@@ -1,10 +1,8 @@
 {
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.1",
   "name": "Premi",
   "description": "test for AngularJS",
   "repository": "https://github.com/PetrucciMauro/sourceAngular.git",
-  "license": "MIT",
   "devDependencies": {
     "karma": "^0.12.16",
     "karma-chrome-launcher": "^0.1.4",

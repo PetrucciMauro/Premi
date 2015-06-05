@@ -10,7 +10,7 @@
     "tmp": "0.0.23",
     "bower": "^1.3.1",
     "shelljs": "^0.2.6",
-    "karma-PhantomJS-launcher":"latest"
+    "karma-phantomjs-launcher":"latest"
   },
   "scripts": {
     "postinstall": "bower install",

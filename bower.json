@@ -1,10 +1,8 @@
 {
-  "name": "angular-phonecat",
+  "name": "Premi",
   "description": "A starter project for AngularJS",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/PetrucciMauro/sourceAngular",
-  "license": "MIT",
-  "private": true,
   "dependencies": {
     "angular": "1.3.x",
     "angular-mocks": "1.3.x",

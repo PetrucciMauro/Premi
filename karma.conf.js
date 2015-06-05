@@ -15,7 +15,7 @@ module.exports = function(config){
 
 
     plugins : [
-            'karma-phantomjs-launcher',
+            'karma-phantomjs-launcher'
             ],
 
     junitReporter : {

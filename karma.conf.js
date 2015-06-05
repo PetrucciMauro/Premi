@@ -13,11 +13,6 @@ module.exports = function(config){
     frameworks: ['jasmine'],
 
 
-
-    plugins : [
-            'karma-phantomjs-launcher'
-            ],
-
     junitReporter : {
       outputFile: 'test_out/unit.xml',
       suite: 'unit'

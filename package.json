@@ -10,13 +10,16 @@
     "tmp": "0.0.23",
     "bower": "^1.3.1",
     "shelljs": "^0.2.6",
-    "karma-phantomjs-launcher":"latest"
+    "karma-phantomjs-launcher":"latest",
+    "mocha": "latest",
+    "istanbul":"latest",
+    "coveralls":"latest"
   },
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",
     "pretest": "npm install",
-    "test": "./node_modules/.bin/karma start test/karma.conf.js --single-run --browsers PhantomJS"
-    
+    "test": "./node_modules/.bin/karma start test/karma.conf.js --single-run --browsers PhantomJS",
+    "test-on-travis":"istanbul cover _mocha"
   }
 }

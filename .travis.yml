@@ -5,4 +5,5 @@ script:
  - npm run-script postinstall
  - npm run-script prestart
  - npm run-script pretest
+ - npm run-script test
  - npm run-script test-on-travis

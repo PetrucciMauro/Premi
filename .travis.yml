@@ -1,5 +1,8 @@
 language: node_js
 node_js:
  - "0.12"
-script: "npm run-script test-on-travis"
-script: "test"
+ script:"postinstall": "bower install",
+ script:"prestart": "npm install",
+ script:"pretest": "npm install",
+ script: "test",
+ script: "npm run-script test-on-travis"

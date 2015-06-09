@@ -1,6 +1,7 @@
 {
   "version": "0.0.1",
   "name": "Premi",
+  "author": "LateButSafe",
   "description": "test for AngularJS",
   "repository": "https://github.com/PetrucciMauro/sourceAngular.git",
   "devDependencies": {

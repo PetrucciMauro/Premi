@@ -21,7 +21,7 @@ describe('PhoneCat controllers', function() {
       expect(scope.phones).toBeUndefined();
       $httpBackend.flush();
 
-      expect(scope.phones).toEqual([{name: 'Nexus S'},
+      expect(scope.phones).toEqual([{name: 'Nexus D'},
                                    {name: 'Motorola DROID'}]);
     });
 

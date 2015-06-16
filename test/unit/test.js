@@ -1,14 +1,31 @@
-describe('testing login',function(){
-   it('should successfully login user',function(){
+describe('loginController', function() {
+  beforeEach(module('app'));
 
-   	 var loginPage = new LoginPage();
-   	 loginPage.get();
-   	 loginPage.setUserName('gschenker');
-   	 loginPage.setPassword('secret');
-   	 login.Page.login().then(function(){
-   	 	expect(loginPage.status.getText()).toEqual('Status: Logged in');
+  var $controller;
 
-   	 });
-   })
+  beforeEach(inject(function(_$controller_){
+    // The injector unwraps the underscores (_) from around the parameter names when matching
+    $controller = _$controller_;
+  }));
 
-})
+  describe('$scope.grade', function() {
+    var $scope, controller;
+
+    beforeEach(function() {
+      $scope = {};
+      controller = $controller('loginController', { $scope: $scope });
+    });
+
+    it('sets the strength to "strong" if the password length is >8 chars', function() {
+      $scope.password = 'longerthaneightchars';
+      $scope.grade();
+      expect($scope.strength).toEqual('strong');
+    });
+
+    it('sets the strength to "weak" if the password length <3 chars', function() {
+      $scope.password = 'a';
+      $scope.grade();
+      expect($scope.strength).toEqual('weak');
+    });
+  });
+});

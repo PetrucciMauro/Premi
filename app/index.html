@@ -10,16 +10,20 @@
   <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
 </head>
-<body>
-
-  <div>
-  <form ng-submit="LoginModalCtrl.submit(_email, _password)">
-    <input type="email" ng-model="_email" />
-    <input type="password" ng-model="_password" />
-    <button>Submit</button>
-  </form>
-  <button ng-click="LoginModalCtrl.cancel()">Cancel</button>
+<body ng-app='app'>
+<div ng-controller='Login'>
+<form>
+   <div>
+      <label>Username:</label>
+      <input type='text' ng-model='userName'/>
+   </div>
+   <div>
+      <label>Password:</label>
+      <input type='password' ng-model='password'/>
+   </div>
+   <button id='loginButton' ng-click='login()'>Login</button>
+</form>
+<div>Status: {{status}}</div>
 </div>
-
 </body>
 </html>

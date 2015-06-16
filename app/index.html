@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en" ng-app="phonecatApp">
+<html lang="it" ng-app="Premi">
 <head>
   <meta charset="utf-8">
-  <title>Google Phone Gallery</title>
+  <title>Premi</title>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="css/app.css">
   <script src="bower_components/angular/angular.js"></script>
@@ -12,7 +12,14 @@
 </head>
 <body>
 
-  <div ng-view></div>
+  <div>
+  <form ng-submit="LoginModalCtrl.submit(_email, _password)">
+    <input type="email" ng-model="_email" />
+    <input type="password" ng-model="_password" />
+    <button>Submit</button>
+  </form>
+  <button ng-click="LoginModalCtrl.cancel()">Cancel</button>
+</div>
 
 </body>
 </html>

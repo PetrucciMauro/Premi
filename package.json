@@ -22,6 +22,5 @@
     "start": "http-server -a 0.0.0.0 -p 8000",
     "pretest": "npm install",
     "test": "./node_modules/.bin/karma start test/karma.conf.js --single-run --browsers PhantomJS",
-    "test-on-travis":"istanbul cover _mocha"
   }
 }

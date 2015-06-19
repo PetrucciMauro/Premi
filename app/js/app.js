@@ -1,24 +1,39 @@
 var premiApp = angular.module('premiApp', [
   'ngRoute',
   'premiControllers',
-  'ngMaterial'
+  'ngMaterial',
+  'users'
   ]);
-  
-premiApp.run(function($log){
-   $log.debug("starterApp + ngMaterial running...");
-     });
 
-  premiApp.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-      when('/', {
-        templateUrl: 'partials/login.html',
-        controller: 'premiLoginController'
-      }).
-      otherwise({
-        redirectTo: '/'
-      });
-  }]); 
+premiApp.run(function($log){
+ $log.debug("starterApp + ngMaterial running...");
+});
+
+premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider){
+  $routeProvider.
+  when('/', {
+    templateUrl: 'partials/login.html',
+    controller: 'premiLoginController'
+  }).
+  otherwise({
+    redirectTo: '/'
+  });
+  $mdIconProvider
+  .defaultIconSet("./assets/svg/avatars.svg", 128)
+  .icon("menu", "./assets/svg/menu.svg", 24)
+  .icon("share", "./assets/svg/share.svg", 24)
+  .icon("google_plus", "./assets/svg/google_plus.svg" , 512)
+  .icon("hangouts"   , "./assets/svg/hangouts.svg"    , 512)
+  .icon("twitter"    , "./assets/svg/twitter.svg"     , 512)
+  .icon("phone"      , "./assets/svg/phone.svg"       , 512);
+
+
+  $mdThemingProvider.theme('default')
+              .primaryPalette('brown')
+              .accentPalette('red');
+
+
+}); 
 
 
 

@@ -14,6 +14,7 @@
     "karma-phantomjs-launcher":"latest",
     "mocha": "latest",
     "istanbul":"latest",
+    "angular-route": "~1.3.0",
     "coveralls":"latest"
   },
   "scripts": {

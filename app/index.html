@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html  ng-app='premiApp'>
 <head>
   <meta charset="utf-8">
   <title>Premi</title>
@@ -8,23 +8,15 @@
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
 
 </head>
-<body ng-app='app'>
-<div ng-controller='loginController'>
-  <form>
+<body >
 
-      <label>Username:</label>
-      <input type='text' ng-model='user.userName'/>
-      <label>Password:</label>
-      <input type='password' ng-model='user.password'/>
-      <input type="button" ng-click="reset()" value="Reset" />
-      <input type="submit" ng-click="update(user)" value="Save" />
 
-  </form>
-  <pre>form = {{user | json}}</pre>
-  <pre>master = {{master | json}}</pre>
-  <pre>{{status}}</pre>
-</div>
+<div ng-view></div>
+
+
+
 </body>
 </html>

@@ -1,7 +1,12 @@
 var premiApp = angular.module('premiApp', [
   'ngRoute',
-  'premiControllers'
+  'premiControllers',
+  'ngMaterial'
   ]);
+  
+premiApp.run(function($log){
+   $log.debug("starterApp + ngMaterial running...");
+     });
 
   premiApp.config(['$routeProvider',
   function($routeProvider) {

@@ -1,5 +1,5 @@
 describe('premiLoginController', function() {
-  beforeEach(module('app'));
+  beforeEach(module('premiApp'));
 
   var $controller;
 

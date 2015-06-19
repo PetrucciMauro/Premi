@@ -1,4 +1,4 @@
-describe('loginController', function() {
+describe('premiLoginController', function() {
   beforeEach(module('app'));
 
   var $controller;
@@ -13,7 +13,7 @@ describe('loginController', function() {
 
     beforeEach(function() {
       $scope = {};
-      controller = $controller('loginController', { $scope: $scope });
+      controller = $controller('premiLoginController', { $scope: $scope });
     });
 
     it('sets the strength to "strong" if the password length is >8 chars', function() {

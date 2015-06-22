@@ -12,12 +12,8 @@ angular.module('angularRestfulAuth')
             }
 
             Main.signin(formData, function(res) {
-                if (res.type == false) {
-                    alert(res.data)    
-                } else {
-                    $localStorage.token = res.data.token;
-                    window.location = "/";    
-                }
+                $localStorage.token = res.data.token;
+                $location.path('/me');
             }, function() {
                 $rootScope.error = 'Failed to signin';
             })
@@ -30,12 +26,8 @@ angular.module('angularRestfulAuth')
             }
 
             Main.save(formData, function(res) {
-                if (res.type == false) {
-                    alert(res.data)
-                } else {
-                    $localStorage.token = res.data.token;
-                    window.location = "/"    
-                }
+                $localStorage.token = res.data.token;
+                $location.path('/me');
             }, function() {
                 $rootScope.error = 'Failed to signup';
             })
@@ -51,13 +43,11 @@ angular.module('angularRestfulAuth')
 
         $scope.logout = function() {
             Main.logout(function() {
-                $window.location = "/"
+                $location.path('/');
             }, function() {
-                alert("Failed to logout!");
+                $rootScope.error = 'Failed to logout';
             });
         };
-
-        $scope.token = $localStorage.token;
     }])
 
 .controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Main', function($rootScope, $scope, $location, Main) {

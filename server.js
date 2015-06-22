@@ -1,27 +1,37 @@
-// Required Modules
-var express    = require("express");
-var morgan     = require("morgan");
-var bodyParser = require("body-parser");
-var jwt        = require("jsonwebtoken");
-var mongoose   = require("mongoose");
+//=========================
+// get the packages we need
+// ========================
+var express    = require('express');
 var app        = express();
+app.use(express.static(__dirname + '/app'));
+var bodyParser = require('body-parser');
+var morgan     = require('morgan');
+var mongoose   = require('mongoose');
 
-var port = process.env.PORT || 3001;
-var User     = require('./models/User');
+var jwt    = require('jsonwebtoken');
+var config = require('./config');
+var User   = require('./models/user');
+var http = require('http');
+var path = require('path');
 
-// Connect to DB
-mongoose.connect(process.env.MONGO_URL);
+//==============
+// configuration
+//==============
 
-app.use(bodyParser.urlencoded({ extended: true }));
+var port = process.env.PORT || 8081;
+mongoose.connect(config.database);
+app.set('SuperSecret', config.secret); // secret variable
+
+app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
-app.use(morgan("dev"));
+
+app.use(morgan('dev')); // to better log to console
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
     next();
 });
-
 
 
 app.post('/authenticate', function(req, res) {

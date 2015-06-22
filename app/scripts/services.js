@@ -2,7 +2,7 @@
 
 angular.module('angularRestfulAuth')
     .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
-        var baseUrl = "localhost:8081/";
+        var baseUrl = "http://angular-restful-auth.herokuapp.com";
         function changeUser(user) {
             angular.extend(currentUser, user);
         }
@@ -44,7 +44,7 @@ angular.module('angularRestfulAuth')
                 $http.post(baseUrl + '/authenticate', data).success(success).error(error)
             },
             me: function(success, error) {
-                $http.get(baseUrl + '/me/').success(success).error(error)
+                $http.get(baseUrl + '/me').success(success).error(error)
             },
             logout: function(success) {
                 changeUser({});

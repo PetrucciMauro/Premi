@@ -1,19 +1,28 @@
+'use strict';
+
 var premiApp = angular.module('premiApp', [
   'ngRoute',
   'premiControllers',
   'ngMaterial',
-  'users'
+  'users',
+  'ngStorage',
+  'premiService'
   ]);
 
 premiApp.run(function($log){
  $log.debug("starterApp + ngMaterial running...");
 });
 
-premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider){
+premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$httpProvider){
   $routeProvider.
   when('/', {
     templateUrl: 'partials/login.html',
     controller: 'premiLoginController'
+  }).
+  when('/first', {
+    templateUrl: 'partials/first.html',
+    controller: ''
+
   }).
   otherwise({
     redirectTo: '/'
@@ -29,14 +38,30 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider){
 
 
   $mdThemingProvider.theme('default')
-              .primaryPalette('brown')
-              .accentPalette('red');
+  .primaryPalette('brown')
+  .accentPalette('red');
+
+
+  $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
+    return {
+      'request': function (config) {
+        config.headers = config.headers || {};
+        if ($localStorage.token) {
+          config.headers.Authorization = 'Bearer ' + $localStorage.token;
+        }
+        return config;
+      },
+      'responseError': function(response) {
+        if(response.status === 401 || response.status === 403) {
+          $location.path('/');
+        }
+        return $q.reject(response);
+      }
+    };
+  }]);
 
 
 }); 
-
-
-
 
 
 

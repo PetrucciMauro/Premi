@@ -6,13 +6,13 @@ var premiControllers = angular.module('premiControllers', []);
 
 
 
-premiControllers.controller('premiLoginController', ['$rootScope', '$scope', '$location', '$localStorage', 'Main', function($rootScope, $scope, $location, $localStorage, Main) {
+premiControllers.controller('premiLoginController', ['$rootScope', '$scope', '$location', '$localStorage','Main', function($rootScope, $scope, $location, $localStorage,Main) {
 
  $scope.master = {};
 
  $scope.update = function(user) {
-    $scope.master.username = $scope.username;
-    $scope.master.password = $scope.password;
+    $scope.master.username = $scope.user.username;
+    $scope.master.password = $scope.user.password;
     $scope.status = 'logged';
 };
 
@@ -22,22 +22,23 @@ $scope.reset = function() {
 
 
 $scope.signin = function() {
-    var formData = {
-        email: $scope.username,
-        password: $scope.password
-    }
+            var formData = {
+                email: $scope.user.username,
+                password: $scope.user.password
+            }
 
-    Main.signin(formData, function(res) {
-        if (res.type == false) {
-            alert(res.data)    
-        } else {
-            $localStorage.token = res.data.token;
-            window.location = "/first";    
-        }
-    }, function() {
-        $rootScope.error = 'Failed to signin';
-    })
-};
+            Main.signin(formData, function(res) {
+                if (res.type == false) {
+                    alert(res.data)    
+                } else {
+                    $localStorage.token = res.data.token;
+                    $window.location= "/first.html";    
+                }
+            }, function() {
+                $rootScope.error = 'Failed to signin';
+            })
+        };
+
 
 $scope.signup = function() {
     var formData = {
@@ -66,11 +67,10 @@ $scope.me = function() {
 };
 
 $scope.logout = function() {
-    Main.logout(function() {
-        window.location = "/"
-    }, function() {
-        alert("Failed to logout!");
-    });
+    $scope.welcome = '';
+    $scope.message = '';
+    $scope.isAuthenticated = false;
+    delete $window.sessionStorage.token;
 };
 $scope.token = $localStorage.token;
 

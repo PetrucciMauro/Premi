@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Consulta Giovani Alpago</title>
+    <meta name="title" content="Consulta Giovani Alpago" />
+    <meta name="description" content="Home Page del sito della Consulta Giovani Alpago" />
+    <meta name="keywords" content="Alpago, Consulta, CGA, associazioni, volontariato, giovani"/>
+    <meta name="language" content="ïtalian it" />
+    <meta name="Author" content="Filinesi Alex, Munaro Michael, Prelaz Marco, Tollot Pietro" />
+    <link rel="stylesheet" type="text/css" href="desk.css" media="screen and (min-width:701px) and (min-device-width:701px)" />
+    <link rel="stylesheet" type="text/css" href="mobile.css" media="handheld, screen and (max-width:700px), only screen and (max-device-width:700px)" />
+    <link rel="stylesheet" type="text/css" href="print.css" media="print" />
+    
+    <script>
+        function open(){
+            var box = document.getElementById(arguments[1]);
+            box.classList.add("open");
+            return "closeComments('"+arguments[0]+"','"+arguments[1]+"');";
+        }
+    </script>
+    <script>
+        function close(){
+            var box = document.getElementById(arguments[1]);
+            box.classList.remove("open");
+            return "openComments('"+arguments[0]+"','"+arguments[1]+"');";
+        }
+    </script>
+    
+    <script>
+        function openComments(){
+            var elem = document.getElementById(arguments[0]);
+            var content=open(arguments[0],arguments[1]);
+            elem.setAttribute('onclick',content);
+            elem.classList.remove("closeButton");
+            elem.classList.add("openButton");
+        }
+    </script>
+    
+    <script>
+        function closeComments(){
+            var elem = document.getElementById(arguments[0]);
+            var content=close(arguments[0],arguments[1]);
+            elem.setAttribute('onclick',content);
+            elem.classList.remove("openButton");
+            elem.classList.add("closeButton");
+        }
+    </script>
+
+    <script type="text/javascript" src="main.js"></script>
+
+
+
+</head>
+
+<body>
+<div id="header">
+    <div id="logo">
+        <img src="images/logo.JPG" alt="logo Consulta Giovani Alpago" />
+    </div>
+    <div id="titolo">
+        <h1>Consulta Giovani Alpago</h1>
+    </div>
+</div>
+
+<div id="breadcrumb">
+    <div id="dovesiete">
+        <p>Ti trovi in: <span xml:lang="en">Home</span></p>
+    </div>
+    <div id="login">
+        <form action="...">
+            <p>
+                <label for="username"><span xml:lang="en">Username</span></label>
+                <input type="text" name="username" id="username" />
+                <label for="password"><span xml:lang="en">Password</span></label>
+                <input type="password" name="password" id="password" />
+           <!-- </p>
+            <p> -->
+                <button type="button"><span xml:lang="en">Login</span></button>
+                <a href="registrazione.xhtml">Registrati</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+<div id="nav">
+    <ul>
+        <li class="CurrentLink"><span xml:lang="en">Home</span></li>
+        <li><a href="chiSiamo.xhtml">Chi Siamo</a></li>
+        <li><a href="attivita.html">Attivit&aacute;</a></li>
+        <li><a href="palestra.xhtml">Arrampicata Indoor</a></li>
+        <li><a href="alpagone.xhtml">Alpagone-Editoriale</a></li>
+        <li><a href="gallery.xhtml"><span xml:lang="en">Gallery</span></a></li>
+        <li><a href="doveSiamo.html">Dove Siamo</a></li>
+        <li><a href="contatti.xhtml">Contatti</a></li>
+        <li><a href="gestisci.xhtml">Gestisci account</a></li>
+    </ul>
+</div>
+
+
+<div id="container">
+
+<div id="avvisi">
+    <div class="note sticky1">
+        <div class='text'>
+            <p><strong>11/11/2014:</strong></p>
+            <p>Iniziata la fase di rimodernizzazione del sito</p>
+        </div>
+    </div>
+    <div class="note sticky2">
+        <div class="text">
+            <p><strong>21/11/2014:</strong></p>
+            <p>Inizia il corso "In Cucina con Piero"</p>
+        </div>
+    </div>
+</div>
+
+<div id="section">
+    <div class="post notLast" id="post2">
+        <h1>Al via il nuovo progetto della <acronym title="Consulta Giovani Alpago">CGA</acronym></h1>
+        <p>La regione Veneto ha approvato il nuovo bando della Consulta Giovani Alpago dal titolo "",
+        che partir&aacute; ufficialmente da Gennaio 2015. "Sar&aacute; un progetto che cercher&aacute; di
+        fare, come minimo, quanto &eacute; gi&aacute; stato fatto lo scorso anno" dice il neo-presidente della
+        <acronym title="Consulta Giovani Alpago">CGA</acronym> Munaro Michael "Quello che ci preme di pi&ugrave; &egrave;
+        per&ograve; far in modo che la gente torni a percepire la Consulta come un'enti&agrave; presente e attiva sul
+        territorio e non semplicemente come un qualcosa che si conosce semplicemente per sentito dire o perch&egrave; ci
+        si vede recapitare a casa il famoso editoriale "l'Alpagone" ".
+        Ed &egrave; proprio parlando di Alpagone che saltano fuori alcune delle novit&agrave; in vista per il nuovo anno.
+        L'Alpagone per stare al passo coi tempi, passer&agrave; al formato digitale e sar&agrave; possibile scaricarlo
+        comodamente in formato PDF sul proprio PC o dispositivo mobile accedendo al sito ufficiale della
+        <acronym title="Consulta Giovani Alpago">CGA</acronym> che proprio in questi giorni si trova in fase di
+        manutenzione e rimodernizzazione.
+        </p>
+        <button id="commBut1" class="closeButton" onclick="openComments('commBut1','comm1');" ></button>
+        <div class="commenti" id="comm1">
+            <h2>inserisci commento</h2>
+            <div class="nuovoCommento">
+                <form method="post" action="/cgi-bin/postInsert.cgi">
+                <textarea id="nc1" name="nuovoCommento2" rows="3" />
+                <label for="nc1">nuovo commento:</label>
+                <input type="submit" value="Submit" />
+                </form>
+            </div>
+            <!--<h2>commenti inseriti</h2>-->
+            <div class="commentiInseriti"></div>
+        </div>
+    </div>
+    
+    <div class="post last" id="post1">
+        <h1>In Cucina Con <acronym title="Gay">Piero</acronym>!</h1>
+        <p>La regione Veneto ha approvato il nuovo bando della Consulta Giovani Alpago dal titolo "",
+        che partir&aacute; ufficialmente da Gennaio 2015. "Sar&aacute; un progetto che cercher&aacute; di
+        fare, come minimo, quanto &eacute; gi&aacute; stato fatto lo scorso anno" dice il neo-presidente della
+        <acronym title="Consulta Giovani Alpago">CGA</acronym> Munaro Michael "Quello che ci preme di pi&ugrave; &egrave;
+        per&ograve; far in modo che la gente torni a percepire la Consulta come un'enti&agrave; presente e attiva sul
+        territorio e non semplicemente come un qualcosa che si conosce semplicemente per sentito dire o perch&egrave; ci
+        si vede recapitare a casa il famoso editoriale "l'Alpagone" ".
+        Ed &egrave; proprio parlando di Alpagone che saltano fuori alcune delle novit&agrave; in vista per il nuovo anno.
+        L'Alpagone per stare al passo coi tempi, passer&agrave; al formato digitale e sar&agrave; possibile scaricarlo
+        comodamente in formato PDF sul proprio PC o dispositivo mobile accedendo al sito ufficiale della
+        <acronym title="Consulta Giovani Alpago">CGA</acronym> che proprio in questi giorni si trova in fase di
+        manutenzione e rimodernizzazione.
+        </p>
+        <button id="commBut2" class="closeButton" onclick="openComments('commBut2','comm2');" ></button>
+        <div class="commenti" id="comm2">
+            <h2>inserisci commento</h2>
+            <div class="nuovoCommento">
+                <form method="post" action="/cgi-bin/postInsert.cgi">
+                <textarea id="nc2" name="nuovoCommento1" rows="3" />
+                <label for="nc2">nuovo commento:</label>
+                <input type="submit" value="Submit" />
+                </form>
+            </div>
+            <!--<h2 class="noDisplay">commenti</h2>-->
+            <div class="commentiInseriti"></div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div id="footer">
+    <ul>
+        <li><a href="http://www.alpago.bl.it/web/cmal/"><img src="images/ComunitaMontana.png" alt="Logo Comunit&aacute; Montana alpago"/></a> </li>
+        <li><a href="http://www.comune.chiesdalpago.bl.it/web/chiesalpago"><img src="images/Chies.jpg" alt="Logo Comune Chies d'Alpago"/></a> </li>
+        <li><a href="http://www.comune.farradalpago.bl.it/web/farraalpago"><img src="images/Farra.jpg" alt="Logo Comune Farra d'Alpago"/></a> </li>
+        <li><a href="http://www.comune.pievedalpago.bl.it/web/pievealpago"><img src="images/Pieve.jpg" alt="Logo Comune Pieve d'Aplago"/></a></li>
+        <li><a href="http://myp25.regione.veneto.it/web/puosalpago"><img src="images/Puos.png" alt="Logo Comune Puos d'Alpago"/></a> </li>
+        <li><a href="http://www.comune.tambre.bl.it/web/Tambre"><img src="images/Tambre.jpg" alt="Logo Comune Tambre d'Alpago"/></a> </li>
+    </ul>
+    <p><span xml:lang="en">This site is Powered by</span> <acronym title="Consulta Giovani Alpago">C.G.A.</acronym>&reg; - Consulta Giovani Alpago -
+    " Vivere è stato concesso a molti... in Alpago solo a pochi eletti... " </p>
+</div>
+
+</body>
+</html>

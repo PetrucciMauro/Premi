@@ -2,19 +2,20 @@
   <form ng-submit="signin()">
 
     <label>Username:</label>
-    <input type='text' ng-model='username'/>
+    <input type='text' ng-model='user.username'/>
     <label>Password:</label>
-    <input type='password' ng-model='password'/>
+    <input type='password' ng-model='user.password'/>
     <input type="button" ng-click="reset()" value="Reset" />
-    <input type="submit" value="Save" ng-clicK="update(user)" />
+    <input type="submit" value="Save" ng-click="update(user)" />
 
   </form>
   <pre>
-    form  username = {{username | json}}
-    form  password = {{password | json}}
+    form  user = {{user | json}}
+    
 
   </pre>
   <pre>master = {{master | json}}</pre>
   <pre>{{status}}</pre>
   <pre>{{error}}</pre>
+  <pre>{{bestemmie}}</pre>
 </div>

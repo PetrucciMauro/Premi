@@ -2,7 +2,7 @@
 
 angular.module('angularRestfulAuth')
     .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
-        var baseUrl ="127.0.0.1:8081";
+        var baseUrl = "http://sub.lvh.me:8081";
         function changeUser(user) {
             angular.extend(currentUser, user);
         }
@@ -38,16 +38,16 @@ angular.module('angularRestfulAuth')
 
         return {
             save: function(data, success, error) {
-                var x= baseUrl + '/signin';
-                $http.post(x, data).success(success).error(error)
+                
+                $http.post(baseUrl + '/signin', data).success(success).error(error)
             },
             signin: function(data, success, error) {
-                var x= baseUrl + '/authenticate';
-                $http.post(x, data).success(success).error(error)
+                
+                $http.post(baseUrl + '/authenticate', data).success(success).error(error)
             },
             me: function(success, error) {
-                var x= baseUrl + '/me';
-                $http.get(x).success(success).error(error)
+               
+                $http.get(baseUrl + '/me').success(success).error(error)
             },
             logout: function(success) {
                 changeUser({});

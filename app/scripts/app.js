@@ -21,11 +21,15 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
   }).
   when('/login', {
     templateUrl: 'partials/login.html',
-    controller: 'premiLoginController'
+    controller: 'premiAuthenticationController'
   }).
     when('/registrazione', {
     templateUrl: 'partials/registrazione.html',
-    controller: 'premiRegistrazioneController'
+    controller: 'premiAuthenticationController'
+  }).
+   when('/profile', {
+    templateUrl: 'partials/profile.html',
+    controller: 'premiAuthenticationController'
   }).
   otherwise({
     redirectTo: '/'

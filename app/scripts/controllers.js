@@ -6,7 +6,7 @@ var premiControllers = angular.module('premiControllers', []);
 
 
 
-premiControllers.controller('premiLoginController', ['$rootScope', '$scope', '$location', '$localStorage','Main', function($rootScope, $scope, $location, $localStorage,Main) {
+premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main', function($rootScope, $scope, $location, $localStorage,Main) {
 
  $scope.master = {};
 
@@ -32,7 +32,7 @@ $scope.signin = function() {
                     alert(res.data)    
                 } else {
                     $localStorage.token = res.data.token;
-                    $window.location= "/first";    
+                    window.location= "#/profile";    
                 }
             }, function() {
                 $rootScope.error = 'Failed to signin';
@@ -42,8 +42,8 @@ $scope.signin = function() {
 
 $scope.signup = function() {
     var formData = {
-        email: $scope.email,
-        password: $scope.password
+        email: $scope.user.email,
+        password: $scope.user.password
     }
 
     Main.save(formData, function(res) {
@@ -51,7 +51,7 @@ $scope.signup = function() {
             alert(res.data)
         } else {
             $localStorage.token = res.data.token;
-            window.location = "/first"    
+            window.location = "#/profile";  
         }
     }, function() {
         $rootScope.error = 'Failed to signup';
@@ -97,5 +97,5 @@ premiControllers.controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Mai
     })
 
 
-    $scope.reset();
+    
 }]);

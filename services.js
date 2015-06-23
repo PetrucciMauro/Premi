@@ -2,7 +2,7 @@
 
 var premiService = angular.module('premiService',[])
     premiService.factory('Main', ['$http', '$localStorage', function($http, $localStorage){
-        var baseUrl = "http://sub.lvh.me:8081";
+        var baseUrl = "localhost:8000/app/";
         function changeUser(user) {
             angular.extend(currentUser, user);
         }
@@ -41,7 +41,7 @@ var premiService = angular.module('premiService',[])
                 $http.post(baseUrl + '/signin', data).success(success).error(error)
             },
             signin: function(data, success, error) {
-                $http.post(baseUrl + '/api/authenticate', data).success(success).error(error)
+                $http.post(baseUrl + '/login', data).success(success).error(error)
             },
             me: function(success, error) {
                 $http.get(baseUrl + '/me').success(success).error(error)

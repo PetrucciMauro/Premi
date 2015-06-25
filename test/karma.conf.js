@@ -22,7 +22,7 @@ module.exports = function(config){
     
      preprocessors: {
       '**/app/scripts/**/*.js': 'coverage'
-   };
+   }
 
 
     junitReporter : {

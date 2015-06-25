@@ -2,9 +2,7 @@ language: node_js
 node_js:
 - 0.12
 script: 
- - npm run-script postinstall
- - npm run-script prestart
- - npm run-script pretest
+ - npm run-script start
  - npm run-script test
 after_success:
   - coveralls

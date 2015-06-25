@@ -11,6 +11,10 @@ module.exports = function(config){
       'test/unit/**/*.js'
     ],
 
+
+      // coverage reporter generates the coverage
+    reporters: ['progress', 'coverage'],
+
     autoWatch : true,
 
     frameworks: ['jasmine'],
@@ -18,6 +22,12 @@ module.exports = function(config){
     junitReporter : {
       outputFile: 'test_out/unit.xml',
       suite: 'unit'
+    }
+
+        // optionally, configure the reporter
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
     }
 
   });

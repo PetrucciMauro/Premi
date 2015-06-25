@@ -4,10 +4,12 @@
   "description": "Premi - Better than Prezi",
   "author": "LateButSafe",
   "license": "MIT",  
+
   "repository": {
   "type":"git",
   "url": "https://github.com/PetrucciMauro/sourceAngular.git"
   },
+
   "keywords":[
    "LateButSafe",
    "Presentazioni",
@@ -15,6 +17,7 @@
    "SlideShow"
 
   ],
+
   "devDependencies": {
     "karma": "^0.12.16",
     "karma-jasmine": "^0.1.5",
@@ -30,7 +33,7 @@
     "jshint": "^2.7.0",
     "mocha": "^2.2.4",
     "mocha-lcov-reporter": "^0.0.2",
-    "mocha-istanbul": "^0.2.0",
+    "mocha-istanbul": "^0.2.0"
   },
   "scripts": {
     "postinstall": "bower install",

@@ -3,6 +3,7 @@ module.exports = function(config){
 
     basePath : '../',
 
+
     files : [
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-route/angular-route.js',
@@ -18,6 +19,11 @@ module.exports = function(config){
     autoWatch : true,
 
     frameworks: ['jasmine'],
+    
+     preprocessors = {
+      '**/app/scripts/**/*.js': 'coverage'
+   };
+
 
     junitReporter : {
       outputFile: 'test_out/unit.xml',
@@ -25,7 +31,7 @@ module.exports = function(config){
     }
 
         // optionally, configure the reporter
-    coverageReporter: {
+    coverageReporter = {
       type : 'html',
       dir : 'coverage/'
     }

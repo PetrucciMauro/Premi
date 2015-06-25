@@ -25,7 +25,7 @@ module.exports = function(config){
    }
 
         // optionally, configure the reporter
-    coverageReporter = {
+    coverageReporter : {
       type : 'html',
       dir : 'coverage/'
     }

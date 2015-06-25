@@ -20,7 +20,7 @@ module.exports = function(config){
 
     frameworks: ['jasmine'],
     
-     preprocessors = {
+     preprocessors: {
       '**/app/scripts/**/*.js': 'coverage'
    };
 

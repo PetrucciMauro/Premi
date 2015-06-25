@@ -41,7 +41,7 @@
     "prestart": "npm install",
     "start": "http-server -a 0.0.0.0 -p 8000",
     "pretest": "npm install",
-    "test": "./node_modules/.bin/karma start test/karma.conf.js --single-run --browsers PhantomJS --ignore-errors",
+    "test": "./node_modules/istanbul/lib/cli.js cover ./node_modules/.bin/karma start test/karma.conf.js --single-run --browsers PhantomJS -- -R spec ./test/unit/* --ignore-errors",
     "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/.bin/karma start test/karma.conf.js -- -R spec ./test/unit/*",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",

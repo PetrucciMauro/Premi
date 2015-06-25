@@ -14,7 +14,7 @@ module.exports = function(config){
 
 
       // coverage reporter generates the coverage
-    reporters: ['progress', 'coverage','junit'],
+    reporters: ['progress', 'coverage'],
 
     autoWatch : true,
 
@@ -23,12 +23,6 @@ module.exports = function(config){
      preprocessors: {
       '**/app/scripts/**/*.js': 'coverage'
    }
-
-
-    junitReporter = {
-      outputFile: 'test_out/unit.xml',
-      suite: 'unit'
-    }
 
         // optionally, configure the reporter
     coverageReporter = {

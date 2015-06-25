@@ -34,7 +34,8 @@
     "mocha": "^2.2.4",
     "mocha-lcov-reporter": "^0.0.2",
     "mocha-istanbul": "^0.2.0",
-    "karma-coverage": "latest"
+    "karma-coverage": "latest",
+    "karma-junit-reporter": "latest"
   },
   "scripts": {
     "postinstall": "bower install",

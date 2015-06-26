@@ -14,7 +14,7 @@ module.exports = function(config){
 
 
       // coverage reporter generates the coverage
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage','coveralls'],
 
     autoWatch : true,
 
@@ -23,7 +23,9 @@ module.exports = function(config){
     plugins : [
       'karma-jasmine',
       'karma-coverage',
-      'karma-junit-reporter'
+      'karma-junit-reporter',
+      'karma-phantomjs-launcher',
+      'karma-coveralls'
  
     ],
     
@@ -33,7 +35,7 @@ module.exports = function(config){
 
         // optionally, configure the reporter
     coverageReporter : {
-      type : 'html',
+      type : 'lcov',
       dir : 'coverage/'
     }
 

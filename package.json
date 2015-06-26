@@ -38,7 +38,8 @@
     "mocha-istanbul": "^0.2.0",
     "karma-coverage": "latest",
     "karma-junit-reporter": "latest",
-    "karma-coveralls": "latest"
+    "karma-coveralls": "latest",
+    "finalhandler": "latest"
   },
   "scripts": {
     "postinstall": "bower install",

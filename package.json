@@ -19,7 +19,7 @@
   ],
 
     "files": [
-    "binary-extensions.json"
+    "./binary-extensions.json"
   ],
 
   "devDependencies": {

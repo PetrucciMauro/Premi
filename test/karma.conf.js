@@ -2,9 +2,7 @@ module.exports = function(config){
   config.set({
 
     basePath : '../',
-    var binaryExtensions = require('binary-extensions');
 
-     console.log(binaryExtensions);
 
     files : [
       'app/bower_components/angular/angular.js',

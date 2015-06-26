@@ -19,6 +19,13 @@ module.exports = function(config){
     autoWatch : true,
 
     frameworks: ['jasmine'],
+
+    plugins : [
+      'karma-jasmine',
+      'karma-coverage',
+      'karma-junit-reporter'
+ 
+    ]
     
      preprocessors: {
       '**/app/scripts/**/*.js': 'coverage'
@@ -29,6 +36,8 @@ module.exports = function(config){
       type : 'html',
       dir : 'coverage/'
     }
+
+
 
   });
 };

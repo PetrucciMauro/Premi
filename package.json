@@ -18,6 +18,10 @@
 
   ],
 
+    "files": [
+    "binary-extensions.json"
+  ],
+
   "devDependencies": {
     "karma": "latest",
     "karma-jasmine": "latest",

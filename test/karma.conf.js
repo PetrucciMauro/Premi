@@ -25,11 +25,11 @@ module.exports = function(config){
       'karma-coverage',
       'karma-junit-reporter'
  
-    ]
+    ],
     
-     preprocessors: {
+     preprocessors : {
       '**/app/scripts/**/*.js': 'coverage'
-   }
+   },
 
         // optionally, configure the reporter
     coverageReporter : {

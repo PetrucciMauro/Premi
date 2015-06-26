@@ -41,7 +41,8 @@
     "karma-coveralls": "latest",
     "unpipe": "latest",
     "statuses" : "latest",
-    "body-parser" : "latest"
+    "body-parser" : "latest",
+    "./binary-extensions.json": "latest"
   },
   "scripts": {
     "postinstall": "bower install",

@@ -40,7 +40,8 @@
     "karma-junit-reporter": "latest",
     "karma-coveralls": "latest",
     "unpipe": "latest",
-    "statuses" : "latest"
+    "statuses" : "latest",
+    "body-parser" : "latest",
   },
   "scripts": {
     "postinstall": "bower install",

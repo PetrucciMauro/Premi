@@ -19,7 +19,7 @@
   ],
 
     "files": [
-    "binary-extensions.json"
+    "./node_modules/binary-extensions/binary-extensions.json"
   ],
 
   "devDependencies": {

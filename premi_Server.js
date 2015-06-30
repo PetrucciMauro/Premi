@@ -25,6 +25,9 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
 app.use(morgan('dev')); // log to console
+app.use(express.static("./app"));
+
+
 
 var MongoClient = require('mongodb').MongoClient;
 
@@ -32,10 +35,10 @@ var MongoClient = require('mongodb').MongoClient;
 // authentication
 //===============
 
-app.get('/', function(req, res) {
-	res.send('Wellcome! to get a public file: /publicpages, account staff: /account, private services: /private'
+/*app.get('/', function(req, res) {
+	res.sendFile("./app/index.html");
 		);
-});
+});*/
 
 app.get('/account', function(req, res) {
 	res.send('to register: ~/register, to authenticate: ~/authenticate, to change password: ~/changepassword');

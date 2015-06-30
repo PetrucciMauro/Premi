@@ -38,7 +38,7 @@ var premiService = angular.module('premiService',[])
 
         return {
             save: function(data, success, error) {
-                $http.post(baseUrl + '/signin', data).success(success).error(error)
+                $http.post(baseUrl + '/account/authenticate', data).success(success).error(error)
             },
             signin: function(data, success, error) {
                 $http.post(baseUrl + '/authenticate', data).success(success).error(error)

@@ -95,7 +95,19 @@ premiControllers.controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Mai
     }, function() {
         $rootScope.error = 'Failed to fetch details';
     })
+ 
+}])
 
 
-    
+premiControllers.controller('ProfileController',['$rootScope', '$scope', '$location', 'Main', function($rootScope, $scope, $location, Main) {
+
+    Main.me(function(res) {
+        $scope.myDetails = res;
+    }, function() {
+        $rootScope.error = 'Failed to fetch details';
+    })
+ 
 }]);
+
+
+

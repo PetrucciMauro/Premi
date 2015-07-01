@@ -15,14 +15,14 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		$scope.user = angular.copy($scope.master);
 	};
 
-	$scope.signin = function() {
+	$scope.login = function() {
 		var formData = {
 				username: $scope.user.username,
 				password: $scope.user.password,
 				admin: false
 		}
 
-		Main.signin(formData, function(res) {
+		Main.login(formData, function(res) {
 				if (res.type == false) {
 						alert(res.data)    
 				} else {
@@ -30,11 +30,11 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 						$local.path("/home");    
 				}
 		}, function() {
-				$rootScope.error = 'Failed to signin';
+				$rootScope.error = 'Failed to login';
 		})
 	};
 
-	$scope.signup = function() {
+	$scope.register = function() {
 		var formData = {
 				username: $scope.user.username,
 				password: $scope.user.password,

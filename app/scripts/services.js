@@ -41,7 +41,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 				save: function(data, success, error) {
 						$http.post(baseUrl + '/register', data).success(success).error(error)
 				},
-				signin: function(data, success, error) {
+				login: function(data, success, error) {
 						$http.post(baseUrl + '/authenticate', data).success(success).error(error)
 				},
 				me: function(success, error) {

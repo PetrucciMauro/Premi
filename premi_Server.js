@@ -75,7 +75,9 @@ app.post('/authenticate', function(req, res) {
 				});
 			}
 			else{
+				console.log("diostracane");
 				var token = jwt.sign({user: user}, app.get('SuperSecret'), {
+					                                                            
                                                                                 expiresInMinutes: 1440 // expires in 24 hours
                                                                             });
 

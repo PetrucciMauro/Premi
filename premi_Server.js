@@ -17,7 +17,7 @@ var fs = require('fs');
 // configuration
 //==============
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 8081;
 app.set('database', config.database);
 app.set('SuperSecret', config.secret);
 
@@ -27,6 +27,29 @@ app.use(bodyParser.json());
 app.use(morgan('dev')); // log to console
 
 var MongoClient = require('mongodb').MongoClient;
+
+app.use('/', express.static("./app"));
+
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, x-csrf-token, Accept');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+		next();
+});
+
+var MongoClient = require('mongodb').MongoClient;
+
+//==================
+// start the server
+//==================
+
+app.listen(port);
+console.log('Server listening at http//localhost: ' + port );
+
+process.on('uncaughtException', function(err) {
+    console.log(err);
+});
 
 //===============
 // authentication
@@ -41,7 +64,7 @@ app.get('/account', function(req, res) {
 	res.send('to register: ~/register, to authenticate: ~/authenticate, to change password: ~/changepassword');
 });
 
-app.get('/account/authenticate', function(req, res) {
+app.post('/authenticate', function(req, res) {
 	var header=req.headers['authorization']||'null';
 	parts=header.split(/:/);
 	user=parts[0];
@@ -79,12 +102,15 @@ app.get('/account/authenticate', function(req, res) {
 
 });
 
-app.post('/account/register', function(req, res) {
+app.post('/register', function(req, res) {
 	var header=req.headers['authorization']||'null';
 	parts=header.split(/:/);
 	user=parts[0];
 	pass=parts[1];
-	
+	console.log(header);
+	console.log(req.headers);
+	console.log("register");
+
 	MongoClient.connect(app.get('database'), function(err, db) {
 		if(err) throw err;
 		db.collection('users').findOne({'username': user}, function(err, doc) {
@@ -115,7 +141,7 @@ app.post('/account/register', function(req, res) {
 	});
 });
 
-app.post('/account/changepassword', function(req, res) {
+app.post('/changepassword', function(req, res) {
 	var header=req.headers['authorization']||'null';
 	parts=header.split(/:/);
 	user=parts[0];
@@ -525,20 +551,4 @@ filesRoutes.post('/video/[^/]+/[^/]+', function(req, res){
 		});
 	}
 });
-
-
-//==================
-// start the server
-//==================
-
-app.listen(port);
-console.log('Server listening at http//localhost: ' + port );
-
-
-
-
-
-
-
-
 

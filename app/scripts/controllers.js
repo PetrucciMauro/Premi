@@ -1,6 +1,6 @@
 'use strict';
 
-var premiControllers = angular.module('premiControllers', []);
+var premiControllers = angular.module('premiControllers', ['premiService']);
 
 premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main', function($rootScope, $scope, $location, $localStorage,Main) {
 	$scope.master = {};
@@ -18,11 +18,11 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 	$scope.login = function() {
 		var formData = {
 				username: $scope.user.username,
-				password: $scope.user.password,
-				admin: false
+				password: $scope.user.password
 		}
 
 		Main.login(formData, function(res) {
+			console.log("Main.login");
 				if (res.type == false) {
 						alert(res.data)    
 				} else {
@@ -34,12 +34,12 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		})
 	};
 
-	$scope.register = function() {
+	$scope.registration = function() {
 		var formData = {
-				username: $scope.user.username,
-				password: $scope.user.password,
-				admin: false
+			username: $scope.user.username,
+			password: $scope.user.password
 		}
+		console.log(formData);
 		Main.save(formData, function(res) {
 				console.log("Main.save");
 				if (res.type == false) {
@@ -92,7 +92,7 @@ premiControllers.controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Mai
 	}])
 
 
-premiControllers.controller('HomeController',['$rootScope', '$scope', '$location', 'Main', 'toPage', function($rootScope, $scope, $location, Main, toPage) {
+premiControllers.controller('HomeController',['$rootScope', '$scope', '$location', 'Main', 'toPages', function($rootScope, $scope, $location, Main, toPages) {
 	//$scope.allSS = SlideShow.query();
 
 	$scope.goEdit = function(slideId){

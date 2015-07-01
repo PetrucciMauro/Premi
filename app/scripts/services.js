@@ -82,4 +82,6 @@ premiService.factory('toPages', ['$resource', '$location',
 				$location.path("/profile")
 			}
     }
+
+    
   }]);

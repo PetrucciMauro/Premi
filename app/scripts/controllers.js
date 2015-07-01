@@ -6,7 +6,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 	$scope.master = {};
 
 	$scope.update = function(user) {
-		$scope.master.email = $scope.user.email;
+		$scope.master.username = $scope.user.username;
 		$scope.master.password = $scope.user.password;
 		$scope.status = 'logged';
 	};
@@ -40,12 +40,12 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 				password: $scope.user.password,
 				admin: false
 		}
-		console.log("ciao");
 		Main.save(formData, function(res) {
 				console.log("Main.save");
 				if (res.type == false) {
 						alert(res.data)
 				} else {
+                        console.log("Main.save222");
 						$localStorage.token = res.data.token;
 						$local.path("/home");  
 				}

@@ -12,11 +12,12 @@ var User   = require('./models/user');
 var multer  = require('multer')
 var fs = require('fs');
 
+
 //==============
 // configuration
 //==============
 
-var port = process.env.PORT || 8081;
+var port = process.env.PORT || 8080;
 app.set('database', config.database);
 app.set('SuperSecret', config.secret);
 
@@ -24,46 +25,31 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
 app.use(morgan('dev')); // log to console
-app.use('/', express.static("./app"));
-
-app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
-    next();
-});
 
 var MongoClient = require('mongodb').MongoClient;
-
-//==================
-// start the server
-//==================
-
-app.listen(port);
-console.log('Server listening at http//localhost: ' + port );
 
 //===============
 // authentication
 //===============
 
-/*app.get('/', function(req, res) {
-	res.sendFile("./app/index.html");
-		);
-});*/
-
 app.get('/', function(req, res) {
+	res.send('Wellcome! to get a public file: /publicpages, account staff: /account, private services: /private'
+		);
+});
+
+app.get('/account', function(req, res) {
 	res.send('to register: ~/register, to authenticate: ~/authenticate, to change password: ~/changepassword');
 });
 
-app.post('/authenticate', function(req, res) {
+app.get('/account/authenticate', function(req, res) {
 	var header=req.headers['authorization']||'null';
 	parts=header.split(/:/);
 	user=parts[0];
 	pass=parts[1];
-	console.log("authenticate");
+	
 	MongoClient.connect(app.get('database'), function(err, db) {
 		if(err) throw err;
-		console.log("authenticate 2");
+		
 		db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
 			if(err) throw err;
 			if(doc == null){
@@ -75,12 +61,10 @@ app.post('/authenticate', function(req, res) {
 				});
 			}
 			else{
-				console.log("diostracane");
 				var token = jwt.sign({user: user}, app.get('SuperSecret'), {
-					                                                            
                                                                                 expiresInMinutes: 1440 // expires in 24 hours
                                                                             });
-
+				
 				res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
 				var json = JSON.stringify({
 					success: true,
@@ -89,18 +73,18 @@ app.post('/authenticate', function(req, res) {
 				res.end(json);
 			}
 		});
-
+		
 		console.dir('called findOne()');
 	});
 
 });
 
-app.post('/register', function(req, res) {
+app.post('/account/register', function(req, res) {
 	var header=req.headers['authorization']||'null';
 	parts=header.split(/:/);
 	user=parts[0];
 	pass=parts[1];
-	console.log("register");
+	
 	MongoClient.connect(app.get('database'), function(err, db) {
 		if(err) throw err;
 		db.collection('users').findOne({'username': user}, function(err, doc) {
@@ -126,18 +110,18 @@ app.post('/register', function(req, res) {
 					message: 'Username already registered'
 				});
 			}
-
+			
 		});
 	});
 });
 
-app.post('/changepassword', function(req, res) {
+app.post('/account/changepassword', function(req, res) {
 	var header=req.headers['authorization']||'null';
 	parts=header.split(/:/);
 	user=parts[0];
 	pass=parts[1];
 	passNew=parts[2];
-
+	
 	MongoClient.connect(app.get('database'), function(err, db) {
 		if(err) throw err;
 		db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
@@ -159,7 +143,7 @@ app.post('/changepassword', function(req, res) {
 					message: 'Username or password not correct'
 				});
 			}
-
+			
 		});
 	});
 });
@@ -181,10 +165,10 @@ var privateRoutes = express.Router();
 app.use('/private', privateRoutes);
 
 privateRoutes.use(function(req, res, next) {
-
+	
 	var token=req.headers['authorization'];
 	if (token) {
-
+		
 																		// verifies secret and checks exp
 																		jwt.verify(token, app.get('SuperSecret'), function(err, decoded) {
 																			if (err) {
@@ -246,7 +230,7 @@ filesRoutes.delete('/image/[^/]+', function(req, res){
 	var dir= __dirname+'/files/'+req.user+'/image/';
 	var name = req.originalUrl.split("/")[5];
 	var there_is = fs.existsSync(dir+name);
-
+	
 	if(there_is){
 		fs.unlinkSync(dir+name);
 		res.json({
@@ -261,21 +245,21 @@ filesRoutes.delete('/image/[^/]+', function(req, res){
 			message: 'file '+dir+name+' does not exists'
 		});
 	}
-
+	
 });
 
 filesRoutes.delete('/video/[^/]+', function(req, res){
 	var dir= __dirname+'/files/'+req.user+'/video/';
 	var name = req.originalUrl.split("/")[5];
 	var there_is = fs.existsSync(dir+name);
-
+	
 	if(there_is){
 		fs.unlinkSync(dir+name);
 		res.json({
 			success: true,
 			message: 'correctly delete file '+dir+name
 		});
-
+		
 	}
 	else{
 		res.json({
@@ -283,21 +267,21 @@ filesRoutes.delete('/video/[^/]+', function(req, res){
 			message: 'file '+dir+name+' does not exists'
 		});
 	}
-
+	
 });
 
 filesRoutes.delete('/audio/[^/]+', function(req, res){
 	var dir= __dirname+'/files/'+req.user+'/audio/';
 	var name = req.originalUrl.split("/")[5];
 	var there_is = fs.existsSync(dir+name);
-
+	
 	if(there_is){
 		fs.unlinkSync(dir+name);
 		res.json({
 			success: true,
 			message: 'correctly delete file '+dir+name
 		});
-
+		
 	}
 	else{
 		res.json({
@@ -305,13 +289,13 @@ filesRoutes.delete('/audio/[^/]+', function(req, res){
 			message: 'file '+dir+name+' does not exists'
 		});
 	}
-
+	
 });
 //====
 // get
 
 filesRoutes.get('/image/[^/]+', function (req, res) {
-
+	
 	var options = {
 		root: __dirname + '/files/'+req.user+'/image',
 		dotfiles: 'deny',
@@ -320,7 +304,7 @@ filesRoutes.get('/image/[^/]+', function (req, res) {
 			'x-sent': true
 		}
 	};
-
+	
 	var file_name = req.originalUrl.split("/")[5];
 	var there_is = fs.existsSync(__dirname+'/files/'+req.user+'/image/'+file_name);
 
@@ -345,7 +329,7 @@ filesRoutes.get('/image/[^/]+', function (req, res) {
 
 
 filesRoutes.get('/audio/[^/]+', function (req, res) {
-
+	
 	var options = {
 		root: __dirname + '/files/'+req.user+'/audio',
 		dotfiles: 'deny',
@@ -354,10 +338,10 @@ filesRoutes.get('/audio/[^/]+', function (req, res) {
 			'x-sent': true
 		}
 	};
-
+	
 	var file_name = req.originalUrl.split("/")[5];
 	var there_is = fs.existsSync(__dirname+'/files/'+req.user+'/audio/'+file_name);
-
+	
 	if(there_is == false){
 		res.status(404).send({
 			success: false,
@@ -379,7 +363,7 @@ filesRoutes.get('/audio/[^/]+', function (req, res) {
 
 
 filesRoutes.get('/video/[^/]+', function (req, res) {
-
+	
 	var options = {
 		root: __dirname + '/files/'+req.user+'/video',
 		dotfiles: 'deny',
@@ -388,10 +372,10 @@ filesRoutes.get('/video/[^/]+', function (req, res) {
 			'x-sent': true
 		}
 	};
-
+	
 	var file_name = req.originalUrl.split("/")[5];
 	var there_is = fs.existsSync(__dirname+'/files/'+req.user+'/video/'+file_name);
-
+	
 	if(there_is == false){
 		res.status(404).send({
 			success: false,
@@ -417,16 +401,16 @@ filesRoutes.get('/video/[^/]+', function (req, res) {
 
 filesRoutes.post('/image/[^/]+',[ multer({
 	dest: __dirname+'/files/',
-
+	
 	changeDest: function(dest, req, res) {
 		var newDestination = dest + req.user + '/image';
 		return newDestination;
 	},
-
+	
 	rename: function (fieldname, filename, req, res) {
 		var new_name = req.originalUrl.split("/")[5];
 		return new_name; }
-
+		
 	}),
 function(req, res){
 																																	console.log(req.body) // form fields
@@ -436,16 +420,16 @@ function(req, res){
 
 filesRoutes.post('/audio/[^/]+',[ multer({
 	dest: __dirname+'/files/',
-
+	
 	changeDest: function(dest, req, res) {
 		var newDestination = dest + req.user + '/audio';
 		return newDestination;
 	},
-
+	
 	rename: function (fieldname, filename, req, res) {
 		var new_name = req.originalUrl.split("/")[5];
 		return new_name; }
-
+		
 	}),
 function(req, res){
 																																	console.log(req.body) // form fields
@@ -455,17 +439,17 @@ function(req, res){
 
 filesRoutes.post('/video/[^/]+',[ multer({
 	dest: __dirname+'/files/',
-
+	
 	changeDest: function(dest, req, res) {
 		var newDestination = dest + req.user + '/video';
 		return newDestination;
 	},
-
-
+	
+	
 	rename: function (fieldname, filename, req, res) {
 		var new_name = req.originalUrl.split("/")[5];
 		return new_name; }
-
+		
 	}),
 function(req, res){
 																																	console.log(req.body) // form fields
@@ -477,7 +461,7 @@ function(req, res){
 // rename
 
 filesRoutes.post('/image/[^/]+/[^/]+', function(req, res){
-
+	
 	var dir= __dirname+'/files/'+req.user+'/image/';
 	var name = req.originalUrl.split("/")[5];
 	var new_name = req.originalUrl.split("/")[6];
@@ -488,7 +472,7 @@ filesRoutes.post('/image/[^/]+/[^/]+', function(req, res){
 			success: true,
 			message: 'correctly renamed file '+dir+name+' in '+dir+new_name
 		});
-
+		
 	}
 	else{
 		res.json({
@@ -499,7 +483,7 @@ filesRoutes.post('/image/[^/]+/[^/]+', function(req, res){
 });
 
 filesRoutes.post('/audio/[^/]+/[^/]+', function(req, res){
-
+	
 	var dir= __dirname+'/files/'+req.user+'/audio/';
 	var name = req.originalUrl.split("/")[5];
 	var new_name = req.originalUrl.split("/")[6];
@@ -510,7 +494,7 @@ filesRoutes.post('/audio/[^/]+/[^/]+', function(req, res){
 			success: true,
 			message: 'correctly renamed file '+dir+name+' in '+dir+new_name
 		});
-
+		
 	}
 	else{
 		res.json({
@@ -521,7 +505,7 @@ filesRoutes.post('/audio/[^/]+/[^/]+', function(req, res){
 });
 
 filesRoutes.post('/video/[^/]+/[^/]+', function(req, res){
-
+	
 	var dir= __dirname+'/files/'+req.user+'/video/';
 	var name = req.originalUrl.split("/")[5];
 	var new_name = req.originalUrl.split("/")[6];
@@ -532,7 +516,7 @@ filesRoutes.post('/video/[^/]+/[^/]+', function(req, res){
 			success: true,
 			message: 'correctly renamed file '+dir+name+' in '+dir+new_name
 		});
-
+		
 	}
 	else{
 		res.json({
@@ -541,3 +525,20 @@ filesRoutes.post('/video/[^/]+/[^/]+', function(req, res){
 		});
 	}
 });
+
+
+//==================
+// start the server
+//==================
+
+app.listen(port);
+console.log('Server listening at http//localhost: ' + port );
+
+
+
+
+
+
+
+
+

@@ -31,13 +31,16 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
     templateUrl: 'partials/profile.html',
     controller: 'ProfileController'
   }).
-	when('/home', {
+  when('/home', {
     templateUrl: 'partials/home.html',
     controller: 'HomeController'
   }).
   otherwise({
     redirectTo: '/'
   });
+
+ 
+
   $mdIconProvider
   .defaultIconSet("./assets/svg/avatars.svg", 128)
   .icon("menu", "./assets/svg/menu.svg", 24)

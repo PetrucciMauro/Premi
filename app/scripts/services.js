@@ -74,10 +74,10 @@ premiService.factory('toPages', ['$resource', '$location',
 			},
 			indexpage: function(){
 				$location.path("/login")
-			}
+			},
 			executionpage: function() {
 				$location.path("/execution")
-			}
+			},
 			profilepage: function() {
 				$location.path("/profile")
 			}

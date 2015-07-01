@@ -15,7 +15,7 @@ premiApp.run(function($log){
 
 premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$httpProvider){
   $routeProvider.
-    when('/', {
+  when('/', {
     templateUrl: 'partials/first.html',
     controller: ''
   }).
@@ -23,11 +23,11 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
     templateUrl: 'partials/login.html',
     controller: 'premiAuthenticationController'
   }).
-    when('/registrazione', {
+  when('/registrazione', {
     templateUrl: 'partials/registrazione.html',
     controller: 'premiAuthenticationController'
   }).
-   when('/profile', {
+  when('/profile', {
     templateUrl: 'partials/profile.html',
     controller: 'ProfileController'
   }).
@@ -53,23 +53,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
   .accentPalette('red');
 
 
-  $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
-    return {
-      'request': function (config) {
-        config.headers = config.headers || {};
-        if ($localStorage.token) {
-          config.headers.Authorization = 'Bearer ' + $localStorage.token;
-        }
-        return config;
-      },
-      'responseError': function(response) {
-        if(response.status === 401 || response.status === 403) {
-          $location.path('/');
-        }
-        return $q.reject(response);
-      }
-    };
-  }]);
+
 
 
 }); 

@@ -1,6 +1,6 @@
 'use strict';
 
-var premiService = angular.module('premiService',[])
+var premiService = angular.module('premiService',['ngResource'])
 
 premiService.factory('Main', ['$http', '$localStorage', function($http, $localStorage){
 		var baseUrl = "http://sub.lvh.me:8081";
@@ -38,11 +38,27 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 		var currentUser = getUserFromToken();
 
 		return {
-				save: function(data, success, error) {
-						$http.post(baseUrl + '/register', data).success(success).error(error)
-				},
-				login: function(data, success, error) {
-						$http.post(baseUrl + '/authenticate', data).success(success).error(error)
+				save: function(formData, success, error) {
+					//$http.post(baseUrl + '/register', formData).success(success).error(error)
+					$http({
+						method: 'POST',
+						url: baseUrl + '/register',
+						headers: {'Content-Type': 'application/json'},
+						data: JSON.stringify(formData),
+						withCredentials: true,
+						headers: {'authorization': formData.username + ':' + formData.password}
+					}).success(success).error(error)
+    },
+				login: function(formData, success, error) {
+					//$http.post(baseUrl + '/authenticate', data).success(success).error(error)
+					$http({
+						method: 'POST',
+						url: baseUrl + '/authenticate',
+						headers: {'Content-Type': 'application/json'},
+						data: JSON.stringify(formData),
+						withCredentials: true,
+						headers: {'authorization': formData.username + ':' + formData.password}
+					}).success(success).error(error)
 				},
 				me: function(success, error) {
 						$http.get(baseUrl + '/me').success(success).error(error)
@@ -75,7 +91,7 @@ premiService.factory('toPages', ['$resource', '$location',
 			indexpage: function(){
 				$location.path("/login")
 			},
-			executionpage: function() {
+			executionpage: function(slideId) {
 				$location.path("/execution")
 			},
 			profilepage: function() {

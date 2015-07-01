@@ -7,7 +7,8 @@
 	<link rel="stylesheet" href="css/app.css">
 	<link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
 	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
-    <link rel="stylesheet" href="assets/app.css"/>
+  <link rel="stylesheet" href="assets/app.css"/>
+	
 	<script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/angular-route/angular-route.js"></script>
 	<script src="scripts/app.js"></script>
@@ -20,34 +21,31 @@
 	<script src="src/users/UserController.js"></script>
 	<script src="src/users/UserService.js"></script>
   <script src="lib/ngStorage.js"></script>
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-
-
+	<script src="scripts/slideshowelement.js"></script>
+	<script src="scripts/inserteditremove.js"></script>
+  <script src="scripts/command.js"></script>
+	
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 
 </head>
-
   <body n layout="column" ng-controller="UserController as ul">
 
-    <md-toolbar layout="row" layout-align="space-between center">
-        <!--The left side-->
-    <span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
-    <!--The right side-->
-    <span>
-        <md-button aria-label="First Button" ng-href="#/login">Accedi</md-button>
-        <md-button aria-label="Second Button" ng-href="#/registrazione">Registrati</md-button>
+		<md-toolbar layout="row" layout-align="space-between center">
+				<!--The left side-->
+		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
+		<!--The right side-->
+		<span>
+				<md-button aria-label="First Button" ng-href="#/login">Accedi</md-button>
+				<md-button aria-label="Second Button" ng-href="#/registrazione">Registrati</md-button>
+		</span>
+		
+		<md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
+			<md-icon md-svg-icon="menu" ></md-icon>
+		</md-button>
+		</md-toolbar>
 
-    </span>
-      <md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
-        <md-icon md-svg-icon="menu" ></md-icon>
-      </md-button>
-    </md-toolbar>
+		<div ng-view></div>
 
- <div ng-view></div>
-
-
-
-</body>
+	</body>
 </html>
 <form>
-
-

@@ -22,36 +22,39 @@ $scope.reset = function() {
 
 
 $scope.signin = function() {
-            var formData = {
-                email: $scope.user.email,
-                password: $scope.user.password
-            }
+		var formData = {
+				username: $scope.user.username,
+				password: $scope.user.password,
+				admin: false
+		}
 
-            Main.signin(formData, function(res) {
-                if (res.type == false) {
-                    alert(res.data)    
-                } else {
-                    $localStorage.token = res.data.token;
-                    window.location= "#/profile";    
-                }
-            }, function() {
-                $rootScope.error = 'Failed to signin';
-            })
-        };
+		Main.signin(formData, function(res) {
+				if (res.type == false) {
+						alert(res.data)    
+				} else {
+						$localStorage.token = res.data.token;
+						$local.path("/home");    
+				}
+		}, function() {
+				$rootScope.error = 'Failed to signin';
+		})
+};
 
 
 $scope.signup = function() {
     var formData = {
-        email: $scope.user.email,
-        password: $scope.user.password
+        username: $scope.user.username,
+        password: $scope.user.password,
+				admin: false
     }
-
+		console.log("ciao");
     Main.save(formData, function(res) {
+				console.log("Main.save");
         if (res.type == false) {
             alert(res.data)
         } else {
             $localStorage.token = res.data.token;
-            window.location = "#/profile";  
+            $local.path("/home");  
         }
     }, function() {
         $rootScope.error = 'Failed to signup';
@@ -99,14 +102,33 @@ premiControllers.controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Mai
 }])
 
 
-premiControllers.controller('ProfileController',['$rootScope', '$scope', '$location', 'Main', function($rootScope, $scope, $location, Main) {
+premiControllers.controller('HomeController',['$rootScope', '$scope', '$location', 'Main', function($rootScope, $scope, $location, Main) {
+	$scope.allSS = SlideShow.query();
 
-    Main.me(function(res) {
-        $scope.myDetails = res;
-    }, function() {
-        $rootScope.error = 'Failed to fetch details';
-    })
- 
+	$scope.goEdit = function(slideId){
+		toPages.editpage(slideId);
+		}
+	
+	$scope.goExecute = function(slideId){
+		toPages.executionpage(slideId);
+		}
+	
+	$scope.goProfile = function(){
+		toPages.profilepage();
+		}
+	
+	$scope.deleteSlideShow = function(slideId) {
+		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
+		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
+	}
+	$scope.renameSlideShow = function(slideId) {
+		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
+		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
+	}
+	$scope.createSlideShow = function() {
+		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
+		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
+	}
 }]);
 
 

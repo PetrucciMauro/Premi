@@ -45,7 +45,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 				if (res.type == false) {
 						alert(res.data)
 				} else {
-                        console.log("Main.save222");
+                        console.log(res.data);
 						$localStorage.token = res.data.token;
 						$local.path("/home");  
 				}

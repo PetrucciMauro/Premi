@@ -123,13 +123,14 @@ app.post('/register', function(req, res) {
 		    			expiresInMinutes: 1440 // expires in 24 hours
 		    		});
 					console.log(token);
-					res.json({
+					var json= JSON.stringify({
 						success: true,
 						message: 'User '+user+' registered',
 						data:user,
 						token: user.token
 					});
-					console.log(res.json.data);
+					res.end(json);
+					console.log(res.json[0].message);
 					console.log(res.json.token);
 					fs.mkdirSync(__dirname+'/files/'+user);
 					fs.mkdirSync(__dirname+'/files/'+user+'/image');

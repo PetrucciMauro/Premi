@@ -31,11 +31,11 @@ var MongoClient = require('mongodb').MongoClient;
 app.use('/', express.static("./app"));
 
 app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, x-csrf-token, Accept');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-		next();
+	res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, x-csrf-token, Accept');
+	res.setHeader('Access-Control-Allow-Credentials', true);
+	next();
 });
 
 var MongoClient = require('mongodb').MongoClient;
@@ -48,7 +48,7 @@ app.listen(port);
 console.log('Server listening at http//localhost: ' + port );
 
 process.on('uncaughtException', function(err) {
-    console.log(err);
+	console.log(err);
 });
 
 //===============
@@ -119,10 +119,18 @@ app.post('/register', function(req, res) {
 				db.collection('users').insert({'username': user, 'password': pass}, function(err, doc){
 					if(err) throw err;
 					console.dir('called insert()');
+					var token = jwt.sign(user, app.get('SuperSecret'), {
+		    			expiresInMinutes: 1440 // expires in 24 hours
+		    		});
+					console.log(token);
 					res.json({
 						success: true,
-						message: 'User '+user+' registered'
+						message: 'User '+user+' registered',
+						data:user,
+						token: user.token
 					});
+					console.log(res.json.data);
+					console.log(res.json.token);
 					fs.mkdirSync(__dirname+'/files/'+user);
 					fs.mkdirSync(__dirname+'/files/'+user+'/image');
 					fs.mkdirSync(__dirname+'/files/'+user+'/video');

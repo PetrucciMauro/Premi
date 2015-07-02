@@ -45,9 +45,10 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 				if (res.type == false) {
 						alert(res.data)
 				} else {
-                        console.log(res.data);
+                        console.log(res.data.message);
+                        console.log(res.data.token);
 						$localStorage.token = res.data.token;
-						$local.path("/home");  
+						$location.path("/home");  
 				}
 		}, function() {
 				$rootScope.error = 'Failed to signup';

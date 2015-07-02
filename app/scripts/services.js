@@ -43,10 +43,9 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 					$http({
 						method: 'POST',
 						url: baseUrl + '/register',
-						headers: {'Content-Type': 'application/json'},
 						data: JSON.stringify(formData),
 						withCredentials: true,
-						headers: {'authorization': formData.username + ':' + formData.password}
+						headers: {'Content-Type': 'application/json','authorization': formData.username + ':' + formData.password}
 					}).success(success).error(error)
     },
 				login: function(formData, success, error) {
@@ -54,10 +53,9 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 					$http({
 						method: 'POST',
 						url: baseUrl + '/authenticate',
-						headers: {'Content-Type': 'application/json'},
 						data: JSON.stringify(formData),
 						withCredentials: true,
-						headers: {'authorization': formData.username + ':' + formData.password}
+						headers: {'Content-Type': 'application/json','authorization': formData.username + ':' + formData.password}
 					}).success(success).error(error)
 				},
 				me: function(success, error) {

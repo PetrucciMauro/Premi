@@ -29,7 +29,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		}).
 		when('/profile', {
 			templateUrl: 'partials/profile.html',
-			controller: 'ProfileController'
+			controller: 'MeCtrl'
 		}).
 		when('/home', {
 			templateUrl: 'partials/home.html',

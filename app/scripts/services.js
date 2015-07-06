@@ -59,7 +59,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 					}).success(success).error(error)
 				},
 				me: function(success, error) {
-						$http.get(baseUrl + '/me').success(success).error(error)
+						$http.get(baseUrl + '/profile').success(success).error(error)
 				},
 				logout: function(success) {
 						changeUser({});

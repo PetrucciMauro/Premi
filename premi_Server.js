@@ -92,6 +92,7 @@ app.post('/authenticate', function(req, res) {
 				var json = JSON.stringify({
 					success: true,
 					message: 'Enjoy your token!',
+					token: token
 				});
 				res.end(json);
 			}

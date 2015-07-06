@@ -26,8 +26,9 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 				if (res.type == false) {
 						alert(res.data)    
 				} else {
-						$localStorage.token = res.data.token;
-						$local.path("/home");    
+					    console.log(res)
+						$localStorage.token = res.token;
+						$location.path("/home");    
 				}
 		}, function() {
 				$rootScope.error = 'Failed to login';
@@ -55,13 +56,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		})
 	};
 
-	$scope.me = function() {
-		Main.me(function(res) {
-				$scope.myDetails = res;
-		}, function() {
-				$rootScope.error = 'Failed to fetch details';
-		})
-	};
+
 
 	$scope.logout = function() {
 		$scope.welcome = '';
@@ -85,11 +80,9 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 }])
 
 premiControllers.controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Main', function($rootScope, $scope, $location, Main) {
-	Main.me(function(res) {
-			$scope.myDetails = res;
-		}, function() {
-			$rootScope.error = 'Failed to fetch details';
-		})
+	       function() {
+			$scope.myDetails = $localStorage;
+
 	}])
 
 

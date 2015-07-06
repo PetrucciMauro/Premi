@@ -79,10 +79,13 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 	};
 }])
 
-premiControllers.controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Main', function($rootScope, $scope, $location, Main) {
-	       function() {
-			$scope.myDetails = $localStorage;
-
+premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$location','$localStorage', 'Main', function($rootScope, $scope, $location,$localStorage, Main) {
+	       
+        Main.me(function(res) {
+            $scope.myDetails = res;
+        }, function() {
+            $rootScope.error = 'Failed to fetch details';
+        })
 	}])
 
 

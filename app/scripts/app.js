@@ -29,7 +29,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		}).
 		when('/profile', {
 			templateUrl: 'partials/profile.html',
-			controller: 'MeCtrl'
+			controller: 'ProfileController'
 		}).
 		when('/home', {
 			templateUrl: 'partials/home.html',
@@ -38,6 +38,10 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		otherwise({
 			redirectTo: '/'
 		});
+
+
+
+		
 		
 //	$httpProvider.defaults.useXDomain = true;
 //  $httpProvider.defaults.withCredentials = true;

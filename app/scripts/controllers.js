@@ -46,9 +46,9 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 				if (res.type == false) {
 						alert(res.data)
 				} else {
-                        console.log(res.data.message);
-                        console.log(res.data.token);
-						$localStorage.token = res.data.token;
+                        console.log(res.message);
+                        console.log(res.token);
+						$localStorage.token = res.token;
 						$location.path("/home");  
 				}
 		}, function() {

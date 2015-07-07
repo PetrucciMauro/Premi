@@ -127,8 +127,7 @@ app.post('/register', function(req, res) {
 					res.json({
 						success: true,
 						message: 'User '+user+' registered',
-						data:user,
-						token: user.token
+						token: token
 					});
 					console.log(json.message);
 					console.log(res.json.token);

@@ -68,6 +68,15 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 						delete $localStorage.token;
 						success();
 				}
+				changepassword: function(success,error){
+					$http({
+						method: 'POST',
+						url: baseUrl + '/changepassword',
+						data: JSON.stringify(formData),
+						withCredentials: true,
+						headers: {'Content-Type': 'application/json','authorization': formData.username + ':' + formData.password}
+					}).success(success).error(error)
+				}
 		};
 }
 ]);

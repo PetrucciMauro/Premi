@@ -38,8 +38,8 @@
 		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
 		<!--The right side-->
 		<span>
-				<md-button aria-label="First Button" ng-href="#/login">Accedi</md-button>
-				<md-button aria-label="Second Button" ng-href="#/registrazione">Registrati</md-button>
+				<md-button aria-label="First Button" ng-href="#/login" ng-show="currentUser == null">Accedi</md-button>
+				<md-button aria-label="Second Button" ng-href="#/registrazione" ng-show="currentUser == null">Registrati</md-button>
 		</span>
 		
 		<md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">

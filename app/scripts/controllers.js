@@ -86,6 +86,30 @@ premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$loca
         }, function() {
             $rootScope.error = 'Failed to fetch details';
         })
+
+	$scope.changepassword = function() {
+		var formData = {
+			password: $scope.user.password,
+			newpassword: $scope.user.newpassword
+		}
+		console.log(formData);
+		Main.changepassword(formData, function(res) {
+				console.log("Main.editPassword");
+				if (res.type == false) {
+						alert(res.data)
+				} else {
+                        console.log(res.message);
+                        console.log(res.token);
+						$localStorage.token = res.token;
+						$location.path("/home");  
+				}
+		}, function() {
+				$rootScope.error = 'Failed to signup';
+		})
+	};
+        /*$scope.uploadMedia(){
+
+        }*/
 	}])
 
 

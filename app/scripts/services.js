@@ -36,6 +36,8 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 		}
 
 		var currentUser = getUserFromToken();
+		console.log("ciaone");
+		console.log(currentUser);
 
 		return {
 				save: function(formData, success, error) {

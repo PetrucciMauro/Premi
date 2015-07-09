@@ -26,7 +26,9 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 		}
 
 		function getUserFromToken() {
+
 				var token = $localStorage.token;
+				console.log(token);
 				var user = {};
 				if (typeof token !== 'undefined') {
 						var encoded = token.split('.')[1];
@@ -37,7 +39,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 
 		var currentUser = getUserFromToken();
 		console.log("ciaone");
-		console.log(currentUser);
+		console.log(currentUser.user);
 
 		return {
 				save: function(formData, success, error) {
@@ -74,7 +76,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 						url: baseUrl + '/changepassword',
 						data: JSON.stringify(formData),
 						withCredentials: true,
-						headers: {'Content-Type': 'application/json','authorization': getUserFromToken() + ':' + formData.password + ':' + formData.newpassword}
+						headers: {'Content-Type': 'application/json','authorization': currentUser.user + ':' + formData.password + ':' + formData.newpassword}
 					}).success(success).error(error)
 				}
 		};

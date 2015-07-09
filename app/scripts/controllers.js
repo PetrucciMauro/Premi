@@ -107,9 +107,10 @@ premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$loca
 				$rootScope.error = 'Failed to signup';
 		})
 	};
-        /*$scope.uploadMedia(){
+        $scope.uploadMedia = function() {
 
-        }*/
+
+        };
 	}])
 
 

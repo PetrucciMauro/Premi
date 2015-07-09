@@ -51,18 +51,16 @@
     <div>
         <md-button class="md-raised md-cornered" ng-click="uploadElement = !uploadElement">Upload Elemento</md-button>
         <div ng-show="uploadElement">
-            <form ng-submit="uploadElement()">
-                <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
-
-                <md-input-container>
-                <label>Title</label>
-                <input ng-model="user.title">
-            </md-input-container>
-            <md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
-        </div>
-    </md-whiteframe>
-</form>
+                <form id="upload_form" enctype="multipart/form-data" method="POST" action="http://localhost:8081/private/api/files/image/provaetta">
+                    <input type="file" name="immagine" id="file_form"/>
+                    <input type="submit" value="Upload" />
+                </form>
+            </div>
+        </md-whiteframe>
+    
 </div>
+
+
 <md-content>
 </div>
 </div>

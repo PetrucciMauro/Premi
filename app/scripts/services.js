@@ -110,7 +110,7 @@ premiService.factory('toPages', ['$resource', '$location',
 				})
 			.success(function(res){$location.path("/private/home")})
 			.error(function(){$location.path("/registrazione")})
-			}
+			
 			},
 			editpage: function(slideId){
 				$location.path("/edit")

@@ -2,14 +2,7 @@
     <div class="col-lg-12">
        <md-content layout-padding style="height: 600px;padding: 24px;">
 
-       <div class="panel-heading">
-        <strong>Your Details</strong>
-    </div>
-    <div class="panel-body">
-        <p>{{myDetails.user}}</p>
-        <p>{{myDetails.password}}</p>
-        <p>{{myDetails.token}}</p> 
-        <div>
+       <div>
 
 
 
@@ -25,13 +18,12 @@
           <md-input-container>
           <label>Email</label>
           <input ng-model="user.email" type="email">
-
-
       </md-input-container>
       <md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
   </form>
-</div>
 </md-whiteframe>
+</div>
+
 </div>
 
 
@@ -43,13 +35,13 @@
             <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
 
             <md-input-container>
-                <label>Password Attuale</label>
-                <input ng-model="user.password">
-            </md-input-container>
-            <md-input-container>
-                <label>Nuova Password</label>
-                <input ng-model="user.newpassword">
-             </md-input-container>
+            <label>Password Attuale</label>
+            <input ng-model="user.password">
+        </md-input-container>
+        <md-input-container>
+        <label>Nuova Password</label>
+        <input ng-model="user.newpassword">
+    </md-input-container>
     <md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
 </div>
 </md-whiteframe>

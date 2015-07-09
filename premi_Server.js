@@ -151,6 +151,7 @@ app.post('/register', function(req, res) {
 
 app.post('/changepassword', function(req, res) {
 	var header=req.headers['authorization']||'null';
+	console.dir(req.headers['authorization']);
 	parts=header.split(/:/);
 	user=parts[0];
 	pass=parts[1];

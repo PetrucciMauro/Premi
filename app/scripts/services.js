@@ -67,14 +67,14 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 						changeUser({});
 						delete $localStorage.token;
 						success();
-				}
-				changepassword: function(success,error){
+				},
+				changepassword: function(formData,success,error){
 					$http({
 						method: 'POST',
 						url: baseUrl + '/changepassword',
 						data: JSON.stringify(formData),
 						withCredentials: true,
-						headers: {'Content-Type': 'application/json','authorization': formData.username + ':' + formData.password}
+						headers: {'Content-Type': 'application/json','authorization': getUserFromToken() + ':' + formData.password + ':' + formData.newpassword}
 					}).success(success).error(error)
 				}
 		};

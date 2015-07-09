@@ -85,7 +85,7 @@ premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$loca
             $scope.myDetails = res;
         }, function() {
             $rootScope.error = 'Failed to fetch details';
-        })
+        });
 
 	$scope.changepassword = function() {
 		var formData = {

@@ -26,7 +26,7 @@
 	<script src="scripts/slideshowelement.js"></script>
 	<script src="scripts/inserteditremove.js"></script>
   <script src="scripts/command.js"></script>
-  <script src="scripts/upload.js"></script>
+
 	
 	
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
@@ -39,8 +39,10 @@
 		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
 		<!--The right side-->
 		<span>
-				<md-button aria-label="First Button" ng-href="#/login" ng-show="currentUser == null">Accedi</md-button>
-				<md-button aria-label="Second Button" ng-href="#/registrazione" ng-show="currentUser == null">Registrati</md-button>
+			<p>{{currentUser.user}}</p>
+			<md-button aria-label="First Button" ng-href="#/login" ng-show="currentUser == null">Accedi</md-button>
+			<md-button aria-label="Second Button" ng-href="#/registrazione" ng-show="currentUser == null">Registrati</md-button>
+			<md-button aria-label="third Button" ng-href="#/" ng-show="currentUser == null" ng-click= "logout()">Logout</md-button>
 		</span>
 		
 		<md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">

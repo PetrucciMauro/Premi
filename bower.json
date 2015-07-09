@@ -12,7 +12,8 @@
 		"angular-resource": "1.3.x",
     "angular-animate": "1.3.x",
     "angular-aria": "1.3.x",
-    "angular-material": "latest"
+    "angular-material": "latest",
+    "ng-file-upload": "latest"
   },
   "devDependencies": {
     "angular-material": "latest"

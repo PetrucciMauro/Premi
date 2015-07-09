@@ -94,7 +94,7 @@ premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$loca
 		}
 		console.log(formData);
 		Main.changepassword(formData, function(res) {
-				console.log("Main.editPassword");
+				console.log("Main.changePassword");
 				if (res.type == false) {
 						alert(res.data)
 				} else {
@@ -107,14 +107,11 @@ premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$loca
 				$rootScope.error = 'Failed to signup';
 		})
 	};
-        $scope.uploadMedia = function() {
 
-
-        };
 	}])
 
 
-premiControllers.controller('HomeController',['$rootScope', '$scope', '$location', 'Main', 'toPages', function($rootScope, $scope, $location, Main, toPages) {
+premiControllers.controller('HomeController',['$rootScope', '$scope', '$location', 'Main', 'toPages', function($rootScope, $scope, $location,  Main, toPages) {
 	//$scope.allSS = SlideShow.query();
 
 	$scope.goEdit = function(slideId){

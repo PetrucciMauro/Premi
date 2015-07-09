@@ -197,7 +197,7 @@ app.use('/private/htdocs', express.static('private_html'));
 //==================
 
 var privateRoutes = express.Router();
-app.use('/private', privateRoutes);
+app.post('/private*', privateRoutes);
 
 privateRoutes.use(function(req, res, next) {
 	console.log("privateRoutes verifica");

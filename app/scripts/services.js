@@ -90,8 +90,8 @@ premiService.factory('SlideShow', ['$resource',
     });*/
   }]);
 
-premiService.factory('toPages', ['$resource', '$location',
-  function($resource, $location){
+premiService.factory('toPages', ['$resource', '$location','$http','$localStorage',
+  function($resource, $location,$http,$localStorage){
     return {
 			homepage: function(){
 		//	$location.path("private/home")

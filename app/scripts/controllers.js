@@ -2,7 +2,7 @@
 
 var premiControllers = angular.module('premiControllers', ['premiService']);
 
-premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main', function($rootScope, $scope, $location, $localStorage,Main) {
+premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main','toPages', function($rootScope, $scope, $location, $localStorage,Main,toPages) {
 	$scope.master = {};
 
 	$scope.update = function(user) {
@@ -46,10 +46,10 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 				if (res.type == false) {
 						alert(res.data)
 				} else {
-                        console.log(res.message);
-                        console.log(res.token);
+            console.log(res.message);
+            console.log(res.token);
 						$localStorage.token = res.token;
-						$location.path("/home");  
+						toPages.homepage();
 				}
 		}, function() {
 				$rootScope.error = 'Failed to signup';

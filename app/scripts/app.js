@@ -15,10 +15,6 @@ premiApp.run(function($log){
 
 premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$httpProvider){
   $routeProvider.
-		when('/', {
-			templateUrl: 'partials/first.html',
-			controller: ''
-		}).
 		when('/login', {
 			templateUrl: 'partials/login.html',
 			controller: 'premiAuthenticationController'
@@ -36,35 +32,32 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			controller: 'HomeController'
 		}).
 		otherwise({
-			redirectTo: '/'
+			redirectTo: '/login'
 		});
 
 
-    /*$httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
-            return {
-                'request': function (config) {
-                	console.log(config.headers);
-                    config.headers = config.headers || {};
-                    if ($localStorage.token) {
-                    	console.log(config.headers);
-                    	console.log(config.headers.Authorization);
-                        config.headers.Authorization = 'Bearer ' + $localStorage.token;
-                        console.log(config.headers.Authorization);
-                        console.log(config);
-                    }
-                    return config;
-                },
-                'responseError': function(response) {
-                    if(response.status === 401 || response.status === 403) {
-                        $location.path('/');
-                    }
-                    return $q.reject(response);
-                }
-            };
-        }]);*/
-
-
-		
+$httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
+  return {
+		'request': function (config) {
+				console.log(config.headers);
+		    config.headers = config.headers || {};
+		    if ($localStorage.token) {
+		    	console.log(config.headers);
+		    	console.log(config.headers.Authorization);
+	        config.headers.Authorization = $localStorage.token;
+	        console.log(config.headers.Authorization);
+	        console.log(config);
+		    }
+		    return config;
+      },
+    'responseError': function(response) {
+        if(response.status === 401 || response.status === 403) {
+          $location.path('/');
+        }
+        return $q.reject(response);
+      }
+  };
+}]);
 		
 //	$httpProvider.defaults.useXDomain = true;
 //  $httpProvider.defaults.withCredentials = true;
@@ -82,7 +75,4 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		.primaryPalette('brown')
 		.accentPalette('red');
 }); 
-
-
-
 

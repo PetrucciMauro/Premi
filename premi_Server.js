@@ -200,28 +200,29 @@ var privateRoutes = express.Router();
 app.use('/private', privateRoutes);
 
 privateRoutes.use(function(req, res, next) {
-	
+	console.log("privateRoutes verifica");
+	console.log(req.headers);
 	var token=req.headers['authorization'];
 	if (token) {
-		
-																		// verifies secret and checks exp
-																		jwt.verify(token, app.get('SuperSecret'), function(err, decoded) {
-																			if (err) {
-																				res.status(400);
-																				return res.json({ success: false, message: 'Failed to authenticate token' });
-																			} else {
-																													// save the token
-																													req.user = decoded.user;
-																													next();
-																												}
-																											});
-																	} else {
-																		return res.status(403).send({
-																			success: false,
-																			message: 'No token provided.'
-																		});
-																	}
-																});
+		// verifies secret and checks exp
+		jwt.verify(token, app.get('SuperSecret'), 
+			function(err, decoded) {
+				if (err) {
+					res.status(400);
+					return res.json({ success: false, message: 'Failed to authenticate token' });
+				} else {
+						// save the token
+						req.user = decoded.user;
+						next();
+					}
+		});
+	} else {
+		return res.status(403).send({
+			success: false,
+			message: 'No token provided.'
+		});
+	}
+});
 
 
 //==================

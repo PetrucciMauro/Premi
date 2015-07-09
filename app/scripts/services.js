@@ -94,7 +94,23 @@ premiService.factory('toPages', ['$resource', '$location',
   function($resource, $location){
     return {
 			homepage: function(){
-				$location.path("/home")
+		//	$location.path("private/home")
+			/*
+				var config = {headers: {
+            'Authorization': $localStorage.token,
+            'Accept': 'application/json;odata=verbose'
+        }
+    };
+    	$http.get('http://sub.lvh.me:8081/private/home',config)*/
+				$http({
+					method: 'POST',
+					url:'http://sub.lvh.me:8081/private/home',
+					withCredentials: true,
+					headers: {'Content-Type': 'application/json','authorization': $localStorage.token}
+				})
+			.success(function(res){$location.path("/private/home")})
+			.error(function(){$location.path("/registrazione")})
+			}
 			},
 			editpage: function(slideId){
 				$location.path("/edit")
@@ -109,6 +125,4 @@ premiService.factory('toPages', ['$resource', '$location',
 				$location.path("/profile")
 			}
     }
-
-    
   }]);

@@ -23,11 +23,11 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			templateUrl: 'partials/registrazione.html',
 			controller: 'premiAuthenticationController'
 		}).
-		when('/profile', {
+		when('/private/profile', {
 			templateUrl: 'partials/profile.html',
 			controller: 'ProfileController'
 		}).
-		when('/home', {
+		when('/private/home', {
 			templateUrl: 'partials/home.html',
 			controller: 'HomeController'
 		}).
@@ -38,21 +38,19 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 
 $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
   return {
-		'request': function (config) {
-				console.log(config.headers);
-		    config.headers = config.headers || {};
-		    if ($localStorage.token) {
-		    	console.log(config.headers);
-		    	console.log(config.headers.Authorization);
+	'request': function (config) {
+	    config.headers = config.headers || {};
+	    if (angular.isObject($localStorage.token)) {
+	    	//console.log("Esiste token:");
+	    	//console.log(typeof($localStorage.token));
 	        config.headers.Authorization = $localStorage.token;
-	        console.log(config.headers.Authorization);
-	        console.log(config);
-		    }
-		    return config;
+	       // console.log($localStorage.token);
+	    }
+	    return config;
       },
     'responseError': function(response) {
         if(response.status === 401 || response.status === 403) {
-          $location.path('/');
+          $location.path('/login');
         }
         return $q.reject(response);
       }

@@ -76,6 +76,7 @@ app.post('/authenticate', function(req, res) {
 		db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
 			if(err) throw err;
 			if(doc == null){
+				consolo.log("null");
 				db.close();
 				res.status(400);
 				res.json({
@@ -84,11 +85,11 @@ app.post('/authenticate', function(req, res) {
 				});
 			}
 			else{
+				console.log("logg");
 				var token = jwt.sign({user: user}, app.get('SuperSecret'), {
-                                                                                expiresInMinutes: 1440 // expires in 24 hours
-                                                                            });
-				
-				res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
+               expiresInMinutes: 1440 // expires in 24 hours
+            });
+				//res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
 				var json = JSON.stringify({
 					success: true,
 					message: 'Enjoy your token!',
@@ -108,9 +109,6 @@ app.post('/register', function(req, res) {
 	parts=header.split(/:/);
 	user=parts[0];
 	pass=parts[1];
-	console.log(header);
-	console.log(req.headers);
-	console.log("register");
 
 	MongoClient.connect(app.get('database'), function(err, db) {
 		if(err) throw err;
@@ -123,14 +121,11 @@ app.post('/register', function(req, res) {
 					var token = jwt.sign(user, app.get('SuperSecret'), {
 		    			expiresInMinutes: 1440 // expires in 24 hours
 		    		});
-					console.log(token);
 					res.json({
 						success: true,
 						message: 'User '+user+' registered',
 						token: token
 					});
-					console.log(json.message);
-					console.log(res.json.token);
 					fs.mkdirSync(__dirname+'/files/'+user);
 					fs.mkdirSync(__dirname+'/files/'+user+'/image');
 					fs.mkdirSync(__dirname+'/files/'+user+'/video');
@@ -186,37 +181,47 @@ app.post('/changepassword', function(req, res) {
 //==================
 // htmlpages_server
 //==================
-
+/*
 app.use('/publicpages', express.static('public_html'));
 
 app.use('/private/htdocs', express.static('private_html'));
-
+*/
 
 //==================
 // token_middleware
 //==================
 
 var privateRoutes = express.Router();
+app.get('/private*', privateRoutes);
 app.post('/private*', privateRoutes);
+
 
 privateRoutes.use(function(req, res, next) {
 	console.log("privateRoutes verifica");
 	console.log(req.headers);
 	var token=req.headers['authorization'];
 	if (token) {
+		console.log("Entrato if(token)");
 		// verifies secret and checks exp
 		jwt.verify(token, app.get('SuperSecret'), 
 			function(err, decoded) {
 				if (err) {
+					console.log("Errore token non autenticato");
 					res.status(400);
 					return res.json({ success: false, message: 'Failed to authenticate token' });
 				} else {
-						// save the token
-						req.user = decoded.user;
-						next();
+					// save the token
+					console.log("OK token salvato");
+					//res.user = decoded.user; // era messo req.user... perché?
+					res.status(200).send({
+						success:true,
+						message: 'Il token è verificato'
+					});
+					next();
 					}
 		});
 	} else {
+		console.log("NO OK il token non esiste");
 		return res.status(403).send({
 			success: false,
 			message: 'No token provided.'

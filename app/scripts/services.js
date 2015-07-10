@@ -68,6 +68,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 				logout: function(success) {
 						changeUser({});
 						delete $localStorage.token;
+						
 						success();
 				},
 				changepassword: function(formData,success,error){

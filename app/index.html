@@ -40,9 +40,9 @@
 		<!--The right side-->
 		<span>
 			<p>{{currentUser.user}}</p>
-			<md-button aria-label="First Button" ng-href="#/login" ng-show="currentUser == null">Accedi</md-button>
-			<md-button aria-label="Second Button" ng-href="#/registrazione" ng-show="currentUser == null">Registrati</md-button>
-			<md-button aria-label="third Button" ng-href="#/" ng-show="currentUser == null" ng-click= "logout()">Logout</md-button>
+			<md-button aria-label="First Button" ng-href="#/login" data-ng-hide="token">Accedi</md-button>
+			<md-button aria-label="Second Button" ng-href="#/registrazione" data-ng-hide="token">Registrati</md-button>
+			<md-button aria-label="Third Button"  ng-show="currentUser == null" data-ng-show="token" ng-click="logout()">Logout</md-button>
 		</span>
 		
 		<md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">

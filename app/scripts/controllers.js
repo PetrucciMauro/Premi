@@ -17,21 +17,21 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 
 	$scope.login = function() {
 		var formData = {
-				username: $scope.user.username,
-				password: $scope.user.password
+			username: $scope.user.username,
+			password: $scope.user.password
 		}
 
 		Main.login(formData, function(res) {
 			console.log("Main.login");
-				if (res.type == false) {
-						alert(res.data)    
-				} else {
-					    console.log(res)
-						$localStorage.token = res.token;
-						$location.path("/home");    
-				}
+			if (res.type == false) {
+				alert(res.data)    
+			} else {
+				console.log(res)
+				$localStorage.token = res.token;
+				$location.path("/home");    
+			}
 		}, function() {
-				$rootScope.error = 'Failed to login';
+			$rootScope.error = 'Failed to login';
 		})
 	};
 
@@ -42,29 +42,30 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		}
 		console.log(formData);
 		Main.save(formData, function(res) {
-				console.log("Main.save");
-				if (res.type == false) {
-						alert(res.data)
-				} else {
-            console.log(res.message);
-            console.log(res.token);
-						$localStorage.token = res.token;
-						toPages.homepage();
-				}
+			console.log("Main.save");
+			if (res.type == false) {
+				alert(res.data)
+			} else {
+				console.log(res.message);
+				console.log(res.token);
+				$localStorage.token = res.token;
+				toPages.homepage();
+			}
 		}, function() {
-				$rootScope.error = 'Failed to signup';
+			$rootScope.error = 'Failed to signup';
 		})
 	};
 
 
 
 	$scope.logout = function() {
-		$scope.welcome = '';
-		$scope.message = '';
-		$scope.isAuthenticated = false;
-		delete $window.sessionStorage.token;
+		Main.logout(function() {
+			window.location = "/"
+		}, function() {
+			alert("Failed to logout!");
+		});
 	};
-	
+
 	$scope.token = $localStorage.token;
 
 	$scope.grade = function() {

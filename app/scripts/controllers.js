@@ -28,7 +28,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 			} else {
 				console.log(res)
 				$localStorage.token = res.token;
-				$location.path("/home");    
+				$location.path("/private/home");    
 			}
 		}, function() {
 			$rootScope.error = 'Failed to login';

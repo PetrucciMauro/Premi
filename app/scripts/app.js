@@ -39,13 +39,16 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
   return {
 	'request': function (config) {
+		//viene richiamato più volte , non so perchè
 	    config.headers = config.headers || {};
-	    if (angular.isObject($localStorage.token)) {
-	    	//console.log("Esiste token:");
+	    if ($localStorage.token) {
+	    	console.log("Esiste token:");
 	    	//console.log(typeof($localStorage.token));
-	        config.headers.Authorization = $localStorage.token;
-	       // console.log($localStorage.token);
+	        config.headers.Authorization =$localStorage.token;
+	        console.log($localStorage.token);
 	    }
+	    else
+	    	{ console.log("dio");}
 	    return config;
       },
     'responseError': function(response) {
@@ -54,6 +57,7 @@ $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q
         }
         return $q.reject(response);
       }
+      
   };
 }]);
 		

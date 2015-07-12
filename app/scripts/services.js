@@ -68,7 +68,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 	function getUserFromToken() {
 
 				var token = $localStorage.token;
-				console.log(token);
+				//console.log(token);
 				var user = {};
 				if (typeof token !== 'undefined') {
 						
@@ -106,11 +106,20 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 				me: function(success, error) {
 						$http.get(baseUrl + '/private').success(success).error(error)
 				},
-				logout: function(success) {
-                changeUser({});
-                $localStorage.token= "";
-                delete $localStorage.token;
-                success();
+				logout: function(success,error) {
+              		 // changeUser({});
+              		 if($localStorage.token){
+              		 	console.log("Logout in corso...");
+              		 	delete $localStorage.token;
+              		 	console.log($localStorage.token);
+              		 	if(!$localStorage.token)
+	                		success();
+	                	else
+	                		error();
+	                	}
+              		 else
+              		 	console.log("Nessun token trovato");
+	                
 				},
 				changepassword: function(formData,success,error){
 					$http({

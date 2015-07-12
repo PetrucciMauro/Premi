@@ -28,7 +28,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 			} else {
 				console.log(res)
 				$localStorage.token = res.token;
-				$location.path("/private/home");    
+				toPages.homepage(); 
 			}
 		}, function() {
 			$rootScope.error = 'Failed to login';
@@ -60,8 +60,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 
 	$scope.logout = function() {
 		Main.logout(function() {
-			$location.path = 'http://sub.lvh.me:8081';
-            window.location.reload();
+			window.location = "/"
 		}, function() {
 			alert("Failed to logout!");
 		});

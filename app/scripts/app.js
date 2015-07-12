@@ -42,11 +42,11 @@ $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q
 		//viene richiamato più volte , non so perchè
 	    config.headers = config.headers || {};
 	    if ($localStorage.token) {
-	    	console.log("Esiste token:");
+	    	//console.log("Esiste token:");
 	    	//console.log(typeof($localStorage.token));
 	        config.headers.authorization =  $localStorage.token;
 	        
-	        console.log($localStorage.token);
+	        //console.log($localStorage.token);
 	    }
 	    else
 	    	{ console.log("token non definito ");}

@@ -8,39 +8,80 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 				angular.extend(currentUser, user);
 		}
 
-		function urlBase64Decode(str) {
-				var output = str.replace('-', '+').replace('_', '/');
-				switch (output.length % 4) {
-						case 0:
-								break;
-						case 2:
-								output += '==';
-								break;
-						case 3:
-								output += '=';
-								break;
-						default:
-								throw 'Illegal base64url string!';
-				}
-				return window.atob(output);
-		}
+/********************************************** FUNZIONI PER IL JWT *************************************************************************************/
+    function decodeToken(token) {
+      var parts = token.split('.');
 
-		function getUserFromToken() {
+      if (parts.length !== 3) {
+        throw new Error('JWT must have 3 parts');
+      }
+
+      var decoded = urlBase64Decode(parts[1]);
+      if (!decoded) {
+        throw new Error('Cannot decode the token');
+      }
+
+      return JSON.parse(decoded);
+    }
+
+
+      function urlBase64Decode (str) {
+      var output = str.replace(/-/g, '+').replace(/_/g, '/');
+      switch (output.length % 4) {
+        case 0: { break; }
+        case 2: { output += '=='; break; }
+        case 3: { output += '='; break; }
+        default: {
+          throw 'Illegal base64url string!';
+        }
+      }
+      return decodeURIComponent(escape(window.atob(output))); //polifyll https://github.com/davidchambers/Base64.js
+    }
+
+
+    function getTokenExpirationDate (token) {
+      var decoded;
+      decoded = this.decodeToken(token);
+
+      if(typeof decoded.exp === "undefined") {
+        return null;
+      }
+
+      var d = new Date(0); // The 0 here is the key, which sets the date to the epoch
+      d.setUTCSeconds(decoded.exp);
+
+      return d;
+    };
+
+    function isTokenExpired (token, offsetSeconds) {
+      var d = this.getTokenExpirationDate(token);
+      offsetSeconds = offsetSeconds || 0;
+      if (d === null) {
+        return false;
+      }
+
+      // Token expired?
+      return !(d.valueOf() > (new Date().valueOf() + (offsetSeconds * 1000)));
+    };
+  
+
+	function getUserFromToken() {
 
 				var token = $localStorage.token;
 				console.log(token);
 				var user = {};
 				if (typeof token !== 'undefined') {
-						var encoded = token.split('.')[1];
-						user = JSON.parse(urlBase64Decode(encoded));
+						
+						user = decodeToken(token);
 				}
 				return user;
 		}
 
 		var currentUser = getUserFromToken();
-		console.log("ciaone");
+		console.log("L'utente collegato è ");
 		console.log(currentUser.user);
 
+/***************************************************************************************************************************/
 		return {
 				save: function(formData, success, error) {
 					//$http.post(baseUrl + '/register', formData).success(success).error(error)

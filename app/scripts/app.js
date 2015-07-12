@@ -44,7 +44,8 @@ $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q
 	    if ($localStorage.token) {
 	    	console.log("Esiste token:");
 	    	//console.log(typeof($localStorage.token));
-	        config.headers.Authorization =$localStorage.token;
+	        config.headers.authorization =  $localStorage.token;
+	        console.log(config.headers.authorization);
 	        console.log($localStorage.token);
 	    }
 	    else

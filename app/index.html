@@ -42,7 +42,7 @@
 		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
 		<!--The right side-->
 		<span>
-			<p>{{currentUser.user}}</p>
+			<p>{{user}}</p>
 			<md-button aria-label="First Button" ng-href="#/login" data-ng-hide="token">Accedi</md-button>
 			<md-button aria-label="Second Button" ng-href="#/registrazione" data-ng-hide="token">Registrati</md-button>
 			<md-button aria-label="Third Button"   data-ng-show="token" ng-click="logout()">Logout</md-button>

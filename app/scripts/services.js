@@ -107,15 +107,10 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 						$http.get(baseUrl + '/private').success(success).error(error)
 				},
 				logout: function(success) {
-						changeUser({});
-						                $localStorage.$reset();
-
-                delete $http.defaults.headers.common['Authorization'];
-
-                // tell the system to save immediately
-                $localStorage.$save();
-
-						success();
+                changeUser({});
+                $localStorage.token= "";
+                delete $localStorage.token;
+                success();
 				},
 				changepassword: function(formData,success,error){
 					$http({
@@ -169,16 +164,7 @@ premiService.factory('toPages', ['$resource', '$location','$http','$localStorage
 				$location.path("/execution")
 			},
 			profilepage: function() {
-				console.log("DIOMERDA");
-				console.log($localStorage.token);
-		//	$location.path("private/home")
-			/*
-				var config = {headers: {
-            'Authorization': $localStorage.token,
-            'Accept': 'application/json;odata=verbose'
-        }
-    };
-    	$http.get('http://sub.lvh.me:8081/private/home',config)*/
+	
 				$http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/profile',

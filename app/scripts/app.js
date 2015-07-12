@@ -45,11 +45,11 @@ $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q
 	    	console.log("Esiste token:");
 	    	//console.log(typeof($localStorage.token));
 	        config.headers.authorization =  $localStorage.token;
-	        console.log(config.headers.authorization);
+	        
 	        console.log($localStorage.token);
 	    }
 	    else
-	    	{ console.log("dio");}
+	    	{ console.log("token non definito ");}
 	    return config;
       },
     'responseError': function(response) {

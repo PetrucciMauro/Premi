@@ -60,7 +60,8 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 
 	$scope.logout = function() {
 		Main.logout(function() {
-			window.location = "/"
+			$location.path = 'http://sub.lvh.me:8081';
+            window.location.reload();
 		}, function() {
 			alert("Failed to logout!");
 		});

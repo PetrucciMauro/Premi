@@ -36,8 +36,8 @@
 
 </head>
   <body n layout="column">
-
-		<md-toolbar layout="row" layout-align="space-between center">
+        <div data-ng-controller="premiAuthenticationController">
+		<md-toolbar layout="row" layout-align="space-between center" >
 				<!--The left side-->
 		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
 		<!--The right side-->
@@ -52,7 +52,7 @@
 			<md-icon md-svg-icon="menu" ></md-icon>
 		</md-button>
 		</md-toolbar>
-
+        </div>
 		<div ng-view></div>
 
 	</body>

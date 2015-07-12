@@ -159,7 +159,7 @@ premiService.factory('toPages', ['$resource', '$location','$http','$localStorage
 					withCredentials: true,
 					headers: {'Content-Type': 'application/json','authorization': $localStorage.token}
 				})
-			.success(function(res){$location.path("/private/home")})
+			.success(function(res){window.location = "/"})
 			.error(function(){$location.path("/registrazione")})
 			
 			},

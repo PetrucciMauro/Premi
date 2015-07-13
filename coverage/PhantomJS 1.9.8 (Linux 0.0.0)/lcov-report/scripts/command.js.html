@@ -1,0 +1,1545 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for scripts/command.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">scripts/command.js</span></h1>
+    <h2>
+        Statements: <span class="metric">8.36% <small>(24 / 287)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 48)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 75)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">8.36% <small>(24 / 287)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">scripts/</a> &#187; command.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+&nbsp;
+var invokerInstace={};
+var invokerInstanced=false;
+var invoker=<span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >    if(!invokerInstanced){</span>
+<span class="cstat-no" title="statement not covered" >    var public={};</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.undoStack=new Array();</span>
+<span class="cstat-no" title="statement not covered" >    private.redoStack=new Array();</span>
+<span class="cstat-no" title="statement not covered" >    public.execute=<span class="fstat-no" title="function not covered" >function(com){</span></span>
+<span class="cstat-no" title="statement not covered" >        com.doAction();</span>
+<span class="cstat-no" title="statement not covered" >        private.undoStack.push(com);</span>
+<span class="cstat-no" title="statement not covered" >        private.redoStack=[];</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.undo=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        var temp=private.undoStack.pop();</span>
+<span class="cstat-no" title="statement not covered" >        temp.undoAction();</span>
+<span class="cstat-no" title="statement not covered" >        private.redoStack.push(temp);</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.redo=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        if(private.redoStack.length&gt;0){</span>
+<span class="cstat-no" title="statement not covered" >        var temp=private.redoStack.pop();</span>
+<span class="cstat-no" title="statement not covered" >        temp.doAction();</span>
+<span class="cstat-no" title="statement not covered" >        private.undoStack.push(temp);</span>
+    }
+    };
+<span class="cstat-no" title="statement not covered" >    public.getUndoStack=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        var notEmpty=false;</span>
+<span class="cstat-no" title="statement not covered" >        if (private.undoStack.length&gt;0){</span>
+<span class="cstat-no" title="statement not covered" >            notEmpty=true;</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return notEmpty;</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.getRedoStack=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        var notEmpty=false;</span>
+<span class="cstat-no" title="statement not covered" >        if (private.redoStack.length&gt;0){</span>
+<span class="cstat-no" title="statement not covered" >            notEmpty=true;</span>
+        }
+<span class="cstat-no" title="statement not covered" >        return notEmpty;</span>
+    };
+    
+<span class="cstat-no" title="statement not covered" >    invokerInstanced=true;</span>
+<span class="cstat-no" title="statement not covered" >    invokerInstance=public;</span>
+    }
+<span class="cstat-no" title="statement not covered" >    return invokerInstance;</span>
+};
+&nbsp;
+var abstractCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public={};</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >    private.xIndex=spec.xIndex;</span>
+<span class="cstat-no" title="statement not covered" >    private.yIndex=spec.yIndex;</span>
+<span class="cstat-no" title="statement not covered" >    private.rotation=spec.rotation;</span>
+<span class="cstat-no" title="statement not covered" >    private.height=spec.height;</span>
+<span class="cstat-no" title="statement not covered" >    private.width=spec.width;</span>
+<span class="cstat-no" title="statement not covered" >    private.executed=0;</span>
+<span class="cstat-no" title="statement not covered" >    private.enabler=insertEditRemove();</span>
+<span class="cstat-no" title="statement not covered" >    public.setId=<span class="fstat-no" title="function not covered" >function(id){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.id=id;</span>
+    };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    public.setExecuted=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.executed=1;</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.getExecuted=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        return private.executed;</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.getId=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        return private.id;</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.getPosition=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        var pos={xIndex:private.xIndex, yIndex:private.yIndex};</span>
+<span class="cstat-no" title="statement not covered" >        return pos;</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.getRotation=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        var rot={rotation:private.rotation};</span>
+<span class="cstat-no" title="statement not covered" >        return rot;</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.getEnabler=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        return private.enabler;</span>
+    };
+<span class="cstat-no" title="statement not covered" >    public.getSize=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        var siz={height:private.height, width:private.width};</span>
+<span class="cstat-no" title="statement not covered" >        return siz;</span>
+    };
+    
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteTextInsertCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertText(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().removeText(public.getId());</span>
+        //controller.remove(id)
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteImageInsertCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertImage(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().removeImage(public.getId());</span>
+        //controller.remove(id)
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteFrameInsertCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertFrame(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().removeFrame(public.getId());</span>
+        //controller.remove(id)
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteSVGInsertCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertSVG(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().removeSVG(public.getId());</span>
+        //controller.remove(id)
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteAudioInsertCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertAudio(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().removeAudio(public.getId());</span>
+        //controller.remove(id)
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteVideoInsertCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertVideo(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().removeVideo(public.getId());</span>
+        //controller.remove(id)
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteBackgroundInsertCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldBackground={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldBackground=public.getEnabler().insertBackground(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertBackground(private.oldBackground);</span>
+        //controller.remove(id);
+        //controller.update(oldBackground.id);
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteTextRemoveCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldText=public.getEnabler().removeText(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.remove(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertText(private.oldText);</span>
+        //controller.update(id);
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteImageRemoveCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldImage=public.getEnabler().removeImage(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.remove(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertImage(private.oldImage);</span>
+        //controller.update(id);
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteFrameRemoveCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldFrame=public.getEnabler().removeFrame(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.remove(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertFrame(private.oldFrame);</span>
+        //controller.update(id);
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+&nbsp;
+var concreteSVGRemoveCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldSVG=public.getEnabler().removeSVG(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.remove(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertSVG(private.oldSVG);</span>
+        //controller.update(id);
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+&nbsp;
+var concreteAudioRemoveCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldAudio=public.getEnabler().removeAudio(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.remove(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertAudio(private.oldAudio);</span>
+        //controller.update(id);
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteVideoRemoveCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldVideo=public.getEnabler().removeVideo(spec);</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.remove(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().insertVideo(private.oldVideo);</span>
+        //controller.update(id);
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+&nbsp;
+var concreteEditPositionCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldPosition={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldPosition=public.getEnabler().editPosition(spec);</span>
+<span class="cstat-no" title="statement not covered" >        private.oldPosition.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >        private.oldPosition.tipo=spec.tipo;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().editPosition(private.oldPosition);</span>
+        //controller.update(public.getId());
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteEditRotationCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldRotation;</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldRotation.rotation=public.getEnabler().editRotation(spec);</span>
+<span class="cstat-no" title="statement not covered" >        private.oldRotation.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >        private.oldRotation.tipo=spec.tipo;</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().editPosition(private.oldRotation);</span>
+        //controller.update(public.getId());
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteEditSizeCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldSize={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldSize=public.getEnabler().editSize(spec);</span>
+<span class="cstat-no" title="statement not covered" >        private.oldSize.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >        private.oldSize.tipo=spec.tipo;</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().editSize(private.oldSize);</span>
+        //controller.update(public.getId());
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteEditContentCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldContent={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldContent.content=public.getEnabler().editContent(spec);</span>
+<span class="cstat-no" title="statement not covered" >        private.oldContent.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >        private.oldContent.tipo=spec.tipo;</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().editContent(private.oldContent);</span>
+        //controller.update(public.getId());
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteEditBackgroundCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldBackground={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldBackground=public.getEnabler().editBackground(spec);</span>
+<span class="cstat-no" title="statement not covered" >        private.oldBackground.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >        private.oldSize.tipo="frames";</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().editBackground(private.oldBackground);</span>
+        //controller.update(public.getId());
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteEditColorCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldColor={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldColor.color=public.getEnabler().editColor(spec);</span>
+<span class="cstat-no" title="statement not covered" >        private.oldColor.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >        private.oldColor.tipo=spec.tipo;</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().editColor(private.oldColor);</span>
+        //controller.update(public.getId());
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};
+&nbsp;
+var concreteEditFontCommand=<span class="fstat-no" title="function not covered" >function(spec){</span>
+<span class="cstat-no" title="statement not covered" >    var public=abstractCommand(spec);</span>
+<span class="cstat-no" title="statement not covered" >    var private={};</span>
+<span class="cstat-no" title="statement not covered" >    private.oldFont={};</span>
+<span class="cstat-no" title="statement not covered" >    public.doAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        private.oldFont.font=public.getEnabler().editFont(spec);</span>
+<span class="cstat-no" title="statement not covered" >        private.oldFont.id=spec.id;</span>
+<span class="cstat-no" title="statement not covered" >        private.oldFont.tipo=spec.tipo;</span>
+<span class="cstat-no" title="statement not covered" >        if(public.getExecuted()===0){</span>
+<span class="cstat-no" title="statement not covered" >            public.setExecuted(1);</span>
+        }
+        else{
+            //controller.update(public.getId());
+        }
+    };  
+<span class="cstat-no" title="statement not covered" >    public.undoAction=<span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >        public.getEnabler().editColor(private.oldFont);</span>
+        //controller.update(public.getId());
+    };
+<span class="cstat-no" title="statement not covered" >    return public;</span>
+};</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Jul 13 2015 19:53:28 GMT+0200 (CEST)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

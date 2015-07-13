@@ -3,6 +3,3 @@ logs/*
 tmp
 .idea
 .DS_Store
-angular-phonecat-snapshots
-app/bower_components/
-node_modules/

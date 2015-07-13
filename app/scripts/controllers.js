@@ -5,7 +5,7 @@ var premiControllers = angular.module('premiControllers', ['premiService']);
 premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main','toPages', function($rootScope, $scope, $location, $localStorage,Main,toPages) {
 	$scope.master = {};
 
-	$scope.update = function(user) {
+	$scope.update = function() {
 		$scope.master.username = $scope.user.username;
 		$scope.master.password = $scope.user.password;
 		$scope.status = 'logged';
@@ -16,6 +16,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 	};
 
 	$scope.login = function() {
+		this.update();
 		var formData = {
 			username: $scope.user.username,
 			password: $scope.user.password
@@ -36,6 +37,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 	};
 
 	$scope.registration = function() {
+		this.update();
 		var formData = {
 			username: $scope.user.username,
 			password: $scope.user.password
@@ -60,7 +62,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 
 	$scope.logout = function() {
 		Main.logout(function() {
-			window.location = "/"
+			toPages.homepage();
 		}, function() {
 			alert("Failed to logout!");
 		});

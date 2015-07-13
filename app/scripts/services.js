@@ -108,8 +108,8 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 				console.log($localStorage.token);
 				if(!$localStorage.token)
 					success();
-			else
-				error();
+				else
+					error();
 			}
 			else
 				console.log("Nessun token trovato");
@@ -139,19 +139,18 @@ premiService.factory('toPages', ['$resource', '$location','$http','$localStorage
 		return {
 			homepage: function(){
 				$http({
-						method: 'POST',
-						url:'http://sub.lvh.me:8081/private/home',
-						withCredentials: true,
-						headers: {'Content-Type': 'application/json','authorization': $localStorage.token}
-					})
-				.success(function(res){window.location = "/"})
-				.error(function(){$location.path("/registrazione")})
-				
+					method: 'POST',
+					url:'http://sub.lvh.me:8081/private/home',
+					withCredentials: true,
+					headers: {'Content-Type': 'application/json','authorization': $localStorage.token}
+				})
+				.success(function(res){location.path("/private/home")})
+				.error(function(){$location.path("/login")})
 			},
 			editpage: function(slideId){
 				$location.path("/edit")
 			},
-			indexpage: function(){
+			homepage: function(){
 				$location.path("/login")
 			},
 			executionpage: function(slideId) {

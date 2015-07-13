@@ -138,14 +138,15 @@ premiService.factory('toPages', ['$resource', '$location','$http','$localStorage
 	function($resource, $location,$http,$localStorage){
 		return {
 			homepage: function(){
+				console.log("homepage");
 				$http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/home',
 					withCredentials: true,
 					headers: {'Content-Type': 'application/json','authorization': $localStorage.token}
 				})
-				.success(function(res){$location.path("/private/home")})
-				.error(function(){$location.path("/login")})
+				.success(function(res){console.log("maremma"); window.location = "/private/home"})
+				.error(function(){window.location = "/login" })
 			},
 			editpage: function(slideId){
 				$location.path("/edit")

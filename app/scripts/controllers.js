@@ -29,6 +29,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 			} else {
 				console.log(res)
 				$localStorage.token = res.token;
+				console.log("ok");
 				toPages.homepage(); 
 			}
 		}, function() {

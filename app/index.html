@@ -7,8 +7,6 @@
 	<link rel="stylesheet" href="css/app.css">
 	<link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
 	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
-  <link rel="stylesheet" href="assets/app.css"/>
-	
 
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="bower_components/angular/angular.js"></script>
@@ -21,9 +19,6 @@
 	<script src="bower_components/angular-animate/angular-animate.js"></script>
 	<script src="bower_components/angular-aria/angular-aria.js"></script>
 	<script type="text/javascript" src="bower_components/angular-material/angular-material.js"></script>
-	<script src="src/users/Users.js"></script>
-	<script src="src/users/UserController.js"></script>
-	<script src="src/users/UserService.js"></script>
   <script src="lib/ngStorage.js"></script>
 	<script src="scripts/slideshowelement.js"></script>
 	<script src="scripts/inserteditremove.js"></script>
@@ -47,10 +42,6 @@
 			<md-button aria-label="Second Button" ng-href="#/registrazione" data-ng-hide="token">Registrati</md-button>
 			<md-button aria-label="Third Button"   data-ng-show="token" ng-click="logout()">Logout</md-button>
 		</span>
-		
-		<md-button class="menu" hide-gt-sm ng-click="ul.toggleList()" aria-label="Show User List">
-			<md-icon md-svg-icon="menu" ></md-icon>
-		</md-button>
 		</md-toolbar>
         </div>
 		<div ng-view></div>

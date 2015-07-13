@@ -95,15 +95,15 @@ premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$loca
 		}
 		console.log(formData);
 		Main.changepassword(formData, function(res) {
-				console.log("Main.changePassword");
-				if (res.type == false) {
-						alert(res.data)
-				} else {
-                        console.log(res.message);
-                        console.log(res.token);
-						$localStorage.token = res.token;
-						$location.path("/home");  
-				}
+			console.log("Main.changePassword");
+			if (res.type == false) {
+				alert(res.data)
+			} else {
+				console.log(res.message);
+				console.log(res.token);
+				$localStorage.token = res.token;
+				$location.path("/home");  
+			}
 		}, function() {
 				$rootScope.error = 'Failed to signup';
 		})
@@ -140,6 +140,3 @@ premiControllers.controller('HomeController',['$rootScope', '$scope', '$location
 		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
 	}
 	}])
-
-
-

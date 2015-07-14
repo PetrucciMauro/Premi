@@ -33,7 +33,7 @@ app.use('/', express.static("./app"));
 app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization, x-csrf-token, Accept');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, authorization, x-csrf-token, Accept,sessiontoken');
 	res.setHeader('Access-Control-Allow-Credentials', true);
 	next();
 });
@@ -81,7 +81,7 @@ app.post('/authenticate', function(req, res) {
 				res.status(400);
 				res.json({
 					success: false,
-					message: 'Username or password incorrect'
+					message: 'Username o password non corretti'
 				});
 			}
 			else{
@@ -92,7 +92,7 @@ app.post('/authenticate', function(req, res) {
 				//res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
 				var json = JSON.stringify({
 					success: true,
-					message: 'Enjoy your token!',
+					message: 'Accesso eseguito',
 					token: token
 				});
 				res.end(json);
@@ -136,7 +136,7 @@ app.post('/register', function(req, res) {
 				res.status(400);
 				res.json({
 					success: false,
-					message: 'Username already registered'
+					message: 'Utente già registrato'
 				});
 			}
 			
@@ -151,6 +151,9 @@ app.post('/changepassword', function(req, res) {
 	user=parts[0];
 	pass=parts[1];
 	passNew=parts[2];
+
+	console.log("u:"+user+"p:"+pass+"p2:"+passNew);
+
 	
 	MongoClient.connect(app.get('database'), function(err, db) {
 		if(err) throw err;
@@ -162,7 +165,7 @@ app.post('/changepassword', function(req, res) {
 					console.dir('called udpate()');
 					res.json({
 						success: true,
-						message: 'Password updated'
+						message: 'Password modificata con successo'
 					});
 				});
 			}
@@ -170,7 +173,7 @@ app.post('/changepassword', function(req, res) {
 				res.status(400);
 				res.json({
 					success: false,
-					message: 'Username or password not correct'
+					message: 'Username o password non corretti'
 				});
 			}
 			
@@ -198,9 +201,8 @@ app.post('/private*', privateRoutes);
 
 privateRoutes.use(function(req, res, next) {
 	console.log("privateRoutes verifica");
+	var token=req.headers['sessiontoken'];
 	console.log(req.headers);
-	var token=req.headers['authorization'];
-	console.log(req.headers['authorization']);
 	if (token) {
 		console.log("Entrato if(token)");
 		// verifies secret and checks exp

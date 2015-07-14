@@ -4,7 +4,8 @@ var premiApp = angular.module('premiApp', [
 	'ngRoute',
 	'premiControllers',
 	'ngMaterial',
-	'ngStorage'
+	'ngStorage',
+	'ngCrypto'
 	]);
 
 premiApp.run(function($log,$window){
@@ -41,7 +42,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 				if ($localStorage.token) {
 					//console.log("Esiste token:");
 					//console.log(typeof($localStorage.token));
-					config.headers.authorization =  $localStorage.token;
+					config.headers.sessiontoken = $localStorage.token;
 
 				}
 				else

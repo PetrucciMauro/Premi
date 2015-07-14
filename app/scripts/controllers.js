@@ -36,28 +36,30 @@ premiControllers.controller('HeaderController', ['$scope', '$localStorage','Main
 
 }])
 
-premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main','toPages','$route','$q',
-	function($rootScope, $scope, $location, $localStorage,Main,toPages,$route,$q) {
-		//$route.reload();
-
+premiControllers.controller('premiAuthenticationController', ['$scope', '$location', '$localStorage','Main','toPages',
+	function($scope, $location, $localStorage,Main,toPages) {
 		$scope.reset = function() {
 			$scope.user = {};
 		};
-
 		$scope.token = function() {
 			if(typeof $localStorage.token === 'undefined')
 				return undefined;
 			return $localStorage.token;
 		};
 
+		var getData = function(){
+			return {
+				username: $scope.user.username,
+				password: CryptoJS.SHA1($scope.user.password).toString()
+			}
+		}
+
 		$scope.login = function() {
 			//check che i campi username e pwd non siano vuoti
 			if(!$scope.user || typeof $scope.user.username === 'undefined' || typeof $scope.user.password === 'undefined')
 				throw new Error("I campi username e password non possono essere vuoti");
-			var formData = {
-				username: $scope.user.username,
-				password: $scope.user.password
-			}
+			var formData = getData();
+			console.log(formData.password);
 
 			Main.login(formData, function(res) {
 				console.log("Main.login login");
@@ -68,8 +70,8 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 					console.log($localStorage.token);
 					toPages.homepage(); 
 				}
-			}, function() {
-				$rootScope.error = 'Failed to login';
+			}, function(res) {
+				throw new Error(res.message);
 			})
 		};
 
@@ -82,10 +84,7 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 			if($scope.strength == 'weak'){
 				throw new Error("Attenzione: la password è troppo corta. Deve essere di almeno 6 caratteri")
 			}
-			var formData = {
-				username: $scope.user.username,
-				password: $scope.user.password
-			}
+			var formData = getData();
 			Main.save(formData, function(res) {
 				console.log("Main.save registration");
 				if (res.type == false) {
@@ -94,8 +93,8 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 					$localStorage.token = res.token;
 					toPages.homepage();
 				}
-			}, function() {
-				$rootScope.error = 'Failed to signup';
+			}, function(res) {
+				throw new Error(res.message);
 			})
 		};
 
@@ -111,34 +110,35 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		};
 	}])
 
-premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$location','$localStorage', 'Main', '$route',
-	function($rootScope, $scope, $location,$localStorage, Main,$route) {
-		//$route.reload();
-
+premiControllers.controller('ProfileController', ['$scope', '$location','$localStorage', 'Main', 'toPages','$route',
+	function($scope, $location,$localStorage, Main, toPages,$route) {
+/*
 		Main.me(function(res) {
-			$scope.myDetails = res;
+			$scope.user = res;
 		}, function() {
 			$rootScope.error = 'Failed to fetch details';
 		});
+*/
+		var getPwd = function(){
+			return {
+				password: CryptoJS.SHA1($scope.user.password).toString(),
+				newpassword: CryptoJS.SHA1($scope.user.newpassword).toString()
+			}
+		}
 
 		$scope.changepassword = function() {
-			var formData = {
-				password: $scope.user.password,
-				newpassword: $scope.user.newpassword
-			}
+			var formData = getPwd();
+
 			console.log(formData);
 			Main.changepassword(formData, function(res) {
 				console.log("Main.changePassword");
 				if (res.type == false) {
 					alert(res.data)
 				} else {
-					console.log(res.message);
-					console.log(res.token);
-					$localStorage.token = res.token;
-					$location.path("/home");  
+					//$route.reload();
 				}
-			}, function() {
-				$rootScope.error = 'Failed to signup';
+			}, function(res) {
+				throw new Error(res.message);
 			})
 		};
 

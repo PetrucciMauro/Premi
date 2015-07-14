@@ -46,7 +46,13 @@
     "unpipe": "latest",
     "statuses" : "latest",
     "body-parser" : "latest",
-    "binary-extensions": "latest"
+    "binary-extensions": "latest",
+    "express": "latest",
+    "morgan": "latest",
+    "jsonwebtoken": "latest",
+    "mongoose":"latest",
+    "multer":"latest",
+    "mongodb":"latest"
   },
 
   "scripts": {

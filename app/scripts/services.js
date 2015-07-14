@@ -138,6 +138,7 @@ premiService.factory('toPages', ['$location','$http','$localStorage','$window',
 	function($location,$http,$localStorage,$window){
 		return {
 			homepage: function(){
+				
 				$http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/home',
@@ -183,6 +184,7 @@ premiService.factory('toPages', ['$location','$http','$localStorage','$window',
 		}
 	}]);
 
+/*
 premiService.factory('errorHandler', [
 	function(){
 		return {
@@ -191,4 +193,4 @@ premiService.factory('errorHandler', [
 				throw new Error(error,cause);
 			}
 		}
-	}]);
+	}]);*/

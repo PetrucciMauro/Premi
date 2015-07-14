@@ -39,15 +39,15 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			'request': function (config) {
 				config.headers = config.headers || {};
 				if ($localStorage.token) {
-		    	//console.log("Esiste token:");
-		    	//console.log(typeof($localStorage.token));
-		    	config.headers.authorization =  $localStorage.token;
+					//console.log("Esiste token:");
+					//console.log(typeof($localStorage.token));
+					config.headers.authorization =  $localStorage.token;
 
-		        //console.log($localStorage.token);
-		    }
-		    else
-		    	{ console.log("token non definito ");}
-		    return config;
+					//console.log($localStorage.token);
+				}
+				else
+					{ console.log("token non definito ");}
+				return config;
 		},
 		'responseError': function(response) {
 			if(response.status === 401 || response.status === 403) {
@@ -60,12 +60,10 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 	};
 }]);
 
-	$provide.decorator("$exceptionHandler", function($delegate, $injector, errorHandler){
+	$provide.decorator("$exceptionHandler", function($delegate, $injector){
 		return function(exception, cause){
-			var $errMessage = {error: exception, cause: cause};
 			$delegate(exception, cause);
-			console.log($errMessage);
-		//	errorHandler.error($errMessage);
+			alert(exception.message);
 		};
 	});
 

@@ -1,68 +1,61 @@
-<div class="row" data-ng-controller="ProfileController" layout="column">
-    <div class="col-lg-12">
-       <md-content layout-padding style="height: 600px;padding: 24px;">
+<div class="row" layout="column">
+	<div class="col-lg-12">
+		<md-content layout-padding style="height: 600px;padding: 24px;">
 
-       <div>
+	<div>
+		<md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">Modifica Profilo</md-button>
+
+		<div ng-show="editProfile">
+			<md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+				<form ng-submit="editProfile()">
+					<md-input-container>
+						<label>Title</label>
+						<input ng-model="user.title"/>
+					</md-input-container>
+					<md-input-container>
+						<label>Email</label>
+						<input ng-model="user.email" type="email"/>
+					</md-input-container>
+					<md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
+				</form>
+			</md-whiteframe>
+		</div>
+	</div>
 
 
 
-          <md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">Modifica Profilo</md-button>
-          <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+	<div>
+		<md-button class="md-raised md-cornered" ng-click="editPassword = !editPassword">Cambia Password</md-button>
 
-          <div ng-show="editProfile">
-            <form ng-submit="editProfile()">
-              <md-input-container>
-              <label>Title</label>
-              <input ng-model="user.title">
-          </md-input-container>
-          <md-input-container>
-          <label>Email</label>
-          <input ng-model="user.email" type="email">
-      </md-input-container>
-      <md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
-  </form>
-</md-whiteframe>
+		<div ng-show="editPassword">
+			<md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+				<form ng-submit="changepassword()">
+					<md-input-container>
+						<label>Password Attuale</label>
+						<input ng-model="user.password"/>
+					</md-input-container>
+					<md-input-container>
+						<label>Nuova Password</label>
+						<input ng-model="user.newpassword"/>
+					</md-input-container>
+					<md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
+				</form>
+			</md-whiteframe>
+		</div>
+	</div>
+
+	<div>
+		<md-button class="md-raised md-cornered" ng-click="uploadElement = !uploadElement">Upload Elemento</md-button>
+		<div ng-show="uploadElement">
+			<md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
+				<form id="upload_form" enctype="multipart/form-data" method="POST" action="http://localhost:8081/private/api/files/image/provaetta">
+					<input type="file" name="immagine" id="file_form"/>
+					<input type="submit" value="Upload" />
+				</form>
+			</md-whiteframe>
+		</div>
 </div>
 
-</div>
-
-
-
-<div>
-    <md-button class="md-raised md-cornered" ng-click="editPassword = !editPassword">Cambia Password</md-button>
-    <div ng-show="editPassword">
-        <form ng-submit="changepassword()">
-            <md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
-
-            <md-input-container>
-            <label>Password Attuale</label>
-            <input ng-model="user.password">
-        </md-input-container>
-        <md-input-container>
-        <label>Nuova Password</label>
-        <input ng-model="user.newpassword">
-    </md-input-container>
-    <md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
-</div>
-</md-whiteframe>
-</form>
-<div>
-
-    <div>
-        <md-button class="md-raised md-cornered" ng-click="uploadElement = !uploadElement">Upload Elemento</md-button>
-        <div ng-show="uploadElement">
-                <form id="upload_form" enctype="multipart/form-data" method="POST" action="http://localhost:8081/private/api/files/image/provaetta">
-                    <input type="file" name="immagine" id="file_form"/>
-                    <input type="submit" value="Upload" />
-                </form>
-            </div>
-        </md-whiteframe>
-    
-</div>
-
-
-<md-content>
+</md-content>
 </div>
 </div>
-
-

@@ -2,8 +2,8 @@
 
 var premiControllers = angular.module('premiControllers', ['premiService']);
 
-premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main','toPages','$window','errorHandler',
-	function($rootScope, $scope, $location, $localStorage,Main,toPages,$window,errorHandler) {
+premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main','toPages','$window',
+	function($rootScope, $scope, $location, $localStorage,Main,toPages,$window) {
 		$scope.master = {};
 
 		$scope.error = $rootScope.error;
@@ -19,17 +19,21 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		};
 
 		$scope.login = function() {
-			//errorHandler.error("Oddio","colpa mia");
+			//check che i campi username e pwd non siano vuoti
+			if(!$scope.user || typeof $scope.user.username === 'undefined' || typeof $scope.user.password === 'undefined')
+				throw new Error("I campi username e password non possono essere vuoti");
 			var formData = {
 				username: $scope.user.username,
 				password: $scope.user.password
 			}
 
 			Main.login(formData, function(res) {
+				console.log("Main.login login");
 				if (res.type == false) {
 					alert(res.data)    
 				} else {
 					$localStorage.token = res.token;
+					console.log($localStorage.token);
 					toPages.homepage(); 
 				}
 			}, function() {
@@ -38,16 +42,20 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		};
 
 		$scope.registration = function() {
+			//check che i campi username e pwd non siano vuoti
+			if(!$scope.user || typeof $scope.user.username === 'undefined' || typeof $scope.user.password === 'undefined')
+				throw new Error("I campi username e password non possono essere vuoti");
+			//check che la pwd sia sicura
 			this.grade();
 			if($scope.strength == 'weak'){
-
-				$location.path("/login");
+				throw new Error("Attenzione: la password è troppo corta. Deve essere di almeno 6 caratteri")
 			}
 			var formData = {
 				username: $scope.user.username,
 				password: $scope.user.password
 			}
 			Main.save(formData, function(res) {
+				console.log("Main.save registration");
 				if (res.type == false) {
 					alert(res.data)
 				} else {
@@ -71,10 +79,10 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		$scope.token = $localStorage.token;
 
 		$scope.grade = function() {
-			var size = $scope.password.length;
+			var size = $scope.user.password.length;
 			if (size > 8) {
 				$scope.strength = 'strong';
-			} else if (size > 3) {
+			} else if (size > 5) {
 				$scope.strength = 'medium';
 			} else {
 				$scope.strength = 'weak';

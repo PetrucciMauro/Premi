@@ -76,7 +76,7 @@ app.post('/authenticate', function(req, res) {
 		db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
 			if(err) throw err;
 			if(doc == null){
-				consolo.log("null");
+				console.log("null");
 				db.close();
 				res.status(400);
 				res.json({

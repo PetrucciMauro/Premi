@@ -43,7 +43,6 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 					//console.log(typeof($localStorage.token));
 					config.headers.authorization =  $localStorage.token;
 
-					//console.log($localStorage.token);
 				}
 				else
 					{ console.log("token non definito ");}

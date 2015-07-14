@@ -31,16 +31,17 @@
 
 </head>
 <body n layout="column">
-	<div data-ng-controller="premiAuthenticationController">
+	<div data-ng-controller="HeaderController">
 		<md-toolbar layout="row" layout-align="space-between center" >
 		<!--The left side-->
 		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
 		<!--The right side-->
 		<span>
 			<p>{{user}}</p>
-			<md-button aria-label="First Button" ng-href="#/login" data-ng-hide="token">Accedi</md-button>
-			<md-button aria-label="Second Button" ng-href="#/registrazione" data-ng-hide="token">Registrati</md-button>
-			<md-button aria-label="Third Button"   data-ng-show="token" ng-click="logout()">Logout</md-button>
+			<md-button aria-label="First Button" ng-click="goLogin()" data-ng-hide="isToken()">Accedi</md-button>
+			<md-button aria-label="Second Button" ng-click="goRegistrazione()" data-ng-hide="isToken()">Registrati</md-button>
+			<md-button aria-label="Third Button"   data-ng-show="isToken()" ng-click="logout()">Logout</md-button>
+			<md-button aria-label="Third Button"   data-ng-show="isToken()" ng-click="goProfile()">Profilo</md-button>
 		</span>
 	</md-toolbar>
 </div>

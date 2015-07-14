@@ -1,19 +1,16 @@
 <div class="container-fluid">
   <div class="row">
-		<div>
-			<input type="submit" name="Profilo" value="Profilo" ng-click="goProfile()"/>
-		</div>
     <div class="col-md-10">
       <!--Body content-->
 
-      <ul class="phones">
+      <ul class="slideshows">
         <li ng-repeat="slide in allSS" class="thumbnail phone-listing">
-					<img ng-src="{{slide.imageUrl}}">
-					<input type="submit" name="Edit" value="Edit" ng-click="goEdit(slide.id)"/>
-					<input type="submit" name="Esegui" value="Esegui" ng-click="goExecute(slide.id)"/>
-					<input type="submit" name="Elimina" value="Esegui" ng-click="deleteSlideShow(slide.id)"/>
-					<p>{{slide.id}}</p>
-					<p>{{slide.name}}</p>
+			<img ng-src="{{slide.imageUrl}}">
+			<input type="submit" name="Edit" value="Edit" ng-click="goEdit(slide.id)"/>
+			<input type="submit" name="Esegui" value="Esegui" ng-click="goExecute(slide.id)"/>
+			<input type="submit" name="Elimina" value="Esegui" ng-click="deleteSlideShow(slide.id)"/>
+			<p>{{slide.id}}</p>
+			<p>{{slide.name}}</p>
         </li>
       </ul>
 

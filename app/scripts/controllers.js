@@ -2,20 +2,52 @@
 
 var premiControllers = angular.module('premiControllers', ['premiService']);
 
-premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main','toPages','$window',
-	function($rootScope, $scope, $location, $localStorage,Main,toPages,$window) {
-		$scope.master = {};
-
-		$scope.error = $rootScope.error;
-
-		$scope.update = function() {
-			$scope.master.username = $scope.user.username;
-			$scope.master.password = $scope.user.password;
-			$scope.status = 'logged';
+premiControllers.controller('HeaderController', ['$scope', '$localStorage','Main','toPages',
+	function($scope, $localStorage,Main,toPages) {
+		$scope.isToken = function() {
+			if(typeof $localStorage.token === 'undefined')
+				return false;
+			return true;
 		};
 
+		$scope.goEdit = function(slideId){
+			toPages.editpage(slideId);
+		}
+		$scope.goExecute = function(slideId){
+			toPages.executionpage(slideId);
+		}
+		$scope.goProfile = function(){
+			toPages.profilepage();
+		}
+		$scope.goLogin = function(){
+			toPages.loginpage();
+		}
+		$scope.goRegistrazione = function(){
+			toPages.registrazionepage();
+		}
+
+		$scope.logout = function() {
+			Main.logout(function() {
+				toPages.loginpage();
+			}, function() {
+				alert("Failed to logout!");
+			});
+		};
+
+}])
+
+premiControllers.controller('premiAuthenticationController', ['$rootScope', '$scope', '$location', '$localStorage','Main','toPages','$route','$q',
+	function($rootScope, $scope, $location, $localStorage,Main,toPages,$route,$q) {
+		//$route.reload();
+
 		$scope.reset = function() {
-			$scope.user = angular.copy($scope.master);
+			$scope.user = {};
+		};
+
+		$scope.token = function() {
+			if(typeof $localStorage.token === 'undefined')
+				return undefined;
+			return $localStorage.token;
 		};
 
 		$scope.login = function() {
@@ -67,17 +99,6 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 			})
 		};
 
-		$scope.logout = function() {
-			Main.logout(function() {
-				toPages.loginpage();
-				$window.location.reload();
-			}, function() {
-				alert("Failed to logout!");
-			});
-		};
-
-		$scope.token = $localStorage.token;
-
 		$scope.grade = function() {
 			var size = $scope.user.password.length;
 			if (size > 8) {
@@ -90,34 +111,36 @@ premiControllers.controller('premiAuthenticationController', ['$rootScope', '$sc
 		};
 	}])
 
-premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$location','$localStorage', 'Main', function($rootScope, $scope, $location,$localStorage, Main) {
+premiControllers.controller('ProfileController', ['$rootScope', '$scope', '$location','$localStorage', 'Main', '$route',
+	function($rootScope, $scope, $location,$localStorage, Main,$route) {
+		//$route.reload();
 
-	Main.me(function(res) {
-		$scope.myDetails = res;
-	}, function() {
-		$rootScope.error = 'Failed to fetch details';
-	});
-
-	$scope.changepassword = function() {
-		var formData = {
-			password: $scope.user.password,
-			newpassword: $scope.user.newpassword
-		}
-		console.log(formData);
-		Main.changepassword(formData, function(res) {
-			console.log("Main.changePassword");
-			if (res.type == false) {
-				alert(res.data)
-			} else {
-				console.log(res.message);
-				console.log(res.token);
-				$localStorage.token = res.token;
-				$location.path("/home");  
-			}
+		Main.me(function(res) {
+			$scope.myDetails = res;
 		}, function() {
-			$rootScope.error = 'Failed to signup';
-		})
-	};
+			$rootScope.error = 'Failed to fetch details';
+		});
+
+		$scope.changepassword = function() {
+			var formData = {
+				password: $scope.user.password,
+				newpassword: $scope.user.newpassword
+			}
+			console.log(formData);
+			Main.changepassword(formData, function(res) {
+				console.log("Main.changePassword");
+				if (res.type == false) {
+					alert(res.data)
+				} else {
+					console.log(res.message);
+					console.log(res.token);
+					$localStorage.token = res.token;
+					$location.path("/home");  
+				}
+			}, function() {
+				$rootScope.error = 'Failed to signup';
+			})
+		};
 
 }])
 

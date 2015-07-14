@@ -198,6 +198,7 @@ app.post('/private*', privateRoutes);
 
 privateRoutes.use(function(req, res, next) {
 	console.log("privateRoutes verifica");
+	console.log(req.headers);
 	var token=req.headers['authorization'];
 	console.log(req.headers['authorization']);
 	if (token) {

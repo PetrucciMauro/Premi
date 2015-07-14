@@ -2,7 +2,8 @@
 
 var premiService = angular.module('premiService',['ngResource'])
 
-premiService.factory('Main', ['$http', '$localStorage', function($http, $localStorage){
+premiService.factory('Main', ['$http', '$localStorage', '$timeout', 
+	function($http, $localStorage,$timeout){
 	var baseUrl = "http://sub.lvh.me:8081";
 	function changeUser(user) {
 		angular.extend(currentUser, user);
@@ -80,7 +81,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 	/***************************************************************************************************************************/
 	return {
 		save: function(formData, success, error) {
-			$http({
+			return $http({
 				method: 'POST',
 				url: baseUrl + '/register',
 				data: JSON.stringify(formData),
@@ -89,7 +90,7 @@ premiService.factory('Main', ['$http', '$localStorage', function($http, $localSt
 			}).success(success).error(error)
 		},
 		login: function(formData, success, error) {
-			$http({
+			return $http({
 				method: 'POST',
 				url: baseUrl + '/authenticate',
 				data: JSON.stringify(formData),
@@ -134,18 +135,17 @@ premiService.factory('SlideShow', ['$resource',
 		});*/
 }]);
 
-premiService.factory('toPages', ['$location','$http','$localStorage','$window',
-	function($location,$http,$localStorage,$window){
+premiService.factory('toPages', ['$location','$http','$localStorage',
+	function($location,$http,$localStorage){
 		return {
 			homepage: function(){
-				
-				$http({
+				return $http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/home',
 					withCredentials: true,
 					headers: {'Content-Type': 'application/json','authorization': $localStorage.token}
 				})
-				.success(function(res){$location.path("/private/home");$window.location.reload();})
+				.success(function(res){$location.path("/private/home");})
 				.error(function(){$location.path("/login");})
 			},
 			editpage: function(slideId){
@@ -159,7 +159,10 @@ premiService.factory('toPages', ['$location','$http','$localStorage','$window',
 				.error(function(){$location.path("/login");})
 			},
 			loginpage: function(){
-				$location.path("/login")
+				$location.path("/login");
+			},
+			registrazionepage: function() {
+				$location.path("/registrazione");
 			},
 			executionpage: function(slideId) {
 				$http({
@@ -183,14 +186,3 @@ premiService.factory('toPages', ['$location','$http','$localStorage','$window',
 			}
 		}
 	}]);
-
-/*
-premiService.factory('errorHandler', [
-	function(){
-		return {
-			error: function(error, cause){
-				alert('Attenzione! ' + error + " Causa: " + cause);
-				throw new Error(error,cause);
-			}
-		}
-	}]);*/

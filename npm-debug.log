@@ -1,0 +1,873 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install' ]
+2 info using npm@2.10.1
+3 info using node@v0.12.4
+4 verbose node symlink /usr/bin/node
+5 verbose readDependencies loading dependencies from /home/petrucci/PremiSource/package.json
+6 verbose install where, deps [ '/home/petrucci/PremiSource',
+6 verbose install   [ 'karma',
+6 verbose install     'karma-jasmine',
+6 verbose install     'http-server',
+6 verbose install     'tmp',
+6 verbose install     'bower',
+6 verbose install     'shelljs',
+6 verbose install     'phantomjs',
+6 verbose install     'karma-phantomjs-launcher',
+6 verbose install     'mocha',
+6 verbose install     'istanbul',
+6 verbose install     'coveralls',
+6 verbose install     'jshint',
+6 verbose install     'nodemon',
+6 verbose install     'mocha-lcov-reporter',
+6 verbose install     'mocha-istanbul',
+6 verbose install     'karma-coverage',
+6 verbose install     'karma-junit-reporter',
+6 verbose install     'karma-coveralls',
+6 verbose install     'unpipe',
+6 verbose install     'statuses',
+6 verbose install     'body-parser',
+6 verbose install     'binary-extensions',
+6 verbose install     'express',
+6 verbose install     'morgan',
+6 verbose install     'jsonwebtoken',
+6 verbose install     'mongoose',
+6 verbose install     'multer',
+6 verbose install     'mongodb' ] ]
+7 verbose install where, peers [ '/home/petrucci/PremiSource', [] ]
+8 verbose installManyTop reading for lifecycle /home/petrucci/PremiSource/package.json
+9 info preinstall Premi@0.0.1
+10 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/angular-route/package.json
+11 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/binary-extensions/package.json
+12 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/body-parser/package.json
+13 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/bower/package.json
+14 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/coveralls/package.json
+15 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/express/package.json
+16 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/http-server/package.json
+17 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/istanbul/package.json
+18 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/jasmine-core/package.json
+19 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/jshint/package.json
+20 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/jsonwebtoken/package.json
+21 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/karma/package.json
+22 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/karma-coverage/package.json
+23 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/karma-coveralls/package.json
+24 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/karma-jasmine/package.json
+25 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/karma-junit-reporter/package.json
+26 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/karma-phantomjs-launcher/package.json
+27 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/mocha/package.json
+28 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/mocha-istanbul/package.json
+29 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/mocha-lcov-reporter/package.json
+30 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/mongodb/package.json
+31 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/mongoose/package.json
+32 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/morgan/package.json
+33 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/multer/package.json
+34 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/nodemon/package.json
+35 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/phantomjs/package.json
+36 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/shelljs/package.json
+37 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/statuses/package.json
+38 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/tmp/package.json
+39 verbose installManyTop reading scoped package data from /home/petrucci/PremiSource/node_modules/unpipe/package.json
+40 info package.json bower@1.4.1 No license field.
+41 info package.json coveralls@2.11.2 license should be a valid SPDX license expression
+42 info package.json http-server@0.6.1 No license field.
+43 info package.json mocha-lcov-reporter@0.0.2 No license field.
+44 info package.json nodemon@1.3.7 No license field.
+45 info package.json phantomjs@1.9.17 No license field.
+46 info package.json shelljs@0.2.6 No license field.
+47 info package.json tmp@0.0.23 No license field.
+48 verbose readDependencies loading dependencies from /home/petrucci/PremiSource/package.json
+49 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/angular-route/package.json
+50 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/binary-extensions/package.json
+51 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/body-parser/package.json
+52 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/bower/package.json
+53 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/coveralls/package.json
+54 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/express/package.json
+55 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/http-server/package.json
+56 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/istanbul/package.json
+57 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/jasmine-core/package.json
+58 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/jshint/package.json
+59 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/jsonwebtoken/package.json
+60 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/karma/package.json
+61 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/karma-coverage/package.json
+62 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/karma-coveralls/package.json
+63 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/karma-jasmine/package.json
+64 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/karma-junit-reporter/package.json
+65 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/karma-phantomjs-launcher/package.json
+66 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/mocha/package.json
+67 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/mocha-istanbul/package.json
+68 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/mocha-lcov-reporter/package.json
+69 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/mongodb/package.json
+70 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/mongoose/package.json
+71 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/morgan/package.json
+72 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/multer/package.json
+73 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/nodemon/package.json
+74 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/phantomjs/package.json
+75 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/shelljs/package.json
+76 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/statuses/package.json
+77 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/tmp/package.json
+78 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/unpipe/package.json
+79 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/bower/package.json
+80 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/coveralls/package.json
+81 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/http-server/package.json
+82 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/istanbul/package.json
+83 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/jshint/package.json
+84 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/karma/package.json
+85 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/mocha/package.json
+86 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/nodemon/package.json
+87 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/phantomjs/package.json
+88 verbose targetResolver reading package data from /home/petrucci/PremiSource/node_modules/.bin/shjs/package.json
+89 verbose already installed skipping jshint@^2.7.0 /home/petrucci/PremiSource
+90 silly cache add args [ 'nodemon@latest', null ]
+91 verbose cache add spec nodemon@latest
+92 verbose already installed skipping mocha-lcov-reporter@^0.0.2 /home/petrucci/PremiSource
+93 verbose already installed skipping mocha-istanbul@^0.2.0 /home/petrucci/PremiSource
+94 silly cache add parsed spec { raw: 'nodemon@latest',
+94 silly cache add   scope: null,
+94 silly cache add   name: 'nodemon',
+94 silly cache add   rawSpec: 'latest',
+94 silly cache add   spec: 'latest',
+94 silly cache add   type: 'tag' }
+95 silly addNamed nodemon@latest
+96 verbose addNamed "latest" is being treated as a dist-tag for nodemon
+97 info addNameTag [ 'nodemon', 'latest' ]
+98 silly mapToRegistry name nodemon
+99 silly mapToRegistry using default registry
+100 silly mapToRegistry registry https://registry.npmjs.org/
+101 silly mapToRegistry uri https://registry.npmjs.org/nodemon
+102 verbose addNameTag registry:https://registry.npmjs.org/nodemon not in flight; fetching
+103 silly cache add args [ 'karma-coverage@latest', null ]
+104 verbose cache add spec karma-coverage@latest
+105 silly cache add parsed spec { raw: 'karma-coverage@latest',
+105 silly cache add   scope: null,
+105 silly cache add   name: 'karma-coverage',
+105 silly cache add   rawSpec: 'latest',
+105 silly cache add   spec: 'latest',
+105 silly cache add   type: 'tag' }
+106 silly addNamed karma-coverage@latest
+107 verbose addNamed "latest" is being treated as a dist-tag for karma-coverage
+108 info addNameTag [ 'karma-coverage', 'latest' ]
+109 silly mapToRegistry name karma-coverage
+110 silly mapToRegistry using default registry
+111 silly mapToRegistry registry https://registry.npmjs.org/
+112 silly mapToRegistry uri https://registry.npmjs.org/karma-coverage
+113 verbose addNameTag registry:https://registry.npmjs.org/karma-coverage not in flight; fetching
+114 verbose request uri https://registry.npmjs.org/nodemon
+115 verbose request no auth needed
+116 info attempt registry request try #1 at 14:11:51
+117 verbose request id ed27a127a79b1fd4
+118 verbose etag "AHR6C8CZZ78P665JINGDDIP1O"
+119 http request GET https://registry.npmjs.org/nodemon
+120 verbose request uri https://registry.npmjs.org/karma-coverage
+121 verbose request no auth needed
+122 info attempt registry request try #1 at 14:11:51
+123 verbose etag "3FWRUSIWLDFEUJ3SOUM97AFFV"
+124 http request GET https://registry.npmjs.org/karma-coverage
+125 silly cache add args [ 'karma-junit-reporter@latest', null ]
+126 verbose cache add spec karma-junit-reporter@latest
+127 silly cache add args [ 'karma-coveralls@latest', null ]
+128 verbose cache add spec karma-coveralls@latest
+129 silly cache add parsed spec { raw: 'karma-junit-reporter@latest',
+129 silly cache add   scope: null,
+129 silly cache add   name: 'karma-junit-reporter',
+129 silly cache add   rawSpec: 'latest',
+129 silly cache add   spec: 'latest',
+129 silly cache add   type: 'tag' }
+130 silly addNamed karma-junit-reporter@latest
+131 verbose addNamed "latest" is being treated as a dist-tag for karma-junit-reporter
+132 info addNameTag [ 'karma-junit-reporter', 'latest' ]
+133 silly mapToRegistry name karma-junit-reporter
+134 silly mapToRegistry using default registry
+135 silly mapToRegistry registry https://registry.npmjs.org/
+136 silly mapToRegistry uri https://registry.npmjs.org/karma-junit-reporter
+137 verbose addNameTag registry:https://registry.npmjs.org/karma-junit-reporter not in flight; fetching
+138 silly cache add parsed spec { raw: 'karma-coveralls@latest',
+138 silly cache add   scope: null,
+138 silly cache add   name: 'karma-coveralls',
+138 silly cache add   rawSpec: 'latest',
+138 silly cache add   spec: 'latest',
+138 silly cache add   type: 'tag' }
+139 silly addNamed karma-coveralls@latest
+140 verbose addNamed "latest" is being treated as a dist-tag for karma-coveralls
+141 info addNameTag [ 'karma-coveralls', 'latest' ]
+142 silly mapToRegistry name karma-coveralls
+143 silly mapToRegistry using default registry
+144 silly mapToRegistry registry https://registry.npmjs.org/
+145 silly mapToRegistry uri https://registry.npmjs.org/karma-coveralls
+146 verbose addNameTag registry:https://registry.npmjs.org/karma-coveralls not in flight; fetching
+147 silly cache add args [ 'unpipe@latest', null ]
+148 verbose cache add spec unpipe@latest
+149 verbose already installed skipping statuses@latest /home/petrucci/PremiSource
+150 silly cache add args [ 'body-parser@latest', null ]
+151 verbose cache add spec body-parser@latest
+152 silly cache add parsed spec { raw: 'unpipe@latest',
+152 silly cache add   scope: null,
+152 silly cache add   name: 'unpipe',
+152 silly cache add   rawSpec: 'latest',
+152 silly cache add   spec: 'latest',
+152 silly cache add   type: 'tag' }
+153 silly addNamed unpipe@latest
+154 verbose addNamed "latest" is being treated as a dist-tag for unpipe
+155 info addNameTag [ 'unpipe', 'latest' ]
+156 silly mapToRegistry name unpipe
+157 silly mapToRegistry using default registry
+158 silly mapToRegistry registry https://registry.npmjs.org/
+159 silly mapToRegistry uri https://registry.npmjs.org/unpipe
+160 verbose addNameTag registry:https://registry.npmjs.org/unpipe not in flight; fetching
+161 silly cache add args [ 'binary-extensions@latest', null ]
+162 verbose cache add spec binary-extensions@latest
+163 silly cache add parsed spec { raw: 'body-parser@latest',
+163 silly cache add   scope: null,
+163 silly cache add   name: 'body-parser',
+163 silly cache add   rawSpec: 'latest',
+163 silly cache add   spec: 'latest',
+163 silly cache add   type: 'tag' }
+164 silly addNamed body-parser@latest
+165 verbose addNamed "latest" is being treated as a dist-tag for body-parser
+166 info addNameTag [ 'body-parser', 'latest' ]
+167 silly mapToRegistry name body-parser
+168 silly mapToRegistry using default registry
+169 silly mapToRegistry registry https://registry.npmjs.org/
+170 silly mapToRegistry uri https://registry.npmjs.org/body-parser
+171 verbose addNameTag registry:https://registry.npmjs.org/body-parser not in flight; fetching
+172 silly cache add args [ 'express@latest', null ]
+173 verbose cache add spec express@latest
+174 silly cache add parsed spec { raw: 'binary-extensions@latest',
+174 silly cache add   scope: null,
+174 silly cache add   name: 'binary-extensions',
+174 silly cache add   rawSpec: 'latest',
+174 silly cache add   spec: 'latest',
+174 silly cache add   type: 'tag' }
+175 silly addNamed binary-extensions@latest
+176 verbose addNamed "latest" is being treated as a dist-tag for binary-extensions
+177 info addNameTag [ 'binary-extensions', 'latest' ]
+178 silly mapToRegistry name binary-extensions
+179 silly mapToRegistry using default registry
+180 silly mapToRegistry registry https://registry.npmjs.org/
+181 silly mapToRegistry uri https://registry.npmjs.org/binary-extensions
+182 verbose addNameTag registry:https://registry.npmjs.org/binary-extensions not in flight; fetching
+183 silly cache add args [ 'morgan@latest', null ]
+184 verbose cache add spec morgan@latest
+185 silly cache add parsed spec { raw: 'express@latest',
+185 silly cache add   scope: null,
+185 silly cache add   name: 'express',
+185 silly cache add   rawSpec: 'latest',
+185 silly cache add   spec: 'latest',
+185 silly cache add   type: 'tag' }
+186 silly addNamed express@latest
+187 verbose addNamed "latest" is being treated as a dist-tag for express
+188 info addNameTag [ 'express', 'latest' ]
+189 silly mapToRegistry name express
+190 silly mapToRegistry using default registry
+191 silly mapToRegistry registry https://registry.npmjs.org/
+192 silly mapToRegistry uri https://registry.npmjs.org/express
+193 verbose addNameTag registry:https://registry.npmjs.org/express not in flight; fetching
+194 silly cache add parsed spec { raw: 'morgan@latest',
+194 silly cache add   scope: null,
+194 silly cache add   name: 'morgan',
+194 silly cache add   rawSpec: 'latest',
+194 silly cache add   spec: 'latest',
+194 silly cache add   type: 'tag' }
+195 silly addNamed morgan@latest
+196 verbose addNamed "latest" is being treated as a dist-tag for morgan
+197 info addNameTag [ 'morgan', 'latest' ]
+198 silly mapToRegistry name morgan
+199 silly mapToRegistry using default registry
+200 silly mapToRegistry registry https://registry.npmjs.org/
+201 silly mapToRegistry uri https://registry.npmjs.org/morgan
+202 verbose addNameTag registry:https://registry.npmjs.org/morgan not in flight; fetching
+203 silly cache add args [ 'jsonwebtoken@latest', null ]
+204 verbose cache add spec jsonwebtoken@latest
+205 silly cache add args [ 'mongoose@latest', null ]
+206 verbose cache add spec mongoose@latest
+207 silly cache add args [ 'multer@latest', null ]
+208 verbose cache add spec multer@latest
+209 verbose request uri https://registry.npmjs.org/karma-junit-reporter
+210 verbose request no auth needed
+211 info attempt registry request try #1 at 14:11:51
+212 verbose etag "A39F7RFOGNKW1YZSDD444PPNX"
+213 http request GET https://registry.npmjs.org/karma-junit-reporter
+214 verbose request uri https://registry.npmjs.org/karma-coveralls
+215 verbose request no auth needed
+216 info attempt registry request try #1 at 14:11:51
+217 verbose etag "BEKCD7L6T0MDYU3GXF9E3K7PY"
+218 http request GET https://registry.npmjs.org/karma-coveralls
+219 silly cache add parsed spec { raw: 'jsonwebtoken@latest',
+219 silly cache add   scope: null,
+219 silly cache add   name: 'jsonwebtoken',
+219 silly cache add   rawSpec: 'latest',
+219 silly cache add   spec: 'latest',
+219 silly cache add   type: 'tag' }
+220 silly addNamed jsonwebtoken@latest
+221 verbose addNamed "latest" is being treated as a dist-tag for jsonwebtoken
+222 info addNameTag [ 'jsonwebtoken', 'latest' ]
+223 silly mapToRegistry name jsonwebtoken
+224 silly mapToRegistry using default registry
+225 silly mapToRegistry registry https://registry.npmjs.org/
+226 silly mapToRegistry uri https://registry.npmjs.org/jsonwebtoken
+227 verbose addNameTag registry:https://registry.npmjs.org/jsonwebtoken not in flight; fetching
+228 silly cache add parsed spec { raw: 'mongoose@latest',
+228 silly cache add   scope: null,
+228 silly cache add   name: 'mongoose',
+228 silly cache add   rawSpec: 'latest',
+228 silly cache add   spec: 'latest',
+228 silly cache add   type: 'tag' }
+229 silly addNamed mongoose@latest
+230 verbose addNamed "latest" is being treated as a dist-tag for mongoose
+231 info addNameTag [ 'mongoose', 'latest' ]
+232 silly mapToRegistry name mongoose
+233 silly mapToRegistry using default registry
+234 silly mapToRegistry registry https://registry.npmjs.org/
+235 silly mapToRegistry uri https://registry.npmjs.org/mongoose
+236 verbose addNameTag registry:https://registry.npmjs.org/mongoose not in flight; fetching
+237 silly cache add args [ 'mongodb@latest', null ]
+238 verbose cache add spec mongodb@latest
+239 silly cache add args [ 'karma@latest', null ]
+240 verbose cache add spec karma@latest
+241 silly cache add args [ 'karma-jasmine@latest', null ]
+242 verbose cache add spec karma-jasmine@latest
+243 verbose already installed skipping http-server@^0.6.1 /home/petrucci/PremiSource
+244 verbose already installed skipping tmp@0.0.23 /home/petrucci/PremiSource
+245 verbose already installed skipping bower@^1.3.1 /home/petrucci/PremiSource
+246 verbose already installed skipping shelljs@^0.2.6 /home/petrucci/PremiSource
+247 verbose already installed skipping phantomjs@latest /home/petrucci/PremiSource
+248 silly cache add parsed spec { raw: 'multer@latest',
+248 silly cache add   scope: null,
+248 silly cache add   name: 'multer',
+248 silly cache add   rawSpec: 'latest',
+248 silly cache add   spec: 'latest',
+248 silly cache add   type: 'tag' }
+249 silly addNamed multer@latest
+250 verbose addNamed "latest" is being treated as a dist-tag for multer
+251 info addNameTag [ 'multer', 'latest' ]
+252 silly mapToRegistry name multer
+253 silly mapToRegistry using default registry
+254 silly mapToRegistry registry https://registry.npmjs.org/
+255 silly mapToRegistry uri https://registry.npmjs.org/multer
+256 verbose addNameTag registry:https://registry.npmjs.org/multer not in flight; fetching
+257 verbose request uri https://registry.npmjs.org/unpipe
+258 verbose request no auth needed
+259 info attempt registry request try #1 at 14:11:51
+260 verbose etag "CUYWL81QRNALZ6DFGKEASW9Q0"
+261 http request GET https://registry.npmjs.org/unpipe
+262 silly cache add parsed spec { raw: 'mongodb@latest',
+262 silly cache add   scope: null,
+262 silly cache add   name: 'mongodb',
+262 silly cache add   rawSpec: 'latest',
+262 silly cache add   spec: 'latest',
+262 silly cache add   type: 'tag' }
+263 silly addNamed mongodb@latest
+264 verbose addNamed "latest" is being treated as a dist-tag for mongodb
+265 info addNameTag [ 'mongodb', 'latest' ]
+266 silly mapToRegistry name mongodb
+267 silly mapToRegistry using default registry
+268 silly mapToRegistry registry https://registry.npmjs.org/
+269 silly mapToRegistry uri https://registry.npmjs.org/mongodb
+270 verbose addNameTag registry:https://registry.npmjs.org/mongodb not in flight; fetching
+271 silly cache add parsed spec { raw: 'karma@latest',
+271 silly cache add   scope: null,
+271 silly cache add   name: 'karma',
+271 silly cache add   rawSpec: 'latest',
+271 silly cache add   spec: 'latest',
+271 silly cache add   type: 'tag' }
+272 silly addNamed karma@latest
+273 verbose addNamed "latest" is being treated as a dist-tag for karma
+274 info addNameTag [ 'karma', 'latest' ]
+275 silly mapToRegistry name karma
+276 silly mapToRegistry using default registry
+277 silly mapToRegistry registry https://registry.npmjs.org/
+278 silly mapToRegistry uri https://registry.npmjs.org/karma
+279 verbose addNameTag registry:https://registry.npmjs.org/karma not in flight; fetching
+280 silly cache add parsed spec { raw: 'karma-jasmine@latest',
+280 silly cache add   scope: null,
+280 silly cache add   name: 'karma-jasmine',
+280 silly cache add   rawSpec: 'latest',
+280 silly cache add   spec: 'latest',
+280 silly cache add   type: 'tag' }
+281 silly addNamed karma-jasmine@latest
+282 verbose addNamed "latest" is being treated as a dist-tag for karma-jasmine
+283 info addNameTag [ 'karma-jasmine', 'latest' ]
+284 silly mapToRegistry name karma-jasmine
+285 silly mapToRegistry using default registry
+286 silly mapToRegistry registry https://registry.npmjs.org/
+287 silly mapToRegistry uri https://registry.npmjs.org/karma-jasmine
+288 verbose addNameTag registry:https://registry.npmjs.org/karma-jasmine not in flight; fetching
+289 verbose already installed skipping karma-phantomjs-launcher@latest /home/petrucci/PremiSource
+290 verbose already installed skipping mocha@^2.2.4 /home/petrucci/PremiSource
+291 silly cache add args [ 'istanbul@latest', null ]
+292 verbose cache add spec istanbul@latest
+293 verbose already installed skipping coveralls@latest /home/petrucci/PremiSource
+294 verbose request uri https://registry.npmjs.org/body-parser
+295 verbose request no auth needed
+296 info attempt registry request try #1 at 14:11:51
+297 verbose etag "DQHPHO6Q3JLQW3ZITVRBGYPE8"
+298 http request GET https://registry.npmjs.org/body-parser
+299 silly cache add parsed spec { raw: 'istanbul@latest',
+299 silly cache add   scope: null,
+299 silly cache add   name: 'istanbul',
+299 silly cache add   rawSpec: 'latest',
+299 silly cache add   spec: 'latest',
+299 silly cache add   type: 'tag' }
+300 silly addNamed istanbul@latest
+301 verbose addNamed "latest" is being treated as a dist-tag for istanbul
+302 info addNameTag [ 'istanbul', 'latest' ]
+303 silly mapToRegistry name istanbul
+304 silly mapToRegistry using default registry
+305 silly mapToRegistry registry https://registry.npmjs.org/
+306 silly mapToRegistry uri https://registry.npmjs.org/istanbul
+307 verbose addNameTag registry:https://registry.npmjs.org/istanbul not in flight; fetching
+308 verbose request uri https://registry.npmjs.org/binary-extensions
+309 verbose request no auth needed
+310 info attempt registry request try #1 at 14:11:51
+311 verbose etag "2196G33WHFOK7OR8I9HMRXGHB"
+312 http request GET https://registry.npmjs.org/binary-extensions
+313 verbose request uri https://registry.npmjs.org/express
+314 verbose request no auth needed
+315 info attempt registry request try #1 at 14:11:51
+316 verbose etag "D0EUUM1TLX82Y2A8K9GHYSLMG"
+317 http request GET https://registry.npmjs.org/express
+318 verbose request uri https://registry.npmjs.org/morgan
+319 verbose request no auth needed
+320 info attempt registry request try #1 at 14:11:51
+321 verbose etag "2088EMFN6LNKIP50H45I12MN6"
+322 http request GET https://registry.npmjs.org/morgan
+323 verbose request uri https://registry.npmjs.org/jsonwebtoken
+324 verbose request no auth needed
+325 info attempt registry request try #1 at 14:11:51
+326 verbose etag "CWMSL3DJPKG54T9PQ850WYMOT"
+327 http request GET https://registry.npmjs.org/jsonwebtoken
+328 verbose request uri https://registry.npmjs.org/mongoose
+329 verbose request no auth needed
+330 info attempt registry request try #1 at 14:11:51
+331 verbose etag "F2T381OGEVIRU931CGG9P644G"
+332 http request GET https://registry.npmjs.org/mongoose
+333 verbose request uri https://registry.npmjs.org/multer
+334 verbose request no auth needed
+335 info attempt registry request try #1 at 14:11:51
+336 verbose etag "8K6EM252KCGJC8Y6JVANAIFJE"
+337 http request GET https://registry.npmjs.org/multer
+338 verbose request uri https://registry.npmjs.org/karma-jasmine
+339 verbose request no auth needed
+340 info attempt registry request try #1 at 14:11:51
+341 verbose etag "KXGWFADG3TUQKXGSAMT3UF4G"
+342 http request GET https://registry.npmjs.org/karma-jasmine
+343 verbose request uri https://registry.npmjs.org/mongodb
+344 verbose request no auth needed
+345 info attempt registry request try #1 at 14:11:51
+346 verbose etag "3J422T3DHX12VPH3K13Q7AJL1"
+347 http request GET https://registry.npmjs.org/mongodb
+348 verbose request uri https://registry.npmjs.org/karma
+349 verbose request no auth needed
+350 info attempt registry request try #1 at 14:11:51
+351 verbose etag "9PN8AKEXZE7J5PCQDTLL5JCGH"
+352 http request GET https://registry.npmjs.org/karma
+353 verbose request uri https://registry.npmjs.org/istanbul
+354 verbose request no auth needed
+355 info attempt registry request try #1 at 14:11:51
+356 verbose etag "B4SP4YBB39F87TL5TO939PNBW"
+357 http request GET https://registry.npmjs.org/istanbul
+358 http 304 https://registry.npmjs.org/nodemon
+359 silly get cb [ 304,
+359 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+359 silly get     via: '1.1 varnish',
+359 silly get     'cache-control': 'max-age=60',
+359 silly get     etag: '"AHR6C8CZZ78P665JINGDDIP1O"',
+359 silly get     age: '42',
+359 silly get     connection: 'keep-alive',
+359 silly get     'x-served-by': 'cache-fra1244-FRA',
+359 silly get     'x-cache': 'HIT',
+359 silly get     'x-cache-hits': '1',
+359 silly get     'x-timer': 'S1436962311.279736,VS0,VE0',
+359 silly get     vary: 'Accept' } ]
+360 verbose etag https://registry.npmjs.org/nodemon from cache
+361 verbose get saving nodemon to /home/petrucci/.npm/registry.npmjs.org/nodemon/.cache.json
+362 http 304 https://registry.npmjs.org/karma-coverage
+363 silly get cb [ 304,
+363 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+363 silly get     via: '1.1 varnish',
+363 silly get     'cache-control': 'max-age=60',
+363 silly get     etag: '"3FWRUSIWLDFEUJ3SOUM97AFFV"',
+363 silly get     age: '33',
+363 silly get     connection: 'keep-alive',
+363 silly get     'x-served-by': 'cache-fra1224-FRA',
+363 silly get     'x-cache': 'HIT',
+363 silly get     'x-cache-hits': '1',
+363 silly get     'x-timer': 'S1436962311.286551,VS0,VE0',
+363 silly get     vary: 'Accept' } ]
+364 verbose etag https://registry.npmjs.org/karma-coverage from cache
+365 verbose get saving karma-coverage to /home/petrucci/.npm/registry.npmjs.org/karma-coverage/.cache.json
+366 silly addNameTag next cb for nodemon with tag latest
+367 silly addNamed nodemon@1.3.7
+368 verbose addNamed "1.3.7" is a plain semver version for nodemon
+369 silly addNameTag next cb for karma-coverage with tag latest
+370 silly addNamed karma-coverage@0.4.2
+371 verbose addNamed "0.4.2" is a plain semver version for karma-coverage
+372 silly cache afterAdd nodemon@1.3.7
+373 verbose afterAdd /home/petrucci/.npm/nodemon/1.3.7/package/package.json not in flight; writing
+374 silly cache afterAdd karma-coverage@0.4.2
+375 verbose afterAdd /home/petrucci/.npm/karma-coverage/0.4.2/package/package.json not in flight; writing
+376 http 304 https://registry.npmjs.org/karma-junit-reporter
+377 silly get cb [ 304,
+377 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+377 silly get     via: '1.1 varnish',
+377 silly get     'cache-control': 'max-age=60',
+377 silly get     etag: '"A39F7RFOGNKW1YZSDD444PPNX"',
+377 silly get     age: '5',
+377 silly get     connection: 'keep-alive',
+377 silly get     'x-served-by': 'cache-fra1229-FRA',
+377 silly get     'x-cache': 'HIT',
+377 silly get     'x-cache-hits': '1',
+377 silly get     'x-timer': 'S1436962311.308409,VS0,VE0',
+377 silly get     vary: 'Accept' } ]
+378 verbose etag https://registry.npmjs.org/karma-junit-reporter from cache
+379 verbose get saving karma-junit-reporter to /home/petrucci/.npm/registry.npmjs.org/karma-junit-reporter/.cache.json
+380 http 304 https://registry.npmjs.org/express
+381 silly get cb [ 304,
+381 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+381 silly get     via: '1.1 varnish',
+381 silly get     'cache-control': 'max-age=60',
+381 silly get     etag: '"D0EUUM1TLX82Y2A8K9GHYSLMG"',
+381 silly get     age: '52',
+381 silly get     connection: 'keep-alive',
+381 silly get     'x-served-by': 'cache-fra1244-FRA',
+381 silly get     'x-cache': 'HIT',
+381 silly get     'x-cache-hits': '2',
+381 silly get     'x-timer': 'S1436962311.326970,VS0,VE0',
+381 silly get     vary: 'Accept' } ]
+382 verbose etag https://registry.npmjs.org/express from cache
+383 verbose get saving express to /home/petrucci/.npm/registry.npmjs.org/express/.cache.json
+384 http 304 https://registry.npmjs.org/body-parser
+385 silly get cb [ 304,
+385 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+385 silly get     via: '1.1 varnish',
+385 silly get     'cache-control': 'max-age=60',
+385 silly get     etag: '"DQHPHO6Q3JLQW3ZITVRBGYPE8"',
+385 silly get     age: '57',
+385 silly get     connection: 'keep-alive',
+385 silly get     'x-served-by': 'cache-fra1239-FRA',
+385 silly get     'x-cache': 'HIT',
+385 silly get     'x-cache-hits': '1',
+385 silly get     'x-timer': 'S1436962311.328072,VS0,VE0',
+385 silly get     vary: 'Accept' } ]
+386 verbose etag https://registry.npmjs.org/body-parser from cache
+387 verbose get saving body-parser to /home/petrucci/.npm/registry.npmjs.org/body-parser/.cache.json
+388 http 304 https://registry.npmjs.org/unpipe
+389 silly get cb [ 304,
+389 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+389 silly get     via: '1.1 varnish',
+389 silly get     'cache-control': 'max-age=60',
+389 silly get     etag: '"CUYWL81QRNALZ6DFGKEASW9Q0"',
+389 silly get     age: '30',
+389 silly get     connection: 'keep-alive',
+389 silly get     'x-served-by': 'cache-fra1240-FRA',
+389 silly get     'x-cache': 'HIT',
+389 silly get     'x-cache-hits': '1',
+389 silly get     'x-timer': 'S1436962311.328131,VS0,VE0',
+389 silly get     vary: 'Accept' } ]
+390 verbose etag https://registry.npmjs.org/unpipe from cache
+391 verbose get saving unpipe to /home/petrucci/.npm/registry.npmjs.org/unpipe/.cache.json
+392 http 304 https://registry.npmjs.org/karma-coveralls
+393 silly get cb [ 304,
+393 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+393 silly get     via: '1.1 varnish',
+393 silly get     'cache-control': 'max-age=60',
+393 silly get     etag: '"BEKCD7L6T0MDYU3GXF9E3K7PY"',
+393 silly get     age: '22',
+393 silly get     connection: 'keep-alive',
+393 silly get     'x-served-by': 'cache-fra1237-FRA',
+393 silly get     'x-cache': 'HIT',
+393 silly get     'x-cache-hits': '2',
+393 silly get     'x-timer': 'S1436962311.328947,VS0,VE0',
+393 silly get     vary: 'Accept' } ]
+394 verbose etag https://registry.npmjs.org/karma-coveralls from cache
+395 verbose get saving karma-coveralls to /home/petrucci/.npm/registry.npmjs.org/karma-coveralls/.cache.json
+396 verbose afterAdd /home/petrucci/.npm/nodemon/1.3.7/package/package.json written
+397 info already installed nodemon@1.3.7
+398 http 304 https://registry.npmjs.org/binary-extensions
+399 silly get cb [ 304,
+399 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+399 silly get     via: '1.1 varnish',
+399 silly get     'cache-control': 'max-age=60',
+399 silly get     etag: '"2196G33WHFOK7OR8I9HMRXGHB"',
+399 silly get     age: '7',
+399 silly get     connection: 'keep-alive',
+399 silly get     'x-served-by': 'cache-fra1234-FRA',
+399 silly get     'x-cache': 'HIT',
+399 silly get     'x-cache-hits': '1203',
+399 silly get     'x-timer': 'S1436962311.332015,VS0,VE0',
+399 silly get     vary: 'Accept' } ]
+400 verbose etag https://registry.npmjs.org/binary-extensions from cache
+401 verbose get saving binary-extensions to /home/petrucci/.npm/registry.npmjs.org/binary-extensions/.cache.json
+402 http 304 https://registry.npmjs.org/morgan
+403 silly get cb [ 304,
+403 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+403 silly get     via: '1.1 varnish',
+403 silly get     'cache-control': 'max-age=60',
+403 silly get     etag: '"2088EMFN6LNKIP50H45I12MN6"',
+403 silly get     age: '18',
+403 silly get     connection: 'keep-alive',
+403 silly get     'x-served-by': 'cache-fra1222-FRA',
+403 silly get     'x-cache': 'HIT',
+403 silly get     'x-cache-hits': '2',
+403 silly get     'x-timer': 'S1436962311.355830,VS0,VE0',
+403 silly get     vary: 'Accept' } ]
+404 verbose etag https://registry.npmjs.org/morgan from cache
+405 verbose get saving morgan to /home/petrucci/.npm/registry.npmjs.org/morgan/.cache.json
+406 verbose afterAdd /home/petrucci/.npm/karma-coverage/0.4.2/package/package.json written
+407 info already installed karma-coverage@0.4.2
+408 http 304 https://registry.npmjs.org/mongodb
+409 silly get cb [ 304,
+409 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+409 silly get     via: '1.1 varnish',
+409 silly get     'cache-control': 'max-age=60',
+409 silly get     etag: '"3J422T3DHX12VPH3K13Q7AJL1"',
+409 silly get     age: '22',
+409 silly get     connection: 'keep-alive',
+409 silly get     'x-served-by': 'cache-fra1229-FRA',
+409 silly get     'x-cache': 'HIT',
+409 silly get     'x-cache-hits': '1',
+409 silly get     'x-timer': 'S1436962311.365320,VS0,VE1',
+409 silly get     vary: 'Accept' } ]
+410 verbose etag https://registry.npmjs.org/mongodb from cache
+411 verbose get saving mongodb to /home/petrucci/.npm/registry.npmjs.org/mongodb/.cache.json
+412 silly addNameTag next cb for karma-junit-reporter with tag latest
+413 silly addNamed karma-junit-reporter@0.3.1
+414 verbose addNamed "0.3.1" is a plain semver version for karma-junit-reporter
+415 silly addNameTag next cb for express with tag latest
+416 silly addNamed express@4.13.1
+417 verbose addNamed "4.13.1" is a plain semver version for express
+418 silly addNameTag next cb for body-parser with tag latest
+419 silly addNamed body-parser@1.13.2
+420 verbose addNamed "1.13.2" is a plain semver version for body-parser
+421 silly addNameTag next cb for karma-coveralls with tag latest
+422 silly addNamed karma-coveralls@1.1.2
+423 verbose addNamed "1.1.2" is a plain semver version for karma-coveralls
+424 silly addNameTag next cb for unpipe with tag latest
+425 silly addNamed unpipe@1.0.0
+426 verbose addNamed "1.0.0" is a plain semver version for unpipe
+427 silly addNameTag next cb for binary-extensions with tag latest
+428 silly addNamed binary-extensions@1.3.1
+429 verbose addNamed "1.3.1" is a plain semver version for binary-extensions
+430 silly addNameTag next cb for morgan with tag latest
+431 silly addNamed morgan@1.6.1
+432 verbose addNamed "1.6.1" is a plain semver version for morgan
+433 silly cache afterAdd karma-junit-reporter@0.3.1
+434 verbose afterAdd /home/petrucci/.npm/karma-junit-reporter/0.3.1/package/package.json not in flight; writing
+435 silly addNameTag next cb for mongodb with tag latest
+436 silly addNamed mongodb@2.0.39
+437 verbose addNamed "2.0.39" is a plain semver version for mongodb
+438 silly cache afterAdd express@4.13.1
+439 verbose afterAdd /home/petrucci/.npm/express/4.13.1/package/package.json not in flight; writing
+440 silly cache afterAdd body-parser@1.13.2
+441 verbose afterAdd /home/petrucci/.npm/body-parser/1.13.2/package/package.json not in flight; writing
+442 silly cache afterAdd karma-coveralls@1.1.2
+443 verbose afterAdd /home/petrucci/.npm/karma-coveralls/1.1.2/package/package.json not in flight; writing
+444 silly cache afterAdd unpipe@1.0.0
+445 verbose afterAdd /home/petrucci/.npm/unpipe/1.0.0/package/package.json not in flight; writing
+446 silly cache afterAdd binary-extensions@1.3.1
+447 verbose afterAdd /home/petrucci/.npm/binary-extensions/1.3.1/package/package.json not in flight; writing
+448 silly cache afterAdd morgan@1.6.1
+449 verbose afterAdd /home/petrucci/.npm/morgan/1.6.1/package/package.json not in flight; writing
+450 verbose afterAdd /home/petrucci/.npm/karma-junit-reporter/0.3.1/package/package.json written
+451 info already installed karma-junit-reporter@0.3.1
+452 verbose afterAdd /home/petrucci/.npm/express/4.13.1/package/package.json written
+453 info already installed express@4.13.1
+454 verbose afterAdd /home/petrucci/.npm/body-parser/1.13.2/package/package.json written
+455 info already installed body-parser@1.13.2
+456 silly cache afterAdd mongodb@2.0.39
+457 verbose afterAdd /home/petrucci/.npm/mongodb/2.0.39/package/package.json not in flight; writing
+458 verbose afterAdd /home/petrucci/.npm/unpipe/1.0.0/package/package.json written
+459 info already installed unpipe@1.0.0
+460 verbose afterAdd /home/petrucci/.npm/karma-coveralls/1.1.2/package/package.json written
+461 info already installed karma-coveralls@1.1.2
+462 verbose afterAdd /home/petrucci/.npm/binary-extensions/1.3.1/package/package.json written
+463 info already installed binary-extensions@1.3.1
+464 verbose afterAdd /home/petrucci/.npm/morgan/1.6.1/package/package.json written
+465 info already installed morgan@1.6.1
+466 verbose afterAdd /home/petrucci/.npm/mongodb/2.0.39/package/package.json written
+467 info already installed mongodb@2.0.39
+468 http 304 https://registry.npmjs.org/jsonwebtoken
+469 silly get cb [ 304,
+469 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+469 silly get     via: '1.1 varnish',
+469 silly get     'cache-control': 'max-age=60',
+469 silly get     etag: '"CWMSL3DJPKG54T9PQ850WYMOT"',
+469 silly get     age: '22',
+469 silly get     connection: 'keep-alive',
+469 silly get     'x-served-by': 'cache-fra1240-FRA',
+469 silly get     'x-cache': 'HIT',
+469 silly get     'x-cache-hits': '1',
+469 silly get     'x-timer': 'S1436962311.400589,VS0,VE0',
+469 silly get     vary: 'Accept' } ]
+470 verbose etag https://registry.npmjs.org/jsonwebtoken from cache
+471 verbose get saving jsonwebtoken to /home/petrucci/.npm/registry.npmjs.org/jsonwebtoken/.cache.json
+472 http 304 https://registry.npmjs.org/multer
+473 silly get cb [ 304,
+473 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+473 silly get     via: '1.1 varnish',
+473 silly get     'cache-control': 'max-age=60',
+473 silly get     etag: '"8K6EM252KCGJC8Y6JVANAIFJE"',
+473 silly get     age: '37',
+473 silly get     connection: 'keep-alive',
+473 silly get     'x-served-by': 'cache-fra1225-FRA',
+473 silly get     'x-cache': 'HIT',
+473 silly get     'x-cache-hits': '1',
+473 silly get     'x-timer': 'S1436962311.401806,VS0,VE0',
+473 silly get     vary: 'Accept' } ]
+474 verbose etag https://registry.npmjs.org/multer from cache
+475 verbose get saving multer to /home/petrucci/.npm/registry.npmjs.org/multer/.cache.json
+476 http 304 https://registry.npmjs.org/mongoose
+477 silly get cb [ 304,
+477 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+477 silly get     via: '1.1 varnish',
+477 silly get     'cache-control': 'max-age=60',
+477 silly get     etag: '"F2T381OGEVIRU931CGG9P644G"',
+477 silly get     age: '24',
+477 silly get     connection: 'keep-alive',
+477 silly get     'x-served-by': 'cache-fra1232-FRA',
+477 silly get     'x-cache': 'HIT',
+477 silly get     'x-cache-hits': '1',
+477 silly get     'x-timer': 'S1436962311.400441,VS0,VE2',
+477 silly get     vary: 'Accept' } ]
+478 verbose etag https://registry.npmjs.org/mongoose from cache
+479 verbose get saving mongoose to /home/petrucci/.npm/registry.npmjs.org/mongoose/.cache.json
+480 http 304 https://registry.npmjs.org/karma-jasmine
+481 silly get cb [ 304,
+481 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+481 silly get     via: '1.1 varnish',
+481 silly get     'cache-control': 'max-age=60',
+481 silly get     etag: '"KXGWFADG3TUQKXGSAMT3UF4G"',
+481 silly get     age: '41',
+481 silly get     connection: 'keep-alive',
+481 silly get     'x-served-by': 'cache-fra1221-FRA',
+481 silly get     'x-cache': 'HIT',
+481 silly get     'x-cache-hits': '2',
+481 silly get     'x-timer': 'S1436962311.403781,VS0,VE0',
+481 silly get     vary: 'Accept' } ]
+482 verbose etag https://registry.npmjs.org/karma-jasmine from cache
+483 verbose get saving karma-jasmine to /home/petrucci/.npm/registry.npmjs.org/karma-jasmine/.cache.json
+484 http 304 https://registry.npmjs.org/istanbul
+485 silly get cb [ 304,
+485 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+485 silly get     via: '1.1 varnish',
+485 silly get     'cache-control': 'max-age=60',
+485 silly get     etag: '"B4SP4YBB39F87TL5TO939PNBW"',
+485 silly get     age: '15',
+485 silly get     connection: 'keep-alive',
+485 silly get     'x-served-by': 'cache-fra1227-FRA',
+485 silly get     'x-cache': 'HIT',
+485 silly get     'x-cache-hits': '1',
+485 silly get     'x-timer': 'S1436962311.403911,VS0,VE1',
+485 silly get     vary: 'Accept' } ]
+486 verbose etag https://registry.npmjs.org/istanbul from cache
+487 verbose get saving istanbul to /home/petrucci/.npm/registry.npmjs.org/istanbul/.cache.json
+488 silly addNameTag next cb for jsonwebtoken with tag latest
+489 silly addNamed jsonwebtoken@5.0.4
+490 verbose addNamed "5.0.4" is a plain semver version for jsonwebtoken
+491 http 304 https://registry.npmjs.org/karma
+492 silly get cb [ 304,
+492 silly get   { date: 'Wed, 15 Jul 2015 12:11:51 GMT',
+492 silly get     via: '1.1 varnish',
+492 silly get     'cache-control': 'max-age=60',
+492 silly get     etag: '"9PN8AKEXZE7J5PCQDTLL5JCGH"',
+492 silly get     age: '8',
+492 silly get     connection: 'keep-alive',
+492 silly get     'x-served-by': 'cache-fra1234-FRA',
+492 silly get     'x-cache': 'HIT',
+492 silly get     'x-cache-hits': '1',
+492 silly get     'x-timer': 'S1436962311.401692,VS0,VE3',
+492 silly get     vary: 'Accept' } ]
+493 verbose etag https://registry.npmjs.org/karma from cache
+494 verbose get saving karma to /home/petrucci/.npm/registry.npmjs.org/karma/.cache.json
+495 silly addNameTag next cb for multer with tag latest
+496 silly addNamed multer@0.1.8
+497 verbose addNamed "0.1.8" is a plain semver version for multer
+498 silly cache afterAdd jsonwebtoken@5.0.4
+499 verbose afterAdd /home/petrucci/.npm/jsonwebtoken/5.0.4/package/package.json not in flight; writing
+500 silly cache afterAdd multer@0.1.8
+501 verbose afterAdd /home/petrucci/.npm/multer/0.1.8/package/package.json not in flight; writing
+502 silly addNameTag next cb for mongoose with tag latest
+503 silly addNamed mongoose@4.0.7
+504 verbose addNamed "4.0.7" is a plain semver version for mongoose
+505 silly addNameTag next cb for karma-jasmine with tag latest
+506 silly addNamed karma-jasmine@0.3.6
+507 verbose addNamed "0.3.6" is a plain semver version for karma-jasmine
+508 silly addNameTag next cb for istanbul with tag latest
+509 silly addNamed istanbul@0.3.17
+510 verbose addNamed "0.3.17" is a plain semver version for istanbul
+511 silly addNameTag next cb for karma with tag latest
+512 silly addNamed karma@0.12.37
+513 verbose addNamed "0.12.37" is a plain semver version for karma
+514 verbose afterAdd /home/petrucci/.npm/jsonwebtoken/5.0.4/package/package.json written
+515 verbose afterAdd /home/petrucci/.npm/multer/0.1.8/package/package.json written
+516 info already installed multer@0.1.8
+517 silly cache afterAdd mongoose@4.0.7
+518 verbose afterAdd /home/petrucci/.npm/mongoose/4.0.7/package/package.json not in flight; writing
+519 silly cache afterAdd karma-jasmine@0.3.6
+520 verbose afterAdd /home/petrucci/.npm/karma-jasmine/0.3.6/package/package.json not in flight; writing
+521 silly cache afterAdd istanbul@0.3.17
+522 verbose afterAdd /home/petrucci/.npm/istanbul/0.3.17/package/package.json not in flight; writing
+523 silly cache afterAdd karma@0.12.37
+524 verbose afterAdd /home/petrucci/.npm/karma/0.12.37/package/package.json not in flight; writing
+525 verbose afterAdd /home/petrucci/.npm/karma-jasmine/0.3.6/package/package.json written
+526 info already installed karma-jasmine@0.3.6
+527 verbose afterAdd /home/petrucci/.npm/mongoose/4.0.7/package/package.json written
+528 info already installed mongoose@4.0.7
+529 verbose afterAdd /home/petrucci/.npm/istanbul/0.3.17/package/package.json written
+530 info already installed istanbul@0.3.17
+531 verbose afterAdd /home/petrucci/.npm/karma/0.12.37/package/package.json written
+532 info already installed karma@0.12.37
+533 silly install resolved [ { name: 'jsonwebtoken',
+533 silly install resolved     version: '5.0.4',
+533 silly install resolved     description: 'JSON Web Token implementation (symmetric and asymmetric)',
+533 silly install resolved     main: 'index.js',
+533 silly install resolved     scripts: { test: 'mocha' },
+533 silly install resolved     repository:
+533 silly install resolved      { type: 'git',
+533 silly install resolved        url: 'git+https://github.com/auth0/node-jsonwebtoken.git' },
+533 silly install resolved     keywords: [ 'jwt' ],
+533 silly install resolved     author: { name: 'auth0' },
+533 silly install resolved     license: 'MIT',
+533 silly install resolved     bugs: { url: 'https://github.com/auth0/node-jsonwebtoken/issues' },
+533 silly install resolved     dependencies: { jws: '^3.0.0' },
+533 silly install resolved     devDependencies: { atob: '^1.1.2', chai: '^1.10.0', mocha: '^2.1.0' },
+533 silly install resolved     engines: { npm: '>=1.4.28' },
+533 silly install resolved     gitHead: '7b9f509641eff3b0aae79001965272c6bf88ca2a',
+533 silly install resolved     homepage: 'https://github.com/auth0/node-jsonwebtoken#readme',
+533 silly install resolved     _id: 'jsonwebtoken@5.0.4',
+533 silly install resolved     _shasum: '4099dd73842da454386bf6a4fc18bc638b15cd03',
+533 silly install resolved     _from: 'jsonwebtoken@latest',
+533 silly install resolved     _npmVersion: '2.10.1',
+533 silly install resolved     _nodeVersion: '0.12.4',
+533 silly install resolved     _npmUser: { name: 'jfromaniello', email: 'jfromaniello@gmail.com' },
+533 silly install resolved     maintainers: [ [Object], [Object], [Object], [Object], [Object], [Object] ],
+533 silly install resolved     dist:
+533 silly install resolved      { shasum: '4099dd73842da454386bf6a4fc18bc638b15cd03',
+533 silly install resolved        tarball: 'http://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-5.0.4.tgz' },
+533 silly install resolved     directories: {},
+533 silly install resolved     _resolved: 'https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-5.0.4.tgz',
+533 silly install resolved     readme: 'ERROR: No README data found!' } ]
+534 info install jsonwebtoken@5.0.4 into /home/petrucci/PremiSource
+535 info installOne jsonwebtoken@5.0.4
+536 verbose installOne of jsonwebtoken to /home/petrucci/PremiSource not in flight; installing
+537 warn locking Error: EACCES, open '/home/petrucci/.npm/_locks/jsonwebtoken-cee7c0e88b622094.lock'
+537 warn locking     at Error (native)
+537 warn locking  /home/petrucci/.npm/_locks/jsonwebtoken-cee7c0e88b622094.lock failed { [Error: EACCES, open '/home/petrucci/.npm/_locks/jsonwebtoken-cee7c0e88b622094.lock']
+537 warn locking   errno: -13,
+537 warn locking   code: 'EACCES',
+537 warn locking   path: '/home/petrucci/.npm/_locks/jsonwebtoken-cee7c0e88b622094.lock' }
+538 verbose stack Error: Attempt to unlock /home/petrucci/PremiSource/node_modules/jsonwebtoken, which hasn't been locked
+538 verbose stack     at unlock (/usr/lib/node_modules/npm/lib/utils/locker.js:66:11)
+538 verbose stack     at cb (/usr/lib/node_modules/npm/lib/install.js:1017:5)
+538 verbose stack     at /usr/lib/node_modules/npm/lib/install.js:1021:20
+538 verbose stack     at /usr/lib/node_modules/npm/lib/utils/locker.js:40:9
+538 verbose stack     at cb (/usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:149:38)
+538 verbose stack     at /usr/lib/node_modules/npm/node_modules/lockfile/lockfile.js:177:38
+538 verbose stack     at FSReqWrap.oncomplete (fs.js:95:15)
+539 verbose cwd /home/petrucci/PremiSource
+540 error Linux 3.13.0-37-generic
+541 error argv "/usr/bin/node" "/usr/bin/npm" "install"
+542 error node v0.12.4
+543 error npm  v2.10.1
+544 error Attempt to unlock /home/petrucci/PremiSource/node_modules/jsonwebtoken, which hasn't been locked
+545 error If you need help, you may report this error at:
+545 error     <https://github.com/npm/npm/issues>
+546 verbose exit [ 1, true ]

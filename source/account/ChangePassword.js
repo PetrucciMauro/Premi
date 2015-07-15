@@ -11,6 +11,8 @@ var MongoClient = require('mongodb').MongoClient;
 //=========
 
 var post = function(req, res) {
+	console.log("Change pwd");
+	console.log(req.headers);
 	var header=req.headers['authorization']||'null';
 	parts=header.split(/:/);
 	user=parts[0];
@@ -18,7 +20,9 @@ var post = function(req, res) {
 	passNew=parts[2];
 	
 	MongoClient.connect(database, function(err, db) {
+		console.log("MongoClient.connect");
 		if(err) throw err;
+		console.log("MongoClient.connect no error");
 		db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
 			if(err) throw err;
 			if(doc != null){

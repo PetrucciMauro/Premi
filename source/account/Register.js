@@ -2,7 +2,9 @@
 // configuration
 //==============
 
+var jwt    = require('jsonwebtoken');
 var config = require('../../config');
+var secret = config.secret;
 var database = config.database;
 var MongoClient = require('mongodb').MongoClient;
 var fs = require('fs');
@@ -24,7 +26,10 @@ var post = function(req, res) {
 				db.collection('users').insert({'username': user, 'password': pass}, function(err, doc){
 					if(err) throw err;
 					console.dir('called insert()');
-					res.json({
+					var token = jwt.sign({user: user}, secret, {
+						expiresInMinutes: 1440 // expires in 24 hours
+					});
+					var json = JSON.stringify({
 						success: true,
 						message: 'User '+user+' registered',
 						token: token
@@ -33,6 +38,8 @@ var post = function(req, res) {
 					fs.mkdirSync(__dirname+'/../../files/'+user+'/image');
 					fs.mkdirSync(__dirname+'/../../files/'+user+'/video');
 					fs.mkdirSync(__dirname+'/../../files/'+user+'/audio');
+					console.log("Guarda qui:"+__dirname+'/../../files/'+user);
+					res.end(json);
 				});
 			}
 			else{

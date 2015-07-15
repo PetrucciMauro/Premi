@@ -1,0 +1,57 @@
+<!doctype html>
+<html  ng-app='premiApp'>
+<head>
+	<meta charset="utf-8">
+	<title>Premi</title>
+	<link rel="stylesheet" href="app/bower_components/bootstrap/dist/css/bootstrap.css">
+	<link rel="stylesheet" href="app/css/app.css">
+	<link rel="stylesheet" href="app/bower_components/angular-material/angular-material.css"/>
+	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
+
+	<script type="text/javascript" src="app/bower_components/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="app/bower_components/angular/angular.js"></script>
+	<script type="text/javascript" src="app/bower_components/angular-route/angular-route.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js"></script>
+	<script type="text/javascript" src="app/bower_components/angular-resource/angular-resource.js"></script>
+	<script type="text/javascript" src="app/bower_components/angular-animate/angular-animate.js"></script>
+	<script type="text/javascript" src="app/bower_components/angular-aria/angular-aria.js"></script>
+	<script type="text/javascript" src="app/bower_components/angular-crypto/angular-crypto.js"></script>
+	<script type="text/javascript" src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha1.js"></script>
+	<script type="text/javascript" src="app/bower_components/angular-material/angular-material.js"></script>
+
+	<script src="app/lib/ngStorage.js"></script>
+
+	<script type="text/javascript" src="app/scripts/slideshowelement.js"></script>
+	<script type="text/javascript" src="app/scripts/inserteditremove.js"></script>
+	<script type="text/javascript" src="app/scripts/command.js"></script>
+	<script type="text/javascript" src="app/scripts/app.js"></script>
+	<script type="text/javascript" src="app/scripts/controllers.js"></script>
+	<script type="text/javascript" src="app/scripts/services.js"></script>
+
+	<script type="text/javascript" src="source/private/presentations/PresentationMeta.js"></script>
+
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+</head>
+<body n layout="column">
+	<div data-ng-controller="HeaderController">
+		<md-toolbar layout="row" layout-align="space-between center" >
+		<!--The left side-->
+		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
+		<!--The right side-->
+		<span>
+			<p>{{user}}</p>
+			<md-button aria-label="First Button" ng-click="goLogin()" data-ng-hide="isToken()">Accedi</md-button>
+			<md-button aria-label="Second Button" ng-click="goRegistrazione()" data-ng-hide="isToken()">Registrati</md-button>
+			<md-button aria-label="Third Button"   data-ng-show="isToken()" ng-click="logout()">Logout</md-button>
+			<md-button aria-label="Fourth Button"   data-ng-hide="!isToken()" ng-click="goProfile()">Profilo</md-button>
+			<md-button aria-label="Fifth Button"   data-ng-hide="!isToken()" ng-click="goHome()">Home</md-button>
+
+		</span>
+	</md-toolbar>
+</div>
+<div ng-view></div>
+
+</body>
+</html>
+<form>

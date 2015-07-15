@@ -50,7 +50,7 @@ var Authenticate = require('./source/account/Authenticate.js');
 var Register = require('./source/account/Register.js');
 var Changepassword = require('./source/account/ChangePassword.js');
 
-app.use('/', express.static("./app"));
+app.use('/', express.static("./"));
 
 /*
 app.get('/', function(req, res) {

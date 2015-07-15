@@ -129,11 +129,9 @@ premiService.factory('Main', ['$http', '$localStorage', '$timeout',
 }
 ]);
 
-premiService.factory('SlideShow', ['$resource',
-	function($resource){/* QUI DEVO RICAVARMI LE PRESENTAZIONI DA MONGO
-		return $resource('slideshows/:slideId.json', {}, {
-			query: {method:'GET', params:{slideId:'slideshows'}, isArray:true}
-		});*/
+premiService.factory('SlideShow', ['$resource','Main',
+	function($resource,Main){// QUI DEVO RICAVARMI LE PRESENTAZIONI DA MONGO
+		
 }]);
 
 premiService.factory('toPages', ['$location','$http','$localStorage',
@@ -150,7 +148,7 @@ premiService.factory('toPages', ['$location','$http','$localStorage',
 				.error(function(){$location.path("/login");})
 			},
 			editpage: function(slideId){
-				$http({
+				return $http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/edit?slideshow=' + slideId,
 					withCredentials: true,
@@ -166,7 +164,7 @@ premiService.factory('toPages', ['$location','$http','$localStorage',
 				$location.path("/registrazione");
 			},
 			executionpage: function(slideId) {
-				$http({
+				return $http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/execution?slideshow=' + slideId,
 					withCredentials: true,

@@ -5,25 +5,24 @@ var premiControllers = angular.module('premiControllers', ['premiService']);
 premiControllers.controller('HeaderController', ['$scope', '$localStorage','Main','toPages',
 	function($scope, $localStorage,Main,toPages) {
 		$scope.isToken = function() {
-			if(typeof $localStorage.token === 'undefined')
+			if(typeof $localStorage.token === 'undefined'){
 				return false;
+			}
 			return true;
 		};
 
-		$scope.goEdit = function(slideId){
-			toPages.editpage(slideId);
-		}
-		$scope.goExecute = function(slideId){
-			toPages.executionpage(slideId);
-		}
-		$scope.goProfile = function(){
-			toPages.profilepage();
-		}
 		$scope.goLogin = function(){
 			toPages.loginpage();
 		}
 		$scope.goRegistrazione = function(){
 			toPages.registrazionepage();
+		}
+
+		$scope.goHome = function(){
+			toPages.homepage();
+		}
+		$scope.goProfile = function(){
+			toPages.profilepage();
 		}
 
 		$scope.logout = function() {
@@ -85,6 +84,7 @@ premiControllers.controller('premiAuthenticationController', ['$scope', '$locati
 				throw new Error("Attenzione: la password è troppo corta. Deve essere di almeno 6 caratteri")
 			}
 			var formData = getData();
+			console.log("Registrazione");
 			Main.save(formData, function(res) {
 				console.log("Main.save registration");
 				if (res.type == false) {
@@ -110,8 +110,8 @@ premiControllers.controller('premiAuthenticationController', ['$scope', '$locati
 		};
 	}])
 
-premiControllers.controller('ProfileController', ['$scope', '$location','$localStorage', 'Main', 'toPages','$route',
-	function($scope, $location,$localStorage, Main, toPages,$route) {
+premiControllers.controller('ProfileController', ['$rootScope','$scope', '$location','$localStorage', 'Main', 'toPages','$route',
+	function($rootScope,$scope, $location,$localStorage, Main, toPages,$route) {
 /*
 		Main.me(function(res) {
 			$scope.user = res;
@@ -119,6 +119,7 @@ premiControllers.controller('ProfileController', ['$scope', '$location','$localS
 			$rootScope.error = 'Failed to fetch details';
 		});
 */
+
 		var getPwd = function(){
 			return {
 				password: CryptoJS.SHA1($scope.user.password).toString(),
@@ -145,31 +146,30 @@ premiControllers.controller('ProfileController', ['$scope', '$location','$localS
 }])
 
 
-premiControllers.controller('HomeController',['$rootScope', '$scope', '$location', 'Main', 'toPages', function($rootScope, $scope, $location,  Main, toPages) {
-	//$scope.allSS = SlideShow.query();
+premiControllers.controller('HomeController',['$rootScope', '$scope', '$location', 'Main', 'toPages', 'SlideShow',
+	function($rootScope, $scope, $location,  Main, toPages, SlideShow) {
+		$scope.goEdit = function(slideId){
+			toPages.editpage(slideId);
+		}
 
-	$scope.goEdit = function(slideId){
-		toPages.editpage(slideId);
-	}
+		$scope.goExecute = function(slideId){
+			toPages.executionpage(slideId);
+		}
 
-	$scope.goExecute = function(slideId){
-		toPages.executionpage(slideId);
-	}
+		$scope.goProfile = function(){
+			toPages.profilepage();
+		}
 
-	$scope.goProfile = function(){
-		toPages.profilepage();
-	}
-
-	$scope.deleteSlideShow = function(slideId) {
-		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
-		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
-	}
-	$scope.renameSlideShow = function(slideId) {
-		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
-		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
-	}
-	$scope.createSlideShow = function() {
-		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
-		//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
-	}
+		$scope.deleteSlideShow = function(slideId) {
+			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
+			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
+		}
+		$scope.renameSlideShow = function(slideId) {
+			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
+			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
+		}
+		$scope.createSlideShow = function() {
+			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
+			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
+		}
 }])

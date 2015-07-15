@@ -24,16 +24,23 @@ app.use(bodyParser.json());
 
 app.use(morgan('dev'));
 app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, authorization, x-csrf-token, Accept, sessiontoken');
-    //res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
 
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID
+
+app.listen(port);
+console.log('Server listening at http//localhost: ' + port );
+
+process.on('uncaughtException', function(err) {
+	console.log(err);
+});
 
 //===============
 // authentication
@@ -77,7 +84,8 @@ app.use('/private/htdocs', express.static('private_html'));
 var Middleware = require('./source/private/tokenMiddleware.js');
 
 var privateRoutes = express.Router();
-app.use('/private*', privateRoutes);
+app.post('/private*', privateRoutes);
+app.get('/private*', privateRoutes);
 
 privateRoutes.use(Middleware.use);
 

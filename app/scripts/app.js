@@ -51,7 +51,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		},
 		'responseError': function(response) {
 			if(response.status === 401 || response.status === 403) {
-				console.log("errore");
+				throw new Error(response.message);
 				$location.path('/login');
 			}
 			return $q.reject(response);

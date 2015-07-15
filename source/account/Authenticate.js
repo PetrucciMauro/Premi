@@ -34,13 +34,14 @@ var post = function(req, res) {
 			}
 			else{
 				var token = jwt.sign({user: user}, secret, {
-																									expiresInMinutes: 1440 // expires in 24 hours
-																								});
+					expiresInMinutes: 1440 // expires in 24 hours
+				});
 
-				res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
+			//	res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
 				var json = JSON.stringify({
 					success: true,
 					message: 'Enjoy your token!',
+					token: token
 				});
 				res.end(json);
 			}

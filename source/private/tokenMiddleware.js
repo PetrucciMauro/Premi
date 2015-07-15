@@ -12,7 +12,8 @@ var jwt    = require('jsonwebtoken');
 // resource
 //=========
 var use = function(req, res, next) {
-	
+	console.log("Middleware");
+	console.log(req.headers);
 	var token=req.headers['sessiontoken'];
 	if (token) {
 		
@@ -23,6 +24,10 @@ var use = function(req, res, next) {
 				return res.json({ success: false, message: 'Failed to authenticate token' });
 			} else {
 				req.user = decoded.user;
+				res.status(200).send({
+					success:true,
+					message: 'Il token è verificato'
+				});
 				next();
 			}
 		});

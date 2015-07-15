@@ -13,24 +13,24 @@ var jwt    = require('jsonwebtoken');
 //=========
 var use = function(req, res, next) {
 	
-	var token=req.headers['authorization'];
+	var token=req.headers['sessiontoken'];
 	if (token) {
 		
 		// verifies secret and checks exp
 		jwt.verify(token, secret, function(err, decoded) {
-													if (err) {
-													res.status(400);
-													return res.json({ success: false, message: 'Failed to authenticate token' });
-													} else {
-													req.user = decoded.user;
-													next();
-													}
-													});
+			if (err) {
+				res.status(400);
+				return res.json({ success: false, message: 'Failed to authenticate token' });
+			} else {
+				req.user = decoded.user;
+				next();
+			}
+		});
 	} else {
 		return res.status(403).send({
-																														success: false,
-																														message: 'No token provided.'
-																														});
+			success: false,
+			message: 'No token provided.'
+		});
 	}
 };
 

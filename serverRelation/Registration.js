@@ -8,13 +8,12 @@ var Registration = function(hostname){
 	//public_methods
 	that.register = function(user, password){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/account/register', false);
-		req.setRequestHeader("Authorization", user+":"+password);
+		req.open('POST', host+'/register', false);
+		req.setRequestHeader("authorization", user+":"+password);
 		req.send();
 		var serverResponse = JSON.parse(req.responseText);
 		messageState = serverResponse.message;
 		return serverResponse.success;
-		return
 	};
 	that.getMessage = function(){
 		return messageState;

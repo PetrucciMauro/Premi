@@ -15,7 +15,7 @@ var fs = require('fs');
 // configuration
 //==============
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 8081;
 app.set('database', config.database);
 app.set('SuperSecret', config.secret);
 
@@ -25,8 +25,9 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, authorization, x-csrf-token, Accept, sessiontoken');
+    //res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
@@ -42,20 +43,23 @@ var Authenticate = require('./source/account/Authenticate.js');
 var Register = require('./source/account/Register.js');
 var Changepassword = require('./source/account/ChangePassword.js');
 
+app.use('/', express.static("./app"));
+
+/*
 app.get('/', function(req, res) {
         res.send('Wellcome! to get a public file: /publicpages, account staff: /account, private services: /private'
 																	);
 								});
 
-app.get('/account', function(req, res) {
+app.post('/account', function(req, res) {
 								res.send('to register: ~/register, to authenticate: ~/authenticate, to change password: ~/changepassword');
-								});
+								});*/
 
-app.get('/account/authenticate', Authenticate.get );
+app.post('/authenticate', Authenticate.post );
 
-app.post('/account/register', Register.post );
+app.post('/register', Register.post );
 
-app.post('/account/changepassword', Changepassword.post );
+app.post('/changepassword', Changepassword.post );
 
 //==================
 // htmlpages_server
@@ -73,7 +77,7 @@ app.use('/private/htdocs', express.static('private_html'));
 var Middleware = require('./source/private/tokenMiddleware.js');
 
 var privateRoutes = express.Router();
-app.use('/private', privateRoutes);
+app.use('/private*', privateRoutes);
 
 privateRoutes.use(Middleware.use);
 

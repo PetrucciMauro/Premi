@@ -8,11 +8,11 @@ var Authentication = function(hostname){
 	//public_methods
 	that.authenticate = function(user, password){
 		var req = new XMLHttpRequest();
-		req.open('GET', host+'/account/authenticate', false);
+		req.open('POST', host+'/authenticate', false);
 		req.setRequestHeader("Authorization", user+":"+password);
 		req.send();
 		var res = JSON.parse(req.responseText);
-		token = req.getResponseHeader("Authorization");
+		token = req.getResponseHeader("authorization");
 		messageState = res.success;
 		return res.success;
 	};
@@ -23,7 +23,7 @@ var Authentication = function(hostname){
 		return token;
 	};
 	that.deAuthenticate = function(){
-		token = 'null';
+		token = 'undefined';
 		return true;
 	};
 	

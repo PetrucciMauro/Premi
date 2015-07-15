@@ -26,7 +26,8 @@ var post = function(req, res) {
 					console.dir('called insert()');
 					res.json({
 						success: true,
-						message: 'User '+user+' registered'
+						message: 'User '+user+' registered',
+						token: token
 					});
 					fs.mkdirSync(__dirname+'/../../files/'+user);
 					fs.mkdirSync(__dirname+'/../../files/'+user+'/image');

@@ -12,7 +12,7 @@ var MongoRelation = function(hostname, auth_obj){
 	that.getPresentationsMeta = function(){
 		var req = new XMLHttpRequest();
 		req.open('GET', host+'/private/api/presentations', false);
-		req.setRequestHeader("Authorization", auth.getToken());
+		req.setRequestHeader("authorization", auth);
 		req.send();
 		var res = JSON.parse(req.responseText);
 		messageState = res.success;
@@ -22,7 +22,7 @@ var MongoRelation = function(hostname, auth_obj){
 	that.newPresentation = function(nameNewPresentation){
 		var req = new XMLHttpRequest();
 		req.open('POST', host+'/private/api/presentations/new/'+nameNewPresentation, false);
-		req.setRequestHeader("Authorization", auth.getToken());
+		req.setRequestHeader("Authorization", auth);
 		req.send();
 		var res = JSON.parse(req.responseText);
 		messageState = res.success;

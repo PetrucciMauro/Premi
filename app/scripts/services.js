@@ -145,6 +145,9 @@ premiService.factory('Utilities', ['$localStorage',
 					strength = 'medium';
 
 				return strength;
+			},
+			hostname: function() {
+				return "http://sub.lvh.me:8081";
 			}
 		}
 		

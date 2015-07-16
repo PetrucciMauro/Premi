@@ -51,7 +51,8 @@
     "jsonwebtoken": "latest",
     "mongoose":"latest",
     "multer":"latest",
-    "mongodb":"latest"
+    "mongodb":"latest",
+    "browserify":"latest"
   },
 
   "scripts": {

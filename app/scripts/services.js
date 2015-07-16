@@ -49,6 +49,20 @@ premiService.factory('Main', ['$localStorage',
 					success(changepwd);
 				else
 					error({message: changepwd.getMessage()});
+			},
+
+			uploadmedia: function(formData,user,urlFormat,success,error){
+
+
+               return $http({
+					method: 'POST',
+					url:baseUrl+urlFormat,
+					withCredentials: true,
+					headers: {'Content-Type': undefined,'sessiontoken': $localStorage.token}
+				})
+				.success(function(res){})
+				.error(function(){})
+
 			}
 		};
 }

@@ -49,12 +49,12 @@
 	</div>
 
 	<div>
-		<md-button class="md-raised md-cornered" ng-click="uploadElement = !uploadElement">Upload Elemento</md-button>
-		<div ng-show="uploadElement">
+		<md-button class="md-raised md-cornered" ng-click="uploadmedia = !uploadmedia">Upload Elemento</md-button>
+		<div ng-show="uploadmedia">
 			<md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
-				<form id="upload_form" enctype="multipart/form-data" method="POST" action="http://localhost:8081/private/api/files/image/provaetta">
-					<input type="file" name="immagine" id="file_form"/>
-					<input type="submit" value="Upload" />
+				<form id="upload_form">
+					<input type="file" file-model="myFile"/>
+					<input type="submit" ng-click = "uploadmedia()" />
 				</form>
 			</md-whiteframe>
 		</div>

@@ -16,7 +16,7 @@
 						<label>Email</label>
 						<input ng-model="user.email" type="email"/>
 					</md-input-container>
-					<md-button class="md-raised md-cornered" ng-click="editProfile = !editProfile">submit</md-button>
+					<md-button class="md-raised md-cornered" ng-click="editProfile = editProfile">Submit</md-button>
 				</form>
 			</md-whiteframe>
 		</div>
@@ -32,13 +32,17 @@
 				<form ng-submit="changepassword()">
 					<md-input-container>
 						<label>Password Attuale</label>
-						<input ng-model="user.password"/>
+						<input ng-model="user.password" type="password"/>
 					</md-input-container>
 					<md-input-container>
 						<label>Nuova Password</label>
-						<input ng-model="user.newpassword"/>
+						<input ng-model="user.newpassword" type="password"/>
 					</md-input-container>
-					<md-button class="md-raised md-cornered" ng-click="editPassword = !editPassword">submit</md-button>
+					<md-input-container>
+						<label>Conferma Nuova Password</label>
+						<input ng-model="user.confnewpassword" type="password"/>
+					</md-input-container>
+					<md-button class="md-raised md-cornered" ng-click="editPassword = editPassword">Submit</md-button>
 				</form>
 			</md-whiteframe>
 		</div>

@@ -12,6 +12,10 @@ h1{
 
 /* Toolbar area */
 
+.saluto {
+  color: #0099CC;
+}
+
 .menu {
   background-color: transparent;
   border: none;

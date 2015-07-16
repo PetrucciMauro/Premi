@@ -9,11 +9,11 @@ var Authentication = function(hostname){
 	that.authenticate = function(user, password){
 		var req = new XMLHttpRequest();
 		req.open('POST', host+'/authenticate', false);
-		req.setRequestHeader("Authorization", user+":"+password);
+		req.setRequestHeader("authorization", user+":"+password);
 		req.send();
 		var res = JSON.parse(req.responseText);
 		token = req.getResponseHeader("authorization");
-		messageState = res.success;
+		messageState = res.message;
 		return res.success;
 	};
 	that.getMessage = function(){
@@ -22,10 +22,12 @@ var Authentication = function(hostname){
 	that.getToken = function(){
 		return token;
 	};
+	/*LOGOUT: viene effettuato con angular in quanto il token viene salvato con $localStorage, molto semplice da gestire
+	Avere un login in questo modo significherebbe creare una variabile globale e in angular è possibile farlo solamente
 	that.deAuthenticate = function(){
 		token = 'undefined';
 		return true;
-	};
+	};*/
 	
 	return that;
 };

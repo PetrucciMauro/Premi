@@ -31,7 +31,7 @@ var post = function(req, res) {
 					console.dir('called udpate()');
 					res.json({
 						success: true,
-						message: 'Password updated'
+						message: 'Password modificata con successo'
 					});
 				});
 			}
@@ -39,7 +39,7 @@ var post = function(req, res) {
 				res.status(400);
 				res.json({
 					success: false,
-					message: 'Username or password not correct'
+					message: 'Username o password non corretti'
 				});
 			}
 			

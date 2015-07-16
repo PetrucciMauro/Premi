@@ -2,15 +2,64 @@
 
 var premiService = angular.module('premiService',['ngResource'])
 
-premiService.factory('Main', ['$http', '$localStorage', '$timeout', 
-	function($http, $localStorage,$timeout){
+premiService.factory('Main', ['$localStorage',
+	function($localStorage){
 		var baseUrl = "http://sub.lvh.me:8081";
 
+		return {
+			save: function(formData, success, error) {
+				//richiamato metodo node per la registrazione di un nuovo utente
+				var register = Registration(baseUrl);
+
+				if(register.register(formData.username, formData.password))
+					success(register);
+				else
+					error({message: register.getMessage()});
+			},
+			login: function(formData, success, error) {
+				//richiamato metodo node per il login di un utente
+				var login = Authentication(baseUrl);
+
+				if(login.authenticate(formData.username, formData.password))
+					success(login);
+				else
+					error({message: login.getMessage()});
+			},
+			me: function(success, error) {
+				$http.get(baseUrl + '/private').success(success).error(error)
+			},
+			logout: function(success,error) {
+				//cancellato il token di sessione, se esiste
+				if(typeof $localStorage.token == 'undefined')
+					throw new Error("Bisogna aver effettuato l'accesso per fare logout");
+				
+				console.log("Logout in corso...");
+				delete $localStorage.token;
+
+				if(typeof $localStorage.token == 'undefined')
+					success();
+				else
+					error();
+			},
+			changepassword: function(formData,success,error){
+				//richiamato il metodo node per il cambio della pwd
+				var changepwd = ChangePassword(baseUrl);
+
+				if(changepwd.changepassword(formData.username, formData.password, formData.newpassword))
+					success(changepwd);
+				else
+					error({message: changepwd.getMessage()});
+			}
+		};
+}
+]);
+
+premiService.factory('Utilities', ['$localStorage',  
+	function($localStorage){
 		function changeUser(user) {
 			angular.extend(currentUser, user);
 		}
 
-		/********************************************** FUNZIONI PER IL JWT *************************************************************************************/
 		function decodeToken(token) {
 			var parts = token.split('.');
 
@@ -33,7 +82,7 @@ premiService.factory('Main', ['$http', '$localStorage', '$timeout',
 				case 2: { output += '=='; break; }
 				case 3: { output += '='; break; }
 				default: {
-					throw 'Illegal base64url string!';
+					throw new Error('Stringa urlBase64 non legale');
 				}
 			}
 		return decodeURIComponent(escape(window.atob(output))); //polifyll https://github.com/davidchambers/Base64.js
@@ -64,76 +113,35 @@ premiService.factory('Main', ['$http', '$localStorage', '$timeout',
 		  return !(d.valueOf() > (new Date().valueOf() + (offsetSeconds * 1000)));
 		};
 
-
-		function getUserFromToken() {
-			var token = $localStorage.token;
-			var user = {};
-			if (typeof token !== 'undefined') {
-				user = decodeToken(token);
-			}
-			return user;
-		}
-
-		var currentUser = getUserFromToken();
-		console.log("L'utente collegato è ");
-		console.log(currentUser.user);
-
-	/***************************************************************************************************************************/
-		return {
-			save: function(formData, success, error) {
-				return $http({
-					method: 'POST',
-					url: baseUrl + '/register',
-					data: JSON.stringify(formData),
-					withCredentials: true,
-					headers: {'Content-Type': 'application/json','authorization': formData.username + ':' + formData.password}
-				}).success(success).error(error)
-			},
-			login: function(formData, success, error) {
-				return $http({
-					method: 'POST',
-					url: baseUrl + '/authenticate',
-					data: JSON.stringify(formData),
-					withCredentials: true,
-					headers: {'Content-Type': 'application/json','authorization': formData.username + ':' + formData.password}
-				}).success(success).error(error)
-			},
-			me: function(success, error) {
-				$http.get(baseUrl + '/private').success(success).error(error)
-			},
-			logout: function(success,error) {
-				// changeUser({});
-				if($localStorage.token){
-					console.log("Logout in corso...");
-					delete $localStorage.token;
-					console.log($localStorage.token);
-					if(!$localStorage.token)
-						success();
-					else
-						error();
+		return{
+			getUserFromToken: function () {
+				var token = $localStorage.token;
+				var user = {};
+				if (typeof token !== 'undefined') {
+					user = decodeToken(token);
 				}
-				else
-					console.log("Nessun token trovato");
+				return user;
 			},
-			changepassword: function(formData,success,error){
-				console.log("changepassword: "+currentUser.user);
-				return $http({
-					method: 'POST',
-					url: baseUrl + '/changepassword',
-					data: JSON.stringify(formData),
-					withCredentials: true,
-					headers: {'Content-Type': 'application/json','authorization': currentUser.user + ':' + formData.password + ':' + formData.newpassword}
-				}).success(success).error(error)
-			}
-		};
-}
-]);
+			grade: function(password) {
+				var size = password.length;
+				var strength = 'weak'
+				if (size > 8)
+					strength = 'strong';
+				else if (size > 5)
+					strength = 'medium';
 
+				return strength;
+			}
+		}
+		
+	}]);
+/*
 premiService.factory('SlideShow', ['$resource','Main',
 	function($resource,Main){// QUI DEVO RICAVARMI LE PRESENTAZIONI DA MONGO
 		
-}]);
+}]);*/
 
+//Serivizio che reindirizza alla pagina corretta attivando il middleware node per la verifica del token
 premiService.factory('toPages', ['$location','$http','$localStorage',
 	function($location,$http,$localStorage){
 		return {

@@ -29,16 +29,17 @@ var post = function(req, res) {
 					var token = jwt.sign({user: user}, secret, {
 						expiresInMinutes: 1440 // expires in 24 hours
 					});
+					res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
 					var json = JSON.stringify({
 						success: true,
-						message: 'User '+user+' registered',
-						token: token
+						message: 'User '+user+' registered'
 					});
+
 					fs.mkdirSync(__dirname+'/../../files/'+user);
 					fs.mkdirSync(__dirname+'/../../files/'+user+'/image');
 					fs.mkdirSync(__dirname+'/../../files/'+user+'/video');
 					fs.mkdirSync(__dirname+'/../../files/'+user+'/audio');
-					console.log("Guarda qui:"+__dirname+'/../../files/'+user);
+					
 					res.end(json);
 				});
 			}

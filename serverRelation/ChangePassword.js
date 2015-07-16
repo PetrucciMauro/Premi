@@ -1,28 +1,23 @@
-var Registration = function(hostname){
+var ChangePassword = function(hostname){
 	
 	// private_fields
-	var token = 'null';
 	var host = hostname;
 	//public_fields
 	var that = {};
 	//public_methods
-	that.register = function(user, password){
+	that.changepassword = function(user, password, newpassword){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/register', false);
-		req.setRequestHeader("authorization", user+":"+password);
+		req.open('POST', host+'/changepassword', false);
+		req.setRequestHeader("authorization", user + ":" + password + ":" + newpassword);
 		req.send();
 		var res = JSON.parse(req.responseText);
-		token = req.getResponseHeader("authorization");
 		messageState = res.message;
 		return res.success;
 	};
 	that.getMessage = function(){
 		return messageState;
 	};
-	that.getToken = function(){
-		return token;
-	};
-
+	
 	return that;
 };
 

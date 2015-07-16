@@ -4,30 +4,15 @@
 		<div class="row" layout="column" layout-align="space-around center">
 			<md-input-container>
 				<label>Username</label>
-				<input ng-model="user.username"/>
+				<input ng-model="user.username" tabindex="1"/>
 			</md-input-container>
 			<md-input-container>
 				<label>Password</label>
-				<input ng-model="user.password"/>
+				<input ng-model="user.password" type="password" tabindex="2"/>
 			</md-input-container>
+
 			<md-button class="md-raised md-cornered" ng-click="login()">Login</md-button>
 			<md-button class="md-raised md-cornered" ng-click="reset()">Reset</md-button>
 		</div>
-		<!--
-		<label>Username:</label>
-		<input type='text' ng-model='user.username'/>
-		<label>Password:</label>
-		<input type='password' ng-model='user.password'/>
-		<input type="button" ng-click="reset()" value="Reset" />
-		<input type="submit" value="Login" ng-click="login()" />
-		<input type="submit" value="Logout" ng-click="logout()" />
-		-->
 	</form>
-
-	<!--
-	<pre>form  user = {{user | json}}</pre>
-	<pre>master = {{master | json}}</pre>
-	<pre>{{status}}</pre>
-	<pre>{{error}}</pre>
-	-->
 </div>

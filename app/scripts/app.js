@@ -2,14 +2,15 @@
 
 var premiApp = angular.module('premiApp', [
 	'ngRoute',
-	'premiControllers',
 	'ngMaterial',
 	'ngStorage',
-	'ngCrypto'
+	'premiAccessController',
+	'premiHomeController',
+	'premiProfileController'
 	]);
 
-premiApp.run(function($log,$window){
-	$log.debug("starterApp + ngMaterial running...");
+premiApp.run(function($log){
+	$log.debug("PremiApp + ngMaterial running...");
 });
 
 premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$httpProvider,$provide){
@@ -40,22 +41,19 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			'request': function (config) {
 				config.headers = config.headers || {};
 				if ($localStorage.token) {
-					//console.log("Esiste token:");
-					//console.log(typeof($localStorage.token));
 					config.headers.sessiontoken = $localStorage.token;
-
 				}
 				else
-					{ console.log("token non definito ");}
+					console.log("token non definito ");
 				return config;
 		},
-		'responseError': function(response) {
-			if(response.status === 401 || response.status === 403) {
-				throw new Error(response.message);
-				$location.path('/login');
+			'responseError': function(response) {
+				if(response.status === 401 || response.status === 403) {
+					throw new Error(response.message);
+					$location.path('/login');
+				}
+				return $q.reject(response);
 			}
-			return $q.reject(response);
-		}
 
 	};
 }]);
@@ -68,16 +66,16 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 	});
 
 	$mdIconProvider
-	.defaultIconSet("./assets/svg/avatars.svg", 128)
-	.icon("menu", "./assets/svg/menu.svg", 24)
-	.icon("share", "./assets/svg/share.svg", 24)
-	.icon("google_plus", "./assets/svg/google_plus.svg" , 512)
-	.icon("hangouts"   , "./assets/svg/hangouts.svg"    , 512)
-	.icon("twitter"    , "./assets/svg/twitter.svg"     , 512)
-	.icon("phone"      , "./assets/svg/phone.svg"       , 512);
+		.defaultIconSet("./assets/svg/avatars.svg", 128)
+		.icon("menu", "./assets/svg/menu.svg", 24)
+		.icon("share", "./assets/svg/share.svg", 24)
+		.icon("google_plus", "./assets/svg/google_plus.svg" , 512)
+		.icon("hangouts"   , "./assets/svg/hangouts.svg"    , 512)
+		.icon("twitter"    , "./assets/svg/twitter.svg"     , 512)
+		.icon("phone"      , "./assets/svg/phone.svg"       , 512);
 
 	$mdThemingProvider.theme('default')
-	.primaryPalette('brown')
-	.accentPalette('red');
+		.primaryPalette('brown')
+		.accentPalette('red');
 }); 
 

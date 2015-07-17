@@ -2,8 +2,8 @@
 
 var premiProfileController = angular.module('premiProfileController', ['premiService'])
 
-premiProfileController.controller('ProfileController', ['$scope', '$localStorage', 'Main', 'toPages', 'Utilities',
-	function($scope, $localStorage, Main, toPages, Utilities) {
+premiProfileController.controller('ProfileController', ['$scope','$http', '$localStorage', 'Main', 'toPages', 'Utilities',
+	function($scope,$http, $localStorage, Main, toPages, Utilities) {
 /*
 		Main.me(function(res) {
 			$scope.user = res;
@@ -43,9 +43,9 @@ premiProfileController.controller('ProfileController', ['$scope', '$localStorage
 
         var getUrlFormat = function (extension) {
 
-        	if( image.indexOf(extension) != -1) return "/image";
-        	if( audio.indexOf(extension) != -1) return "/audio";
-        	if( video.indexOf(extension) != -1) return "/video";
+        	if( image.indexOf(extension) != -1) return "/private/api/files/image/";
+        	if( audio.indexOf(extension) != -1) return "/private/api/files/audio/";
+        	if( video.indexOf(extension) != -1) return "/private/api/files/video/";
         }
 
 		$scope.changepassword = function() {
@@ -75,25 +75,40 @@ premiProfileController.controller('ProfileController', ['$scope', '$localStorage
 			})
 		};
 
-		$scope.uploadmedia = function(){
+		$scope.uploadmedia = function(files){
 
                    var file = (($('input[type=file]').val()).split('\\'))[2];
         		   console.log('file is ' + JSON.stringify(file));
-                   var formData = new FormData();
-                   formaData.append("file", file);
-                   var extension= getExtension(file);
-                   console.log(extension);
-                   var urlFormat = getUrlFormat(extension);
-                   console.log(urlFormat);
+
+        		   var fd = new FormData();
+        		   fd.append("file", files[0]);
+
+        		   var extension= getExtension(file);
+        		   console.log(extension);
+        		   var urlFormat = getUrlFormat(extension);
+        		   console.log(urlFormat);
+        		   var uploadUrl="http://sub.lvh.me:8081"+urlFormat+file;
+        		   console.log(uploadUrl);
+
+                   $http.post(uploadUrl, fd, {
+                   	headers: {'Content-Type': undefined },
+                   	transformRequest: angular.identity
+                   })
+                   .success(function(res){})
+                   .error(function(){$location.path("/login");})
                    
-             Main.uploadmedia(formData,Utilities.getUserFromToken().user,urlFormat, function(res){
+
+                   
+            /* Main.uploadmedia(formData,Utilities.getUserFromToken().user,urlFormat, function(res){
              	console.log("upload file completato");
              	$scope.myFile= 'undefined';
              }, function(res){
              	throw new Error(res.message);
-             })
+             })*/
 			
 
 		};
+
+
 
 }])

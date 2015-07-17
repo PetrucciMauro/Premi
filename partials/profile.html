@@ -53,8 +53,9 @@
 		<div ng-show="uploadmedia">
 			<md-whiteframe class="md-whiteframe-z1" layout layout-align="center center">
 				<form id="upload_form">
-					<input type="file" file-model="myFile"/>
-					<input type="submit" ng-click = "uploadmedia()" />
+					
+					<input type="file" name="file" onchange="angular.element(this).scope().uploadmedia(this.files)"/>
+					
 				</form>
 			</md-whiteframe>
 		</div>

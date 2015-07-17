@@ -58,7 +58,7 @@ premiService.factory('Main', ['$localStorage',
 					method: 'POST',
 					url:baseUrl+urlFormat,
 					withCredentials: true,
-					headers: {'Content-Type': undefined,'sessiontoken': $localStorage.token}
+					headers: {'Content-Type': undefined,'sessiontoken': $localStorage.token,'Data':formData}
 				})
 				.success(function(res){})
 				.error(function(){})

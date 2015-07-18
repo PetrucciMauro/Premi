@@ -38,4 +38,5 @@ premiHomeController.controller('HomeController',['$scope','$localStorage', 'Main
 
 			console.log(newSS);
 		}
+
 }])

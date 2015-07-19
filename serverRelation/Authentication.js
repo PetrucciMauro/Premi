@@ -1,7 +1,7 @@
 var Authentication = function(hostname){
 	
 	// private_fields
-	var token = 'null';
+	var token = undefined;
 	var host = hostname;
 	//public_fields
 	var that = {};
@@ -22,12 +22,10 @@ var Authentication = function(hostname){
 	that.getToken = function(){
 		return token;
 	};
-	/*LOGOUT: viene effettuato con angular in quanto il token viene salvato con $localStorage, molto semplice da gestire
-	Avere un login in questo modo significherebbe creare una variabile globale e in angular è possibile farlo solamente
 	that.deAuthenticate = function(){
-		token = 'undefined';
+		token = undefined;
 		return true;
-	};*/
+	};
 	
 	return that;
 };

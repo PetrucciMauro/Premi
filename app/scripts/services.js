@@ -2,44 +2,53 @@
 
 var premiService = angular.module('premiService',['ngResource'])
 
-premiService.factory('Main', ['$localStorage',
-	function($localStorage){
-		var baseUrl = "http://sub.lvh.me:8081";
+premiService.factory('Main', ['$localStorage', 'Utilities',
+	function($localStorage, Utilities){
+		var baseUrl = Utilities.hostname();
+
+		var login = Authentication(baseUrl);
 
 		return {
-			save: function(formData, success, error) {
+			register: function(formData, success, error) {
 				//richiamato metodo node per la registrazione di un nuovo utente
 				var register = Registration(baseUrl);
 
-				if(register.register(formData.username, formData.password))
-					success(register);
+				if(register.register(formData.username, formData.password)){
+					if(login.authenticate(formData.username, formData.password))
+						success();
+					else
+						error({message: login.getMessage()});
+				}
 				else
 					error({message: register.getMessage()});
 			},
 			login: function(formData, success, error) {
 				//richiamato metodo node per il login di un utente
-				var login = Authentication(baseUrl);
+				if(Utilities.isUndefined(formData))
+					return login;
 
 				if(login.authenticate(formData.username, formData.password))
-					success(login);
+					success();
 				else
-					error({message: login.getMessage()});
+					error();
 			},
 			me: function(success, error) {
 				$http.get(baseUrl + '/private').success(success).error(error)
 			},
 			logout: function(success,error) {
 				//cancellato il token di sessione, se esiste
-				if(typeof $localStorage.token == 'undefined')
+				if(typeof login.getToken() === 'undefined')
 					throw new Error("Bisogna aver effettuato l'accesso per fare logout");
 				
 				console.log("Logout in corso...");
-				delete $localStorage.token;
 
-				if(typeof $localStorage.token == 'undefined')
+				login.deAuthenticate();
+
+				console.log("mi sono deautenticato");
+				if(typeof login.getToken() === 'undefined')
 					success();
 				else
-					error();
+					error({message: login.getMessage()});
 			},
 			changepassword: function(formData,success,error){
 				//richiamato il metodo node per il cambio della pwd
@@ -52,13 +61,11 @@ premiService.factory('Main', ['$localStorage',
 			},
 
 			uploadmedia: function(formData,user,urlFormat,success,error){
-
-
                return $http({
 					method: 'POST',
 					url:baseUrl+urlFormat,
 					withCredentials: true,
-					headers: {'Content-Type': undefined,'sessiontoken': $localStorage.token,'Data':formData}
+					headers: {'Content-Type': undefined,'sessiontoken': login.getToken,'Data':formData}
 				})
 				.success(function(res){})
 				.error(function(){})
@@ -68,11 +75,11 @@ premiService.factory('Main', ['$localStorage',
 }
 ]);
 
-premiService.factory('Utilities', ['$localStorage',  
+premiService.factory('Utilities', ['$localStorage',
 	function($localStorage){
 		function changeUser(user) {
 			angular.extend(currentUser, user);
-		}
+		};
 
 		function decodeToken(token) {
 			var parts = token.split('.');
@@ -99,7 +106,7 @@ premiService.factory('Utilities', ['$localStorage',
 					throw new Error('Stringa urlBase64 non legale');
 				}
 			}
-		return decodeURIComponent(escape(window.atob(output))); //polifyll https://github.com/davidchambers/Base64.js
+			return decodeURIComponent(escape(window.atob(output))); //polifyll https://github.com/davidchambers/Base64.js
 		};
 
 
@@ -128,12 +135,12 @@ premiService.factory('Utilities', ['$localStorage',
 		};
 
 		return{
-			getUserFromToken: function () {
-				var token = $localStorage.token;
+			getUserFromToken: function (token) {
 				var user = {};
-				if (typeof token !== 'undefined') {
-					user = decodeToken(token);
-				}
+				if(this.isUndefined(token))
+					return user;
+
+				user = decodeToken(token);
 				return user;
 			},
 			grade: function(password) {
@@ -148,6 +155,18 @@ premiService.factory('Utilities', ['$localStorage',
 			},
 			hostname: function() {
 				return "http://sub.lvh.me:8081";
+			},
+			isUndefined: function(object){
+				if(!object)
+					return true;
+				if(typeof object === 'undefined')
+					return true;
+				if(typeof object === 'null')
+					return true;
+				return false;
+			},
+			isObject: function(object){
+				return !this.isUndefined(object);
 			}
 		}
 		
@@ -158,16 +177,17 @@ premiService.factory('SlideShow', ['$resource','Main',
 		
 }]);*/
 
-//Serivizio che reindirizza alla pagina corretta attivando il middleware node per la verifica del token
-premiService.factory('toPages', ['$location','$http','$localStorage',
-	function($location,$http,$localStorage){
+//Servizio che reindirizza alla pagina corretta attivando il middleware node per la verifica del token
+premiService.factory('toPages', ['$location','$http','$localStorage', 'Main',
+	function($location,$http,$localStorage, Main){
 		return {
 			homepage: function(){
+				console.log(Main.login().getToken);
 				return $http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/home',
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': $localStorage.token}
+					headers: {'Content-Type': 'application/json','sessiontoken': Main.login().getToken()}
 				})
 				.success(function(res){$location.path("/private/home");})
 				.error(function(){$location.path("/login");})
@@ -177,7 +197,7 @@ premiService.factory('toPages', ['$location','$http','$localStorage',
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/edit?slideshow=' + slideId,
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': $localStorage.token}
+					headers: {'Content-Type': 'application/json','sessiontoken': Main.login().getToken()}
 				})
 				.success(function(res){$location.path("/private/edit?slideshow=" + slideId);})
 				.error(function(){$location.path("/login");})
@@ -193,17 +213,18 @@ premiService.factory('toPages', ['$location','$http','$localStorage',
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/execution?slideshow=' + slideId,
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': $localStorage.token}
+					headers: {'Content-Type': 'application/json','sessiontoken': Main.login().getToken()}
 				})
 				.success(function(res){$location.path("/private/execution?slideshow=" + slideId);})
 				.error(function(){$location.path("/login");})
 			},
 			profilepage: function(){
+				console.log(Main.login().getToken);
 				return $http({
 					method: 'POST',
 					url:'http://sub.lvh.me:8081/private/profile',
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': $localStorage.token}
+					headers: {'Content-Type': 'application/json','sessiontoken': Main.login().getToken()}
 				})
 				.success(function(res){$location.path("/private/profile");})
 				.error(function(){$location.path("/login");})

@@ -36,24 +36,33 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 	});
 
 
-	$httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
-		return {
-			'request': function (config) {
-				config.headers = config.headers || {};
-				if ($localStorage.token) {
-					config.headers.sessiontoken = $localStorage.token;
+	$httpProvider.interceptors.push(['$q', '$location', '$localStorage', 'Main',
+		function($q, $location, $localStorage, Main) {
+			return {
+				'request': function (config) {
+					config.headers = config.headers || {};
+					if (typeof Main.login().getToken() !== 'undefined') {
+						config.headers.sessiontoken = Main.login().getToken();
+					}
+					else/*
+						if(typeof $locaStorage.token !== 'undefined'){
+							Main.login($localStorage.formData, function(){
+								//$route.reload();
+							}, function(){
+								throw new Error({message: "Impossibile verificare il token"})
+							});
+						}
+						else*/
+							console.log("token non definito ");
+					return config;
+			},
+				'responseError': function(response) {
+					if(response.status === 401 || response.status === 403) {
+						throw new Error(response.message);
+						$location.path('/login');
+					}
+					return $q.reject(response);
 				}
-				else
-					console.log("token non definito ");
-				return config;
-		},
-			'responseError': function(response) {
-				if(response.status === 401 || response.status === 403) {
-					throw new Error(response.message);
-					$location.path('/login');
-				}
-				return $q.reject(response);
-			}
 
 	};
 }]);

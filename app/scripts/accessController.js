@@ -4,15 +4,13 @@ var premiAccessController = angular.module('premiAccessController', ['premiServi
 
 premiAccessController.controller('HeaderController', ['$scope', '$localStorage', 'Main', 'toPages', 'Utilities',
 	function($scope, $localStorage, Main, toPages, Utilities) {
-		
 		$scope.who = function(){
-			return Utilities.getUserFromToken().user;
+			return Utilities.getUserFromToken(Main.login().getToken()).user;
 		}
+		console.log(Main.login().getToken());
 
 		$scope.isToken = function() {
-			if(typeof $localStorage.token === 'undefined')
-				return false;
-			return true;
+			return Utilities.isObject(Main.login().getToken());
 		};
 
 		$scope.goLogin = function(){
@@ -21,7 +19,6 @@ premiAccessController.controller('HeaderController', ['$scope', '$localStorage',
 		$scope.goRegistrazione = function(){
 			toPages.registrazionepage();
 		}
-
 		$scope.goHome = function(){
 			toPages.homepage();
 		}
@@ -32,8 +29,8 @@ premiAccessController.controller('HeaderController', ['$scope', '$localStorage',
 		$scope.logout = function() {
 			Main.logout(function() {
 				toPages.loginpage();
-			}, function() {
-				alert("Failed to logout!");
+			}, function(res) {
+				throw new Error(res.message);
 			});
 		};
 
@@ -45,9 +42,9 @@ premiAccessController.controller('premiAuthenticationController', ['$scope', '$l
 			$scope.user = {};
 		};
 		$scope.token = function() {
-			if(typeof $localStorage.token === 'undefined')
+			if(Utilities.isUndefined(Main.login().getToken()))
 				return undefined;
-			return $localStorage.token;
+			return Main.login.getToken();
 		};
 
 		var getData = function(){
@@ -59,15 +56,16 @@ premiAccessController.controller('premiAuthenticationController', ['$scope', '$l
 
 		$scope.login = function() {
 			//check che i campi username e pwd non siano vuoti
-			if(!$scope.user || typeof $scope.user.username === 'undefined' || typeof $scope.user.password === 'undefined')
+			if(!$scope.user || Utilities.isUndefined($scope.user.username) || Utilities.isUndefined($scope.user.password))
 				throw new Error("I campi username e password non possono essere vuoti");
 			var formData = getData();
 
-			Main.login(formData, function(res) {
-				$localStorage.token = res.getToken();
+			Main.login(formData, function() {
+				//$localStorage.login = res;
 				toPages.homepage();
-			}, function(res) {
-				throw new Error(res.message);
+			}, function() {
+				console.log("Errore di login");
+				throw new Error(Main.login().getMessage());
 			})
 		};
 
@@ -84,8 +82,8 @@ premiAccessController.controller('premiAuthenticationController', ['$scope', '$l
 			var formData = getData();
 
 			console.log("Registrazione");
-			Main.save(formData, function(res) {
-				$localStorage.token = res.getToken();
+			Main.register(formData, function(res) {
+				//$localStorage.login = res;
 				toPages.homepage();
 			}, function(res) {
 				throw new Error(res.message);

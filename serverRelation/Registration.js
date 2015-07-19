@@ -1,7 +1,6 @@
 var Registration = function(hostname){
 	
 	// private_fields
-	var token = 'null';
 	var host = hostname;
 	//public_fields
 	var that = {};
@@ -11,16 +10,12 @@ var Registration = function(hostname){
 		req.open('POST', host+'/register', false);
 		req.setRequestHeader("authorization", user+":"+password);
 		req.send();
-		var res = JSON.parse(req.responseText);
-		token = req.getResponseHeader("authorization");
-		messageState = res.message;
-		return res.success;
+		var serverResponse = JSON.parse(req.responseText);
+		messageState = serverResponse.message;
+		return serverResponse.success;
 	};
 	that.getMessage = function(){
 		return messageState;
-	};
-	that.getToken = function(){
-		return token;
 	};
 
 	return that;

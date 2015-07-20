@@ -88,7 +88,7 @@ premiProfileController.controller('ProfileController', ['$scope','$http', 'Main'
 			var uploadUrl="http://sub.lvh.me:8081"+urlFormat+file;
 			console.log(uploadUrl);
            
-            Upload.uploadmedia(fd,urlFormat ,function() {
+            Upload.uploadmedia(fd,uploadUrl ,function() {
             	$scope.file={};
 
             } , function(res) {

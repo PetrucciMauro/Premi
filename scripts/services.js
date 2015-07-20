@@ -117,12 +117,15 @@ premiService.factory('Upload', ['$http','Main','Utils',
 			image: ['jpeg','jpg','gif','png'],
 			video: ['mp4','waw','avi'],
 			audio: ['mp3'],
-			uploadmedia: function(formData,urlFormat, success, error) {
+			uploadmedia: function(formData,uploadUrl, success, error) {
+				console.log(formData);
+				console.log(uploadUrl);
                return $http({
 					method: 'POST',
-					url:baseUrl+urlFormat,
+					url:uploadUrl,
+					file: formData,
 					withCredentials: true,
-					headers: {'Content-Type': undefined,'authorization': token,'Data':formData}
+					headers: {'Content-Type': undefined,'authorization': token}
 				})
 				.success(function(res){})
 				.error(function(){})

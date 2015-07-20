@@ -5,10 +5,10 @@ module.exports = function(config){
 
 
     files : [
-      'app/bower_components/angular/angular.js',
-      'app/bower_components/angular-route/angular-route.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/scripts/**/*.js',
+      'bower_components/angular/angular.js',
+      'bower_components/angular-route/angular-route.js',
+      'bower_components/angular-mocks/angular-mocks.js',
+      'scripts/**/*.js',
       'test/unit/**/*.js',
       'binary-extensions.json'
     ],
@@ -31,7 +31,7 @@ module.exports = function(config){
     ],
     
      preprocessors : {
-      '**/app/scripts/**/*.js': 'coverage'
+      '**/scripts/**/*.js': 'coverage'
    },
 
         // optionally, configure the reporter

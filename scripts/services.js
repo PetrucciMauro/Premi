@@ -96,8 +96,10 @@ premiService.factory('Main', ['Utils', '$localStorage',
 				//richiamato il metodo node per il cambio della pwd
 				var changepwd = ChangePassword(baseUrl);
 
-				if(changepwd.changepassword(formData.username, formData.password, formData.newpassword))
+				if(changepwd.changepassword(formData.username, formData.password, formData.newpassword)){
+					$localStorage.formData.password = formData.password;
 					success();
+				}
 				else
 					error({message: changepwd.getMessage()});
 			}
@@ -117,7 +119,7 @@ premiService.factory('Upload', [
 					method: 'POST',
 					url:baseUrl+urlFormat,
 					withCredentials: true,
-					headers: {'Content-Type': undefined,'sessiontoken': login.getToken,'Data':formData}
+					headers: {'Content-Type': undefined,'authorization': login.getToken,'Data':formData}
 				})
 				.success(function(res){})
 				.error(function(){})
@@ -265,7 +267,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					method: 'POST',
 					url: baseUrl + '/private/home',
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': token}
+					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/home");})
 				.error(function(){this.loginpage();})
@@ -276,7 +278,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					method: 'POST',
 					url: baseUrl + '/private/edit?slideshow=' + slideId,
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': token}
+					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/edit?slideshow=" + slideId);})
 				.error(function(){this.loginpage();})
@@ -287,7 +289,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					method: 'POST',
 					url: baseUrl + '/private/execution?slideshow=' + slideId,
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': token}
+					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/execution?slideshow=" + slideId);})
 				.error(function(){this.loginpage();})
@@ -298,7 +300,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					method: 'POST',
 					url: baseUrl + '/private/profile',
 					withCredentials: true,
-					headers: {'Content-Type': 'application/json','sessiontoken': token}
+					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/profile");})
 				.error(function(){this.loginpage();})

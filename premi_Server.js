@@ -26,7 +26,7 @@ app.use(morgan('dev'));
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, authorization, x-csrf-token, Accept, sessiontoken');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, authorization, x-csrf-token, Accept');
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Expose-Headers','authorization, sessiontoken');
     next();
@@ -143,21 +143,18 @@ filesRoutes.post('/audio/[^/]+', Audio.post );
 // RenameImage
 
 var RenameImage = require('./source/private/files/images/RenameImage.js');
-
 filesRoutes.post('/image/[^/]+/[^/]+', RenameImage.post );
 
 //============
 // RenameAudio
 
 var RenameAudio = require('./source/private/files/audios/RenameAudio.js');
-
 filesRoutes.post('/audio/[^/]+/[^/]+', RenameAudio.post );
 
 //============
 // RenameVideo
 
 var RenameVideo = require('./source/private/files/videos/RenameVideo.js');
-
 filesRoutes.post('/video/[^/]+/[^/]+', RenameVideo.post );
 
 
@@ -169,15 +166,12 @@ var presentationRoutes = express.Router();
 app.use('/private/api/presentations', presentationRoutes);
 
 var PresentationMeta = require('./source/private/presentations/PresentationMeta.js');
-
 presentationRoutes.get('/', PresentationMeta.get );
 
 var NewPresentation = require('./source/private/presentations/new/NewPresentation.js');
-
 presentationRoutes.post('/new/[^/]+', NewPresentation.post );
 
 var NewCopyPresentation = require('./source/private/presentations/new/NewCopyPresentation.js');
-
 presentationRoutes.post('/new/[^/]+/[^/]+', NewCopyPresentation.post );
 
 //=============

@@ -17,7 +17,7 @@ premiApp.run(function($log, $rootScope, Main, Utils, toPages){
 	$rootScope.$on('$routeChangeStart', function (event, next) {
 		if(!next.isLogin)
 			return;
-		
+
 		var token = Main.login().getToken();
 
 		if (Utils.isUndefined(token))
@@ -69,8 +69,8 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			return {
 				'request': function (config) {
 					config.headers = config.headers || {};
-					if (Utils.isObject(Main.login().getToken())) 
-						config.headers.sessiontoken = Main.login().getToken();
+					if (Utils.isObject(Main.login().getToken()))
+						config.headers.authorization = Main.login().getToken();
 					else
 						console.log("token non definito ");
 					

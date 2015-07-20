@@ -34,11 +34,18 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
 		}
 		$scope.createSlideShow = function() {
-			var newSS = MongoRelation(Utils.hostname(), token);
+			var newSS = MongoRelation(Utils.hostname(), token());
 
 			newSS.newPresentation("Prova");
 
 			console.log(newSS);
 		}
 
+		$scope.getSlideShow = function() {
+			var newSS = MongoRelation(Utils.hostname(), token());
+
+			newSS.getPresentation("Prova");
+
+			console.log(newSS);
+		}
 }])

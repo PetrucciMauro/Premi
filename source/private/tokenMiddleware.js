@@ -14,15 +14,17 @@ var jwt    = require('jsonwebtoken');
 var use = function(req, res, next) {
 	console.log("Middleware");
 	console.log(req.headers);
-	var token=req.headers['sessiontoken'];
+	var token=req.headers['authorization'];
 	if (token) {
-		
+		console.log("sono in token");
 		// verifies secret and checks exp
 		jwt.verify(token, secret, function(err, decoded) {
 			if (err) {
+				console.log("non verificato");
 				res.status(400);
 				return res.json({ success: false, message: 'Failed to authenticate token' });
 			} else {
+				console.log("verificato");
 				req.user = decoded.user;
 				res.status(200).send({
 					success:true,
@@ -32,6 +34,7 @@ var use = function(req, res, next) {
 			}
 		});
 	} else {
+		console.log("nessun token");
 		return res.status(403).send({
 			success: false,
 			message: 'No token provided.'

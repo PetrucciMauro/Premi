@@ -51,10 +51,9 @@
     "jsonwebtoken": "latest",
     "mongoose":"latest",
     "multer":"latest",
-    "mongodb":"latest",
-    "browserify":"latest"
+    "mongodb":"latest"
   },
-
+  
   "scripts": {
     
     "postinstall": "bower install",

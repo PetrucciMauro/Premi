@@ -1,0 +1,24 @@
+<input type="submit" ng-click="goHome()"/>
+
+<div class="phone-images">
+		<img ng-src="{{mainImageUrl}}"/>
+</div>
+
+<h1>{{slide.name}}</h1>
+
+<ul class="phone-thumbs">
+  <li ng-repeat="img in slide.images">
+    <img ng-src="{{img}}" ng-click="setImage(img)">
+  </li>
+</ul>
+
+<ul class="specs">
+  <li>
+    <span>Oggetti</span>
+		<span>Tipo</span>
+    <dl>
+      <dt>Text</dt>
+			<dd ng-repeat="testo in slide.objects.text">{{testo.idobj + ' ' + testo.content}}</dd>
+    </dl>
+  </li>
+</ul>

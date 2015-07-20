@@ -1,0 +1,131 @@
+body{  
+margin:0; 
+overflow-x: hidden;
+overflow-y: hidden;
+}
+
+
+#drag-1, #drag-2 {
+	position: absolute;
+
+  width: 25%;
+  height: 100%;
+  min-height: 6.5em;
+  margin: 10%;
+
+  background-color: #29e;
+  color: white;
+
+  border-radius: 0.75em;
+  padding: 4%;
+
+  -webkit-transform: translate(0px, 0px);
+          transform: translate(0px, 0px);
+}
+
+#drag-me::before {
+  content: "#" attr(id);
+  font-weight: bold;
+}
+
+.frame { 
+	width: 10em; 
+	height: 10em; 
+	padding: 0.5em; 
+	border: 0.25em dotted #ccc;
+	position: absolute;
+}
+
+.text {
+	text-align: center; 
+	height: 1em; 
+	padding: 0.5em; 
+	background-color: none; 
+	position: absolute; 
+}
+
+.resizable {
+	width:15em; 
+	height:10em; 
+	padding: 0.5em; 
+	background-color: none;
+}
+
+.image{
+	background-color: none; 
+	position: absolute;
+	padding:0;
+}
+#contextual-menu{
+	padding:0.2em;
+	min-height: 2.5em;
+}
+
+#contextual-menu md-icon{
+	margin: 0.2em;
+	vertical-align: none;
+	height: 1.6em;
+	width: 1.6em;
+}
+
+#contextual-menu button{
+	padding:0;
+	width:auto;
+	height:auto;
+	min-width:0;
+	min-height:0;
+	font-size:inherit;
+}
+
+#contextual-menu .menu{
+	padding:0;
+	margin: 0;
+}
+.elementMenu{
+	display:none;
+    position:relative;
+  
+}
+
+#rotation{
+	display:none;
+	position: absolute;
+	margin-top: 0;
+	height: 3em;
+	background-color: rgba(249,249,249,1);
+}
+
+#rotation::-webkit-slider-runnable-track{
+	width:2em;
+}
+#rangeRotation{
+	margin-top: 1em;
+	width:3em;
+	}
+
+	.deleteButton{
+		opacity: 0;
+	}
+
+.image{
+	padding:0;
+}
+
+#backgroundManage, #pathsManage{
+	display:none;
+	position: absolute;
+	margin-top: 0;
+	background-color: rgba(249,249,249,1);
+}
+
+.backgroundButton{
+display:inline;
+}
+
+#textMenu{
+	display:none;
+}
+
+#slideShowMenu{
+	display:block;
+}

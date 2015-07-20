@@ -6,7 +6,8 @@ var premiApp = angular.module('premiApp', [
 	'ngStorage',
 	'premiAccessController',
 	'premiHomeController',
-	'premiProfileController'
+	'premiProfileController',
+	'premiEditController'
 	]);
 
 premiApp.run(function($log, $rootScope, Main, Utils, toPages){
@@ -113,7 +114,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		.icon("phone"      , "./assets/svg/phone.svg"       , 512);
 
 	$mdThemingProvider.theme('default')
-		.primaryPalette('brown')
+		.primaryPalette('blue')
 		.accentPalette('red');
 }); 
 

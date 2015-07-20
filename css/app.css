@@ -13,7 +13,7 @@ h1{
 /* Toolbar area */
 
 .saluto {
-  color: #0099CC;
+  color: brown;
 }
 
 .message-class{
@@ -101,7 +101,6 @@ md-button.menuBtn > md-icon {
 #content img {
   display: block;
   height: auto;
-  max-width: 500px;
 }
 
 /* Utils */

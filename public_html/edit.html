@@ -1,24 +1,123 @@
-<input type="submit" ng-click="goHome()"/>
+<script type="text/javascript" src="../scripts/viewscripts.js"></script>
+<div layout="row">
+	<div layout="column">
+<md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" tabindex="-1" flex>
+	<md-list>
+		<md-list-item role="listitem" class="ng-scope md-clickable">
+			<button md-ink-ripple class="md-button md-default-theme" onclick="inserisciFrame();"><span class="ng-binding ng-scope">Inserisci un Frame</span></button>
+		</md-list-item>
+		<md-list-item role="listitem" class="ng-scope md-clickable">
+			<input type="text" name="text" placeholder="Inserisci il tuo testo..."/>
+		</md-list-item>
+		<md-list-item role="listitem" class="ng-scope md-clickable">
+			<button md-ink-ripple class="md-button md-default-theme" onclick="inserisciTesto();"><span class="ng-binding ng-scope">Inserisci un Testo</span></button>
+		</md-list-item>
+		<!--SFOGLIA FILE
+		<md-list-item role="listitem" class="ng-scope md-clickable">
 
-<div class="phone-images">
-		<img ng-src="{{mainImageUrl}}"/>
+		<button md-ink-ripple class="md-button md-default-theme" onclick="inserisciImmagine('piv1.jpg');"><span class="ng-binding ng-scope">Inserisci un'Immagine</span></button>
+		</md-list-item>
+		<md-list-item role="listitem" class="ng-scope md-clickable">
+
+		<button md-ink-ripple class="md-button md-default-theme" onclick="inserisciImmagine('piv2.jpg');"><span class="ng-binding ng-scope">Inserisci un'Immagine</span></button>
+		</md-list-item>
+		-->
+		<md-list-item role="listitem" class="ng-scope md-clickable">
+			<input type="file" id="imgLoader" name="Inserisci Immagine"/>
+		</md-list-item>
+		<!--SFOGLIA FILE -->
+
+		<!--SFONDO GENERALE -->
+		<md-list-item>
+			Cambia Colore Sfondo Presentazione:
+			<input type="button" class="color" onchange="document.getElementById('content').style.backgroundColor = '#'+this.color" >colore</input>
+		</md-list-item>
+		<!--SFONDO GENERALE -->
+
+		<!--SFONDO FRAME -->
+		<md-list-item>
+			Cambia Colore Sfondo Frame selezionato:
+			<input id="backgroundFrame" class="color"/>
+		</md-list-item>
+		<md-list-item>
+			<button id="backgroundFrameEraser">Elimina Colore Sfondo Frame selezionato </button>
+		</md-list-item>
+	<!--SFONDO FRAME -->
+	</md-list>
+
+</md-sidenav>
 </div>
 
-<h1>{{slide.name}}</h1>
+<div flex layout="column" tabIndex="-1" role="main">	
+	<md-toolbar layout="row" class="md-whiteframe-z2  md-hue-2" id="contextual-menu">
+		<div id="slideShowMenu">
+		</div>
+		
+		<div id="standardMenu" class="elementMenu">
+			<md-button class="menu md-button md-default-theme" id="rotate" onclick="toggleElement('rotation')">
+				<md-tooltip>Ruota</md-tooltip>
+				<md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+			</md-button>
+			<div id="rotation" class="md-whiteframe-z2" onfocusout="hideElement(this)">
+			</div>
+		</div>
 
-<ul class="phone-thumbs">
-  <li ng-repeat="img in slide.images">
-    <img ng-src="{{img}}" ng-click="setImage(img)">
-  </li>
-</ul>
+		<div id="textMenu">
+		</div>
 
-<ul class="specs">
-  <li>
-    <span>Oggetti</span>
-		<span>Tipo</span>
-    <dl>
-      <dt>Text</dt>
-			<dd ng-repeat="testo in slide.objects.text">{{testo.idobj + ' ' + testo.content}}</dd>
-    </dl>
-  </li>
-</ul>
+		<div id="frameMenu" class="elementMenu">
+			<md-button class="menu md-button md-default-theme" id="background" onclick="toggleElement('backgroundManage')">
+				<md-tooltip>Gestisci sfondo</md-tooltip>
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>	
+			</md-button>
+
+			<div id="backgroundManage" class="md-whiteframe-z2" onfocusout="hideElement(this)">
+				<md-button id="cancelBackground" md-ink-ripple class="md-button md-default-theme backgroundButton" onclick="removeElementBackground(id)">
+					<md-tooltip>Rimuovi sfondo</md-tooltip>
+					<md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+				</md-button>
+					<!--<md-button id="loadBackground" md-ink-ripple class="md-button md-default-theme backgroundButton" onclick="loadElementBackground(id)">
+						<md-tooltip>Seleziona sfondo</md-tooltip>
+						<md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+					</md-button>-->
+				<md-button id="colorBackground" md-ink-ripple class="md-button md-default-theme backgroundButton" onclick="setElementBackgroundColor(id)">
+					<md-tooltip>Seleziona colore di sfondo</md-tooltip>
+					<md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+				</md-button>
+			</div>
+
+			<md-button class="menu md-button md-default-theme" id="addToMainPath" onclick="toggleElement('pathsManage')">
+				<md-tooltip>Aggiungi un frame al percorso principale</md-tooltip>
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>	
+			</md-button>
+
+			<div id="pathsManage" class="md-whiteframe-z2" onfocusout="hideElement(this)">
+				<md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton">
+					<md-tooltip>aggiungi al percorso principale</md-tooltip>
+					<md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+				</md-button>
+			</div>
+		</div>
+
+		<div id="mediaMenu" class="elementMenu">
+		</div>
+	</md-toolbar>
+
+	<md-content flex="" id="content" class="md-default-theme">
+		<div>contenuti in mainpath: <span id="mainp"></span>
+		</div>
+
+		<div id="percorso">
+		</div>
+
+		<div id="frames">
+		</div>
+
+		<div id="elements">
+		</div>
+	</md-content>
+
+</div>
+</div>
+
+<script type="text/javascript" src="../scripts/viewscripts.js"></script>

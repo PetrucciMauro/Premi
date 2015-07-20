@@ -87,13 +87,21 @@ premiProfileController.controller('ProfileController', ['$scope','$http', 'Main'
 			console.log(urlFormat);
 			var uploadUrl="http://sub.lvh.me:8081"+urlFormat+file;
 			console.log(uploadUrl);
+           
+            Upload.uploadmedia(fd,urlFormat ,function() {
+            	$scope.file={};
 
-			$http.post(uploadUrl, fd, {
+            } , function(res) {
+            	throw new Error(res.message);
+
+            })
+        };
+			/*$http.post(uploadUrl, fd, {
 				headers: {'Content-Type': undefined },
 				transformRequest: angular.identity
 			})
 			.success(function(res){})
-			.error(function(){$location.path("/login");})
+			.error(function(){$location.path("/login");})*/
 
 			/* Main.uploadmedia(formData,Utils.getUserFromToken().user,urlFormat, function(res){
 				console.log("upload file completato");
@@ -101,7 +109,7 @@ premiProfileController.controller('ProfileController', ['$scope','$http', 'Main'
 			 }, function(res){
 				throw new Error(res.message);
 			 })*/
-	};
+	
 
 	/*
 		Main.me(function(res) {

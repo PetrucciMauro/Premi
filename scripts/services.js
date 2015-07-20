@@ -107,19 +107,22 @@ premiService.factory('Main', ['Utils', '$localStorage',
 	}
 ]);
 
-premiService.factory('Upload', [
-	function(){
+premiService.factory('Upload', ['$http','Main','Utils',
+	function($http,Main,Utils){
+		var baseUrl = Utils.hostname();
+		var token = Main.login().getToken();
+
 		return{
 			//Formati accettati per l'upload
 			image: ['jpeg','jpg','gif','png'],
 			video: ['mp4','waw','avi'],
 			audio: ['mp3'],
-			uploadmedia: function(formData, user, urlFormat, success, error) {
+			uploadmedia: function(formData,urlFormat, success, error) {
                return $http({
 					method: 'POST',
 					url:baseUrl+urlFormat,
 					withCredentials: true,
-					headers: {'Content-Type': undefined,'authorization': login.getToken,'Data':formData}
+					headers: {'Content-Type': undefined,'authorization': token,'Data':formData}
 				})
 				.success(function(res){})
 				.error(function(){})

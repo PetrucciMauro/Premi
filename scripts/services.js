@@ -118,12 +118,13 @@ premiService.factory('Upload', ['$http','Main','Utils',
 			video: ['mp4','waw','avi'],
 			audio: ['mp3'],
 			uploadmedia: function(formData,uploadUrl, success, error) {
-				console.log(formData);
+				console.log(JSON.stringify(formData));
 				console.log(uploadUrl);
                return $http({
+               	    transformRequest: angular.identity,
 					method: 'POST',
 					url:uploadUrl,
-					file: formData,
+					data: formData,
 					withCredentials: true,
 					headers: {'Content-Type': undefined,'authorization': token}
 				})

@@ -52,7 +52,7 @@
 
 </head>
 <body layout="column">
-	<div data-ng-controller="HeaderController">
+	<div data-ng-controller="HeaderController" class="header">
 		<md-toolbar layout="row" layout-align="space-between center" >
 		<!--The left side-->
 		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
@@ -68,9 +68,10 @@
 			<md-button aria-label="Fourth Button"   data-ng-hide="!isToken()" ng-click="goProfile()">Profilo</md-button>
 			<md-button aria-label="Fifth Button"   data-ng-hide="!isToken()" ng-click="goHome()">Home</md-button>
 		</span>
-	</md-toolbar>
-</div>
-<div ng-view></div>
+		</md-toolbar>
+	</div>
+
+	<div ng-view layout="row" layout-align="center" class="body-stretch"></div>
 
 </body>
 </html>

@@ -44,7 +44,6 @@ premiService.factory('Main', ['Utils', '$localStorage',
 			login: function(formData, success, error) {
 				//Se formData è definito significa che il login deve essere ancora effettuato
 				//altrimenti è già stato fatto e viene ritornato l'oggetto login
-				
 				if(Utils.isUndefined(formData))
 					return login;
 
@@ -173,7 +172,7 @@ premiService.factory('Utils', [
 		};
 		function getTokenExpirationDate (token) {
 			var decoded;
-			decoded = this.decodeToken(token);
+			decoded = decodeToken(token);
 
 			if(typeof decoded.exp === "undefined") {
 				return null;
@@ -185,7 +184,7 @@ premiService.factory('Utils', [
 		  return d;
 		};
 		function isTokenExpired (token, offsetSeconds) {
-			var d = this.getTokenExpirationDate(token);
+			var d = getTokenExpirationDate(token);
 			offsetSeconds = offsetSeconds || 0;
 			if (d === null) {
 				return false;
@@ -194,15 +193,15 @@ premiService.factory('Utils', [
 		  return !(d.valueOf() > (new Date().valueOf() + (offsetSeconds * 1000)));
 		};
 
-		return{
+		var utilities = {
 			//Metodo che ritorna lo username in base ad un token passato come parametro
 			getUser: function (token) {
 				//se il token non è definito è impossibile ricavarsi lo username
-				if(this.isUndefined(token))
+				if(utilities.isUndefined(token))
 					return user;
 
 				//se user è definito e il token è identico a quello salvato precedentemente allora user viene ritornato
-				if(this.isObject(user) && token === oldtoken)
+				if(utilities.isObject(user) && token === oldtoken)
 					return user;
 
 				//altrimenti viene ricavato e lo username viene salvato in user e il token in oldtoken
@@ -237,7 +236,7 @@ premiService.factory('Utils', [
 				return false;
 			},
 			isObject: function(object){
-				return !this.isUndefined(object);
+				return !utilities.isUndefined(object);
 			},
 			//Metodo per criptare stringhe
 			encrypt: function(string){
@@ -245,6 +244,7 @@ premiService.factory('Utils', [
 			}
 		}
 		
+		return utilities;
 	}]);
 /*
 premiService.factory('SlideShow', ['$resource','Main',
@@ -258,7 +258,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 		var baseUrl = Utils.hostname();
 		var token = Main.login().getToken();
 
-		return {
+		var pages = {
 			//PAGINA DI LOGIN
 			loginpage: function() {
 				$location.path("/login");
@@ -277,7 +277,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/home");})
-				.error(function(){this.loginpage();})
+				.error(function(){pages.loginpage();})
 			},
 			//PAGINA EDIT
 			editpage: function(slideId) {
@@ -288,7 +288,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/edit?slideshow=" + slideId);})
-				.error(function(){this.loginpage();})
+				.error(function(){pages.loginpage();})
 			},
 			//PAGINA DI ESECUZIONE
 			executionpage: function(slideId) {
@@ -299,7 +299,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/execution?slideshow=" + slideId);})
-				.error(function(){this.loginpage();})
+				.error(function(){pages.loginpage();})
 			},
 			//PAGINA DI PROFILO
 			profilepage: function() {
@@ -310,7 +310,9 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 					headers: {'Content-Type': 'application/json','authorization': token}
 				})
 				.success(function(res){$location.path("/private/profile");})
-				.error(function(){this.loginpage();})
+				.error(function(){pages.loginpage();})
 			}
-		}
+		};
+
+		return pages;
 	}]);

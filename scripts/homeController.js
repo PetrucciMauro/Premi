@@ -7,6 +7,11 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		var token = function(){
 			return Main.login().getToken();
 		}
+		$scope.display_limit = 50;
+
+		var mongo = MongoRelation(Utils.hostname(), token());
+		var allSS = mongo.getPresentationsMeta();
+		console.log("allSS"+allSS);
 		//Metodi per il reindirizzamento
 		$scope.goEdit = function(slideId){
 			toPages.editpage(slideId);
@@ -17,14 +22,13 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		$scope.goProfile = function(){
 			toPages.profilepage();
 		}
-
-		$scope.allSS = function() {
-			var getSS = MongoRelation(Utils.hostname(), token);
-
-			getSS.getPresentationsMeta();
-
-			console.log(getSS);
+		
+		$scope.getSS = function() {
+			return allSS;
 		}
+
+
+		//console.log("allSS"+$scope.allSS);
 		$scope.deleteSlideShow = function(slideId) {
 			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
 			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW

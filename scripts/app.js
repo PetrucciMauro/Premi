@@ -42,22 +42,22 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			isLogin: false
 		}).
 		when('/private/profile', {
-			templateUrl: 'public_html/profile.html',
+			templateUrl: 'private_html/profile.html',
 			controller: 'ProfileController',
 			isLogin: true
 		}).
 		when('/private/home', {
-			templateUrl: 'public_html/home.html',
+			templateUrl: 'private_html/home.html',
 			controller: 'HomeController',
 			isLogin: true
 		}).
 		when('/private/edit', {
-			templateUrl: 'public_html/edit.html',
+			templateUrl: 'private_html/edit.html',
 			controller: 'EditController',
 			isLogin: true
 		}).
 		when('/private/execution', {
-			templateUrl: 'public_html/execution.html',
+			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
 			isLogin: true
 		}).

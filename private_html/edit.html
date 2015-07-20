@@ -1,10 +1,10 @@
 <script type="text/javascript" src="../scripts/viewscripts.js"></script>
-<div layout="row">
-	<div layout="column">
+
+<div layout="column">
 <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" tabindex="-1" flex>
 	<md-list>
 		<md-list-item role="listitem" class="ng-scope md-clickable">
-			<button md-ink-ripple class="md-button md-default-theme" onclick="inserisciFrame();"><span class="ng-binding ng-scope">Inserisci un Frame</span></button>
+			<button md-ink-ripple class="md-button md-default-theme" ng-click="insertFrame()"><span class="ng-binding ng-scope">Inserisci un Frame</span></button>
 		</md-list-item>
 		<md-list-item role="listitem" class="ng-scope md-clickable">
 			<input type="text" name="text" placeholder="Inserisci il tuo testo..."/>
@@ -117,7 +117,6 @@
 		</div>
 	</md-content>
 
-</div>
 </div>
 
 <script type="text/javascript" src="../scripts/viewscripts.js"></script>

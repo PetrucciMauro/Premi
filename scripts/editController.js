@@ -18,4 +18,9 @@ premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 			toPages.profilepage();
 		}
 
+		//Metodi propri dell'edit
+		$scope.insertFrame = function(){
+			inserisciFrame();
+		}
+
 }])

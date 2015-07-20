@@ -1,16 +1,45 @@
 html, body {
   font-family: 'Roboto', sans-serif;
-  font-size:14px;
+  font-size:16px;
   height:100%;
   margin: 0px;
   padding: 0px;
 }
 
-h1{
+
+/* Login e Registrazione */
+.access{
+  padding: 30px;
+  display: block;
+}
+.access p{
+  height: 25px;
+}
+.access form{
+  height: 50px;
+  font-size: 20px;
+}
+.access h1{
   text-align: center;
 }
 
+.header-class{
+  position: absolute;
+  overflow: auto;
+  display: block;
+  height: auto;
+  min-height: 10%;
+}
+
 /* Toolbar area */
+.body-stretch{
+  width: 100%;
+  margin: auto;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  display: block;
+}
 
 .saluto {
   color: brown;
@@ -42,6 +71,7 @@ md-list .md-button {
   font-weight: 500;
   text-align: left;
   width: 100%;
+  height: 100%;
 }
   md-list .md-button.selected {
     color: #03a9f4;

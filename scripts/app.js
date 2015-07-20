@@ -17,7 +17,7 @@ premiApp.run(function($log, $rootScope, Main, Utils, toPages){
 	$rootScope.$on('$routeChangeStart', function (event, next) {
 		if(!next.isLogin)
 			return;
-
+		
 		var token = Main.login().getToken();
 
 		if (Utils.isUndefined(token))
@@ -65,14 +65,15 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		});
 
 	$httpProvider.interceptors.push(['$rootScope', '$q', 'Main', 'Utils',
-		function($rootScope, $q, Main, Utils) {
+		function($rootScope, $q, Main, Utils, toPages) {
 			return {
 				'request': function (config) {
 					config.headers = config.headers || {};
-					if (Utils.isObject(Main.login().getToken())) {
+					if (Utils.isObject(Main.login().getToken())) 
 						config.headers.sessiontoken = Main.login().getToken();
-					}
 					else
+						console.log("token non definito ");
+					
 					/*
 						if(typeof $locaStorage.token !== 'undefined'){
 							Main.login($localStorage.formData, function(){
@@ -82,13 +83,13 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 							});
 						}
 						else*/
-							console.log("token non definito ");
+							
 					return config;
 				},
 				'responseError': function(response) {
 					if(response.status === 401 || response.status === 403) {
 						throw new Error(response.message);
-						$location.path('/login');
+						toPages.loginpage();
 					}
 					return $q.reject(response);
 				}

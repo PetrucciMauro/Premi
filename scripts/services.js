@@ -2,12 +2,27 @@
 
 var premiService = angular.module('premiService',[])
 
-premiService.factory('Main', ['Utils',
-	function(Utils){
+premiService.factory('Main', ['Utils', '$localStorage',
+	function(Utils, $localStorage){
 		var baseUrl = Utils.hostname();
 
 		var login = Authentication(baseUrl);
 
+		/*
+		Ogni refresh della pagina (f5) comporta il reset di angular e con esso anche della var. login.
+		Per questo, ogni volta che il servizio Main è chiamato si attiva la funzione value().
+		Questa valuta se è stato fatto un refresh vedendo se login è definito
+			e in questo caso vede se nel localstorage sono salvati username e pwd:
+			in tal caso allora riapplica l'authenticate e login viene ripristinata
+		*/
+
+		var value = function(){
+			if(Utils.isUndefined(login.getToken()) && Utils.isObject($localStorage.formData))
+				if(!login.authenticate($localStorage.formData.username, $localStorage.formData.password))
+					throw new Error({message: login.getMessage()});
+		};
+
+		value();
 		return {
 			//Metodo che richiama il metodo del server per la registrazione
 			register: function(formData, success, error) {
@@ -16,8 +31,10 @@ premiService.factory('Main', ['Utils',
 
 				if(register.register(formData.username, formData.password))
 					//la registrazione ha avuto buon fine quindi è possibile fare il login e creare il token
-					if(login.authenticate(formData.username, formData.password))
+					if(login.authenticate(formData.username, formData.password)){
+						$localStorage.formData = formData;
 						success();
+					}
 					else
 						error({message: login.getMessage()});
 				else
@@ -31,8 +48,10 @@ premiService.factory('Main', ['Utils',
 				if(Utils.isUndefined(formData))
 					return login;
 
-				if(login.authenticate(formData.username, formData.password))
+				if(login.authenticate(formData.username, formData.password)){
+					$localStorage.formData = formData;
 					success();
+				}
 				else
 					error({message: login.getMessage()});
 			},
@@ -42,8 +61,24 @@ premiService.factory('Main', ['Utils',
 			//Metodo che richiama il metodo del server per il logout
 			logout: function(success, error) {
 				//viene cancellato il token di sessione, se esiste
+				var notdef = false;
+				var local = false;
+
 				if(Utils.isUndefined(login.getToken()))
-					throw new Error("Bisogna aver effettuato l'accesso per fare logout");
+					notdef = true;
+				if(Utils.isObject($localStorage.formData))
+					local = true;
+
+				//IF NELL'ORDINE CORRETTO
+				//se è presente $localStorage.formData bisogna cancellarlo
+				if(local)
+					delete $localStorage.formData;
+				//se è presente $localStorage.formData ma login è indefinito allora c'è un errore nel server
+				if(local && notdef)
+					throw new Error("Errore interno del server, forse non risponde. Provare a rieffettuare il login");
+				//altrimenti non è mai stato fatto un login
+				if(notdef)
+					throw new Error("Bisogna aver effettuato l'accesso per fare il logout");
 				
 				console.log("Logout in corso...");
 

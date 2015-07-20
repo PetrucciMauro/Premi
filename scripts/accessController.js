@@ -5,6 +5,8 @@ var premiAccessController = angular.module('premiAccessController', ['premiServi
 premiAccessController.controller('HeaderController', ['$rootScope', '$scope', 'Main', 'toPages', 'Utils',
 	function($rootScope, $scope, Main, toPages, Utils) {
 		var token = function(){
+			if(Utils.isObject($rootScope.temp))
+				Main.auth($rootScope.temp);
 			return Main.login().getToken();
 		}
 

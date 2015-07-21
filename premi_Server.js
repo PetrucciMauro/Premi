@@ -30,8 +30,7 @@ var ObjectID = require('mongodb').ObjectID
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, authorization, x-csrf-token, Accept,Data');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Headers', 'content-type, Authorization, Data');
     res.setHeader('Access-Control-Expose-Headers','authorization');
     next();
 });
@@ -67,8 +66,7 @@ app.post('/account/changepassword', Changepassword.post );
 
 app.use('/publicpages', express.static('public_html'));
 
-app.use('/private/htdocs', express.static('private_html'));
-
+app.use('/private', express.static('private_html'));
 
 //==================
 // token_middleware
@@ -77,8 +75,9 @@ app.use('/private/htdocs', express.static('private_html'));
 var Middleware = require('./source/private/tokenMiddleware.js');
 
 var privateRoutes = express.Router();
-app.post('/private', privateRoutes);
-app.get('/private', privateRoutes);
+//app.post('/private*', privateRoutes);
+//app.get('/private*', privateRoutes);
+app.use('/private', privateRoutes);
 
 privateRoutes.use(Middleware.use);
 

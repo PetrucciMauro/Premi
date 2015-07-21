@@ -31,12 +31,12 @@ premiApp.run(function($log, $rootScope, Main, Utils, toPages){
 premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$httpProvider,$provide,$locationProvider){
 	$routeProvider.
 		//isLogin: se true indica che per accedere a quella pag. bisogna essere autenticati
-		when('/account/login', {
+		when('/login', {
 			templateUrl: 'public_html/login.html',
 			controller: 'AuthenticationController',
 			isLogin: false
 		}).
-		when('/account/registrazione', {
+		when('/registrazione', {
 			templateUrl: 'public_html/registrazione.html',
 			controller: 'AuthenticationController',
 			isLogin: false
@@ -62,7 +62,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			isLogin: true
 		}).
 		otherwise({
-			redirectTo: '/account/login'
+			redirectTo: '/login'
 		});
 
 	$httpProvider.interceptors.push(['$rootScope', '$q', 'Main', 'Utils',
@@ -80,6 +80,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 					return config;
 				},
 				'responseError': function(response) {
+					console.log("response error");
 					if(response.status === 401 || response.status === 403) {
 						throw new Error(response.message);
 						toPages.loginpage();

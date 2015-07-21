@@ -27,7 +27,8 @@ var use = function(req, res, next) {
 			} else {
 				console.log("ok è giusto");
 				req.user = decoded.user;
-				res.status(200).send({user: req.user});
+				//res.status(200).send({user: req.user});
+				//res.end();
 				next();
 			}
 		});

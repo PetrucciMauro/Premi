@@ -223,7 +223,7 @@ premiService.factory('Utils', [
 			},
 			//Metodo che ritorna l'hostname dove risiede il sito
 			hostname: function() {
-				return "http://sub.lvh.me:8081";
+				return "http://localhost:8081";
 			},
 			//Metodi che determinano se un oggetto è definito o meno
 			isUndefined: function(object){
@@ -257,58 +257,87 @@ premiService.factory('SlideShow', ['$resource','Main',
 }]);*/
 
 //Servizio che reindirizza alla pagina corretta attivando il middleware node per la verifica del token
-premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
-	function($location,$http, Main, Utils){
+premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedData',
+	function($location,$http, Main, Utils, SharedData){
 		var baseUrl = Utils.hostname();
-		var token = Main.login().getToken();
+
+		var sendRequest = function(dest, success, error){
+			return $http({
+				method: 'GET',
+				url: baseUrl + dest
+			})
+			.success(success)
+			.error(error)
+		};
+
+		var baseError = function(){};
+		var error = function(){pages.loginpage();};
 
 		var pages = {
 			//PAGINA DI LOGIN
 			loginpage: function() {
-				$location.path("/account/login");
+				var success = function(){$location.path('/login');};
+				return sendRequest('/publicpages/login.html', success, baseError);
 			},
 			//PAGINA DI REGISTRAZIONE
 			registrazionepage: function() {
-				$location.path("/account/registrazione");
+				var success = function(){$location.path('/registrazione');};
+				return sendRequest('/publicpages/registrazione.html', success, error);
 			},
 			//Le seguenti pagine sono tutte accessibili solo dopo essersi autenticati al server
 			//PAGINA HOME
 			homepage: function() {
-				return $http({
-					method: 'GET',
-					url: baseUrl + '/private'
-				})
-				.success(function(){$location.path("/private/home");})
-				.error(function(){pages.loginpage();})
+				var success = function(){$location.path('/private/home');};
+				return sendRequest('/private/home.html', success, error);
 			},
 			//PAGINA EDIT
 			editpage: function(slideId) {
-				return $http({
-					method: 'GET',
-					url: baseUrl + '/private'
-				})
-				.success(function(res){$location.path("/private/edit?slideshow=" + slideId);})
-				.error(function(){pages.loginpage();})
+				var success = function(){
+					$location.path('/private/edit');
+					SharedData.forEdit(slideId);
+				};
+				return sendRequest('/private/edit.html', success, error);
 			},
 			//PAGINA DI ESECUZIONE
 			executionpage: function(slideId) {
-				return $http({
-					method: 'GET',
-					url: baseUrl + '/private'
-				})
-				.success(function(res){$location.path("/private/execution?slideshow=" + slideId);})
-				.error(function(){pages.loginpage();})
+				var success = function(){
+					$location.path('/private/execution');
+					SharedData.forExecution(slideId);
+				};
+				return sendRequest('/private/execution.html', success, error);
 			},
 			//PAGINA DI PROFILO
 			profilepage: function() {
-				return $http({
-					method: 'GET',
-					url: baseUrl + '/private'
-				})
-				.success(function(res){$location.path("/private/profile");})
-				.error(function(){pages.loginpage();})
+				var success = function(){$location.path('/private/profile');};
+				return sendRequest('/private/profile.html', success, error);
 			}
 		};
 
 		return pages;
+	}]);
+
+premiService.factory('SharedData', ['Utils',
+	function(Utils){
+		//ricordano l'id della presentazione su cui lavorare
+		//per l'esecuzione
+		var idExecution = {};
+		//per l'edit
+		var idEdit = {};
+
+		var shared = {
+			forExecution: function(idSlideShow) {
+				if(Utils.isObject(idSlideShow))
+					idExecution = idSlideShow;
+
+				return idExecution;
+			},
+			forEdit: function(idSlideShow) {
+				if(Utils.isObject(idSlideShow))
+					idEdit = idSlideShow;
+
+				return idEdit;
+			}
+		};
+
+		return shared;
 	}]);

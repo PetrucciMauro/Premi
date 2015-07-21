@@ -22,11 +22,27 @@ var get = function(req, res){
 				message.push(pres);
 			});
 			console.log(message);
+			
 			res.json({
 				success: true,
 				message: message
 			});
+/*
+			var json = JSON.stringify({
+				success: true,
+				message: message
+			});
+			res.end(json);
+			res.send();
+
+			/*res.status(200).send({
+				success: true,
+				message: message
+			});*/
+
 			db.close();
+
+			
 
 		});
 	});

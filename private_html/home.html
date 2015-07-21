@@ -1,19 +1,20 @@
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-10">
-			<!--Body content-->
-			<md-button class="md-raised md-cornered" ng-click="createSlideShow()">Submit</md-button>
-			<md-button class="md-raised md-cornered" ng-click="getSlideShow()">get</md-button>
-			<ul class="slideshows">
-				<li ng-repeat="slide in getSS() track by $index | limitTo: display_limit" class="thumbnail phone-listing">
-					<input type="submit" name="Edit" value="Edit" ng-click="goEdit(slide._id)"/>
-					<input type="submit" name="Esegui" value="Esegui" ng-click="goExecute(slide._id)"/>
-					<input type="submit" name="Elimina" value="Esegui" ng-click="deleteSlideShow(slide._id)"/>
-					<p>{{slide._id}}</p>
-					<p>{{slide.meta.name}}</p>
-				</li>
-			</ul>
-
-		</div>
+	<div layout="column">
+		<md-button class="md-raised md-cornered" ng-click="createSlideShow()">Submit</md-button>
+		<md-button class="md-raised md-cornered" ng-click="getSlideShow()">get</md-button>
 	</div>
+
+	<div layout="row" class="col-md-10">
+		<ul class="slideshows">
+			<li ng-repeat="slide in getSS() track by $index | limitTo: display_limit" class="thumbnail phone-listing">
+				<input type="submit" name="Edit" value="Edit" ng-click="goEdit(slide._id)"/>
+				<input type="submit" name="Esegui" value="Esegui" ng-click="goExecute(slide._id)"/>
+				<input type="submit" name="Elimina" value="Esegui" ng-click="deleteSlideShow(slide._id)"/>
+				<p>{{slide._id}}</p>
+				<p>{{slide.meta.name}}</p>
+			</li>
+		</ul>
+
+	</div>
+
 </div>

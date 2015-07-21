@@ -44,6 +44,9 @@ overflow-y: hidden;
 	position: absolute; 
 }
 
+.elemento {
+	z-index: 0;
+}
 .resizable {
 	width:15em; 
 	height:10em; 
@@ -105,13 +108,32 @@ overflow-y: hidden;
 
 	.deleteButton{
 		opacity: 0;
+		position:absolute;
+		top:-1.5em;
+		left:-1em;
+	}
+	.bringForwardButton{
+		opacity: 0;
+		position:absolute;
+		top:-1.3em;
+		left:0.5em;
+
+		
+	}
+	.moveBackwardButton{
+		opacity: 0;
+		position:absolute;
+		top:-1.3em;
+		left:1.8em;
+
+		
 	}
 
 .image{
 	padding:0;
 }
 
-#backgroundManage, #pathsManage{
+#backgroundManage, #pathsManage, #insertElement,#slideShowBackgroundManage{
 	display:none;
 	position: absolute;
 	margin-top: 0;
@@ -126,6 +148,30 @@ display:inline;
 	display:none;
 }
 
+#imageMenu{
+	display:none;
+}
+
+#mediaMenu{
+	display:none;
+}
+
 #slideShowMenu{
 	display:block;
+}
+
+.colorPicker{
+	width:3em;
+}
+
+input.autogrow{
+	background-color: rgba(0 ,0 ,0, 0);
+	position: absolute;
+	top: 0.2em;
+	left: 0.2em;
+}
+
+.inputContainer{
+	padding:0;
+	margin:0;
 }

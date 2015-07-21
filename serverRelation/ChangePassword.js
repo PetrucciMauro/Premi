@@ -7,8 +7,8 @@ var ChangePassword = function(hostname){
 	//public_methods
 	that.changepassword = function(user, password, newpassword){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/changepassword', false);
-		req.setRequestHeader("authorization", user + ":" + password + ":" + newpassword);
+		req.open('POST', host+'/account/changepassword', false);
+		req.setRequestHeader("Authorization", user + ":" + password + ":" + newpassword);
 		req.send();
 		var res = JSON.parse(req.responseText);
 		messageState = res.message;

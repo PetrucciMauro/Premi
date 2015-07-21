@@ -9,7 +9,7 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		}
 		$scope.display_limit = 50;
 
-		var mongo = MongoRelation(Utils.hostname(), token());
+		var mongo = MongoRelation(Utils.hostname(), Main.login());
 		var allSS = mongo.getPresentationsMeta();
 		console.log("allSS"+allSS);
 		//Metodi per il reindirizzamento

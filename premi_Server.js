@@ -23,24 +23,17 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
 app.use(morgan('dev'));
+
+var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID
+
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, authorization, x-csrf-token, Accept,Data');
     res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Expose-Headers','authorization, sessiontoken');
+    res.setHeader('Access-Control-Expose-Headers','authorization');
     next();
-});
-
-
-var MongoClient = require('mongodb').MongoClient;
-var ObjectID = require('mongodb').ObjectID
-
-app.listen(port);
-console.log('Server listening at http//localhost: ' + port );
-
-process.on('uncaughtException', function(err) {
-	console.log(err);
 });
 
 //===============
@@ -51,23 +44,22 @@ var Authenticate = require('./source/account/Authenticate.js');
 var Register = require('./source/account/Register.js');
 var Changepassword = require('./source/account/ChangePassword.js');
 
-app.use('/', express.static("./"));
+app.use('/', express.static('./'));
 
-/*
 app.get('/', function(req, res) {
         res.send('Wellcome! to get a public file: /publicpages, account staff: /account, private services: /private'
 																	);
 								});
 
-app.post('/account', function(req, res) {
+app.get('/account', function(req, res) {
 								res.send('to register: ~/register, to authenticate: ~/authenticate, to change password: ~/changepassword');
-								});*/
+								});
 
-app.post('/authenticate', Authenticate.post );
+app.get('/account/authenticate', Authenticate.get );
 
-app.post('/register', Register.post );
+app.post('/account/register', Register.post );
 
-app.post('/changepassword', Changepassword.post );
+app.post('/account/changepassword', Changepassword.post );
 
 //==================
 // htmlpages_server
@@ -85,8 +77,8 @@ app.use('/private/htdocs', express.static('private_html'));
 var Middleware = require('./source/private/tokenMiddleware.js');
 
 var privateRoutes = express.Router();
-app.post('/private*', privateRoutes);
-app.get('/private*', privateRoutes);
+app.post('/private', privateRoutes);
+app.get('/private', privateRoutes);
 
 privateRoutes.use(Middleware.use);
 
@@ -143,18 +135,21 @@ filesRoutes.post('/audio/[^/]+', Audio.post );
 // RenameImage
 
 var RenameImage = require('./source/private/files/images/RenameImage.js');
+
 filesRoutes.post('/image/[^/]+/[^/]+', RenameImage.post );
 
 //============
 // RenameAudio
 
 var RenameAudio = require('./source/private/files/audios/RenameAudio.js');
+
 filesRoutes.post('/audio/[^/]+/[^/]+', RenameAudio.post );
 
 //============
 // RenameVideo
 
 var RenameVideo = require('./source/private/files/videos/RenameVideo.js');
+
 filesRoutes.post('/video/[^/]+/[^/]+', RenameVideo.post );
 
 
@@ -166,12 +161,15 @@ var presentationRoutes = express.Router();
 app.use('/private/api/presentations', presentationRoutes);
 
 var PresentationMeta = require('./source/private/presentations/PresentationMeta.js');
+
 presentationRoutes.get('/', PresentationMeta.get );
 
 var NewPresentation = require('./source/private/presentations/new/NewPresentation.js');
+
 presentationRoutes.post('/new/[^/]+', NewPresentation.post );
 
 var NewCopyPresentation = require('./source/private/presentations/new/NewCopyPresentation.js');
+
 presentationRoutes.post('/new/[^/]+/[^/]+', NewCopyPresentation.post );
 
 //=============

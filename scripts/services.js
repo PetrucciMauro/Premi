@@ -125,7 +125,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					url:uploadUrl,
 					data: formData,
 					withCredentials: true,
-					headers: {'Content-Type': undefined,'authorization': token}
+					headers: {'Content-Type': undefined,'Authorization': token}
 				})
 				.success(function(res){})
 				.error(function(){})
@@ -233,6 +233,10 @@ premiService.factory('Utils', [
 					return true;
 				if(typeof object === 'null')
 					return true;
+				if(object === 'null')
+					return true;
+				if(object === 'undefined')
+					return true;
 				return false;
 			},
 			isObject: function(object){
@@ -261,31 +265,27 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 		var pages = {
 			//PAGINA DI LOGIN
 			loginpage: function() {
-				$location.path("/login");
+				$location.path("/account/login");
 			},
 			//PAGINA DI REGISTRAZIONE
 			registrazionepage: function() {
-				$location.path("/registrazione");
+				$location.path("/account/registrazione");
 			},
 			//Le seguenti pagine sono tutte accessibili solo dopo essersi autenticati al server
 			//PAGINA HOME
 			homepage: function() {
 				return $http({
-					method: 'POST',
-					url: baseUrl + '/private/home',
-					withCredentials: true,
-					headers: {'Content-Type': 'application/json','authorization': token}
+					method: 'GET',
+					url: baseUrl + '/private'
 				})
-				.success(function(res){$location.path("/private/home");})
+				.success(function(){$location.path("/private/home");})
 				.error(function(){pages.loginpage();})
 			},
 			//PAGINA EDIT
 			editpage: function(slideId) {
 				return $http({
-					method: 'POST',
-					url: baseUrl + '/private/edit?slideshow=' + slideId,
-					withCredentials: true,
-					headers: {'Content-Type': 'application/json','authorization': token}
+					method: 'GET',
+					url: baseUrl + '/private'
 				})
 				.success(function(res){$location.path("/private/edit?slideshow=" + slideId);})
 				.error(function(){pages.loginpage();})
@@ -293,10 +293,8 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 			//PAGINA DI ESECUZIONE
 			executionpage: function(slideId) {
 				return $http({
-					method: 'POST',
-					url: baseUrl + '/private/execution?slideshow=' + slideId,
-					withCredentials: true,
-					headers: {'Content-Type': 'application/json','authorization': token}
+					method: 'GET',
+					url: baseUrl + '/private'
 				})
 				.success(function(res){$location.path("/private/execution?slideshow=" + slideId);})
 				.error(function(){pages.loginpage();})
@@ -304,10 +302,8 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
 			//PAGINA DI PROFILO
 			profilepage: function() {
 				return $http({
-					method: 'POST',
-					url: baseUrl + '/private/profile',
-					withCredentials: true,
-					headers: {'Content-Type': 'application/json','authorization': token}
+					method: 'GET',
+					url: baseUrl + '/private'
 				})
 				.success(function(res){$location.path("/private/profile");})
 				.error(function(){pages.loginpage();})

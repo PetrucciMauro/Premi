@@ -1,4 +1,4 @@
 module.exports = {
     "secret": "griever",
-    "database": "mongodb://localhost:27017/premi"
+    "database": "mongodb://localhost/premi"
 };

@@ -1,19 +1,19 @@
 var Authentication = function(hostname){
 	
 	// private_fields
-	var token = undefined;
+	var token = 'null';
 	var host = hostname;
 	//public_fields
 	var that = {};
 	//public_methods
 	that.authenticate = function(user, password){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/authenticate', false);
-		req.setRequestHeader("authorization", user+":"+password);
+		req.open('GET', host+'/account/authenticate', false);
+		req.setRequestHeader("Authorization", user+":"+password);
 		req.send();
 		var res = JSON.parse(req.responseText);
-		token = req.getResponseHeader("authorization");
-		messageState = res.message;
+		token = req.getResponseHeader("Authorization");
+		messageState = res.success;
 		return res.success;
 	};
 	that.getMessage = function(){
@@ -23,7 +23,7 @@ var Authentication = function(hostname){
 		return token;
 	};
 	that.deAuthenticate = function(){
-		token = undefined;
+		token = 'null';
 		return true;
 	};
 	

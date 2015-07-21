@@ -31,12 +31,12 @@ premiApp.run(function($log, $rootScope, Main, Utils, toPages){
 premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$httpProvider,$provide,$locationProvider){
 	$routeProvider.
 		//isLogin: se true indica che per accedere a quella pag. bisogna essere autenticati
-		when('/login', {
+		when('/account/login', {
 			templateUrl: 'public_html/login.html',
 			controller: 'AuthenticationController',
 			isLogin: false
 		}).
-		when('/registrazione', {
+		when('/account/registrazione', {
 			templateUrl: 'public_html/registrazione.html',
 			controller: 'AuthenticationController',
 			isLogin: false
@@ -62,7 +62,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			isLogin: true
 		}).
 		otherwise({
-			redirectTo: '/login'
+			redirectTo: '/account/login'
 		});
 
 	$httpProvider.interceptors.push(['$rootScope', '$q', 'Main', 'Utils',
@@ -70,21 +70,13 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			return {
 				'request': function (config) {
 					config.headers = config.headers || {};
-					if (Utils.isObject(Main.login().getToken()))
-						config.headers.authorization = Main.login().getToken();
+					if (Utils.isObject(Main.login().getToken())){
+						config.headers.Authorization = Main.login().getToken();
+						
+					}
 					else
 						console.log("token non definito ");
 					
-					/*
-						if(typeof $locaStorage.token !== 'undefined'){
-							Main.login($localStorage.formData, function(){
-								//$route.reload();
-							}, function(){
-								throw new Error({message: "Impossibile verificare il token"})
-							});
-						}
-						else*/
-							
 					return config;
 				},
 				'responseError': function(response) {

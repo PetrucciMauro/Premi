@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for scripts/profileController.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">scripts/profileController.js</span></h1>
+    <h2>
+        Statements: <span class="metric">3.85% <small>(2 / 52)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 18)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">3.85% <small>(2 / 52)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">scripts/</a> &#187; profileController.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+&nbsp;
+var premiProfileController = angular.module('premiProfileController', ['premiService'])
+&nbsp;
+premiProfileController.controller('ProfileController', ['$scope','$http', 'Main', 'toPages', 'Utils', 'Upload',
+<span class="fstat-no" title="function not covered" >	function($scope,$http, Main, toPages, Utils, Upload) {</span>
+<span class="cstat-no" title="statement not covered" >		var token = <span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >			return Main.login().getToken();</span>
+		}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		if(Utils.isUndefined(token))</span>
+<span class="cstat-no" title="statement not covered" >			toPages.loginpage();</span>
+		
+		//formati accettati per l'upload
+<span class="cstat-no" title="statement not covered" >		var image = Upload.image;</span>
+<span class="cstat-no" title="statement not covered" >		var audio = Upload.audio;</span>
+<span class="cstat-no" title="statement not covered" >		var video = Upload.video;</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var getData = <span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >			return {</span>
+				username: Utils.getUser(token()).user,
+				password: Utils.encrypt($scope.user.password),
+				newpassword: Utils.encrypt($scope.user.newpassword)
+			}
+		};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var getMedia = <span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >			return {</span>
+				username: Utils.getUser(token()).user,
+				media: JSON.stringify($scope.myFile)
+			}
+		};
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var getExtension = <span class="fstat-no" title="function not covered" >function (filename) {</span></span>
+<span class="cstat-no" title="statement not covered" >			var extension = filename.split(".");</span>
+<span class="cstat-no" title="statement not covered" >			return extension[extension.length-1];</span>
+&nbsp;
+		};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var getUrlFormat = <span class="fstat-no" title="function not covered" >function (extension) {</span></span>
+<span class="cstat-no" title="statement not covered" >			if(image.indexOf(extension) != -1)</span>
+<span class="cstat-no" title="statement not covered" >				return "/private/api/files/image/";</span>
+<span class="cstat-no" title="statement not covered" >			if(audio.indexOf(extension) != -1)</span>
+<span class="cstat-no" title="statement not covered" >				return "/private/api/files/audio/";</span>
+<span class="cstat-no" title="statement not covered" >			if(video.indexOf(extension) != -1)</span>
+<span class="cstat-no" title="statement not covered" >				return "/private/api/files/video/";</span>
+		};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		$scope.changepassword = <span class="fstat-no" title="function not covered" >function() {</span></span>
+			//check che i campi pwd non siano vuoti
+<span class="cstat-no" title="statement not covered" >			if(Utils.isUndefined($scope.user) || Utils.isUndefined($scope.user.password) || Utils.isUndefined($scope.user.newpassword) || Utils.isUndefined($scope.user.confnewpassword))</span>
+<span class="cstat-no" title="statement not covered" >				throw new Error("I campi password non possono essere vuoti");</span>
+&nbsp;
+			//check che la nuova pwd e la su conferma siano identiche
+<span class="cstat-no" title="statement not covered" >			if($scope.user.newpassword !== $scope.user.confnewpassword)</span>
+<span class="cstat-no" title="statement not covered" >				throw new Error("La nuova password e la sua conferma non coincidono");</span>
+			
+			//check che la nuova pwd sia abbastanza lunga
+<span class="cstat-no" title="statement not covered" >			if(Utils.grade($scope.user.newpassword) == 'weak'){</span>
+<span class="cstat-no" title="statement not covered" >				throw new Error("Attenzione: la password è troppo corta. Deve essere di almeno 6 caratteri")</span>
+			}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			var formData = getData();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			Main.changepassword(formData, <span class="fstat-no" title="function not covered" >function() {</span></span>
+<span class="cstat-no" title="statement not covered" >				$scope.message = 'Password modificata con successo';</span>
+<span class="cstat-no" title="statement not covered" >				$scope.user.password = {};</span>
+<span class="cstat-no" title="statement not covered" >				$scope.user.newpassword = {};</span>
+<span class="cstat-no" title="statement not covered" >				$scope.user.confpassword = {};</span>
+			}, <span class="fstat-no" title="function not covered" >function(res) {</span>
+<span class="cstat-no" title="statement not covered" >				throw new Error(res.message);</span>
+			})
+		};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		$scope.uploadmedia = <span class="fstat-no" title="function not covered" >function(files){</span></span>
+<span class="cstat-no" title="statement not covered" >			var file = (($('input[type=file]').val()).split('\\'))[2];</span>
+<span class="cstat-no" title="statement not covered" >			console.log('file is ' + JSON.stringify(file));</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			var fd = new FormData();</span>
+<span class="cstat-no" title="statement not covered" >			fd.append("file", files[0]);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			var extension= getExtension(file);</span>
+<span class="cstat-no" title="statement not covered" >			console.log(extension);</span>
+<span class="cstat-no" title="statement not covered" >			var urlFormat = getUrlFormat(extension);</span>
+<span class="cstat-no" title="statement not covered" >			console.log(urlFormat);</span>
+<span class="cstat-no" title="statement not covered" >			var uploadUrl="http://sub.lvh.me:8081"+urlFormat+file;</span>
+<span class="cstat-no" title="statement not covered" >			console.log(uploadUrl);</span>
+<span class="cstat-no" title="statement not covered" >           console.log(JSON.stringify(fd));</span>
+<span class="cstat-no" title="statement not covered" >            Upload.uploadmedia(fd,uploadUrl ,<span class="fstat-no" title="function not covered" >function() {</span></span>
+<span class="cstat-no" title="statement not covered" >            	$scope.file={};</span>
+&nbsp;
+            } , <span class="fstat-no" title="function not covered" >function(res) {</span>
+<span class="cstat-no" title="statement not covered" >            	throw new Error(res.message);</span>
+&nbsp;
+            })
+        };
+			/*$http.post(uploadUrl, fd, {
+				headers: {'Content-Type': undefined },
+				transformRequest: angular.identity
+			})
+			.success(function(res){})
+			.error(function(){$location.path("/login");})*/
+&nbsp;
+			/* Main.uploadmedia(formData,Utils.getUserFromToken().user,urlFormat, function(res){
+				console.log("upload file completato");
+				$scope.myFile= 'undefined';
+			 }, function(res){
+				throw new Error(res.message);
+			 })*/
+	
+&nbsp;
+	/*
+		Main.me(function(res) {
+			$scope.user = res;
+		}, function() {
+			$rootScope.error = 'Failed to fetch details';
+		});
+&nbsp;
+	*/
+&nbsp;
+&nbsp;
+}])</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jul 21 2015 16:34:25 GMT+0200 (CEST)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

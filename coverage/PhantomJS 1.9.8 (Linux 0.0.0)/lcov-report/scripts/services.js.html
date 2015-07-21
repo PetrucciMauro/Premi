@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for scripts/services.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../prettify.css">
+    <link rel="stylesheet" href="../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">scripts/services.js</span></h1>
+    <h2>
+        Statements: <span class="metric">7.41% <small>(10 / 135)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 60)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 38)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">7.52% <small>(10 / 133)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">scripts/</a> &#187; services.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+&nbsp;
+var premiService = angular.module('premiService',[])
+&nbsp;
+premiService.factory('Main', ['Utils', '$localStorage',
+<span class="fstat-no" title="function not covered" >	function(Utils, $localStorage){</span>
+<span class="cstat-no" title="statement not covered" >		var baseUrl = Utils.hostname();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var login = Authentication(baseUrl);</span>
+&nbsp;
+		/*
+		Ogni refresh della pagina (f5) comporta il reset di angular e con esso anche della var. login.
+		Per questo, ogni volta che il servizio Main è chiamato si attiva la funzione value().
+		Questa valuta se è stato fatto un refresh vedendo se login è definito
+			e in questo caso vede se nel localstorage sono salvati username e pwd:
+			in tal caso allora riapplica l'authenticate e login viene ripristinata
+		*/
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var value = <span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >			if(Utils.isUndefined(login.getToken()) &amp;&amp; Utils.isObject($localStorage.formData))</span>
+<span class="cstat-no" title="statement not covered" >				if(!login.authenticate($localStorage.formData.username, $localStorage.formData.password))</span>
+<span class="cstat-no" title="statement not covered" >					throw new Error({message: login.getMessage()});</span>
+		};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		value();</span>
+<span class="cstat-no" title="statement not covered" >		return {</span>
+			//Metodo che richiama il metodo del server per la registrazione
+			register: <span class="fstat-no" title="function not covered" >function(formData, success, error) {</span>
+				//richiamato metodo node per la registrazione di un nuovo utente
+<span class="cstat-no" title="statement not covered" >				var register = Registration(baseUrl);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >				if(register.register(formData.username, formData.password))</span>
+					//la registrazione ha avuto buon fine quindi è possibile fare il login e creare il token
+<span class="cstat-no" title="statement not covered" >					if(login.authenticate(formData.username, formData.password)){</span>
+<span class="cstat-no" title="statement not covered" >						$localStorage.formData = formData;</span>
+<span class="cstat-no" title="statement not covered" >						success();</span>
+					}
+					else
+<span class="cstat-no" title="statement not covered" >						error({message: login.getMessage()});</span>
+				else
+<span class="cstat-no" title="statement not covered" >					error({message: register.getMessage()});</span>
+			},
+			//Metodo che richiama il metodo del server per il login
+			login: <span class="fstat-no" title="function not covered" >function(formData, success, error) {</span>
+				//Se formData è definito significa che il login deve essere ancora effettuato
+				//altrimenti è già stato fatto e viene ritornato l'oggetto login
+<span class="cstat-no" title="statement not covered" >				if(Utils.isUndefined(formData))</span>
+<span class="cstat-no" title="statement not covered" >					return login;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >				if(login.authenticate(formData.username, formData.password)){</span>
+<span class="cstat-no" title="statement not covered" >					$localStorage.formData = formData;</span>
+<span class="cstat-no" title="statement not covered" >					success();</span>
+				}
+				else
+<span class="cstat-no" title="statement not covered" >					error({message: login.getMessage()});</span>
+			},
+			me: <span class="fstat-no" title="function not covered" >function(success, error) {</span>
+<span class="cstat-no" title="statement not covered" >				$http.get(baseUrl + '/private').success(success).error(error)</span>
+			},
+			//Metodo che richiama il metodo del server per il logout
+			logout: <span class="fstat-no" title="function not covered" >function(success, error) {</span>
+				//viene cancellato il token di sessione, se esiste
+<span class="cstat-no" title="statement not covered" >				var notdef = false;</span>
+<span class="cstat-no" title="statement not covered" >				var local = false;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >				if(Utils.isUndefined(login.getToken()))</span>
+<span class="cstat-no" title="statement not covered" >					notdef = true;</span>
+<span class="cstat-no" title="statement not covered" >				if(Utils.isObject($localStorage.formData))</span>
+<span class="cstat-no" title="statement not covered" >					local = true;</span>
+&nbsp;
+				//IF NELL'ORDINE CORRETTO
+				//se è presente $localStorage.formData bisogna cancellarlo
+<span class="cstat-no" title="statement not covered" >				if(local)</span>
+<span class="cstat-no" title="statement not covered" >					delete $localStorage.formData;</span>
+				//se è presente $localStorage.formData ma login è indefinito allora c'è un errore nel server
+<span class="cstat-no" title="statement not covered" >				if(local &amp;&amp; notdef)</span>
+<span class="cstat-no" title="statement not covered" >					throw new Error("Errore interno del server, forse non risponde. Provare a rieffettuare il login");</span>
+				//altrimenti non è mai stato fatto un login
+<span class="cstat-no" title="statement not covered" >				if(notdef)</span>
+<span class="cstat-no" title="statement not covered" >					throw new Error("Bisogna aver effettuato l'accesso per fare il logout");</span>
+				
+<span class="cstat-no" title="statement not covered" >				console.log("Logout in corso...");</span>
+&nbsp;
+				//richiamato il metodo per fare il logout dal server
+<span class="cstat-no" title="statement not covered" >				if(login.deAuthenticate()){</span>
+<span class="cstat-no" title="statement not covered" >					success();</span>
+<span class="cstat-no" title="statement not covered" >					return;</span>
+				}
+&nbsp;
+				//arrivati qui significa che il logout non è stato possibile
+<span class="cstat-no" title="statement not covered" >				error({message: 'Impossibile effettuare il logout'});</span>
+			},
+			//Metodo che richiama il metodo del server per fare il cambio della password
+			changepassword: <span class="fstat-no" title="function not covered" >function(formData, success, error){</span>
+				//richiamato il metodo node per il cambio della pwd
+<span class="cstat-no" title="statement not covered" >				var changepwd = ChangePassword(baseUrl);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >				if(changepwd.changepassword(formData.username, formData.password, formData.newpassword)){</span>
+<span class="cstat-no" title="statement not covered" >					$localStorage.formData.password = formData.password;</span>
+<span class="cstat-no" title="statement not covered" >					success();</span>
+				}
+				else
+<span class="cstat-no" title="statement not covered" >					error({message: changepwd.getMessage()});</span>
+			}
+		};
+	}
+]);
+&nbsp;
+premiService.factory('Upload', ['$http','Main','Utils',
+<span class="fstat-no" title="function not covered" >	function($http,Main,Utils){</span>
+<span class="cstat-no" title="statement not covered" >		var baseUrl = Utils.hostname();</span>
+<span class="cstat-no" title="statement not covered" >		var token = Main.login().getToken();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		return{</span>
+			//Formati accettati per l'upload
+			image: ['jpeg','jpg','gif','png'],
+			video: ['mp4','waw','avi'],
+			audio: ['mp3'],
+			uploadmedia: <span class="fstat-no" title="function not covered" >function(formData,uploadUrl, success, error) {</span>
+<span class="cstat-no" title="statement not covered" >				console.log(JSON.stringify(formData));</span>
+<span class="cstat-no" title="statement not covered" >				console.log(uploadUrl);</span>
+<span class="cstat-no" title="statement not covered" >               return $http({</span>
+               	    transformRequest: angular.identity,
+					method: 'POST',
+					url:uploadUrl,
+					data: formData,
+					withCredentials: true,
+					headers: {'Content-Type': undefined,'authorization': token}
+				})
+				.success(<span class="fstat-no" title="function not covered" >function(res){</span>})
+				.error(<span class="fstat-no" title="function not covered" >function(){</span>})
+			}
+		}
+	}
+]);
+&nbsp;
+premiService.factory('Utils', [
+<span class="fstat-no" title="function not covered" >	function(){</span>
+		//user è adibita al contenimento dello username
+		//oldtoken invece al contenimento del token
+<span class="cstat-no" title="statement not covered" >		var user = {};</span>
+<span class="cstat-no" title="statement not covered" >		var oldtoken = {};</span>
+&nbsp;
+		//Metodi per la decodifica di un token
+<span class="fstat-no" title="function not covered" >		function changeUser(user) {</span>
+<span class="cstat-no" title="statement not covered" >			angular.extend(currentUser, user);</span>
+		};
+<span class="fstat-no" title="function not covered" >		function decodeToken(token) {</span>
+<span class="cstat-no" title="statement not covered" >			var parts = token.split('.');</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			if (parts.length !== 3) {</span>
+<span class="cstat-no" title="statement not covered" >				throw new Error('Il token deve essere formato da 3 parti');</span>
+			}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			var decoded = urlBase64Decode(parts[1]);</span>
+<span class="cstat-no" title="statement not covered" >			if (!decoded) {</span>
+<span class="cstat-no" title="statement not covered" >				throw new Error('Impossibile decodificare il token');</span>
+			}
+<span class="cstat-no" title="statement not covered" >			return JSON.parse(decoded);</span>
+		};
+<span class="fstat-no" title="function not covered" >		function urlBase64Decode (str) {</span>
+<span class="cstat-no" title="statement not covered" >			var output = str.replace(/-/g, '+').replace(/_/g, '/');</span>
+<span class="cstat-no" title="statement not covered" >			switch (output.length % 4) {</span>
+				case 0: { <span class="cstat-no" title="statement not covered" >break; </span>}
+				case 2: { <span class="cstat-no" title="statement not covered" >output += '=='; <span class="cstat-no" title="statement not covered" ></span>break; </span>}
+				case 3: { <span class="cstat-no" title="statement not covered" >output += '='; <span class="cstat-no" title="statement not covered" ></span>break; </span>}
+				default: {
+<span class="cstat-no" title="statement not covered" >					throw new Error('Stringa urlBase64 non legale');</span>
+				}
+			}
+<span class="cstat-no" title="statement not covered" >			return decodeURIComponent(escape(window.atob(output))); </span>//polifyll https://github.com/davidchambers/Base64.js
+		};
+<span class="fstat-no" title="function not covered" >		function getTokenExpirationDate (token) {</span>
+<span class="cstat-no" title="statement not covered" >			var decoded;</span>
+<span class="cstat-no" title="statement not covered" >			decoded = decodeToken(token);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >			if(typeof decoded.exp === "undefined") {</span>
+<span class="cstat-no" title="statement not covered" >				return null;</span>
+			}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		  var d = new Date(0); </span>// The 0 here is the key, which sets the date to the epoch
+<span class="cstat-no" title="statement not covered" >		  d.setUTCSeconds(decoded.exp);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		  return d;</span>
+		};
+<span class="fstat-no" title="function not covered" >		function isTokenExpired (token, offsetSeconds) {</span>
+<span class="cstat-no" title="statement not covered" >			var d = getTokenExpirationDate(token);</span>
+<span class="cstat-no" title="statement not covered" >			offsetSeconds = offsetSeconds || 0;</span>
+<span class="cstat-no" title="statement not covered" >			if (d === null) {</span>
+<span class="cstat-no" title="statement not covered" >				return false;</span>
+			}
+		  // Token expired?
+<span class="cstat-no" title="statement not covered" >		  return !(d.valueOf() &gt; (new Date().valueOf() + (offsetSeconds * 1000)));</span>
+		};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var utilities = {</span>
+			//Metodo che ritorna lo username in base ad un token passato come parametro
+			getUser: <span class="fstat-no" title="function not covered" >function (token) {</span>
+				//se il token non è definito è impossibile ricavarsi lo username
+<span class="cstat-no" title="statement not covered" >				if(utilities.isUndefined(token))</span>
+<span class="cstat-no" title="statement not covered" >					return user;</span>
+&nbsp;
+				//se user è definito e il token è identico a quello salvato precedentemente allora user viene ritornato
+<span class="cstat-no" title="statement not covered" >				if(utilities.isObject(user) &amp;&amp; token === oldtoken)</span>
+<span class="cstat-no" title="statement not covered" >					return user;</span>
+&nbsp;
+				//altrimenti viene ricavato e lo username viene salvato in user e il token in oldtoken
+<span class="cstat-no" title="statement not covered" >				user = decodeToken(token);</span>
+<span class="cstat-no" title="statement not covered" >				oldtoken = token;</span>
+<span class="cstat-no" title="statement not covered" >				return user;</span>
+			},
+			//Metodo per valutare la robustezza di una password
+			grade: <span class="fstat-no" title="function not covered" >function(password) {</span>
+<span class="cstat-no" title="statement not covered" >				var size = password.length;</span>
+<span class="cstat-no" title="statement not covered" >				var strength = 'weak';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >				if (size &gt; 8)</span>
+<span class="cstat-no" title="statement not covered" >					strength = 'strong';</span>
+				else <span class="cstat-no" title="statement not covered" >if (size &gt; 5)</span>
+<span class="cstat-no" title="statement not covered" >					strength = 'medium';</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >				return strength;</span>
+			},
+			//Metodo che ritorna l'hostname dove risiede il sito
+			hostname: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >				return "http://sub.lvh.me:8081";</span>
+			},
+			//Metodi che determinano se un oggetto è definito o meno
+			isUndefined: <span class="fstat-no" title="function not covered" >function(object){</span>
+<span class="cstat-no" title="statement not covered" >				if(!object)</span>
+<span class="cstat-no" title="statement not covered" >					return true;</span>
+<span class="cstat-no" title="statement not covered" >				if(typeof object === 'undefined')</span>
+<span class="cstat-no" title="statement not covered" >					return true;</span>
+<span class="cstat-no" title="statement not covered" >				if(typeof object === 'null')</span>
+<span class="cstat-no" title="statement not covered" >					return true;</span>
+<span class="cstat-no" title="statement not covered" >				return false;</span>
+			},
+			isObject: <span class="fstat-no" title="function not covered" >function(object){</span>
+<span class="cstat-no" title="statement not covered" >				return !utilities.isUndefined(object);</span>
+			},
+			//Metodo per criptare stringhe
+			encrypt: <span class="fstat-no" title="function not covered" >function(string){</span>
+<span class="cstat-no" title="statement not covered" >				return CryptoJS.SHA1(string).toString();</span>
+			}
+		}
+		
+<span class="cstat-no" title="statement not covered" >		return utilities;</span>
+	}]);
+/*
+premiService.factory('SlideShow', ['$resource','Main',
+	function($resource,Main){// QUI DEVO RICAVARMI LE PRESENTAZIONI DA MONGO
+		
+}]);*/
+&nbsp;
+//Servizio che reindirizza alla pagina corretta attivando il middleware node per la verifica del token
+premiService.factory('toPages', ['$location','$http', 'Main', 'Utils',
+<span class="fstat-no" title="function not covered" >	function($location,$http, Main, Utils){</span>
+<span class="cstat-no" title="statement not covered" >		var baseUrl = Utils.hostname();</span>
+<span class="cstat-no" title="statement not covered" >		var token = Main.login().getToken();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var pages = {</span>
+			//PAGINA DI LOGIN
+			loginpage: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >				$location.path("/login");</span>
+			},
+			//PAGINA DI REGISTRAZIONE
+			registrazionepage: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >				$location.path("/registrazione");</span>
+			},
+			//Le seguenti pagine sono tutte accessibili solo dopo essersi autenticati al server
+			//PAGINA HOME
+			homepage: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >				return $http({</span>
+					method: 'POST',
+					url: baseUrl + '/private/home',
+					withCredentials: true,
+					headers: {'Content-Type': 'application/json','authorization': token}
+				})
+				.success(<span class="fstat-no" title="function not covered" >function(res){<span class="cstat-no" title="statement not covered" ></span>$location.path("/private/home");}</span>)
+				.error(<span class="fstat-no" title="function not covered" >function(){<span class="cstat-no" title="statement not covered" ></span>pages.loginpage();}</span>)
+			},
+			//PAGINA EDIT
+			editpage: <span class="fstat-no" title="function not covered" >function(slideId) {</span>
+<span class="cstat-no" title="statement not covered" >				return $http({</span>
+					method: 'POST',
+					url: baseUrl + '/private/edit?slideshow=' + slideId,
+					withCredentials: true,
+					headers: {'Content-Type': 'application/json','authorization': token}
+				})
+				.success(<span class="fstat-no" title="function not covered" >function(res){<span class="cstat-no" title="statement not covered" ></span>$location.path("/private/edit?slideshow=" + slideId);}</span>)
+				.error(<span class="fstat-no" title="function not covered" >function(){<span class="cstat-no" title="statement not covered" ></span>pages.loginpage();}</span>)
+			},
+			//PAGINA DI ESECUZIONE
+			executionpage: <span class="fstat-no" title="function not covered" >function(slideId) {</span>
+<span class="cstat-no" title="statement not covered" >				return $http({</span>
+					method: 'POST',
+					url: baseUrl + '/private/execution?slideshow=' + slideId,
+					withCredentials: true,
+					headers: {'Content-Type': 'application/json','authorization': token}
+				})
+				.success(<span class="fstat-no" title="function not covered" >function(res){<span class="cstat-no" title="statement not covered" ></span>$location.path("/private/execution?slideshow=" + slideId);}</span>)
+				.error(<span class="fstat-no" title="function not covered" >function(){<span class="cstat-no" title="statement not covered" ></span>pages.loginpage();}</span>)
+			},
+			//PAGINA DI PROFILO
+			profilepage: <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >				return $http({</span>
+					method: 'POST',
+					url: baseUrl + '/private/profile',
+					withCredentials: true,
+					headers: {'Content-Type': 'application/json','authorization': token}
+				})
+				.success(<span class="fstat-no" title="function not covered" >function(res){<span class="cstat-no" title="statement not covered" ></span>$location.path("/private/profile");}</span>)
+				.error(<span class="fstat-no" title="function not covered" >function(){<span class="cstat-no" title="statement not covered" ></span>pages.loginpage();}</span>)
+			}
+		};
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		return pages;</span>
+	}]);</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jul 21 2015 16:34:25 GMT+0200 (CEST)</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

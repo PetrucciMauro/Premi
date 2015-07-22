@@ -5,10 +5,12 @@
 			<md-input-container>
 				<label>Username</label>
 				<input ng-model="user.username" tabindex="1"/>
+				 <span ng-bind="user.username.error"></span>
 			</md-input-container>
 			<md-input-container>
 				<label>Password</label>
 				<input ng-model="user.password" type="password" tabindex="2"/>
+				 <span ng-bind="user.password.error"></span>
 			</md-input-container>
 
 			<md-button class="md-raised md-cornered" ng-click="login()" tabindex="3">Login</md-button>

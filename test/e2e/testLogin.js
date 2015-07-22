@@ -1,17 +1,22 @@
-describe('angularjs homepage todo list', function() {
-  it('should add a todo', function() {
-    browser.get('https://angularjs.org');
+describe('Premi Login page ', function() {
+  it('should login the user', function() {
+    browser.get('http://localhost:8081/');
 
-    element(by.model('todoList.todoText')).sendKeys('write first protractor test');
-    element(by.css('[value="add"]')).click();
+    var username = element(by.model('user.username')).sendKeys('3');
+    var pass = element(by.model('user.password')).sendKeys('ciaociao');
+    expect(username.getAttribute('value')).toEqual('3');
+    expect(pass.getAttribute('value')).toEqual('ciaociao');
 
-    var todoList = element.all(by.repeater('todo in todoList.todos'));
-    expect(todoList.count()).toEqual(3);
-    expect(todoList.get(2).getText()).toEqual('write first protractor test');
+    var loginButton = element( by.css('[ng-click="login()"]') );
+    loginURL = browser.getCurrentUrl();
+    loginButton.click();
+    expect(loginURL).not.toEqual('http://localhost:8081/#/private/home')
 
-    // You wrote your first test, cross it off the list
-    todoList.get(2).element(by.css('input')).click();
-    var completedAmount = element.all(by.css('.done-true'));
-    expect(completedAmount.count()).toEqual(2);
+    
+
+    
   });
+
+ 
+
 });

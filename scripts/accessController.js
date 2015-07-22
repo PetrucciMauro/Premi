@@ -62,8 +62,10 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 		//Metodo per effettuare il login al server
 		$scope.login = function() {
 			//check che i campi username e pwd non siano vuoti
-			if(Utils.isUndefined($scope.user) || Utils.isUndefined($scope.user.username) || Utils.isUndefined($scope.user.password))
-				throw new Error("I campi username e password non possono essere vuoti");
+			if(Utils.isUndefined($scope.user.username))
+				$scope.user.username.error="Inserire username";
+			if(Utils.isUndefined($scope.user.password))
+				$scope.user.password.error="Inserire username";
 
 			var formData = getData();
 

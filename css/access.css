@@ -1,0 +1,38 @@
+/* Login e Registrazione */
+.access{
+  padding: 30px;
+  display: block;
+}
+.access p{
+  height: 25px;
+}
+.access form{
+  height: 50px;
+  font-size: 20px;
+}
+.access h1{
+  text-align: center;
+}
+
+.header-class{
+  display: block;
+  height: auto;
+  min-height: 10%;
+}
+
+/* Toolbar area */
+
+.saluto {
+  color: brown;
+}
+
+.message-class{
+  color: #009933;
+  font-family: "Arial";
+  font-size: 20px;
+  text-align: center;
+}
+
+.button-font{
+  font-size: 20px;
+}

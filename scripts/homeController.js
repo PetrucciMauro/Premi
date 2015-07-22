@@ -2,54 +2,76 @@
 
 var premiHomeController = angular.module('premiHomeController', ['premiService'])
 
-premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils',
-	function($scope, Main, toPages, Utils) {
+premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window',
+	function($scope, Main, toPages, Utils, $window) {
 		var token = function(){
 			return Main.login().getToken();
 		}
+
 		$scope.display_limit = 50;
 
+		//istanziazione di mongoRelation
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
 		var allSS = mongo.getPresentationsMeta();
-		console.log("allSS"+allSS);
+
+		var update = function(){
+			allSS = mongo.getPresentationsMeta();
+		};
+		
 		//Metodi per il reindirizzamento
 		$scope.goEdit = function(slideId){
 			toPages.editpage(slideId);
-		}
+		};
 		$scope.goExecute = function(slideId){
 			toPages.executionpage(slideId);
-		}
+		};
 		$scope.goProfile = function(){
 			toPages.profilepage();
-		}
+		};
 		
+		//Metodi propri della home
 		$scope.getSS = function() {
 			return allSS;
-		}
-
-
-		//console.log("allSS"+$scope.allSS);
+		};
 		$scope.deleteSlideShow = function(slideId) {
-			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
-			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
-		}
-		$scope.renameSlideShow = function(slideId) {
-			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DEL MODEL
-			//$scope.delete CHIAMARE LA DELETE SLIDESHOW DELLA VIEW
-		}
+			var confirm = $window.confirm('Sicuro di voler eliminare la presentazione?');
+
+			if(!confirm)
+				return;
+
+			if(!mongo.deletePresentation(slideId))
+				throw new Error(mongo.getMessage());
+
+			update();
+		};
+		$scope.renameSlideShow = function(nameSS) {
+			var rename = $window.prompt('Nome:', undefined);
+
+			if(rename === null)
+				return;
+
+			if(Utils.isUndefined(rename))
+				throw new Error("E' necessario specificare un nome per poter rinominare la presentazione");
+
+			if(!mongo.renamePresentation(nameSS,rename))
+				throw new Error(mongo.getMessage());
+
+			update();
+		};
 		$scope.createSlideShow = function() {
-			var newSS = MongoRelation(Utils.hostname(), token());
+			if(Utils.isUndefined($scope.slideshow.name))
+				throw new Error("E' necessario specificare un nome per la presentazione");
 
-			newSS.newPresentation("Prova");
+			if(!mongo.newPresentation($scope.slideshow.name))
+				throw new Error(mongo.getMessage());
 
-			console.log(newSS);
-		}
+			$scope.newSS = !$scope.newSS;
+			update();
+		};
 
 		$scope.getSlideShow = function() {
-			var newSS = MongoRelation(Utils.hostname(), token());
+			mongo.getPresentation("Prova");
 
-			newSS.getPresentation("Prova");
-
-			console.log(newSS);
-		}
+			console.log(mongo);
+		};
 }])

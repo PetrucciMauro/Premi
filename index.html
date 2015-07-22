@@ -2,10 +2,13 @@
 <html  ng-app='premiApp'>
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Premi</title>
-	<!--<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">-->
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/home.css">
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/access.css">
 	<link rel="stylesheet" href="css/jquery-ui.css">
 
 	<link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
@@ -15,7 +18,7 @@
 	
 	<!-- SCRIPT DI ANGULAR -->
 	<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
-	<script type="text/javascript" src="scripts/noTesting/jquery-ui.js"></script>
+	<script type="text/javascript" src="scripts/jquery-ui.js"></script>
 	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
 	<script type="text/javascript" src="bower_components/angular-route/angular-route.js"></script>
 	<script type="text/javascript" src="bower_components/angular-resource/angular-resource.js"></script>
@@ -38,7 +41,7 @@
 	<script type="text/javascript" src="scripts/slideshowelement.js"></script>
 	<script type="text/javascript" src="scripts/inserteditremove.js"></script>
 	<script type="text/javascript" src="scripts/command.js"></script>
-	<script type="text/javascript" src="scripts/noTesting/viewscripts.js"></script>
+	<script type="text/javascript" src="scripts/viewscripts.js"></script>
 	
 	<!-- SCRIPT DEL SERVER-->
 	<script type="text/javascript" src="serverRelation/FileServerRelation.js"></script>
@@ -71,7 +74,7 @@
 		</md-toolbar>
 	</div>
 
-	<div ng-view layout="row" layout-align="center" class="body-stretch"></div>
+	<div ng-view layout="row" layout-align="space-around center" class="row"></div>
 
 </body>
 </html>

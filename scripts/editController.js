@@ -2,8 +2,8 @@
 
 var premiHomeController = angular.module('premiEditController', ['premiService'])
 
-premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils',
-	function($scope, Main, toPages, Utils) {
+premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData',
+	function($scope, Main, toPages, Utils, SharedData) {
 		var token = function(){
 			return Main.login().getToken();
 		}
@@ -17,7 +17,7 @@ premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 		$scope.goProfile = function(){
 			toPages.profilepage();
 		}
-
+		console.log(SharedData.forEdit());
 		//Metodi propri dell'edit
 		$scope.insertFrame = function(){
 			inserisciFrame();

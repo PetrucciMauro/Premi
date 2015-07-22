@@ -1,20 +1,24 @@
-<div class="container-fluid">
-	<div layout="column">
-		<md-button class="md-raised md-cornered" ng-click="createSlideShow()">Submit</md-button>
-		<md-button class="md-raised md-cornered" ng-click="getSlideShow()">get</md-button>
+<div class="col-12 home">
+<div layout="column" class="col-4 left-menu" layout-align="space-around center">
+	<md-button class="md-raised md-cornered" ng-click="newSS = !newSS">Nuova Presentazione</md-button>
+	<div ng-show="newSS">
+		<md-whiteframe class="md-whiteframe-z1" layout-align="center center">
+			<label>Nome</label>
+			<input ng-model="slideshow.name"/>
+			<md-button class="md-raised md-cornered submit" ng-click="createSlideShow()">Submit</md-button>
+		</md-whiteframe>
 	</div>
-
-	<div layout="row" class="col-md-10">
-		<ul class="slideshows">
-			<li ng-repeat="slide in getSS() track by $index | limitTo: display_limit" class="thumbnail phone-listing">
-				<input type="submit" name="Edit" value="Edit" ng-click="goEdit(slide._id)"/>
-				<input type="submit" name="Esegui" value="Esegui" ng-click="goExecute(slide._id)"/>
-				<input type="submit" name="Elimina" value="Esegui" ng-click="deleteSlideShow(slide._id)"/>
-				<p>{{slide._id}}</p>
-				<p>{{slide.meta.name}}</p>
-			</li>
-		</ul>
-
-	</div>
-
 </div>
+
+<div layout="row" class="col-8 right-pres">
+	<dl class="slideshows">
+		<dd ng-repeat="slide in getSS() track by $index | limitTo: display_limit" class="slide">
+			<md-button class="md-raised md-cornered submit" ng-click="goEdit(slide._id)">Edit</md-button>
+			<md-button class="md-raised md-cornered submit" ng-click="goExecute(slide._id)">Esegui</md-button>
+			<md-button class="md-raised md-cornered submit" ng-click="deleteSlideShow(slide._id)">Elimina</md-button>
+			<md-button class="md-raised md-cornered submit" ng-click="renameSlideShow(slide._id)">Rinomina</md-button>
+			<p>{{slide._id}}</p>
+			<p>{{slide.meta.name}}</p>
+		</dd>
+	</dl>
+</div></div>

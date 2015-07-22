@@ -47,13 +47,13 @@ var MongoRelation = function(hostname, auth_obj){
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
-		messageState = res.success;
-		return res.message;
+		messageState = res.message;
+		return res.success;
 	};
 	
 	that.renamePresentation = function(name_presentation, new_name){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/presentations/'+name_presentation+'/'+new_name, false);
+		req.open('POST', host+'/private/api/presentations/'+name_presentation+'/rename/'+new_name, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);

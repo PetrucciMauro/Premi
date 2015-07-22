@@ -71,7 +71,7 @@ premiService.factory('Main', ['Utils', '$localStorage',
 				//IF NELL'ORDINE CORRETTO
 				//se è presente $localStorage.formData bisogna cancellarlo
 				if(local)
-					delete $localStorage.formData;
+					$localStorage.$reset();
 				//se è presente $localStorage.formData ma login è indefinito allora c'è un errore nel server
 				if(local && notdef)
 					throw new Error("Errore interno del server, forse non risponde. Provare a rieffettuare il login");
@@ -316,26 +316,28 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 		return pages;
 	}]);
 
-premiService.factory('SharedData', ['Utils',
-	function(Utils){
+premiService.factory('SharedData', ['Utils', '$localStorage',
+	function(Utils, $localStorage){
 		//ricordano l'id della presentazione su cui lavorare
 		//per l'esecuzione
-		var idExecution = {};
+		var idExecution = function(idSS){
+			if(Utils.isObject(idSS))
+				$localStorage.idExecution = idSS;
+			return $localStorage.idExecution;
+		};
 		//per l'edit
-		var idEdit = {};
+		var idEdit = function(idSS){
+			if(Utils.isObject(idSS))
+				$localStorage.idEdit = idSS;
+			return $localStorage.idEdit;
+		};
 
 		var shared = {
 			forExecution: function(idSlideShow) {
-				if(Utils.isObject(idSlideShow))
-					idExecution = idSlideShow;
-
-				return idExecution;
+				return idExecution(idSlideShow);
 			},
 			forEdit: function(idSlideShow) {
-				if(Utils.isObject(idSlideShow))
-					idEdit = idSlideShow;
-
-				return idEdit;
+				return idEdit(idSlideShow);
 			}
 		};
 

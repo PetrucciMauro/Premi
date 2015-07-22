@@ -107,7 +107,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		.icon("phone"      , "./assets/svg/phone.svg"       , 512);
 
 	$mdThemingProvider.theme('default')
-		.primaryPalette('blue')
-		.accentPalette('red');
+		.primaryPalette('indigo')
+		.accentPalette('yellow');
 }); 
 

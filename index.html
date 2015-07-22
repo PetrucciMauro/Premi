@@ -55,7 +55,7 @@
 
 </head>
 <body layout="column">
-	<div data-ng-controller="HeaderController" class="header">
+	<header data-ng-controller="HeaderController" class="header">
 		<md-toolbar layout="row" layout-align="space-between center" >
 		<!--The left side-->
 		<span> <h2 class="md-toolbar-tools"><a ng-href="#/"> Premi </a></h2></span>
@@ -72,9 +72,15 @@
 			<md-button aria-label="Fifth Button"   data-ng-hide="!isToken()" ng-click="goHome()">Home</md-button>
 		</span>
 		</md-toolbar>
-	</div>
+	</header>
 
-	<div ng-view layout="row" layout-align="space-around center" class="row"></div>
+	<section ng-view layout="row" layout-align="space-around center" class="row"></section>
 
+	<footer class="footer">
+		<md-toolbar layout="row" layout-align="space-between center" >
+			<p>Progetto di Ingegneria del software 2014/2015</p>
+			<p>Gruppo LateButSafe <a href="mailto:latebutsafe@gmail.com">latebutsafe@gmail.com</a></p>
+		</md-toolbar>
+	</footer>
 </body>
 </html>

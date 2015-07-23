@@ -62,18 +62,28 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 		//Metodo per effettuare il login al server
 		$scope.login = function() {
 			//check che i campi username e pwd non siano vuoti
+			if(Utils.isUndefined($scope.user)) 
+				{
+					$scope.usernameError='Inserire username';
+			    	$scope.passwordError='Inserire password';
+			    }
+			else
 			if(Utils.isUndefined($scope.user.username))
-				$scope.user.username.error="Inserire username";
+				$scope.usernameError='Inserire username';
+			else
 			if(Utils.isUndefined($scope.user.password))
-				$scope.user.password.error="Inserire username";
-
-			var formData = getData();
+				$scope.passwordError='Inserire password';
+            
+   			if(!Utils.isUndefined($scope.user)) 
+				var formData = getData();
 
 			//richiamato il login
 			Main.login(formData, function() {	//function richiamata in caso di successo
 				toPages.homepage();
 			}, function(res) {						//function richiamata in caso di errore
-				throw new Error(res.message);
+				//throw new Error(res.message);
+				$scope.usernameError='username errata';
+				$scope.passwordError='password errata';
 			})
 		};
 

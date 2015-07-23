@@ -4,13 +4,13 @@
 		<div class="row" layout="column" layout-align="space-around center">
 			<md-input-container>
 				<label>Username</label>
-				<input ng-model="user.username" tabindex="1"/>
-				 <span ng-bind="user.username.error"></span>
+				<input ng-model="user.username" tabindex="1" ng-focus="usernameError=''"/>
+				 <span class="error" ng-bind="usernameError"></span>
 			</md-input-container>
 			<md-input-container>
 				<label>Password</label>
-				<input ng-model="user.password" type="password" tabindex="2"/>
-				 <span ng-bind="user.password.error"></span>
+				<input ng-model="user.password" type="password" tabindex="2" ng-focus="passwordError=''"/>
+				 <span class="error" ng-bind="passwordError"></span>
 			</md-input-container>
 
 			<md-button class="md-raised md-cornered" ng-click="login()" tabindex="3">Login</md-button>

@@ -72,6 +72,9 @@
 			<md-button aria-label="Fifth Button"   data-ng-hide="!isToken()" ng-click="goHome()">Home</md-button>
 		</span>
 		</md-toolbar>
+		<section class="error">
+			<span>{{error()}}</span>
+		</section>
 	</header>
 
 	<section ng-view layout="row" layout-align="space-around center" class="row"></section>

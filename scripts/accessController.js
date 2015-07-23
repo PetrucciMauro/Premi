@@ -8,6 +8,9 @@ premiAccessController.controller('HeaderController', ['$rootScope', '$scope', 'M
 			return Main.login().getToken();
 		}
 
+		$scope.error = function(){
+			return $rootScope.error;
+		}
 		//Metodi per far apparire il saluto e i pulsanti di logout, home e profilo
 		$scope.who = function(){
 			return Utils.getUser(token()).user;
@@ -57,46 +60,59 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 		//Metodo per resettare i campi username e password
 		$scope.reset = function() {
 			$scope.user = {};
+			$scope.usernameError = undefined;
+			$scope.passwordError = undefined;
 		};
 
 		//Metodo per effettuare il login al server
 		$scope.login = function() {
 			//check che i campi username e pwd non siano vuoti
-			if(Utils.isUndefined($scope.user)) 
-				{
-					$scope.usernameError='Inserire username';
-			    	$scope.passwordError='Inserire password';
-			    }
-			else
-			if(Utils.isUndefined($scope.user.username))
+			var notgo = false;
+
+			if(Utils.isUndefined($scope.user.username)){
 				$scope.usernameError='Inserire username';
-			else
-			if(Utils.isUndefined($scope.user.password))
+				notgo = true;
+			}
+
+			if(Utils.isUndefined($scope.user.password)){
 				$scope.passwordError='Inserire password';
+				notgo = true;
+			}
+
+			if(notgo) return;
             
-   			if(!Utils.isUndefined($scope.user)) 
-				var formData = getData();
+   			var formData = getData();
 
 			//richiamato il login
 			Main.login(formData, function() {	//function richiamata in caso di successo
 				toPages.homepage();
 			}, function(res) {						//function richiamata in caso di errore
-				//throw new Error(res.message);
-				$scope.usernameError='username errata';
-				$scope.passwordError='password errata';
+				throw new Error(res.message);
 			})
 		};
 
 		//Metodo per effettuare la registrazione al server
 		$scope.registration = function() {
 			//check che i campi username e pwd non siano vuoti
-			if(Utils.isUndefined($scope.user) || Utils.isUndefined($scope.user.username) || Utils.isUndefined($scope.user.password))
-				throw new Error("I campi username e password non possono essere vuoti");
-			
-			//check che la pwd sia abbastanza lunga
-			if(Utils.grade($scope.user.password) == 'weak'){
-				throw new Error("Attenzione: la password è troppo corta. Deve essere di almeno 6 caratteri")
+			var notgo = false;
+
+			if(Utils.isUndefined($scope.user.username)){
+				$scope.usernameError='Inserire username';
+				notgo = true;
 			}
+
+			if(Utils.isUndefined($scope.user.password)){
+				$scope.passwordError='Inserire password';
+				notgo = true;
+			}
+			else	
+			//check che la pwd sia abbastanza lunga
+				if(Utils.grade($scope.user.password) == 'weak'){
+					$scope.passwordError="La password deve essere lunga almeno 6 caratteri";
+					notgo = true;
+				}
+
+			if(notgo) return;
 
 			var formData = getData();
 

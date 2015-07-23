@@ -93,7 +93,9 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 	$provide.decorator("$exceptionHandler", function($delegate, $injector){
 		return function(exception, cause){
 			$delegate(exception, cause);
-			alert(exception.message);
+			//alert(exception.message);
+			var rootscope = $injector.get('$rootScope');
+			rootscope.error = exception.message;
 		};
 	});
 

@@ -270,7 +270,7 @@ function rotate(el,value) {
 function clearMenu(){
 	var hideEles = document.getElementById("contextual-menu").children;
 	for(var i = 0; i < hideEles.length; i++) {
-		if(hideEles[i].id!="slideShowMenu")
+		if(hideEles[i].id!="slideShowMenu" && hideEles[i].id!="percorsi")
 			hideEles[i].style.display="none";
 	}
 }
@@ -320,62 +320,12 @@ var inserisciElemento=function(classe){
 		yInit=$(this).position().top;
 	});
 	
-	$(div).draggable(
-	{
-		start: function(event, ui) {
-        // Log start dragged position to element data
-        
-    },
 
-    drag: function(){
-    	var offset = $(this).offset();
-    	var xPos = offset.left;
-    	var yPos = offset.top;
-    	var thisId = $(this).attr('id');
-    	$('#' + thisId + ' .posX').text(xPos);
-    	$('#' + thisId + ' .posY').text(yPos);
-    }
-}
-);
-	$(".droppable").droppable({
-		drop: function(event, ui) {
-			if($(ui.draggable).hasClass("frame")){
-				$(ui.draggable).css({top: yInit, left: xInit, position:'absolute', width: widthInit, height:heightInit});
-			}
-		},
-		over: function(event, ui) {
-			heightInit=$(ui.draggable).height();
-			widthInit=$(ui.draggable).width();
-			if($(ui.draggable).hasClass("frame")){
-				$(ui.draggable).animate({
-					width: '3em',
-					height: '3em'
-				}, 300);
-			}
-
-            /*$(this).mousemove(function(e) {
-            	console.log("ciao");
-        $(div).show(2000);
-         $(div).css({position:"absolute", left:e.pageX,top:e.pageY});
-
-     });*/
-
-
-},
-
-out: function(event, ui) {
-	if($(ui.draggable).hasClass("frame")){
-		$(ui.draggable).animate({
-			width: widthInit,
-			height: heightInit
-		}, 300);
-	}
-}
-});
 	return div;
 }
 
 var inserisciFrame=function(){
+	console.log("inserisciFrame");
 	var div=inserisciElemento("frame");
 	div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
@@ -383,6 +333,7 @@ var inserisciFrame=function(){
 			aspectRatio: 1 / 1
 		});
 	});
+	console.log(div);
 	return div;
 }
 
@@ -545,7 +496,7 @@ $(document).mousedown(function(e) {
 			}
 			//SFONDO FRAME
 		}
-		else if($(event.target).is('#content') || $(event.target).parents().is('#elements')){
+		else if($(event.target).is('#fantoccio') || $(event.target).is('#content')|| $(event.target).parents().is('#elements')){
 			console.log("deselect");
 			active().deselect();
 		}
@@ -573,7 +524,7 @@ $(document).mousedown(function(e) {
 			//SFONDO FRAME
 		}
 
-		else if($(event.target).is('#content') || $(event.target).parents().is("#elements")){
+		else if($(event.target).is('#fantoccio') || $(event.target).is('#content') || $(event.target).parents().is("#elements")){
 			active().deselect();
 		}
 	}
@@ -827,7 +778,9 @@ function zoomIn(){
 	scale=$("#content").height()/$("#"+active().getId()).height();
 	var z=scale;
 	console.log(degrees);
-	
+	var left=$("#"+active().getId()).left;
+	var top=$("#"+active().getId()).top;
+	var val=left+" "+top;
 	$("#fantoccio").css({
     "-ms-transform": "rotate("+degrees+"deg) scale("+z+")", /* IE 9 */
     "-webkit-transform":"rotate("+degrees+"deg) scale("+z+")", /* Chrome, Safari, Opera */
@@ -835,7 +788,8 @@ function zoomIn(){
     "-webkit-transition": "0.5s ease-in-out",
     "-moz-transition": "0.5s ease-in-out",
     "-o-transition": "0.5s ease-in-out",
-    "transition": "0.5s ease-in-out"
+    "transition": "0.5s ease-in-out",
+   
     
 });
 	
@@ -861,7 +815,10 @@ function zoomOut(){
     "-webkit-transition": "0.5s ease-in-out",
     "-moz-transition": "0.5s ease-in-out",
     "-o-transition": "0.5s ease-in-out",
-    "transition": "0.5s ease-in-out"
+    "transition": "0.5s ease-in-out",
+   
+    "top": "0",
+    "left": "0"
     
 });
 	$("#content").goTo();
@@ -877,24 +834,76 @@ function zoomOut(){
         return this; // for chaining...
     }
 })(jQuery);
-
+var click = {
+    x: 0,
+    y: 0
+};
 function updateDraggable(){
 	var div=$("#"+active().getId());
+	var originalHeight = $(div).height();
+    var originalWidth = $(div).width();
+	var originalLeft=$(div).css("left");
+	var originalTop=$(div).css("top");
+	console.log("original left: " + originalLeft);
 	$(div).draggable(
 	{
 		start: function(event, ui) {
-        // Log start dragged position to element data
+        click.x = event.clientX;
+        click.y = event.clientY;
+        
         
     },
-
-    drag: function(){
-    	var offset = $(this).offset();
-    	var xPos = offset.left;
-    	var yPos = offset.top;
-    	var thisId = $(this).attr('id');
-    	$('#' + thisId + ' .posX').text(xPos/scale);
-    	$('#' + thisId + ' .posY').text(yPos/scale);
+	containment: "fantoccio",
+    drag: function(event, ui){
+    var original = ui.originalPosition;
+        // jQuery will simply use the same object we alter here
+        ui.position = {
+            left: (event.clientX - click.x + original.left) / scale,
+            top:  (event.clientY - click.y + original.top) / scale
+        };
     }
+});
+
+$(".droppable").droppable({
+	
+		drop: function(event, ui) {
+			
+			if($(ui.draggable).hasClass("frame") && $(ui.droppable).id!="content"){
+				$(ui.draggable).css({top: originalTop, left: originalLeft, position:'absolute', width: originalWidth, height:originalWidth});
+			}
+		},
+		over: function(event, ui) {
+			if($(ui.draggable).hasClass("frame") && $(ui.droppable).id!="content"){
+			if($(ui.draggable).hasClass("frame")){
+				$(ui.draggable).animate({
+					width: '3em',
+					height: '3em'
+				}, 300);
+			}
+		}
+			},
+
+            /*$(this).mousemove(function(e) {
+            	console.log("ciao");
+        $(div).show(2000);
+         $(div).css({position:"absolute", left:e.pageX,top:e.pageY});
+
+     });*/
+
+
+
+
+out: function(event, ui) {
+	if($(ui.draggable).hasClass("frame")){
+		$(ui.draggable).animate({
+			width: originalWidth,
+			height: originalHeight
+		}, 300);
+	}
 }
-);
+
+});
 }
+
+
+

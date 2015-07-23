@@ -6,6 +6,7 @@ premiService.factory('Main', ['Utils', '$localStorage',
 	function(Utils, $localStorage){
 		var baseUrl = Utils.hostname();
 
+		//variabile login per mantenere aperta la sessione
 		var login = Authentication(baseUrl);
 
 		/*
@@ -316,28 +317,54 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 		return pages;
 	}]);
 
-premiService.factory('SharedData', ['Utils', '$localStorage',
-	function(Utils, $localStorage){
+premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
+	function(Utils, $localStorage, Main){
+		var mongo = MongoRelation(Utils.hostname(), Main.login());
 		//ricordano l'id della presentazione su cui lavorare
 		//per l'esecuzione
-		var idExecution = function(idSS){
-			if(Utils.isObject(idSS))
-				$localStorage.idExecution = idSS;
-			return $localStorage.idExecution;
-		};
+		var idExecution = undefined;
 		//per l'edit
-		var idEdit = function(idSS){
-			if(Utils.isObject(idSS))
-				$localStorage.idEdit = idSS;
-			return $localStorage.idEdit;
-		};
+		var idEdit = undefined;
 
 		var shared = {
 			forExecution: function(idSlideShow) {
-				return idExecution(idSlideShow);
+				var idss = {};
+
+				if(Utils.isUndefined(idSlideShow)){
+					if(Utils.isObject(idExecution))
+						return idExecution;
+
+					if(Utils.isObject($localStorage.idExecution))
+						idss = $localStorage.idExecution;
+				}
+				else
+					idss = idSlideShow;
+
+				if(Utils.isObject(idss)){
+					idExecution = mongo.getPresentation(idss);
+					$localStorage.idEdit = idss;
+				}
+				return idExecution;
 			},
 			forEdit: function(idSlideShow) {
-				return idEdit(idSlideShow);
+				var idss = {};
+
+				if(Utils.isUndefined(idSlideShow)){
+					if(Utils.isObject(idEdit))
+						return idEdit;
+
+					if(Utils.isObject($localStorage.idEdit))
+						idss = $localStorage.idEdit;
+				}
+				else
+					idss = idSlideShow;
+
+				if(Utils.isObject(idss)){
+					idEdit = mongo.getPresentation(idss);
+					$localStorage.idEdit = idss;
+				}
+
+				return idEdit;
 			}
 		};
 

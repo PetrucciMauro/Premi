@@ -33,7 +33,7 @@ var MongoRelation = function(hostname, auth_obj){
 	
 	that.getPresentation = function(nameNewPresentation){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/presentations/'+nameNewPresentation, false);
+		req.open('GET', host+'/private/api/presentations/'+nameNewPresentation, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);

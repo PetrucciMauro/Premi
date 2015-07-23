@@ -2,8 +2,8 @@
 
 var premiHomeController = angular.module('premiEditController', ['premiService'])
 
-premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData',
-	function($scope, Main, toPages, Utils, SharedData) {
+premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData', '$q', '$mdSidenav', '$mdBottomSheet',
+	function($scope, Main, toPages, Utils, SharedData, $q, $mdSidenav, $mdBottomSheet) {
 		var token = function(){
 			return Main.login().getToken();
 		}
@@ -18,9 +18,32 @@ premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 			toPages.profilepage();
 		}
 		console.log(SharedData.forEdit());
+
+		$scope.toggleList = function() {
+			var pending = $mdBottomSheet.hide() || $q.when(true);
+
+			pending.then(function(){
+				$mdSidenav('left').toggle();
+			});
+		}
+
+		$scope.show = function(which, id){
+			$scope.sfondo = false;
+			$scope.insele = false;
+			if(which === 'insele')
+				$scope.insele = true;
+			if(which === 'sfondo')
+				$scope.sfondo = true;
+			
+			toggleElement(id);
+		}
+
 		//Metodi propri dell'edit
-		$scope.insertFrame = function(){
+		$scope.inserisciFrame = function(){
 			inserisciFrame();
+		}
+		$scope.inserisciTesto = function(){
+			inserisciTesto();
 		}
 
 }])

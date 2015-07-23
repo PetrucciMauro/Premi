@@ -18,9 +18,12 @@ describe('Premi Login page ', function() {
     pass.sendKeys('ciaociao');
     expect(username.getAttribute('value')).toEqual('3');
     expect(pass.getAttribute('value')).toEqual('ciaociao');
+    browser.pause();
     loginURL = browser.getCurrentUrl();
     loginButton.click();
+    browser.pause();
     expect(loginURL).not.toEqual('http://localhost:8081/#/private/home');
+
     
 
   });
@@ -28,20 +31,17 @@ describe('Premi Login page ', function() {
  it('should show error when login form is undefined',function(){
           
 
-    //element(by.model('user.username')).clear();
-    //element(by.model('user.password')).clear();
-    
-    loginButton = element( by.css('[ng-click="login()"]') );
-    //var usernameError = element(by.binding('usernameError'));
-    //var passwordError = element(by.binding('passwordError'));
-    
-    //expect(element(by.binding('usernameError')).getText()).not.toBe('');
-    //expect(element(by.binding('passwordError')).getText()).not.toBe('');
-    usernameError.getAttribute('value').then(function(val){ expect(val).toEqual('Inserire username');
-        });
-    passwordError.getAttribute('value').then(function(val){ expect(val).toEqual('Inserire password');
-        });
 
+    loginButton = element( by.css('[ng-click="login()"]') );
+
+    /*usernameError.getAttribute('value').then(function(val){ expect(val).toBe('Inserire username');
+        });
+    passwordError.getAttribute('value').then(function(val){ expect(val).toBe('Inserire password');
+        });*/
+     
+      expect(usernameError.getText()).toEqual('Inserire username');
+      expect(passwordError.getText()).toEqual('Inserire password');
+      browser.pause();
 });
 
 });

@@ -69,16 +69,22 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 			//check che i campi username e pwd non siano vuoti
 			var notgo = false;
 
-			if(Utils.isUndefined($scope.user.username)){
+			if(Utils.isUndefined($scope.user)){
+				$scope.passwordError='Inserire password';
 				$scope.usernameError='Inserire username';
 				notgo = true;
 			}
+			else{
+				if(Utils.isUndefined($scope.user.username)){
+					$scope.usernameError='Inserire username';
+					notgo = true;
+				}
 
-			if(Utils.isUndefined($scope.user.password)){
-				$scope.passwordError='Inserire password';
-				notgo = true;
+				if(Utils.isUndefined($scope.user.password)){
+					$scope.passwordError='Inserire password';
+					notgo = true;
+				}
 			}
-
 			if(notgo) return;
             
    			var formData = getData();
@@ -96,21 +102,28 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 			//check che i campi username e pwd non siano vuoti
 			var notgo = false;
 
-			if(Utils.isUndefined($scope.user.username)){
+			if(Utils.isUndefined($scope.user)){
+				$scope.passwordError='Inserire password';
 				$scope.usernameError='Inserire username';
 				notgo = true;
 			}
-
-			if(Utils.isUndefined($scope.user.password)){
-				$scope.passwordError='Inserire password';
-				notgo = true;
-			}
-			else	
-			//check che la pwd sia abbastanza lunga
-				if(Utils.grade($scope.user.password) == 'weak'){
-					$scope.passwordError="La password deve essere lunga almeno 6 caratteri";
+			else{
+				if(Utils.isUndefined($scope.user.username)){
+					$scope.usernameError='Inserire username';
 					notgo = true;
 				}
+
+				if(Utils.isUndefined($scope.user.password)){
+					$scope.passwordError='Inserire password';
+					notgo = true;
+				}
+				else	
+				//check che la pwd sia abbastanza lunga
+					if(Utils.grade($scope.user.password) == 'weak'){
+						$scope.passwordError="La password deve essere lunga almeno 6 caratteri";
+						notgo = true;
+					}
+			}
 
 			if(notgo) return;
 

@@ -83,6 +83,15 @@ var active=function(){
 }
 //--end oggetto che tiene traccia dell'elemento selezionato--//
 
+function highlight(id) {
+    if (!document.getElementById(id).style.outline === "green dotted thick")
+        document.getElementById(id).style.outline === "green dotted thick";
+    else
+        document.getElementById(id).removeAttribute("outline");
+}
+
+
+
 //percorso principale//
 var mainPathInstance={};
 var mainPathInstanced=false;
@@ -107,6 +116,8 @@ var mainPath=function(){
 			document.getElementById("addToMain").removeAttribute("onclick");
 			selezionaPercorso(id);
 		};
+        
+        
 
 		that.removeFromMainPath=function(id, position){
 			var index=new Array();
@@ -133,13 +144,22 @@ var mainPath=function(){
 			}
 		};
 
-		that.contains=function(id){
-			var contiene=false;
-			if (private.percorso.indexOf(parseInt(id))>-1){
+		that.contains = function (id) {
+		    var contiene = false;
+		    if (private.percorso.indexOf(parseInt(id)) > -1) {
 
-				contiene=true;
-			}
-			return contiene;
+		        contiene = true;
+		    }
+		    return contiene;
+		};
+
+		that.stampaPercorso = function (id) {
+		    var element = $("#" + id);
+		    element.empty();
+		    for (var i = 0; i < private.percorso.length; i++) {
+		        console.log("siamo entrati " + i);
+		        element.append('<li class="ui-state-default" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + i + '</li>');
+		    }
 		}
 		mainPathInstance=that;
 	}
@@ -147,6 +167,8 @@ var mainPath=function(){
 	return mainPathInstance;
 }
 //--end percorso principale --//
+
+
 
 //percorsi scelta//
 var choicePathsInstance={};
@@ -325,15 +347,13 @@ var inserisciElemento=function(classe){
 }
 
 var inserisciFrame=function(){
-	console.log("inserisciFrame");
 	var div=inserisciElemento("frame");
-	div.setAttribute("ondblclick", "zoomIn()");
+	div.setAttribute("ng-dblclick", "zoomIn()");
 	$(function() {
 		$( div ).resizable({
 			aspectRatio: 1 / 1
 		});
 	});
-	console.log(div);
 	return div;
 }
 
@@ -452,6 +472,7 @@ function mandaDietro(id){
 		document.getElementById("back"+id).style.opacity = '0';
 	}
 }
+
 function toggleElement(id) { 
 	var element=document.getElementById(id);
 	if(document.getElementById(id).style.display==="block"){
@@ -770,58 +791,79 @@ function mediaControl(){
 	else
 		element.pause();
 };
-var scale=1;
-
+var scale=75;
 function zoomIn(){
-	$("#content").css({"overflow":"scroll"});
-	var degrees=0-getRotationDegrees($("#"+active().getId()));
-	scale=$("#content").height()/$("#"+active().getId()).height();
-	var z=scale;
-	console.log(degrees);
-	var left=$("#"+active().getId()).left;
-	var top=$("#"+active().getId()).top;
-	var val=left+" "+top;
-	$("#fantoccio").css({
-    "-ms-transform": "rotate("+degrees+"deg) scale("+z+")", /* IE 9 */
-    "-webkit-transform":"rotate("+degrees+"deg) scale("+z+")", /* Chrome, Safari, Opera */
-    "transform": "rotate("+degrees+"deg) scale("+z+")",
-    "-webkit-transition": "0.5s ease-in-out",
-    "-moz-transition": "0.5s ease-in-out",
-    "-o-transition": "0.5s ease-in-out",
-    "transition": "0.5s ease-in-out",
-   
     
-});
+    var degrees = 0 - getRotationDegrees($("#" + active().getId()));
+    if (degrees > 180)
+        degrees=0-(360-degrees);
+    scale=($("#content").height()/$("#"+active().getId()).height())*75;
+    var z=scale;
+    console.log(degrees);
+    var nleft = parseFloat(document.getElementById(active().getId()).style.left) || 0;
+    console.log("new left " + nleft);
+    var ntop = parseFloat(document.getElementById(active().getId()).style.top) || 0;
+    var elements = document.getElementById("frames").children;
+    var xCenter=nleft+1/2*$("#"+active().getId()).width();
+    var yCenter=ntop+1/2*$("#"+active().getId()).height();
+    var rotLeft = (Math.cos((0-degrees) * Math.PI / 180) * (nleft - xCenter)) -
+                   (Math.sin((0-degrees) * Math.PI / 180) * (ntop - yCenter)) +
+                   xCenter;
+   var rotTop = Math.sin(0-degrees * Math.PI / 180) * (nleft-xCenter) +
+                   (Math.cos(0-degrees * Math.PI / 180) * (ntop-yCenter)) +
+                   yCenter;
+    console.log("rotLeft " + rotLeft);
+
+    var percLeft = parseFloat(rotLeft) * 100 / $("#fantoccio").width();
+    var percTop = parseFloat(rotTop) * 100 / $("#fantoccio").height();
+    var oldHeight = $("#fantoccio").height();
+    var oldWidth = $("#fantoccio").width();
+    var transOrigin= percLeft+"% "+percTop+"%";
+
+        $("#fantoccio").css({
+            "zoom": z + "%",
+            "height": oldHeight,
+            "width" : oldWidth,
+            "position": "absolute",
+            "left": (0 - nleft) + "px",
+            "top": (0 - ntop) + "px",
+            "-ms-transform": "rotate(" + degrees + "deg)", /* IE 9 */
+            "-webkit-transform":"rotate("+degrees+"deg)", /* Chrome, Safari, Opera */
+            "transform": "rotate(" + degrees + "deg)",
+            "-ms-transform-origin": transOrigin, /* IE 9 */
+            "-webkit-transform-origin": transOrigin,
+            "transform-origin": transOrigin,
+            "-webkit-transition": "0.5s ease-in-out",
+            "-moz-transition": "0.5s ease-in-out",
+            "-o-transition": "0.5s ease-in-out",
+            "transition": "0.5s ease-in-out"
+            
+        });
+
 	
-	
-
-	$("#"+active().getId()).goTo();
-
-
 };
 
 function zoomOut(){
 	if(!active().getId()){
-	scale=1;
-	var z=scale;
+	scale=75;
+	var z=scale+25;
 	var degrees=0;
 	var frames=$("#frames").children();
 	$("#content").css({"overflow":"hidden"});
-	$("#fantoccio").css({
-		
-    "-ms-transform": "rotate("+degrees+"deg) scale("+z+")", /* IE 9 */
-    "-webkit-transform":"rotate("+degrees+"deg) scale("+z+")", /* Chrome, Safari, Opera */
-    "transform": "rotate("+degrees+"deg) scale("+z+")",
-    "-webkit-transition": "0.5s ease-in-out",
-    "-moz-transition": "0.5s ease-in-out",
-    "-o-transition": "0.5s ease-in-out",
-    "transition": "0.5s ease-in-out",
-   
-    "top": "0",
-    "left": "0"
-    
-});
-	$("#content").goTo();
+	var elements = document.getElementById("frames").children;
+
+	    $("#fantoccio").css({
+	        "zoom": z + "%",
+	        "position": "relative",
+	        "left": 0,
+        "top": 0,
+	        "-ms-transform": "rotate(" + degrees + "deg) ", /* IE 9 */
+	        "-webkit-transform": "rotate(" + degrees + "deg)", /* Chrome, Safari, Opera */
+	        "transform": "rotate(" + degrees + "deg) ",
+	       
+
+	    });
+
 }
 
 };
@@ -858,8 +900,8 @@ function updateDraggable(){
     var original = ui.originalPosition;
         // jQuery will simply use the same object we alter here
         ui.position = {
-            left: (event.clientX - click.x + original.left) / scale,
-            top:  (event.clientY - click.y + original.top) / scale
+            left: (event.clientX - click.x + original.left)/(scale/75),
+            top:  (event.clientY - click.y + original.top) /(scale/75)
         };
     }
 });
@@ -905,5 +947,8 @@ out: function(event, ui) {
 });
 }
 
+$(document).ready(function () {
+    $("#fantoccio").height($("#content").height()*0.9);
 
+});
 

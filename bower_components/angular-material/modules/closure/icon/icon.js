@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.0
+ * v0.9.8
  */
 goog.provide('ng.material.components.icon');
 goog.require('ng.material.core');
@@ -156,8 +156,35 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
       svgSrc  : '@mdSvgSrc'
     },
     restrict: 'E',
-    link : postLink
+    transclude:true,
+    template: getTemplate,
+    link: postLink
   };
+
+  function getTemplate(element, attr) {
+    var isEmptyAttr  = function(key) { return angular.isDefined(attr[key]) ? attr[key].length == 0 : false    },
+        hasAttrValue = function(key) { return attr[key] && attr[key].length > 0;     },
+        attrValue    = function(key) { return hasAttrValue(key) ? attr[key] : '' };
+
+    // If using the deprecated md-font-icon API
+    // If using ligature-based font-icons, transclude the ligature or NRCs
+
+    var tmplFontIcon = '<span class="md-font {{classNames}}" ng-class="fontIcon"></span>';
+    var tmplFontSet  = '<span class="{{classNames}}" ng-transclude></span>';
+
+    var tmpl = hasAttrValue('mdSvgIcon')     ? ''           :
+               hasAttrValue('mdSvgSrc')      ? ''           :
+               isEmptyAttr('mdFontIcon')     ? ''           :
+               hasAttrValue('mdFontIcon')    ? tmplFontIcon : tmplFontSet;
+
+    // If available, lookup the fontSet style and add to the list of classnames
+    // NOTE: Material Icons expects classnames like `.material-icons.md-48` instead of `.material-icons .md-48`
+
+    var names = (tmpl == tmplFontSet) ? $mdIcon.fontSet(attrValue('mdFontSet'))  + ' ' : '';
+        names = (names + attrValue('class')).trim();
+
+    return $interpolate( tmpl )({ classNames: names });
+  }
 
 
   /**
@@ -166,8 +193,6 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
    */
   function postLink(scope, element, attr) {
     $mdTheming(element);
-
-    prepareForFontIcon();
 
     // If using a font-icon, then the textual name of the icon itself
     // provides the aria-label.
@@ -203,7 +228,6 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
 
       });
     }
-
     function parentsHaveText() {
       var parent = element.parent();
       if (parent.attr('aria-label') || parent.text()) {
@@ -213,18 +237,6 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria, $interpolate ) {
         return true;
       }
       return false;
-    }
-
-    function prepareForFontIcon () {
-      if (!scope.svgIcon && !scope.svgSrc) {
-        if (scope.fontIcon) {
-          element.addClass('md-font');
-          element.addClass(scope.fontIcon);
-        } else {
-          element.addClass($mdIcon.fontSet(scope.fontSet));
-        }
-      }
-
     }
   }
 }
@@ -306,8 +318,8 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     * @param {string} id Icon name/id used to register the icon
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {number=} viewBoxSize Sets the width and height the icon's viewBox.
-    * It is ignored for icons with an existing viewBox. Default size is 24.
+    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
+    * in the icon set must be the same size. Default size is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -336,9 +348,8 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     * @param {string} id Icon name/id used to register the iconset
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {number=} viewBoxSize Sets the width and height of the viewBox of all icons in the set. 
-    * It is ignored for icons with an existing viewBox. All icons in the icon set should be the same size.
-    * Default value is 24.
+    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
+    * in the icon set must be the same size. Default size is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -366,9 +377,8 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *
     * @param {string} url specifies the external location for the data file. Used internally by `$http` to load the
     * data or as part of the lookup in `$templateCache` if pre-loading was configured.
-    * @param {number=} viewBoxSize Sets the width and height of the viewBox of all icons in the set. 
-    * It is ignored for icons with an existing viewBox. All icons in the icon set should be the same size.
-    * Default value is 24.
+    * @param {string=} iconSize Number indicating the width and height of the icons in the set. All icons
+    * in the icon set must be the same size. Default size is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -418,14 +428,15 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
 
    /**
     * @ngdoc method
-    * @name $mdIconProvider#defaultViewBoxSize
+    * @name $mdIconProvider#defaultIconSize
     *
     * @description
     * While `<md-icon />` markup can also be style with sizing CSS, this method configures
     * the default width **and** height used for all icons; unless overridden by specific CSS.
     * The default sizing is (24px, 24px).
-    * @param {number=} viewBoxSize Sets the width and height of the viewBox for an icon or an icon set.
-    * All icons in a set should be the same size. The default value is 24.
+    *
+    * @param {string} iconSize Number indicating the width and height of the icons in the set. All icons
+    * in the icon set must be the same size. Default size is 24.
     *
     * @returns {obj} an `$mdIconProvider` reference; used to support method call chains for the API
     *
@@ -436,14 +447,14 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *     // Configure URLs for icons specified by [set:]id.
     *
     *     $mdIconProvider
-    *          .defaultViewBoxSize(36)   // Register a default icon size (width == height)
+    *          .defaultIconSize(36)   // Register a default icon size (width == height)
     *   });
     * </hljs>
     *
     */
 
  var config = {
-   defaultViewBoxSize: 24,
+   defaultIconSize: 24,
    defaultFontSet: 'material-icons',
    fontSets : [ ]
  };
@@ -451,35 +462,28 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
  function MdIconProvider() { }
 
  MdIconProvider.prototype = {
-   icon : function (id, url, viewBoxSize) {
+
+   icon : function icon(id, url, iconSize) {
      if ( id.indexOf(':') == -1 ) id = '$default:' + id;
 
-     config[id] = new ConfigurationItem(url, viewBoxSize );
+     config[id] = new ConfigurationItem(url, iconSize );
      return this;
    },
-
-   iconSet : function (id, url, viewBoxSize) {
-     config[id] = new ConfigurationItem(url, viewBoxSize );
+   iconSet : function iconSet(id, url, iconSize) {
+     config[id] = new ConfigurationItem(url, iconSize );
      return this;
    },
-
-   defaultIconSet : function (url, viewBoxSize) {
+   defaultIconSet : function defaultIconSet(url, iconSize) {
      var setName = '$default';
 
      if ( !config[setName] ) {
-       config[setName] = new ConfigurationItem(url, viewBoxSize );
+       config[setName] = new ConfigurationItem(url, iconSize );
      }
 
-     config[setName].viewBoxSize = viewBoxSize || config.defaultViewBoxSize;
-
+     config[setName].iconSize = iconSize || config.defaultIconSize;
      return this;
    },
 
-   defaultViewBoxSize : function (viewBoxSize) {
-     config.defaultViewBoxSize = viewBoxSize;
-     return this;
-   },
-   
    /**
     * Register an alias name associated with a font-icon library style ;
     */
@@ -552,9 +556,9 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *  Configuration item stored in the Icon registry; used for lookups
     *  to load if not already cached in the `loaded` cache
     */
-   function ConfigurationItem(url, viewBoxSize) {
+   function ConfigurationItem(url, iconSize) {
      this.url = url;
-     this.viewBoxSize = viewBoxSize || config.defaultViewBoxSize;
+     this.iconSize = iconSize || config.defaultIconSize;
    }
 
  /**
@@ -752,13 +756,13 @@ mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria", "$interpolate"];
     *  loaded iconCache store.
     */
    function prepareAndStyle() {
-     var viewBoxSize = this.config ? this.config.viewBoxSize : config.defaultViewBoxSize;
+     var iconSize = this.config ? this.config.iconSize : config.defaultIconSize;
          angular.forEach({
            'fit'   : '',
            'height': '100%',
            'width' : '100%',
            'preserveAspectRatio': 'xMidYMid meet',
-           'viewBox' : this.element.getAttribute('viewBox') || ('0 0 ' + viewBoxSize + ' ' + viewBoxSize)
+           'viewBox' : this.element.getAttribute('viewBox') || ('0 0 ' + iconSize + ' ' + iconSize)
          }, function(val, attr) {
            this.element.setAttribute(attr, val);
          }, this);

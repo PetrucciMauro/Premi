@@ -143,18 +143,21 @@ var mainPath=function(){
         
         
 
-		that.removeFromMainPath=function(id, position){
-			var index=new Array();
-			for(var i = 0; i<private.percorso.length; i++){
+		that.removeFromMainPath=function(id){
+		    var index = new Array();
+		    var position;
+		    var found = false;
+			for(var i = 0; i<private.percorso.length && !found; i++){
 				if (private.percorso[i]==id){
-					index.push(i);
+				    position=i;
+				    found = true;
 				}
 			}
-			var pos=position || index[index.length-1];
+			
 			var popped;
-			if(index.length){
-				popped=private.percorso.splice(pos, 1);
-			}
+			
+				popped=private.percorso.splice(position, 1);
+			
 			return popped;
 		};
 
@@ -182,7 +185,7 @@ var mainPath=function(){
 		    element.empty();
 		    for (var i = 0; i < private.percorso.length; i++) {
 		        console.log("siamo entrati " + i);
-		        element.append('<li class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + i + '</li>');
+		        element.append('<li class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + private.percorso[i] + '</li>');
 		    	var obj = {};
 		        obj.id = "sort" + private.percorso[i];
 		        obj.association = private.percorso[i];
@@ -981,7 +984,7 @@ out: function(event, ui) {
 
 $(document).ready(function () {
     $("#fantoccio").height($("#content").height()*0.9);
-
+    console.log("altezza content", document.getElementById("content").style.height)
 
 });
 
@@ -993,3 +996,26 @@ function flash(id) {
     }, 400);
     
 }
+
+
+$(function () {
+    var origin;
+    $("#sortable").sortable({
+        start: function (event, ui) {
+            origin = ui.item.index();
+            console.log("origine " + origin);
+        },
+        change: function (event, ui) {
+            $(ui.item[0].previousElementSibling).trigger("click");
+            $(ui.item[0].nextElementSibling).trigger("click");
+            console.log("New position: " + ui.item.index());
+        },
+        sort: function (event, ui) {
+            mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")));
+            console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
+            mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
+            console.log("New position: " + ui.item.index());
+        }
+    });
+    $("#sortable").disableSelection();
+});

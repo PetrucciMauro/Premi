@@ -1,5 +1,5 @@
-﻿
-
+﻿<link rel="stylesheet" href="css/jquery-ui.css">
+<script type="text/javascript" src="scripts/viewscripts.js"></script>
 <md-sidenav id="barraPercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
 <md-list>
 <md-list-item>
@@ -149,24 +149,6 @@ percorsi scelta
 
 </div>
 <script>
-    $(function () {
-        var origin;
-        $("#sortable").sortable({
-            start: function(event,ui){
-                origin=ui.item.index();
-            },
-            change: function (event, ui) {
-                $(ui.item[0].previousElementSibling).trigger("click");
-                $(ui.item[0].nextElementSibling).trigger("click");
-                console.log("New position: " + ui.item.index());
-            },
-            stop: function (event, ui) {
-                mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
-                console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
-                mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
-                console.log("New position: " + ui.item.index());
-        }
-        });
-        $("#sortable").disableSelection();
-    });
+
+
 </script>

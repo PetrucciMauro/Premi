@@ -152,26 +152,11 @@ premiService.factory('Upload', ['$http','Main','Utils',
 
 				var realfilename = getFileName(filename);
 				var uploadUrl = getUrlFormat(filename) + realfilename;
-				console.log(uploadUrl);
 			
                	var req = new XMLHttpRequest();
 				req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, false);
 				req.setRequestHeader("Authorization", token);
 				req.send(formData);
-				var res = JSON.parse(req.responseText);
-				console.log(res);
-				return res;
-               /*return $http({
-               	    transformRequest: angular.identity,
-					method: 'POST',
-					url:uploadUrl,
-					data: formData,
-					withCredentials: true,
-					headers: {'Content-Type': undefined,'Authorization': token}
-				})
-				.success(function(res){})
-				.error(function(){})
-				*/
 			}
 		}
 

@@ -66,7 +66,7 @@ var get = function (req, res) {
 
 
 var post = [ multer({
-	dest: __dirname+'/files/',
+	dest: __dirname+'../../../../../files/',
 
 	changeDest: function(dest, req, res) {
 		var newDestination = dest + req.user + '/audio';

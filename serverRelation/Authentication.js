@@ -13,7 +13,7 @@ var Authentication = function(hostname){
 		req.send();
 		var res = JSON.parse(req.responseText);
 		token = req.getResponseHeader("Authorization");
-		messageState = res.success;
+		messageState = res.message;
 		return res.success;
 	};
 	that.getMessage = function(){

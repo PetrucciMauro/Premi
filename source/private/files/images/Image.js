@@ -65,8 +65,8 @@ var get = function (req, res) {
 };
 
 var post = [ multer({
-	//dest: __dirname+'/files/',
-	dest: '/home/matteo/Premi/files/',
+	dest: __dirname+'../../../../../files/',
+	//dest: '/home/matteo/Premi/files/',
 
 	changeDest: function(dest, req, res) {
 		var newDestination = dest + req.user + '/image';

@@ -144,7 +144,6 @@ var mainPath=function(){
         
 
 		that.removeFromMainPath=function(id){
-		    var index = new Array();
 		    var position;
 		    var found = false;
 			for(var i = 0; i<private.percorso.length && !found; i++){
@@ -180,8 +179,8 @@ var mainPath=function(){
 		    return contiene;
 		};
 
-		that.stampaPercorso = function (id) {
-		    var element = $("#" + id);
+		that.stampaPercorso = function () {
+		    var element = $("#sortable");
 		    element.empty();
 		    for (var i = 0; i < private.percorso.length; i++) {
 		        console.log("siamo entrati " + i);
@@ -1011,9 +1010,10 @@ $(function () {
             console.log("New position: " + ui.item.index());
         },
         sort: function (event, ui) {
+            mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
             mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")));
             console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
-            mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
+            
             console.log("New position: " + ui.item.index());
         }
     });

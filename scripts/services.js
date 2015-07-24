@@ -112,15 +112,56 @@ premiService.factory('Upload', ['$http','Main','Utils',
 		var baseUrl = Utils.hostname();
 		var token = Main.login().getToken();
 
-		return{
-			//Formati accettati per l'upload
-			image: ['jpeg','jpg','gif','png'],
-			video: ['mp4','waw','avi'],
-			audio: ['mp3'],
-			uploadmedia: function(formData,uploadUrl, success, error) {
-				console.log(JSON.stringify(formData));
+		//Formati accettati per l'upload
+		var image = ['jpeg','jpg','gif','png'];
+		var video = ['mp4','waw','avi'];
+		var audio = ['mp3'];
+
+		var getExtension = function (filename) {
+			var extension = filename.split(".");
+			return extension[extension.length-1];
+
+		};
+
+		var getUrlFormat = function (filename) {
+			var extension = getExtension(filename);
+
+			if(image.indexOf(extension) != -1)
+				return "image/";
+			if(audio.indexOf(extension) != -1)
+				return "audio/";
+			if(video.indexOf(extension) != -1)
+				return "video/";
+
+			return undefined;
+		};
+
+		var getFileName = function(filename){
+			var name = filename.split(".");
+			var ris = "";
+			for(var i=0;i<name.length - 1;++i){
+				ris += name[i];
+			}
+			return ris;
+		};
+
+		var upload = {
+			uploadmedia: function(formData, filename, success, error) {				
+				if(Utils.isUndefined(formData))
+					throw new Error("Attenzione! Il file non è definito.");
+
+				var realfilename = getFileName(filename);
+				var uploadUrl = getUrlFormat(filename) + realfilename;
 				console.log(uploadUrl);
-               return $http({
+			
+               	var req = new XMLHttpRequest();
+				req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, false);
+				req.setRequestHeader("Authorization", token);
+				req.send(formData);
+				var res = JSON.parse(req.responseText);
+				console.log(res);
+				return res;
+               /*return $http({
                	    transformRequest: angular.identity,
 					method: 'POST',
 					url:uploadUrl,
@@ -130,8 +171,11 @@ premiService.factory('Upload', ['$http','Main','Utils',
 				})
 				.success(function(res){})
 				.error(function(){})
+				*/
 			}
 		}
+
+		return upload;
 	}
 ]);
 

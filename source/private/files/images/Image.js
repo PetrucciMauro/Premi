@@ -17,29 +17,29 @@ var del = function(req, res){
 	if(there_is){
 		fs.unlinkSync(dir+name);
 		res.json({
-											success: true,
-											message: 'correctly delete file '+dir+name
-											});
+			success: true,
+			message: 'correctly delete file '+dir+name
+		});
 		
 	}
 	else{
 		res.json({
-											success: false,
-											message: 'file '+dir+name+' does not exists'
-											});
+			success: false,
+			message: 'file '+dir+name+' does not exists'
+		});
 	}
 	
 };
 
 var get = function (req, res) {
-																
+
 	var options = {
-	root: __dirname + '/../../../../files/'+req.user+'/image',
-	dotfiles: 'deny',
-	headers: {
-		'x-timestamp': Date.now(),
-		'x-sent': true
-	}
+		root: __dirname + '/../../../../files/'+req.user+'/image',
+		dotfiles: 'deny',
+		headers: {
+			'x-timestamp': Date.now(),
+			'x-sent': true
+		}
 	};
 	
 	var file_name = req.originalUrl.split("/")[5];
@@ -47,60 +47,45 @@ var get = function (req, res) {
 
 	if(there_is == false){
 		res.status(404).send({
-																							success: false,
-																							message: 'File not found'
-																							});
+			success: false,
+			message: 'File not found'
+		});
 	}
 	else{
 		res.sendFile(file_name, options, function (err) {
-															if (err) {
-															console.log(err);
-															res.status(err.status).end();
-															}
-															else {
-															console.log('Sent:', file_name);
-															}
-															});
+			if (err) {
+				console.log(err);
+				res.status(err.status).end();
+			}
+			else {
+				console.log('Sent:', file_name);
+			}
+		});
 	}
 };
 
 var post = [ multer({
-																				dest: __dirname+'/files/',
-									
-																				changeDest: function(dest, req, res) {
-																				var newDestination = dest + req.user + '/image';
-																				return newDestination;
-																				}
-																				,
-																				rename: function (fieldname, filename, req, res) {
-																				var new_name = req.originalUrl.split("/")[5];
-																				return new_name; }
-																				
-																				})
-												,
-												function(req, res){
-												console.log(req.body);
-												console.log(req.files);
-												res.status(204).end();
-												}];
+	//dest: __dirname+'/files/',
+	dest: '/home/matteo/Premi/files/',
+
+	changeDest: function(dest, req, res) {
+		var newDestination = dest + req.user + '/image';
+		return newDestination;
+	}
+	,
+	rename: function (fieldname, filename, req, res) {
+		var new_name = req.originalUrl.split("/")[5];
+		return new_name; }
+
+	})
+,
+function(req, res){
+	console.log(req.body);
+	console.log(req.files);
+	res.status(204).end();
+}];
 
 
 exports.get= get;
 exports.delete= del;
 exports.post = post;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

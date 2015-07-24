@@ -10,11 +10,6 @@ premiProfileController.controller('ProfileController', ['$scope','$http', 'Main'
 
 		if(Utils.isUndefined(token))
 			toPages.loginpage();
-		
-		//formati accettati per l'upload
-		var image = Upload.image;
-		var audio = Upload.audio;
-		var video = Upload.video;
 
 
 		var getData = function(){
@@ -25,28 +20,13 @@ premiProfileController.controller('ProfileController', ['$scope','$http', 'Main'
 			}
 		};
 
+/*
 		var getMedia = function(){
 			return {
 				username: Utils.getUser(token()).user,
 				media: JSON.stringify($scope.myFile)
 			}
-		};
-
-
-		var getExtension = function (filename) {
-			var extension = filename.split(".");
-			return extension[extension.length-1];
-
-		};
-
-		var getUrlFormat = function (extension) {
-			if(image.indexOf(extension) != -1)
-				return "/private/api/files/image/";
-			if(audio.indexOf(extension) != -1)
-				return "/private/api/files/audio/";
-			if(video.indexOf(extension) != -1)
-				return "/private/api/files/video/";
-		};
+		};*/
 
 		$scope.changepassword = function() {
 			//check che i campi pwd non siano vuoti
@@ -77,19 +57,21 @@ premiProfileController.controller('ProfileController', ['$scope','$http', 'Main'
 		$scope.uploadmedia = function(files){
 			var file = (($('input[type=file]').val()).split('\\'))[2];
 			console.log('file is ' + JSON.stringify(file));
-
+			console.log(files);
+			console.log(files[0]);
 			var fd = new FormData();
 			fd.append("file", files[0]);
-
-			var extension= getExtension(file);
+			//return;
+			/*var extension= getExtension(file);
 			console.log(extension);
 			var urlFormat = getUrlFormat(extension);
 			console.log(urlFormat);
-			var uploadUrl="http://sub.lvh.me:8081"+urlFormat+file;
+			var uploadUrl=urlFormat+file;
 			console.log(uploadUrl);
-           console.log(JSON.stringify(fd));
-            Upload.uploadmedia(fd,uploadUrl ,function() {
+           console.log(JSON.stringify(fd));*/
+            Upload.uploadmedia(fd, file, function() {
             	$scope.file={};
+            	console.log("vai così");
 
             } , function(res) {
             	throw new Error(res.message);

@@ -1,5 +1,25 @@
 
 var contatore=0;
+$(document).ready(function () {
+        var origin;
+        $("#sortable").sortable({
+            start: function(event,ui){
+                origin=ui.item.index();
+            },
+            change: function (event, ui) {
+                $(ui.item[0].previousElementSibling).trigger("click");
+                $(ui.item[0].nextElementSibling).trigger("click");
+                console.log("New position: " + ui.item.index());
+            },
+            stop: function (event, ui) {
+                mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
+                console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
+                mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
+                console.log("New position: " + ui.item.index());
+        }
+        });
+        $("#sortable").disableSelection();
+    });
 
 //oggetto che tiene traccia dell'elemento selezionato//
 var activeInstance={};
@@ -84,10 +104,13 @@ var active=function(){
 //--end oggetto che tiene traccia dell'elemento selezionato--//
 
 function highlight(id) {
-    if (!document.getElementById(id).style.outline === "green dotted thick")
-        document.getElementById(id).style.outline === "green dotted thick";
+   
+    if (!$("#"+id).hasClass("highlighted") ){
+        $("#"+id).addClass("highlighted");
+        console.log("over");
+    }
     else
-        document.getElementById(id).removeAttribute("outline");
+        $("#"+id).removeClass("highlighted");
 }
 
 
@@ -102,6 +125,7 @@ var mainPath=function(){
 		var that={};
 		var private={};
 		private.percorso=new Array();
+		private.associations=new Array();
 		that.getPercorso=function(){
 			return private.percorso;
 		}
@@ -158,8 +182,23 @@ var mainPath=function(){
 		    element.empty();
 		    for (var i = 0; i < private.percorso.length; i++) {
 		        console.log("siamo entrati " + i);
-		        element.append('<li class="ui-state-default" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + i + '</li>');
+		        element.append('<li class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + i + '</li>');
+		    	var obj = {};
+		        obj.id = "sort" + private.percorso[i];
+		        obj.association = private.percorso[i];
+		        private.associations.push(obj);
 		    }
+		}
+		that.getAssociation = function (id) {
+		    var found = false;
+		    var value;
+		    for (var i = 0; i < private.associations.length && !found; ++i) {
+		        if (private.associations[i].id === id) {
+		            value = private.associations[i].association;
+		            found = true;
+		        }
+		    }
+            return value
 		}
 		mainPathInstance=that;
 	}
@@ -868,14 +907,7 @@ function zoomOut(){
 
 };
 
-(function($) {
-    $.fn.goTo = function() {
-        $('html, body').animate({
-            scrollTop: $(this).offset().top + 'px'
-        }, 'fast');
-        return this; // for chaining...
-    }
-})(jQuery);
+
 var click = {
     x: 0,
     y: 0
@@ -950,5 +982,14 @@ out: function(event, ui) {
 $(document).ready(function () {
     $("#fantoccio").height($("#content").height()*0.9);
 
+
 });
 
+
+function flash(id) {
+    $("#" + id).animate({
+        "-ms-transform": "scale(1.1)",
+    "-webkit-transform": "scale(1.1)"
+    }, 400);
+    
+}

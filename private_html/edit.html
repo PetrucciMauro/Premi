@@ -17,7 +17,6 @@ percorsi scelta
 </md-list>
 
 <ul id="sortable">
-	<li>ciao</li>
 </ul>
 </md-sidenav>
 
@@ -149,11 +148,25 @@ percorsi scelta
 	</md-content>
 
 </div>
-
-<script type="text/javascript">
-
-$(function () {
-	$("#sortable").sortable();
-	$("#sortable").disableSelection();
-});
+<script>
+    $(function () {
+        var origin;
+        $("#sortable").sortable({
+            start: function(event,ui){
+                origin=ui.item.index();
+            },
+            change: function (event, ui) {
+                $(ui.item[0].previousElementSibling).trigger("click");
+                $(ui.item[0].nextElementSibling).trigger("click");
+                console.log("New position: " + ui.item.index());
+            },
+            stop: function (event, ui) {
+                mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
+                console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
+                mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
+                console.log("New position: " + ui.item.index());
+        }
+        });
+        $("#sortable").disableSelection();
+    });
 </script>

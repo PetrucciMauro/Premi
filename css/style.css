@@ -194,7 +194,7 @@ input.autogrow{
       padding-left: 0.4em;
   }
 #barraPercorsi{
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 #sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
@@ -208,4 +208,12 @@ input.autogrow{
   #content{
       padding:0;
       margin-bottom:0;
+  }
+
+  .highlighted{
+      outline: green dotted thick;
+  }
+
+  .spark{
+      outline: yellow solid thin;
   }

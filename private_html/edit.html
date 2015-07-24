@@ -3,7 +3,7 @@
 <md-sidenav id="barraPercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
 <md-list>
 <md-list-item>
-<md-button id="percorsoPrincipale" class="menu md-button md-default-theme" onclick="mainPath().stampaPercorso()">
+<md-button id="percorsoPrincipale" class="menu md-button md-default-theme" ng-click="showPathBottomSheet()">
 percorso principale
 </md-button>
 </md-list-item>
@@ -15,9 +15,14 @@ percorsi scelta
 </md-list-item>
 
 </md-list>
+<script type="text/ng-template" id="bottomsheet-percorsi">
+	<md-bottom-sheet id="bottomsheet-percorsi" class="md-list">
+	<ul id="sortable">
+		{{stampa()}}
+	</ul>
+	</md-bottom-sheet>
+</script>
 
-<ul id="sortable">
-</ul>
 </md-sidenav>
 
 <div flex layout="column" tabindex="-1" role="main">

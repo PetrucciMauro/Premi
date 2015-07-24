@@ -1,8 +1,8 @@
 'use strict';
 
-var premiHomeController = angular.module('premiEditController', ['premiService'])
+var premiEditController = angular.module('premiEditController', ['premiService'])
 
-premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData', '$q', '$mdSidenav', '$mdBottomSheet',
+premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData', '$q', '$mdSidenav', '$mdBottomSheet',
 	function($scope, Main, toPages, Utils, SharedData, $q, $mdSidenav, $mdBottomSheet) {
 		var token = function(){
 			return Main.login().getToken();
@@ -82,6 +82,18 @@ premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 			
 			toggleElement(id);
 		}
+		var mainpath = function() {
+			return mainPath();
+		}
+		//Bottom Sheet
+		$scope.showPathBottomSheet = function($event) {
+			$mdBottomSheet.show({
+				templateUrl: 'bottomsheet-percorsi',
+				controller: 'BottomSheetController'
+			}).then(function() {
+				console.log("fatto")
+			});
+		};
 
 		//METODI PROPRI DELL'EDIT
 		//Inserimento elementi
@@ -109,12 +121,11 @@ premiHomeController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 		$scope.mediaControl = function(){
 			mediaControl();
 		}
+}])
 
-		//Zoom
-		$scope.zoomOut = function(){
-			zoomOut();
-		}
-		$scope.zoomIn = function(){
-			zoomIn();
+premiEditController.controller('BottomSheetController', ['$scope',
+	function($scope) {
+		$scope.stampa = function(){
+			return mainPath().stampaPercorso();
 		}
 }])

@@ -3,7 +3,7 @@
 var premiEditController = angular.module('premiEditController', ['premiService'])
 
 premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData', '$q', '$mdSidenav', '$mdBottomSheet',
-	function($scope, Main, toPages, Utils, SharedData, $q, $mdSidenav, $mdBottomSheet) {
+	function ($scope, Main, toPages, Utils, SharedData, $q, $mdSidenav, $mdBottomSheet, $mdDialog) {
 		var token = function(){
 			return Main.login().getToken();
 		}
@@ -27,6 +27,13 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 			    $("#sortable").slideUp();
 			});
 		}
+
+		$scope.isOpen = false;
+		$scope.demo = {
+		    isOpen: false,
+		    count: 0,
+		    selectedAlignment: 'md-left'
+		};
 
 		//Menu a comparsa
 		var insertElement = function(bool){
@@ -123,10 +130,30 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 			mediaControl();
 		}
 		
+	    //menu contestuali
+		var vm = this;
+		this.announceClick = function (index) {
+		    $mdDialog.show(
+              $mdDialog.alert()
+                .title('You clicked!')
+                .content('You clicked the menu item at index ' + index)
+                .ok('Nice')
+            );
+		};
 
 		
 
 	}])
+
+
+
+premiEditController.controller('BottomSheetController', ['$scope',
+	function($scope) {
+		$scope.stampa = function(){
+			return mainPath().stampaPercorso();
+		}
+	}])
+
 
 premiApp.directive('printPath', function ($compile) {
     return {
@@ -138,23 +165,20 @@ premiApp.directive('printPath', function ($compile) {
 
                 for (var i = 0; i < mainPath().getPercorso().length; i++) {
                     console.log("qui si entra");
-                    element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" click="show(\'mainPath().removeFromMainPath(' + mainPath().getPercorso[i] + ')\')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
+                    element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" onClick="mainPath().removeFromMainPath(' + mainPath().getPercorso()[i] + ')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
                     var obj = {};
                     obj.id = "sort" + mainPath().getPercorso()[i];
                     obj.association = mainPath().getPercorso()[i];
                     mainPath().pushAssociation(obj);
                 }
 
-                    element.slideDown("slow");
-                
+                element.slideDown("slow");
             }
         }
     };
 });
 
-premiEditController.controller('BottomSheetController', ['$scope',
-	function($scope) {
-		$scope.stampa = function(){
-			return mainPath().stampaPercorso();
-		}
-}])
+
+
+          
+    

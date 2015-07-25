@@ -120,34 +120,40 @@ function highlight(id) {
 var mainPathInstance={};
 var mainPathInstanced=false;
 var mainPath=function(){
-	if(!mainPathInstanced==true)
-	{
-		mainPathInstanced=true;
-		var that={};
-		var private={};
-		private.percorso=new Array();
-		private.associations=new Array();
-		that.getPercorso=function(){
-			return private.percorso;
-		}
-		that.addToMainPath=function(id, position){
-			var pos=position || private.percorso.length;
-			private.percorso.splice(pos, 0, id);
-			var s="";
-			for (var i=0; i<private.percorso.length; i++){
-				s=s+" "+private.percorso[i];
-			}
-			document.getElementById("mainp").innerHTML=s;
-			document.getElementById("addToMain").removeAttribute("onclick");
-			selezionaPercorso(id);
-		};
+    if(!mainPathInstanced==true)
+    {
+        mainPathInstanced=true;
+        var that={};
+        var private={};
+        private.percorso=new Array();
+        private.associations=new Array();
+        that.getPercorso=function(){
+            return private.percorso;
+        }
+        that.addToMainPath=function(id, position){
+            var pos=position || private.percorso.length;
+            private.percorso.splice(pos, 0, id);
+            var s="";
+            for (var i=0; i<private.percorso.length; i++){
+                s=s+" "+private.percorso[i];
+            }
+            document.getElementById("mainp").innerHTML=s;
+            document.getElementById("addToMain").removeAttribute("onclick");
+            selezionaPercorso(id);
+        };
         
         
 
-		that.removeFromMainPath=function(id){
-		    var index = new Array();
-		    var position;
-		    var found = false;
+        that.removeFromMainPath=function(id){
+            var index = new Array();
+            var position;
+            var found = false;
+            console.log("sort " + id+ $("#sort"+id).length);
+            if ($("#sort" + id).length) {
+                console.log("sort " + id);
+                $("#sort" + id).remove();
+            }
+            $("#" + id).removeClass("highlighted");
 			for(var i = 0; i<private.percorso.length && !found; i++){
 				if (private.percorso[i]==id){
 				    position=i;
@@ -157,8 +163,14 @@ var mainPath=function(){
 			
 			var popped;
 			
-				popped=private.percorso.splice(position, 1);
-			
+			popped = private.percorso.splice(position, 1);
+			var s = "";
+				for (var i = 0; i < private.percorso.length; i++) {
+				    s = s + " " + private.percorso[i];
+				}
+				document.getElementById("mainp").innerHTML = s;
+				document.getElementById("addToMain").setAttribute("onclick", "mainPath().addToMainPath(" + popped.id + ")");;
+				document.getElementById(id).style.removeProperty('border');
 			return popped;
 		};
 
@@ -173,7 +185,10 @@ var mainPath=function(){
 		}
 
 		that.deleteFrame=function(id){
-
+		    if ($("#sort" + id).length) {
+		        console.log("sort " + id);
+		        $("#sort" + id).remove();
+		    }
 			for(var i = 0; i<private.percorso.length; i++){
 				if (private.percorso[i]==id){
 					private.percorso.splice(i, 1);
@@ -275,7 +290,8 @@ var choicePaths=function(){
 			private.percorsi.splice(index,1);
 		};
 
-		that.removeFromChoicePaths=function (id, position){
+		that.removeFromChoicePaths = function (id, position) {
+		    
 			for(var i=0; i<private.percorsi.length; i++){
 
 				var index=new Array();
@@ -1020,3 +1036,11 @@ $(function () {
     inserisciFrame();
     inserisciFrame();
 });
+
+angular.module('menuDemoWidth', ['ngMaterial'])
+.config(function ($mdIconProvider) {
+    $mdIconProvider
+      .iconSet("call", 'img/icons/sets/communication-icons.svg', 24)
+      .iconSet("social", 'img/icons/sets/social-icons.svg', 24);
+})
+.controller('WidthDemoCtrl', premiEditController);

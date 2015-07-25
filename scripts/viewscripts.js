@@ -19,6 +19,7 @@ $(document).ready(function () {
         }
         });
         $("#sortable").disableSelection();
+        
     });
 
 //oggetto che tiene traccia dell'elemento selezionato//
@@ -161,6 +162,16 @@ var mainPath=function(){
 			return popped;
 		};
 
+		that.setPath = function (newPath) {
+		    private.percorso.length=0;
+		    private.percorso = newPath;
+		    var s = "";
+		    for (var i = 0; i < private.percorso.length; i++) {
+		        s = s + " " + private.percorso[i];
+		    }
+		    document.getElementById("mainp").innerHTML = s;
+		}
+
 		that.deleteFrame=function(id){
 
 			for(var i = 0; i<private.percorso.length; i++){
@@ -180,18 +191,27 @@ var mainPath=function(){
 		    return contiene;
 		};
 
+		var flag = false;
 		that.stampaPercorso = function () {
 		    var element = $("#sortable");
 		    element.empty();
 		    for (var i = 0; i < private.percorso.length; i++) {
 		        console.log("siamo entrati " + i);
-		        element.append('<li class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + private.percorso[i] + '</li>');
+		        element.append('<md-list-item class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + private.percorso[i] + '</md-list-item>');
 		    	var obj = {};
 		        obj.id = "sort" + private.percorso[i];
 		        obj.association = private.percorso[i];
 		        private.associations.push(obj);
 		    }
-		};
+		    if (flag==false) {
+		        $("#sortable").slideDown();
+		        flag = true;
+		    }
+		    else {
+		        $("#sortable").slideUp();
+		        flag = false;
+		    }
+            };
 		that.getAssociation = function (id) {
 		    var found = false;
 		    var value;
@@ -344,8 +364,9 @@ function elimina(id){
 
 		mainPath().deleteFrame(id);
 		choicePaths().deleteFrame(id);
-
+		
 	}
+	active().deselect();
 	$("#"+id).remove();
 
 	document.getElementById("standardMenu").style.display="none";
@@ -384,13 +405,14 @@ var inserisciElemento=function(classe){
 		yInit=$(this).position().top;
 	});
 	
+	active().select(div.id);
 
 	return div;
 }
 
 var inserisciFrame=function(){
 	var div=inserisciElemento("frame");
-	div.setAttribute("ng-dblclick", "zoomIn()");
+	div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
 		$( div ).resizable({
 			aspectRatio: 1 / 1
@@ -833,80 +855,65 @@ function mediaControl(){
 	else
 		element.pause();
 };
-var scale=75;
-function zoomIn(){
-    
+var scale=100;
+function zoomIn() {
+    $("#content").css({ "overflow": "scroll", "height": "auto" });
     var degrees = 0 - getRotationDegrees($("#" + active().getId()));
-    if (degrees > 180)
-        degrees=0-(360-degrees);
-    scale=($("#content").height()/$("#"+active().getId()).height())*75;
-    var z=scale;
+    var rotRad = degrees * Math.PI / 180;
+    scale = ($("#content").height() / $("#" + active().getId()).height()) * 75;
+    var z = scale;
     console.log(degrees);
-    var nleft = parseFloat(document.getElementById(active().getId()).style.left) || 0;
+    var nleft = (document.getElementById(active().getId()).style.left);
     console.log("new left " + nleft);
-    var ntop = parseFloat(document.getElementById(active().getId()).style.top) || 0;
+    var ntop = (document.getElementById(active().getId()).style.top);
     var elements = document.getElementById("frames").children;
-    var xCenter=nleft+1/2*$("#"+active().getId()).width();
-    var yCenter=ntop+1/2*$("#"+active().getId()).height();
-    var rotLeft = (Math.cos((0-degrees) * Math.PI / 180) * (nleft - xCenter)) -
-                   (Math.sin((0-degrees) * Math.PI / 180) * (ntop - yCenter)) +
-                   xCenter;
-   var rotTop = Math.sin(0-degrees * Math.PI / 180) * (nleft-xCenter) +
-                   (Math.cos(0-degrees * Math.PI / 180) * (ntop-yCenter)) +
-                   yCenter;
-    console.log("rotLeft " + rotLeft);
+    console.log("radianti " + rotRad);
+    var yCenter = document.getElementById("fantoccio").offsetHeight / 2;
+    var xCenter = document.getElementById("fantoccio").offsetWidth / 2;
+    var width = document.getElementById(active().getId()).offsetWidth;
+    var height = document.getElementById(active().getId()).offsetHeight;
+    var devX = ((0 - width / 2 - 6) * Math.cos(-rotRad) + (height / 2 + 6) * Math.sin(-rotRad) + width / 2 + 6);
+    var devY = ((width / 2 + 6) * Math.sin(-rotRad) + (height / 2 + 6) * Math.cos(-rotRad) - height / 2 - 6);
+    var val = (0 - parseFloat(nleft) + (1 / 2) * document.getElementById(active().getId()).offsetWidth) + " " + (0 - parseFloat(ntop) + (1 / 2) * document.getElementById(active().getId()).offsetHeight);
+    $("#fantoccio").append('<div height="2em" width="2em" style="top: ' + (parseFloat(ntop) - devY) + 'px; left: ' + (parseFloat(nleft) + devX) + 'px; background-color: red"/>');
+    $("#fantoccio").css({
+        //"position": "absolute",
+        /*"left": (0 - ((parseFloat(nleft) + devX - xCenter) * Math.cos(0 - rotRad) + (parseFloat(ntop) - devY - yCenter) * Math.sin(0 - rotRad) + xCenter)) + "px",
+        "top": (0 - (0 - (parseFloat(nleft) + devX - xCenter) * Math.sin(0 - rotRad) + (parseFloat(ntop) - devY - yCenter) * Math.cos(0 - rotRad) + yCenter)) + "px",*/
+        "-ms-transform": "rotate(" + degrees + "deg)", /* IE 9 */
+        "-webkit-transform": "rotate(" + degrees + "deg)", /* Chrome, Safari, Opera */
+        "transform": "rotate(" + degrees + "deg)",
+        "-webkit-transition": "all 0.5s ease-in-out",
+        "-moz-transition": "all 0.5s ease-in-out",
+        "-o-transition": "all 0.5s ease-in-out",
+        "transition": "all 0.5s ease-in-out"
+    });
+    $("#content").css({ "zoom": z + "%" });
+    document.getElementById(active().getId()).scrollIntoView();
+};
 
-    var percLeft = parseFloat(rotLeft) * 100 / $("#fantoccio").width();
-    var percTop = parseFloat(rotTop) * 100 / $("#fantoccio").height();
-    var oldHeight = $("#fantoccio").height();
-    var oldWidth = $("#fantoccio").width();
-    var transOrigin= percLeft+"% "+percTop+"%";
+function zoomOut() {
+    if (!active().getId()) {
+        scale = 100;
+        var z = scale;
+        var degrees = 0;
+        var frames = $("#frames").children();
+        $("#content").css({ "overflow": "hidden" });
+        var elements = document.getElementById("frames").children;
 
         $("#fantoccio").css({
             "zoom": z + "%",
-            "height": oldHeight,
-            "width" : oldWidth,
-            "position": "absolute",
-            "left": (0 - nleft) + "px",
-            "top": (0 - ntop) + "px",
-            "-ms-transform": "rotate(" + degrees + "deg)", /* IE 9 */
-            "-webkit-transform":"rotate("+degrees+"deg)", /* Chrome, Safari, Opera */
-            "transform": "rotate(" + degrees + "deg)",
-            "-ms-transform-origin": transOrigin, /* IE 9 */
-            "-webkit-transform-origin": transOrigin,
-            "transform-origin": transOrigin,
-            "-webkit-transition": "0.5s ease-in-out",
-            "-moz-transition": "0.5s ease-in-out",
-            "-o-transition": "0.5s ease-in-out",
-            "transition": "0.5s ease-in-out"
-            
+            "position": "relative",
+            "left": 0,
+            "top": 0,
+            "-ms-transform": "rotate(" + degrees + "deg) ", /* IE 9 */
+            "-webkit-transform": "rotate(" + degrees + "deg)", /* Chrome, Safari, Opera */
+            "transform": "rotate(" + degrees + "deg) ",
+
+
         });
-
-	
-};
-
-function zoomOut(){
-	if(!active().getId()){
-	scale=75;
-	var z=scale+25;
-	var degrees=0;
-	var frames=$("#frames").children();
-	$("#content").css({"overflow":"hidden"});
-	var elements = document.getElementById("frames").children;
-
-	    $("#fantoccio").css({
-	        "zoom": z + "%",
-	        "position": "relative",
-	        "left": 0,
-        "top": 0,
-	        "-ms-transform": "rotate(" + degrees + "deg) ", /* IE 9 */
-	        "-webkit-transform": "rotate(" + degrees + "deg)", /* Chrome, Safari, Opera */
-	        "transform": "rotate(" + degrees + "deg) ",
-	       
-
-	    });
-
-}
+        $("#content").css({ "zoom": z + "%" });
+    }
 
 };
 
@@ -935,8 +942,8 @@ function updateDraggable(){
     var original = ui.originalPosition;
         // jQuery will simply use the same object we alter here
         ui.position = {
-            left: (event.clientX - click.x + original.left)/(scale/75),
-            top:  (event.clientY - click.y + original.top) /(scale/75)
+            left: (event.clientX - click.x + original.left)/(scale/100),
+            top:  (event.clientY - click.y + original.top) /(scale/100)
         };
     }
 });
@@ -1006,16 +1013,20 @@ $(function () {
             console.log("origine " + origin);
         },
         change: function (event, ui) {
-            $(ui.item[0].previousElementSibling).trigger("click");
-            $(ui.item[0].nextElementSibling).trigger("click");
-            console.log("New position: " + ui.item.index());
+           
         },
-        sort: function (event, ui) {
-            mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")));
-            console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
-            mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
-            console.log("New position: " + ui.item.index());
+        stop: function (event, ui) {
+            var temp = new Array();
+            var ids = new Array();
+            $("#sortable li").each(function (index, item) {
+               ids.push(mainPath().getAssociation($(item).attr("id")));
+            });
+            mainPath().setPath(ids);
+            
+            
         }
     });
     $("#sortable").disableSelection();
+    inserisciFrame();
+    inserisciFrame();
 });

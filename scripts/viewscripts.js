@@ -191,18 +191,25 @@ var mainPath=function(){
 		    return contiene;
 		};
 
-		var flag = false;
+		private.flag = false;
+		that.getFlag = function () {
+		    return private.flag;
+		}
+		that.setFlag = function (status) {
+		    private.flag = status;
+		}
 		that.stampaPercorso = function () {
 		    var element = $("#sortable");
 		    element.empty();
-		    for (var i = 0; i < private.percorso.length; i++) {
-		        console.log("siamo entrati " + i);
-		        element.append('<md-list-item class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + private.percorso[i] + '</md-list-item>');
-		    	var obj = {};
-		        obj.id = "sort" + private.percorso[i];
-		        obj.association = private.percorso[i];
-		        private.associations.push(obj);
-		    }
+		
+		        for (var i = 0; i < private.percorso.length; i++) {
+		            element.append($compile('<md-list-item class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + private.percorso[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" click="show(\'mainPath().removeFromMainPath('+private.percorso[i]+')\')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>'));
+		            var obj = {};
+		            obj.id = "sort" + private.percorso[i];
+		            obj.association = private.percorso[i];
+		            private.associations.push(obj);
+		        }
+		    
 		    if (flag==false) {
 		        $("#sortable").slideDown();
 		        flag = true;
@@ -211,7 +218,11 @@ var mainPath=function(){
 		        $("#sortable").slideUp();
 		        flag = false;
 		    }
-            };
+		};
+		that.pushAssociation = function (obj) {
+		   private.associations.push(obj);
+		}
+
 		that.getAssociation = function (id) {
 		    var found = false;
 		    var value;
@@ -1012,14 +1023,13 @@ $(function () {
             origin = ui.item.index();
             console.log("origine " + origin);
         },
-        change: function (event, ui) {
-           
-        },
+        
         stop: function (event, ui) {
             var temp = new Array();
             var ids = new Array();
-            $("#sortable li").each(function (index, item) {
-               ids.push(mainPath().getAssociation($(item).attr("id")));
+            $("#sortable md-list-item").each(function (index, item) {
+                ids.push(mainPath().getAssociation($(item).attr("id")));
+                
             });
             mainPath().setPath(ids);
             

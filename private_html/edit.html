@@ -3,9 +3,7 @@
 <md-sidenav id="barraPercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
 <md-list>
 <md-list-item>
-<md-button id="percorsoPrincipale" class="menu md-button md-default-theme" onClick="mainPath().stampaPercorso()">
-percorso principale
-</md-button>
+<div print-path></div>
 </md-list-item>
 
    
@@ -21,6 +19,7 @@ percorso principale
     <md-list-item>
 
         <md-list id="sortable">
+            
             {{stampa()}}
         </md-list>
     </md-list-item>

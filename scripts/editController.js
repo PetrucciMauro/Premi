@@ -23,7 +23,8 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 			var pending = $mdBottomSheet.hide() || $q.when(true);
 
 			pending.then(function(){
-				$mdSidenav('left').toggle();
+			    $mdSidenav('left').toggle();
+
 			});
 		}
 
@@ -121,6 +122,38 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 		$scope.mediaControl = function(){
 			mediaControl();
 		}
+
+
+		premiApp.directive('printPath', function ($compile) {
+		    return {
+		        template: '<md-button id="percorsoPrincipale" class="menu md-button md-default-theme" ng-click="stampaPercorso()">Percorso Principale</md-button>',
+		        link: function (scope, el, attr) {
+		            scope.stampaPercorso = function () {
+		                var element = $('#sortable');
+		                element.empty();
+
+		                for (var i = 0; i < mainPath().getPercorso().length; i++) {
+		                    console.log("qui si entra");
+		                    element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" click="show(\'mainPath().removeFromMainPath(' + mainPath().getPercorso[i] + ')\')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')(scope));
+		                    var obj = {};
+		                    obj.id = "sort" + mainPath().getPercorso()[i];
+		                    obj.association = mainPath().getPercorso()[i];
+		                    mainPath().pushAssociation(obj);
+		                }
+
+		                if (mainPath().getFlag() == false) {
+		                    element.slideDown();
+		                    mainPath().setFlag(true);
+		                }
+		                else {
+		                    element.slideUp();
+		                    mainPath().setFlag(false);
+		                }
+		            }
+		        }
+		    };
+		});
+
 }])
 
 premiEditController.controller('BottomSheetController', ['$scope',

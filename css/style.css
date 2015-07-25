@@ -197,7 +197,7 @@ input.autogrow{
     background-color: rgba(255, 255, 255, 0.9);
 }
 
-#sortable { list-style-type: none; margin: 0; padding: 0; width: 60%; bottom: 0; position: fixed; }
+#sortable { list-style-type: none; margin: 0; padding: 0; margin-bottom: 10%; width: 60%; bottom: 0; position: fixed; }
   #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
   #sortable li span { position: absolute; margin-left: -1.3em; }
 

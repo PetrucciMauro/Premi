@@ -1,4 +1,4 @@
-<div class="col-12 home">
+<div id="home" class="col-12 home">
 <div layout="column" class="col-4 left-menu" layout-align="space-around center">
 	<md-button class="md-raised md-cornered" ng-click="newSS = !newSS">Nuova Presentazione</md-button>
 	<div ng-show="newSS">
@@ -17,8 +17,9 @@
 			<md-button class="md-raised md-cornered submit" ng-click="goExecute(slide._id)">Esegui</md-button>
 			<md-button class="md-raised md-cornered submit" ng-click="deleteSlideShow(slide._id)">Elimina</md-button>
 			<md-button class="md-raised md-cornered submit" ng-click="renameSlideShow(slide._id)">Rinomina</md-button>
-			<p>{{slide._id}}</p>
-			<p>{{slide.meta.name}}</p>
+			<span  ng-bind="slide._id"></span>
+			<span  ng-bind="slide.meta.name"></span>
+
 		</dd>
 	</dl>
 </div></div>

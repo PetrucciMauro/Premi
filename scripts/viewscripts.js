@@ -198,27 +198,7 @@ var mainPath=function(){
 		that.setFlag = function (status) {
 		    private.flag = status;
 		}
-		that.stampaPercorso = function () {
-		    var element = $("#sortable");
-		    element.empty();
 		
-		        for (var i = 0; i < private.percorso.length; i++) {
-		            element.append($compile('<md-list-item class="ui-state-default" id="sort' + private.percorso[i] + '" onMouseOver="highlight(' + private.percorso[i].toString() + ')"  onMouseOut="highlight(' + private.percorso[i].toString() + ')" onClick="flash(' + private.percorso[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + private.percorso[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" click="show(\'mainPath().removeFromMainPath('+private.percorso[i]+')\')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>'));
-		            var obj = {};
-		            obj.id = "sort" + private.percorso[i];
-		            obj.association = private.percorso[i];
-		            private.associations.push(obj);
-		        }
-		    
-		    if (flag==false) {
-		        $("#sortable").slideDown();
-		        flag = true;
-		    }
-		    else {
-		        $("#sortable").slideUp();
-		        flag = false;
-		    }
-		};
 		that.pushAssociation = function (obj) {
 		   private.associations.push(obj);
 		}

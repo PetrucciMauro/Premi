@@ -24,7 +24,7 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 
 			pending.then(function(){
 			    $mdSidenav('left').toggle();
-
+			    $("#sortable").slideUp();
 			});
 		}
 
@@ -145,14 +145,8 @@ premiApp.directive('printPath', function ($compile) {
                     mainPath().pushAssociation(obj);
                 }
 
-                if (mainPath().getFlag() == false) {
                     element.slideDown("slow");
-                    mainPath().setFlag(true);
-                }
-                else {
-                    element.slideUp("slow");
-                    mainPath().setFlag(false);
-                }
+                
             }
         }
     };

@@ -224,4 +224,6 @@ input.autogrow{
   padding: 24px; }
 .menudemoMenuWidth .menu-demo-container {
   min-height: 200px; }
-
+body {
+    overflow-y: hidden !important;
+}

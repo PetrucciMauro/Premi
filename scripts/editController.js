@@ -2,8 +2,8 @@
 
 var premiEditController = angular.module('premiEditController', ['premiService'])
 
-premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet',
-	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet) {
+premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData', '$q', '$mdSidenav', '$mdBottomSheet',
+	function ($scope, Main, toPages, Utils, SharedData, $q, $mdSidenav, $mdBottomSheet, $mdDialog) {
 		var token = function(){
 			return Main.login().getToken();
 		}
@@ -14,6 +14,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.goExecute = function(slideId){
 			toPages.executionpage(slideId);
 		}
+		$scope.goProfile = function(){
+			toPages.profilepage();
+		}
+		console.log(SharedData.forEdit());
 
 		$scope.toggleList = function() {
 			var pending = $mdBottomSheet.hide() || $q.when(true);
@@ -32,6 +36,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		};
 
 		//Menu a comparsa
+		var insertElement = function(bool){
+			if(bool)
+				$scope.insertElement = true;
+			else
+				$scope.insertElement = false;
+		}
 		var backgroundManage = function(bool){
 			if(bool)
 				$scope.backgroundManage = true;
@@ -57,14 +67,17 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				$scope.rotation = false;
 		}
 		//per far apparire il div corretto e far sparire quelli eventualmenti aperti
-		//id-> id del div su cui applicare il toggleElement
+		//which-> variabile per ng-show || id-> id del div su cui applicare il toggleElement
 		$scope.show = function(id){
 			backgroundManage(false);
 			slideShowBackgroundManage(false);
+			insertElement(false);
 			pathsManage(false);
 			rotation(false);
 
-			if(id === 'slideShowBackgroundManage')
+			if(id === 'insertElement')
+				insertElement(true);
+			else if(id === 'slideShowBackgroundManage')
 				slideShowBackgroundManage(true);
 			else if(id === 'backgroundManage')
 				backgroundManage(true);
@@ -80,9 +93,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		var mainpath = function() {
 			return mainPath();
 		}
-		var inv = invoker();
-		//Variabile slideshow che mantiene la presentazione col model
-		var slideshow = insertEditRemove();
 		//Bottom Sheet
 		$scope.showPathBottomSheet = function($event) {
 			$mdBottomSheet.show({
@@ -96,55 +106,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//METODI PROPRI DELL'EDIT
 		//Inserimento elementi
 		$scope.inserisciFrame = function(){
-			var frame = inserisciFrame();
-			console.log(frame);
-			var command = concreteFrameInsertCommand(frame);
-			
-			inv.execute(command);
+			inserisciFrame();
+			insertElement(false);
 		}
 		$scope.inserisciTesto = function(){
-			var frame = inserisciTesto();
-			var command = concreteTextInsertCommand(frame);
-			
-			inv.execute(command);
-		}
-
-		var uploadmedia = function(files){
-			Upload.uploadmedia(files, function() {
-            	console.log("vai così");
-
-            } , function(res) {
-            	throw new Error(res.message);
-
-            });
-		}
-		$scope.inserisciImmagine = function(files){
-			if(!Upload.isImage(files))
-				throw new Error("Estensione non corretta");
-
-			uploadmedia(files);
-			var fileurl = Utils.hostname() + '/files/' + Utils.getUser(token()).user + '/image/' + files[0].name;
-			inserisciImmagine(fileurl);
-		}
-		$scope.inserisciAudio = function(files){
-			if(!Upload.isAudio(files))
-				throw new Error("Estensione non corretta");
-
-			uploadmedia(files);
-		}
-		$scope.inserisciVideo = function(files){
-			if(!Upload.isVideo(files))
-				throw new Error("Estensione non corretta");
-
-			uploadmedia(files);
-			
-		}
-		$scope.ruotaElemento = function(){
-			//come richiamarlo??
-		}
-		$scope.addMainPath = function(frame, position){
-			var path = concreteAddToMainPathCommand(frame);
-			mainPath().addToMainPath(frame.id, position);
+			inserisciTesto();
+			insertElement(false);
 		}
 
 		//Gestione sfondo
@@ -173,9 +140,23 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
                 .ok('Nice')
             );
 		};
+
+		$scope.element = { rotation: 0 };
+
+		$scope.setRotation = function (new_rotation) {
+		    console.log("rotazione" + getRotationDegrees($('#' + active().getId())));
+		    this.element.rotation = new_rotation;
+		}
+
+	    //aggiungi al percorso principale
+		$scope.addToMain = function () {
+		    mainPath().addToMainPath(active().getId());
+		}
 	}])
 
-premiEditController.controller('BottomSheetController', ['$scope',
+
+
+premiEditController.controller('BottomSheetController', ['scope',
 	function($scope) {
 		$scope.stampa = function(){
 			return mainPath().stampaPercorso();
@@ -192,7 +173,6 @@ premiApp.directive('printPath', function ($compile) {
                 element.empty();
 
                 for (var i = 0; i < mainPath().getPercorso().length; i++) {
-                    console.log("qui si entra");
                     element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" onClick="mainPath().removeFromMainPath(' + mainPath().getPercorso()[i] + ')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
                     var obj = {};
                     obj.id = "sort" + mainPath().getPercorso()[i];
@@ -206,6 +186,23 @@ premiApp.directive('printPath', function ($compile) {
     };
 });
 
+premiApp.directive('printChoichePaths', function ($compile) {
+    return {
+        template: '<md-button id="percorsiScelta" class="menu md-button md-default-theme" ng-click="stampaElencoPercorsi()">Percorsi Scelta</md-button>',
+        link: function ($scope, el, attr) {
+            $scope.stampaElencoPercorsi = function () {
+                var element = $('#choiceList');
+                element.empty();
+
+                for (var i = 0; i < choicePaths().getPercorsi().length; i++) {
+                    element.append($compile('<md-list-item class="ui-state-default" id="choice' + choicePaths().getPercorsi()[i].pathId + '" onMouseOver="highlightPath(' + i + ')"  onMouseOut="highlightPath(' + choicePaths().getPercorsi()[i].pathId + ')" ><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + choicePaths().getPercorsi()[i].pathId + '<md-button class="menu md-button md-default-theme" class="deleteChoicePath" onClick="coicePaths().deleteChoicePath(' + i + ')"><md-tooltip>Elimina percorso scelta</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
+                }
+
+                element.slideDown("slow");
+            }
+        }
+    };
+});
 
 
           

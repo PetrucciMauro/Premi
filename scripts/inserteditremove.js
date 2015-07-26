@@ -96,6 +96,7 @@ var insertEditRemove = function () {
         };
         public.insertFrame = function (spec) {
             var newFrame = frame(spec);
+            console.log(newFrame);
             private.presentazione.proper.frames.push(newFrame);
         };
         public.insertImage = function (spec) {

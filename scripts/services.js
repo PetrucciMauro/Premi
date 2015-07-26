@@ -109,28 +109,29 @@ premiService.factory('Main', ['Utils', '$localStorage',
 
 premiService.factory('Upload', ['$http','Main','Utils',
 	function($http,Main,Utils){
+		console.log("Ecco l'upload");
 		var baseUrl = Utils.hostname();
 		var token = Main.login().getToken();
 
 		//Formati accettati per l'upload
-		var image = ['jpeg','jpg','gif','png'];
-		var video = ['mp4','waw','avi'];
-		var audio = ['mp3'];
+		var image = ['image/jpeg', 'image/gif','image/png'];
+		var video = ['video/mp4','video/wav','video/avi'];
+		var audio = ['audio/mp3'];
 
-		var getExtension = function (filename) {
-			var extension = filename.split(".");
-			return extension[extension.length-1];
+		var getExtension = function (file) {
+			var extension = file.type;
+			return extension;
 
 		};
 
-		var getUrlFormat = function (filename) {
-			var extension = getExtension(filename);
+		var getUrlFormat = function (file) {
+			var extension = getExtension(file);
 
 			if(image.indexOf(extension) != -1)
 				return "image/";
-			if(audio.indexOf(extension) != -1)
+			else if(audio.indexOf(extension) != -1)
 				return "audio/";
-			if(video.indexOf(extension) != -1)
+			else if(video.indexOf(extension) != -1)
 				return "video/";
 
 			return undefined;
@@ -145,18 +146,48 @@ premiService.factory('Upload', ['$http','Main','Utils',
 			return ris;
 		};
 
+
+		var checkExtension = function(files, array){
+			if(Utils.isUndefined(array))
+				return checkExtension(files, image) || checkExtension(files, audio) || checkExtension(files, video);
+			
+			var ris = true;
+			for(var i=0; i<files.length && ris; ++i)
+				if(array.indexOf(files[i].type) == -1)
+					ris = false;
+
+			return ris;
+		};
 		var upload = {
-			uploadmedia: function(formData, filename, success, error) {				
-				if(Utils.isUndefined(formData))
+			uploadmedia: function(files, success, error) {				
+				if(Utils.isUndefined(files))
 					throw new Error("Attenzione! Il file non è definito.");
 
-				var realfilename = getFileName(filename);
-				var uploadUrl = getUrlFormat(filename) + realfilename;
-			
-               	var req = new XMLHttpRequest();
-				req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, false);
-				req.setRequestHeader("Authorization", token);
-				req.send(formData);
+				if(!checkExtension(files))
+					throw new Error("Estensione non riconosciuta dal sistema.");
+
+				for(var i=0; i<files.length; ++i){
+					var formData = new FormData();
+					formData.append("file", files[i]);
+					var uploadUrl = getUrlFormat(files[i]) + getFileName(files[i].name);
+
+					var req = new XMLHttpRequest();
+					req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, false);
+					req.setRequestHeader("Authorization", token);
+					req.send(formData);
+
+					//var res = JSON.parse(req.responseText);
+					//console.log(req.responseText);
+				}
+			},
+			isImage: function(files){
+				return checkExtension(files, image);
+			},
+			isAudio: function(files){
+				return checkExtension(files, audio);
+			},
+			isVideo: function(files){
+				return checkExtension(files, video);
 			}
 		}
 
@@ -370,7 +401,7 @@ premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 					idss = idSlideShow;
 
 				if(Utils.isObject(idss)){
-					idExecution = mongo.getPresentation(idss);
+					idExecution = JSON.stringify(mongo.getPresentation(idss));
 					$localStorage.idEdit = idss;
 				}
 				return idExecution;
@@ -389,7 +420,7 @@ premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 					idss = idSlideShow;
 
 				if(Utils.isObject(idss)){
-					idEdit = mongo.getPresentation(idss);
+					idEdit = JSON.stringify(mongo.getPresentation(idss));
 					$localStorage.idEdit = idss;
 				}
 

@@ -2,8 +2,8 @@
 
 var premiProfileController = angular.module('premiProfileController', ['premiService'])
 
-premiProfileController.controller('ProfileController', ['$scope','$http', 'Main', 'toPages', 'Utils', 'Upload',
-	function($scope,$http, Main, toPages, Utils, Upload) {
+premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPages', 'Utils', 'Upload',
+	function($scope, Main, toPages, Utils, Upload) {
 		var token = function(){
 			return Main.login().getToken();
 		}
@@ -55,21 +55,9 @@ premiProfileController.controller('ProfileController', ['$scope','$http', 'Main'
 		};
 
 		$scope.uploadmedia = function(files){
-			var file = (($('input[type=file]').val()).split('\\'))[2];
-			console.log('file is ' + JSON.stringify(file));
-			console.log(files);
-			console.log(files[0]);
-			var fd = new FormData();
-			fd.append("file", files[0]);
-			//return;
-			/*var extension= getExtension(file);
-			console.log(extension);
-			var urlFormat = getUrlFormat(extension);
-			console.log(urlFormat);
-			var uploadUrl=urlFormat+file;
-			console.log(uploadUrl);
-           console.log(JSON.stringify(fd));*/
-            Upload.uploadmedia(fd, file, function() {
+			//var file = (($('input[type=file]').val()).split('\\'))[2];
+			
+            Upload.uploadmedia(files, function() {
             	$scope.file={};
             	console.log("vai così");
 

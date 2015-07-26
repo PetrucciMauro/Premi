@@ -1033,8 +1033,6 @@ $(function () {
         }
     });
     $("#sortable").disableSelection();
-    inserisciFrame();
-    inserisciFrame();
 });
 
 angular.module('menuDemoWidth', ['ngMaterial'])
@@ -1044,3 +1042,5 @@ angular.module('menuDemoWidth', ['ngMaterial'])
       .iconSet("social", 'img/icons/sets/social-icons.svg', 24);
 })
 .controller('WidthDemoCtrl', premiEditController);
+
+

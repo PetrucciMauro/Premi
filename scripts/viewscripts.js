@@ -49,11 +49,13 @@ var active=function(){
 				document.getElementById("back"+id).style.MozTransition = 'opacity 0.5s';
 			}
 			
-			document.getElementById("rotation").innerHTML="<input id=\"rangeRotation\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" value=\""+getRotationDegrees($("#"+id))+"\" oninput=\"rotate('"+id+"',this.value)\">";
-			private.id=id;
+			//document.getElementById("rotation").innerHTML="<input id=\"rangeRotation\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" value=\""+getRotationDegrees($("#"+id))+"\" oninput=\"rotate('"+id+"',this.value)\">";
+			console.log("gradi " + getRotationDegrees($("#" + id)));
+			private.id = id;
 			deselezionaPercorso(id);
 			selezionaPercorso(id);
 			updateDraggable();
+			
 		};
 		that.getId=function(){
 			return private.id;
@@ -116,6 +118,21 @@ function highlight(id) {
 
 
 
+function highlightPath(index) {
+    var high = false;
+    if ($(choicePaths().getPercorsi[index].path[0].hasClass("highlighted"))){
+        high=true;
+    }
+        for (var i = 0; i < choicePaths().getPercorsi[index].path.length; i++) {
+            if(high)
+                $(choicePaths().getPercorsi[index].path[i]).removeClass("highlighted");
+            else
+                $(choicePaths().getPercorsi[index].path[i]).addClass("highlighted");
+        }
+}
+
+
+
 //percorso principale//
 var mainPathInstance={};
 var mainPathInstanced=false;
@@ -130,16 +147,18 @@ var mainPath=function(){
         that.getPercorso=function(){
             return private.percorso;
         }
-        that.addToMainPath=function(id, position){
-            var pos=position || private.percorso.length;
-            private.percorso.splice(pos, 0, id);
-            var s="";
-            for (var i=0; i<private.percorso.length; i++){
-                s=s+" "+private.percorso[i];
+        that.addToMainPath = function (id, position) {
+            if (!mainPath().contains(id)) {
+                var pos = position || private.percorso.length;
+                private.percorso.splice(pos, 0, id);
+                var s = "";
+                for (var i = 0; i < private.percorso.length; i++) {
+                    s = s + " " + private.percorso[i];
+                }
+                document.getElementById("mainp").innerHTML = s;
+                document.getElementById("addToMain").removeAttribute("onclick");
+                selezionaPercorso(id);
             }
-            document.getElementById("mainp").innerHTML=s;
-            document.getElementById("addToMain").removeAttribute("onclick");
-            selezionaPercorso(id);
         };
         
         
@@ -199,7 +218,7 @@ var mainPath=function(){
 
 		that.contains = function (id) {
 		    var contiene = false;
-		    if (private.percorso.indexOf(parseInt(id)) > -1) {
+		    if (private.percorso.indexOf(id) > -1) {
 
 		        contiene = true;
 		    }
@@ -578,12 +597,12 @@ $(document).mousedown(function(e) {
 			backgroundFrameEraser.setAttribute("onclick","document.getElementById('"+att+"').style.removeProperty ('background')");
 			var addToMain=document.getElementById("addToMain");
 			if(!mainPath().contains(frames[i].id)){
-				addToMain.removeAttribute("disabled");
-				addToMain.setAttribute("onclick","mainPath().addToMainPath("+frames[i].id+")");
+				//addToMain.removeAttribute("disabled");
+				//addToMain.setAttribute("onclick","mainPath().addToMainPath("+frames[i].id+")");
 
 			}
 			else{
-				addToMain.setAttribute("disabled","disabled");
+				//addToMain.setAttribute("disabled","disabled");
 				
 			}
 			//SFONDO FRAME
@@ -658,9 +677,7 @@ function countChar(val) {
 //NEWTEXT
 
 function selezionaPercorso(id){
-
-	var nid=parseInt(id);
-	if (mainPath().getPercorso().indexOf(nid)>-1){
+	if (mainPath().getPercorso().indexOf(id)>-1){
 
 		for (var i=0; i<mainPath().getPercorso().length; i++){
 			document.getElementById(mainPath().getPercorso()[i]).style.border= "0.25em solid red"
@@ -680,8 +697,8 @@ function selezionaPercorso(id){
 function deselezionaPercorso(id){
 
 	var main=mainPath();
-	var nid=parseInt(id);
-	if (main.getPercorso().indexOf(nid)==-1){
+	
+	if (main.getPercorso().indexOf(id)==-1){
 		for (var i=0; i<main.getPercorso().length; i++){
 			document.getElementById(main.getPercorso()[i]).style.removeProperty('border');
 		}
@@ -1033,6 +1050,8 @@ $(function () {
         }
     });
     $("#sortable").disableSelection();
+        
+
 });
 
 angular.module('menuDemoWidth', ['ngMaterial'])

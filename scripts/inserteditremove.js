@@ -43,7 +43,7 @@ var insertEditRemove = function () {
         };
         public.getElement = function (id) {
             var element;
-
+            var found = false;
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
                 if (private.presentazione.proper.texts[i].id === id) {
                     element = private.presentazione.proper.texts[i];

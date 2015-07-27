@@ -19,7 +19,7 @@ premiApp.run(function($log, $rootScope, Main, Utils, toPages){
 		if(!next.isLogin)
 			return;
 
-		var token = Main.login().getToken();
+		var token = Main.getToken();
 
 		if (Utils.isUndefined(token))
 			//il token non è definito e l'utente non può accedere a questa pagina
@@ -70,8 +70,8 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			return {
 				'request': function (config) {
 					config.headers = config.headers || {};
-					if (Utils.isObject(Main.login().getToken())){
-						config.headers.Authorization = Main.login().getToken();
+					if (Utils.isObject(Main.getToken())){
+						config.headers.Authorization = Main.getToken();
 						
 					}
 					else

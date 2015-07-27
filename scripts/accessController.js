@@ -4,19 +4,15 @@ var premiAccessController = angular.module('premiAccessController', ['premiServi
 
 premiAccessController.controller('HeaderController', ['$rootScope', '$scope', 'Main', 'toPages', 'Utils',
 	function($rootScope, $scope, Main, toPages, Utils) {
-		var token = function(){
-			return Main.login().getToken();
-		}
-
 		$scope.error = function(){
 			return $rootScope.error;
 		}
 		//Metodi per far apparire il saluto e i pulsanti di logout, home e profilo
 		$scope.who = function(){
-			return Utils.getUser(token()).user;
+			return Main.getUser().user;
 		};
 		$scope.isToken = function() {
-			return Utils.isObject(token());
+			return Utils.isObject(Main.getToken());
 		};
 
 		//Metodi per il reindirizzamento delle pagine
@@ -46,10 +42,6 @@ premiAccessController.controller('HeaderController', ['$rootScope', '$scope', 'M
 
 premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 'toPages', 'Utils',
 	function($scope, Main, toPages, Utils) {
-		var token = function(){
-			return Main.login().getToken();
-		};
-
 		var getData = function(){
 			return {
 				username: $scope.user.username,

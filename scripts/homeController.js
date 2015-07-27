@@ -4,9 +4,8 @@ var premiHomeController = angular.module('premiHomeController', ['premiService']
 
 premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window',
 	function($scope, Main, toPages, Utils, $window) {
-		var token = function(){
-			return Main.login().getToken();
-		}
+		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
+			toPages.loginpage();
 
 		$scope.display_limit = 50;
 

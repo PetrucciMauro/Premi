@@ -8,12 +8,14 @@ premiService.factory('Main', ['Utils', '$localStorage',
 
 		//variabile login per mantenere aperta la sessione
 		var login = Authentication(baseUrl);
+		//user è adibita al contenimento dell'oggetto user
+		var user = {};
 
 		/*
 		Ogni refresh della pagina (f5) comporta il reset di angular e con esso anche della var. login.
 		Per questo, ogni volta che il servizio Main è chiamato si attiva la funzione value().
 		Questa valuta se è stato fatto un refresh vedendo se login è definito
-			e in questo caso vede se nel localstorage sono salvati username e pwd:
+			e in questo caso vede se nel localstorage sono salvati username e pwd (pwd ovviamente criptata):
 			in tal caso allora riapplica l'authenticate e login viene ripristinata
 		*/
 
@@ -24,7 +26,7 @@ premiService.factory('Main', ['Utils', '$localStorage',
 		};
 
 		value();
-		return {
+		var main = {
 			//Metodo che richiama il metodo del server per la registrazione
 			register: function(formData, success, error) {
 				//richiamato metodo node per la registrazione di un nuovo utente
@@ -102,8 +104,22 @@ premiService.factory('Main', ['Utils', '$localStorage',
 				}
 				else
 					error({message: changepwd.getMessage()});
+			},
+			getToken: function(){
+				return login.getToken();
+			},
+			//Metodo che ritorna lo user in base al token di sessione
+			getUser: function () {
+				//se il token è definito ok si può decodificare
+				if(Utils.isObject(main.getToken()))
+					user = Utils.decodeToken(main.getToken());
+
+				//in ogni caso viene ritornato user
+				return user;
 			}
 		};
+
+		return main;
 	}
 ]);
 
@@ -188,6 +204,9 @@ premiService.factory('Upload', ['$http','Main','Utils',
 			},
 			isVideo: function(files){
 				return checkExtension(files, video);
+			},
+			getFileUrl: function(){
+				return 'files/' + Utils.getUser()
 			}
 		}
 
@@ -197,28 +216,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 
 premiService.factory('Utils', [
 	function(){
-		//user è adibita al contenimento dello username
-		//oldtoken invece al contenimento del token
-		var user = {};
-		var oldtoken = {};
-
 		//Metodi per la decodifica di un token
-		function changeUser(user) {
-			angular.extend(currentUser, user);
-		};
-		function decodeToken(token) {
-			var parts = token.split('.');
-
-			if (parts.length !== 3) {
-				throw new Error('Il token deve essere formato da 3 parti');
-			}
-
-			var decoded = urlBase64Decode(parts[1]);
-			if (!decoded) {
-				throw new Error('Impossibile decodificare il token');
-			}
-			return JSON.parse(decoded);
-		};
 		function urlBase64Decode (str) {
 			var output = str.replace(/-/g, '+').replace(/_/g, '/');
 			switch (output.length % 4) {
@@ -232,8 +230,7 @@ premiService.factory('Utils', [
 			return decodeURIComponent(escape(window.atob(output))); //polifyll https://github.com/davidchambers/Base64.js
 		};
 		function getTokenExpirationDate (token) {
-			var decoded;
-			decoded = decodeToken(token);
+			var decoded = decodeToken(token);
 
 			if(typeof decoded.exp === "undefined") {
 				return null;
@@ -255,22 +252,20 @@ premiService.factory('Utils', [
 		};
 
 		var utilities = {
-			//Metodo che ritorna lo username in base ad un token passato come parametro
-			getUser: function (token) {
-				//se il token non è definito è impossibile ricavarsi lo username
-				if(utilities.isUndefined(token))
-					return user;
-
-				//se user è definito e il token è identico a quello salvato precedentemente allora user viene ritornato
-				if(utilities.isObject(user) && token === oldtoken)
-					return user;
-
-				//altrimenti viene ricavato e lo username viene salvato in user e il token in oldtoken
-				user = decodeToken(token);
-				oldtoken = token;
-				return user;
-			},
 			//Metodo per valutare la robustezza di una password
+			decodeToken: function(token) {
+				var parts = token.split('.');
+
+				if (parts.length !== 3) {
+					throw new Error('Il token deve essere formato da 3 parti');
+				}
+
+				var decoded = urlBase64Decode(parts[1]);
+				if (!decoded) {
+					throw new Error('Impossibile decodificare il token');
+				}
+				return JSON.parse(decoded);
+			},
 			grade: function(password) {
 				var size = password.length;
 				var strength = 'weak';

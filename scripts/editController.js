@@ -4,9 +4,8 @@ var premiEditController = angular.module('premiEditController', ['premiService']
 
 premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet',
 	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet) {
-		var token = function(){
-			return Main.login().getToken();
-		}
+		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
+			toPages.loginpage();
 		//Metodi per il reindirizzamento
 		$scope.goEdit = function(slideId){
 			toPages.editpage(slideId);
@@ -93,17 +92,18 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//METODI PROPRI DELL'EDIT
 
 		var inv = invoker();
+
 		//Inserimento elementi
 		$scope.inserisciFrame = function(){
-			var frame = inserisciFrame();
-			var command = concreteFrameInsertCommand(frame);
-			
+			var frame = inserisciFrame(); //view
+
+			var command = concreteFrameInsertCommand(frame); //model
 			inv.execute(command);
 		}
 		$scope.inserisciTesto = function(){
-			var frame = inserisciTesto();
-			var command = concreteTextInsertCommand(frame);
-			
+			var frame = inserisciTesto(); //view
+
+			var command = concreteTextInsertCommand(frame);  //model
 			inv.execute(command);
 		}
 
@@ -114,26 +114,62 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
             	throw new Error(res.message);
             });
 		}
+		//url dove sono salvati i file dell'utente corrente
+		var baseurl = 'files/' + Main.getUser().user + '/';
+
 		$scope.inserisciImmagine = function(files){
 			if(!Upload.isImage(files))
 				throw new Error("Estensione non corretta");
 
 			uploadmedia(files);
-			var fileurl = Utils.hostname() + '/files/' + Utils.getUser(token()).user + '/image/' + files[0].name;
-			inserisciImmagine(fileurl);
+
+			for(var i=0; i<files.length; ++i){
+				var fileurl = baseurl + 'image/' + files[i].name;
+				var img = inserisciImmagine(fileurl); //view
+
+				var command = concreteImageInsertCommand(img); //model
+				inv.execute(command);
+			}
 		}
 		$scope.inserisciAudio = function(files){
 			if(!Upload.isAudio(files))
 				throw new Error("Estensione non corretta");
 
 			uploadmedia(files);
+
+			for(var i=0; i<files.length; ++i){
+				var fileurl = baseurl + 'audio/' + files[i].name;
+				var audio = inserisciAudio(fileurl); //view
+
+				var command = concreteAudioInsertCommand(audio); //model
+				inv.execute(command);
+			}
 		}
 		$scope.inserisciVideo = function(files){
 			if(!Upload.isVideo(files))
 				throw new Error("Estensione non corretta");
 
 			uploadmedia(files);
+
+			for(var i=0; i<files.length; ++i){
+				var fileurl = baseurl + 'video/' + files[i].name;
+				var video = inserisciVideo(fileurl); //view
+
+				var command = concreteVideoInsertCommand(video); //model
+				inv.execute(command);
+			}
 			
+		}
+
+		//rimozione
+		$scope.rimuoviFrame = function(id){
+			if(Utils.isUndefined(insertEditRemove().getElement(id)))
+				throw new Error("Il frame non esiste");
+
+			elimina(id); //della view
+
+			var rimuovi = concreteFrameRemoveCommand(id);
+			inv.execute(rimuovi);  //del model
 		}
 
 		//Gestione sfondo
@@ -141,11 +177,16 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			document.getElementById('content').style.removeProperty('background');
 		}
 		$scope.cambiaColoreSfondo = function(color){
+			console.log(color);
 			document.getElementById('content').style.backgroundColor = '#'+color;
 		}
 		$scope.cambiaColoreSfondoFrame = function(color){
 			document.getElementById('content').style.backgroundColor = '#'+color;
 		}
+		//$scope.backcolor = "#ffffff";
+		$scope.$watch('backcolor', function(val) {
+        	console.log('val ' + val);
+    	});
 
 		//Gestione media
 		$scope.mediaControl = function(){

@@ -1,191 +1,194 @@
 ﻿<link rel="stylesheet" href="css/jquery-ui.css">
 <script type="text/javascript" src="scripts/viewscripts.js"></script>
 <md-sidenav id="barraPercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
-    <md-list>
-        <md-list-item>
-            <div print-path></div>
-        </md-list-item>
-        <md-list-item>
-            <div print-choiche-paths></div>
-        </md-list-item>
+	<md-list>
+		<md-list-item>
+			<div print-path></div>
+		</md-list-item>
+		<md-list-item>
+			<div print-choiche-paths></div>
+		</md-list-item>
 
-        <md-list-item role="listitem" class="md-no-proxy">
-            <div>
-                <md-button id="creaPercorsoScelta" class="menu md-button md-default-theme" ng-click="">Crea Percorso Scelta</md-button>
-            </div>
-        </md-list-item>
+		<md-list-item role="listitem" class="md-no-proxy">
+			<div>
+				<md-button id="creaPercorsoScelta" class="menu md-button md-default-theme" ng-click="">Crea Percorso Scelta</md-button>
+			</div>
+		</md-list-item>
 
 
-        <md-list-item>
+		<md-list-item>
 
-            <md-list id="sortable">
-                {{stampa()}}
-            </md-list>
-        </md-list-item>
-        <md-list-item>
+			<md-list id="sortable">
+				{{stampa()}}
+			</md-list>
+		</md-list-item>
+		<md-list-item>
 
-            <md-list id="choiceList">
+			<md-list id="choiceList">
 
-            </md-list>
-        </md-list-item>
-    </md-list>
+			</md-list>
+		</md-list-item>
+	</md-list>
 
 
 </md-sidenav>
 
 <div flex layout="column" tabindex="-1" role="main">
 
-    <md-toolbar layout="row" class="md-whiteframe-z2  md-hue-2" id="contextual-menu">
-        <md-button class="menu" id="percorsi" ng-click="toggleList()">
-            <md-tooltip>Percorsi</md-tooltip>
-            <md-icon md-svg-icon="menu"></md-icon>
-        </md-button>
+	<md-toolbar layout="row" class="md-whiteframe-z2  md-hue-2" id="contextual-menu">
+		<md-button class="menu" id="percorsi" ng-click="toggleList()">
+			<md-tooltip>Percorsi</md-tooltip>
+			<md-icon md-svg-icon="menu"></md-icon>
+		</md-button>
 
-        <!--Menu generico delle presentazioni-->
-        <div id="slideShowMenu" class="lock-size" layout="row" layout-align="center center">
-            <!--Menu di inserimento-->
-            <md-menu md-offset="0 -7">
-                <md-button class="menu md-button md-default-theme" aria-label="Apri menu inserimento elementi" ng-click="$mdOpenMenu()">
-                    <md-tooltip>Inserisci elemento</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                </md-button>
-                <md-menu-content width="2">
-                    <md-menu-item>
-                        <md-button ng-click="inserisciFrame()"> <p md-menu-align-target>Inserisci Frame</p></md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button ng-click="inserisciTesto()"> <p md-menu-align-target>Inserisci Testo</p></md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button id="insertImage" class="fileContainer"><p id="insertImageActivator">Inserisci Immagine</p><input multiple type="file" id="imgLoader" name="Inserisci Immagine" onchange="angular.element(this).scope().inserisciImmagine(this.files)"/></md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button id="insertVideo" class="fileContainer"><p id="insertVideoActivator">Inserisci Video</p><input multiple type="file" id="videoLoader" name="Inserisci Video" onchange="angular.element(this).scope().inserisciVideo(this.files)"/></md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button id="insertAudio" class="fileContainer"><p id="insertAudioActivator">Inserisci Audio</p><input multiple type="file" id="audioLoader" name="Inserisci Audio" onchange="angular.element(this).scope().inserisciAudio(this.files)"/></md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-            <!--Menu di inserimento-->
-            <!--Menu di gestione sfondo-->
-            <md-menu md-offset="0 -7">
-                <md-button aria-label="Apri menu gestione sfondo" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="sfondoSlideshow" ng-click="$mdOpenMenu()">
-                    <md-tooltip>Gestisci sfondo presentazione</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                </md-button>
-                <md-menu-content width="2">
-                    <md-menu-item>
-                        <md-button id="backgroundEraser" ng-click="rimuoviSfondo()"><p>Elimina Sfondo Presentazione</p></md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button id="slideshowColor" class="colorContainer"><p id="slideshowColorActivator">Cambia colore allo sfondo</p><input class=""type="color" ng-model="color" ng-change="cambiaColoreSfondo()" />
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button id="slideshowImage" class="fileContainer"><p id="slideshowBackgroundImageActivator">Scegli Immagine di Sfondo</p><input multiple type="file" id="contentBackgroundLoader" onchange="backgroundReadURL(this, 'fantoccio');" name="Inserisci Immagine di Sfondo" /></md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-            <!--Menu di inserimento-->
-        </div>
-        <!--Menu generico delle presentazioni-->
-        <!--Menu generico degli elementi-->
-        <div id="standardMenu" class="elementMenu lock-size" layout-align="center center">
-            <!--Menu delle rotazioni-->
-            <md-menu md-offset="0 -7">
-                <md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" ng-click="$mdOpenMenu(); setRotation(getRotationDegrees($('#'+active().getId())))" id="rotate">
-                    <md-tooltip>Ruota</md-tooltip>
-                    <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                </md-button>
-                <md-menu-content width="2">
-                    <md-menu-item>
-                        <md-input-content>
-                            <md-button>
-                                <input id="rangeRotation" type="range" min="0" max="360" step="1" value="{{element.rotation}}" oninput="rotate(active().getId(), this.value)" />
-                            </md-button>
-                        </md-input-content>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+		<!--Menu generico delle presentazioni-->
+		<div id="slideShowMenu" class="lock-size" layout="row" layout-align="center center">
+			<!--Menu di inserimento-->
+			<md-menu md-offset="0 -7">
+				<md-button class="menu md-button md-default-theme" aria-label="Apri menu inserimento elementi" ng-click="$mdOpenMenu()">
+					<md-tooltip>Inserisci elemento</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+				</md-button>
+				<md-menu-content width="2">
+					<md-menu-item>
+						<md-button ng-click="inserisciFrame()"> <p md-menu-align-target>Inserisci Frame</p></md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button ng-click="inserisciTesto()"> <p md-menu-align-target>Inserisci Testo</p></md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button id="insertImage" class="fileContainer"><p id="insertImageActivator">Inserisci Immagine</p><input multiple type="file" id="imgLoader" name="Inserisci Immagine" onchange="angular.element(this).scope().inserisciImmagine(this.files)"/></md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button id="insertVideo" class="fileContainer"><p id="insertVideoActivator">Inserisci Video</p><input multiple type="file" id="videoLoader" name="Inserisci Video" onchange="angular.element(this).scope().inserisciVideo(this.files)"/></md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button id="insertAudio" class="fileContainer"><p id="insertAudioActivator">Inserisci Audio</p><input multiple type="file" id="audioLoader" name="Inserisci Audio" onchange="angular.element(this).scope().inserisciAudio(this.files)"/></md-button>
+					</md-menu-item>
+				</md-menu-content>
+			</md-menu>
+			<!--Menu di inserimento-->
+			<!--Menu di gestione sfondo-->
+			<md-menu md-offset="0 -7">
+				<md-button aria-label="Apri menu gestione sfondo" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="sfondoSlideshow">
+					<md-tooltip>Gestisci sfondo presentazione</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+				</md-button>
+				<md-menu-content width="2">
+					<md-menu-item>
+						<md-button id="backgroundEraser" ng-click="rimuoviSfondo()"><p>Elimina Sfondo Presentazione</p></md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button id="slideshowColor" class="colorContainer"><p id="slideshowColorActivator">Cambia colore allo sfondo</p>
+						<input type="color" ng-model="backcolor"/> <!-- Se messo appena fuori dal md-menu... FUNZIONA DIO LAMPO PERCHÉ???? -->
+						</md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button id="slideshowImage" class="fileContainer"><p id="slideshowBackgroundImageActivator">Scegli Immagine di Sfondo</p><input multiple type="file" id="contentBackgroundLoader" onchange="backgroundReadURL(this, 'fantoccio');" name="Inserisci Immagine di Sfondo" />
+					</md-button>
+					</md-menu-item>
+				</md-menu-content>
+			</md-menu>
+			<!--Menu di inserimento-->
+		</div>
+		<!--Menu generico delle presentazioni-->
+		<!--Menu generico degli elementi-->
+		<div id="standardMenu" class="elementMenu lock-size" layout-align="center center">
+			<!--Menu delle rotazioni-->
+			<md-menu md-offset="0 -7">
+				<md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" ng-click="$mdOpenMenu(); setRotation(getRotationDegrees($('#'+active().getId())))" id="rotate">
+					<md-tooltip>Ruota</md-tooltip>
+					<md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+				</md-button>
+				<md-menu-content width="2">
+					<md-menu-item>
+						<md-input-content>
+							<md-button>
+								<input id="rangeRotation" type="range" min="0" max="360" step="1" value="{{element.rotation}}" oninput="rotate(active().getId(), this.value)" />
+							</md-button>
+						</md-input-content>
+					</md-menu-item>
+				</md-menu-content>
+			</md-menu>
 
-        </div>
+		</div>
 
-        <!--Menu generico delle presentazioni-->
-        <div id="textMenu">
-            <!--TESTO -->
-            <md-input-container class="md-button md-default-theme inputContainer" style="width:3em, height:1em">
-                <md-tooltip>Cambia colore testo</md-tooltip>
-                <md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="colorText" class="color" />
-            </md-input-container>
-            <!--TESTO -->
-            <!--TESTO -->
-            <md-input-container class="md-button md-default-theme inputContainer" style="width:3em height:1em">
-                <md-tooltip>Cambia dimensione testo</md-tooltip>
-                <md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="textSize" type="number" min="1" max="400">
-            </md-input-container>
-            <!--TESTO -->
-        </div>
-        <div id="frameMenu" class="elementMenu">
-            <md-button class="menu md-button md-default-theme" id="background" ng-click="show('backgroundManage')">
-                <md-tooltip>Gestisci sfondo</md-tooltip>
-                <md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-            </md-button>
-            <div id="backgroundManage" class="md-whiteframe-z2" ng-show="backgroundManage">
-                <md-button class="menu md-button md-default-theme" id="backgroundFrameEraser"><md-tooltip>Elimina sfondo</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>
-                <!--<md-button id="loadBackground" md-ink-ripple class="md-button md-default-theme backgroundButton" onclick="loadElementBackground(id)">
-                        <md-tooltip>Seleziona sfondo</md-tooltip>
-                        <md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                    </md-button>-->
-                <md-input id="colorBackground" md-ink-ripple class="md-button md-default-theme backgroundButton">
-                    <!--SFONDO FRAME -->
-                    <md-tooltip>Seleziona colore di sfondo</md-tooltip>
-                    <md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                    <input id="backgroundFrame" class="color colorPicker" />
-                </md-input>
+		<!--Menu generico delle presentazioni-->
+		<div id="textMenu">
+			<!--TESTO -->
+			<md-input-container class="md-button md-default-theme inputContainer" style="width:3em, height:1em">
+				<md-tooltip>Cambia colore testo</md-tooltip>
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="colorText" class="color" />
+			</md-input-container>
+			<!--TESTO -->
+			<!--TESTO -->
+			<md-input-container class="md-button md-default-theme inputContainer" style="width:3em height:1em">
+				<md-tooltip>Cambia dimensione testo</md-tooltip>
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="textSize" type="number" min="1" max="400">
+			</md-input-container>
+			<!--TESTO -->
+		</div>
+		<div id="frameMenu" class="elementMenu">
+			<md-button class="menu md-button md-default-theme" id="background" ng-click="show('backgroundManage')">
+				<md-tooltip>Gestisci sfondo</md-tooltip>
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+			</md-button>
+			<div id="backgroundManage" class="md-whiteframe-z2" ng-show="backgroundManage">
+				<md-button class="menu md-button md-default-theme" id="backgroundFrameEraser"><md-tooltip>Elimina sfondo</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>
+				<!--<md-button id="loadBackground" md-ink-ripple class="md-button md-default-theme backgroundButton" onclick="loadElementBackground(id)">
+						<md-tooltip>Seleziona sfondo</md-tooltip>
+						<md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+					</md-button>-->
+				<md-input id="colorBackground" md-ink-ripple class="md-button md-default-theme backgroundButton">
+					<!--SFONDO FRAME -->
+					<md-tooltip>Seleziona colore di sfondo</md-tooltip>
+					<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+					<input id="backgroundFrame" class="color colorPicker" />
+				</md-input>
 
-                <md-input id="imageFrameBackground" md-ink-ripple class="md-button md-default-theme backgroundButton">
-                    <md-tooltip>Seleziona immagine di sfondo</md-tooltip>
-                    <md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                    <input type="file" id="frameBackgroundLoader" name="Inserisci Immagine" />
-                </md-input>
-            </div>
+				<md-input id="imageFrameBackground" md-ink-ripple class="md-button md-default-theme backgroundButton">
+					<md-tooltip>Seleziona immagine di sfondo</md-tooltip>
+					<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+					<input type="file" id="frameBackgroundLoader" name="Inserisci Immagine" />
+				</md-input>
+			</div>
 
-            <md-menu md-offset="0 -7">
-                <md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()">
-                    <md-tooltip>Aggiungi a un percorso</md-tooltip>
-                    <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                </md-button>
-                <md-menu-content width="2">
-                    <md-menu-item>
-                        <md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton" ng-click="addToMain()">
-                            <p md-menu-align-target>Aggiungi frame al percorso principare</p>
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+			<md-menu md-offset="0 -7">
+				<md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()">
+					<md-tooltip>Aggiungi a un percorso</md-tooltip>
+					<md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+				</md-button>
+				<md-menu-content width="2">
+					<md-menu-item>
+						<md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton" ng-click="addToMain()">
+							<p md-menu-align-target>Aggiungi frame al percorso principare</p>
+						</md-button>
+					</md-menu-item>
+				</md-menu-content>
+			</md-menu>
 
-        </div>
-        <div id="mediaMenu" class="elementMenu">
-            <md-button class="menu md-button md-default-theme" id="play" ng-click="mediaControl()">
-                <md-tooltip>Play</md-tooltip>
-                <md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-            </md-button>
-        </div>
-        <div id="imageMenu" class="elementMenu">
-        </div>
-    </md-toolbar>
+		</div>
+		<div id="mediaMenu" class="elementMenu">
+			<md-button class="menu md-button md-default-theme" id="play" ng-click="mediaControl()">
+				<md-tooltip>Play</md-tooltip>
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+			</md-button>
+		</div>
+		<div id="imageMenu" class="elementMenu">
+		</div>
+	</md-toolbar>
 
-    <md-content flex="" id="content" class="md-default-theme" ondblclick="zoomOut()">
-        <div id="fantoccio">
-            <div id="corner"></div>
-            <div>contenuti in mainpath: <span id="mainp"></span></div>
-            <div id="percorso">
+	<md-content flex="" id="content" class="md-default-theme" ondblclick="zoomOut()">
+		<div id="fantoccio">
+			<div id="corner"></div>
+			<div>contenuti in mainpath: <span id="mainp"></span></div>
+			<div id="percorso">
 
-            </div>
-            <div id="frames">
-            </div>
-            <div id="elements">
-            </div>
-        </div>
-    </md-content>
+			</div>
+			<div id="frames">
+			</div>
+			<div id="elements">
+			</div>
+		</div>
+	</md-content>
 
 </div>
 <script>

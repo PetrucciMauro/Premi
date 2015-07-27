@@ -4,17 +4,13 @@ var premiProfileController = angular.module('premiProfileController', ['premiSer
 
 premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPages', 'Utils', 'Upload',
 	function($scope, Main, toPages, Utils, Upload) {
-		var token = function(){
-			return Main.login().getToken();
-		}
-
-		if(Utils.isUndefined(token))
+		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
 
 
 		var getData = function(){
 			return {
-				username: Utils.getUser(token()).user,
+				username: Main.getUser().user,
 				password: Utils.encrypt($scope.user.password),
 				newpassword: Utils.encrypt($scope.user.newpassword)
 			}
@@ -23,7 +19,7 @@ premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPag
 /*
 		var getMedia = function(){
 			return {
-				username: Utils.getUser(token()).user,
+				username: Main.getUser().user,
 				media: JSON.stringify($scope.myFile)
 			}
 		};*/
@@ -66,19 +62,6 @@ premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPag
 
             })
         };
-			/*$http.post(uploadUrl, fd, {
-				headers: {'Content-Type': undefined },
-				transformRequest: angular.identity
-			})
-			.success(function(res){})
-			.error(function(){$location.path("/login");})*/
-
-			/* Main.uploadmedia(formData,Utils.getUserFromToken().user,urlFormat, function(res){
-				console.log("upload file completato");
-				$scope.myFile= 'undefined';
-			 }, function(res){
-				throw new Error(res.message);
-			 })*/
 	
 
 	/*

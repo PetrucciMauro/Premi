@@ -413,7 +413,7 @@ var inserisciElemento=function(classe){
 	else
 		document.getElementById("elements").appendChild(div);
 
-	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"src/img/x.png\" onclick=\"elimina("+div.id+");\" width=\"20em\">");//inserisce immagine x
+	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"src/img/x.png\" onclick=\"angular.element(this).scope().rimuoviFrame("+div.id+")\" width=\"20em\">");//inserisce immagine x
 
 	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"text-align:center\" src=\"src/img/bringfront.png\" onclick=\"portaAvanti("+div.id+");\" width=\"15em\" style=\"display: block\">");//inserisce immagine bring to front
 
@@ -473,6 +473,7 @@ var inserisciTesto=function(){
 //NEWTEXT
 
 var inserisciMedia=function(x,classe){
+	console.log(x);
 	var div=inserisciElemento(classe);
 	var url=x;
 	var type;

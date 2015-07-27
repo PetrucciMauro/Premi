@@ -56,13 +56,13 @@
                         <md-button ng-click="inserisciTesto()"> <p md-menu-align-target>Inserisci Testo</p></md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button id="insertImage" class="fileContainer"><p id="insertImageActivator">Inserisci Immagine</p><input multiple type="file" id="imgLoader" name="Inserisci Immagine" /></md-button>
+                        <md-button id="insertImage" class="fileContainer"><p id="insertImageActivator">Inserisci Immagine</p><input multiple type="file" id="imgLoader" name="Inserisci Immagine" onchange="angular.element(this).scope().inserisciImmagine(this.files)"/></md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button id="insertVideo" class="fileContainer"><p id="insertVideoActivator">Inserisci Video</p><input multiple type="file" id="videoLoader" name="Inserisci Video" /></md-button>
+                        <md-button id="insertVideo" class="fileContainer"><p id="insertVideoActivator">Inserisci Video</p><input multiple type="file" id="videoLoader" name="Inserisci Video" onchange="angular.element(this).scope().inserisciVideo(this.files)"/></md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button id="insertAudio" class="fileContainer"><p id="insertAudioActivator">Inserisci Audio</p><input multiple type="file" id="audioLoader" name="Inserisci Audio" /></md-button>
+                        <md-button id="insertAudio" class="fileContainer"><p id="insertAudioActivator">Inserisci Audio</p><input multiple type="file" id="audioLoader" name="Inserisci Audio" onchange="angular.element(this).scope().inserisciAudio(this.files)"/></md-button>
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>

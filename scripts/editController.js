@@ -2,8 +2,8 @@
 
 var premiEditController = angular.module('premiEditController', ['premiService'])
 
-premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'Utils', 'SharedData', '$q', '$mdSidenav', '$mdBottomSheet',
-	function ($scope, Main, toPages, Utils, SharedData, $q, $mdSidenav, $mdBottomSheet, $mdDialog) {
+premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet',
+	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet) {
 		var token = function(){
 			return Main.login().getToken();
 		}
@@ -14,10 +14,6 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 		$scope.goExecute = function(slideId){
 			toPages.executionpage(slideId);
 		}
-		$scope.goProfile = function(){
-			toPages.profilepage();
-		}
-		console.log(SharedData.forEdit());
 
 		$scope.toggleList = function() {
 			var pending = $mdBottomSheet.hide() || $q.when(true);
@@ -36,12 +32,6 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 		};
 
 		//Menu a comparsa
-		var insertElement = function(bool){
-			if(bool)
-				$scope.insertElement = true;
-			else
-				$scope.insertElement = false;
-		}
 		var backgroundManage = function(bool){
 			if(bool)
 				$scope.backgroundManage = true;
@@ -71,13 +61,10 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 		$scope.show = function(id){
 			backgroundManage(false);
 			slideShowBackgroundManage(false);
-			insertElement(false);
 			pathsManage(false);
 			rotation(false);
 
-			if(id === 'insertElement')
-				insertElement(true);
-			else if(id === 'slideShowBackgroundManage')
+			if(id === 'slideShowBackgroundManage')
 				slideShowBackgroundManage(true);
 			else if(id === 'backgroundManage')
 				backgroundManage(true);
@@ -104,14 +91,49 @@ premiEditController.controller('EditController',['$scope', 'Main', 'toPages', 'U
 		};
 
 		//METODI PROPRI DELL'EDIT
+
+		var inv = invoker();
 		//Inserimento elementi
 		$scope.inserisciFrame = function(){
-			inserisciFrame();
-			insertElement(false);
+			var frame = inserisciFrame();
+			var command = concreteFrameInsertCommand(frame);
+			
+			inv.execute(command);
 		}
 		$scope.inserisciTesto = function(){
-			inserisciTesto();
-			insertElement(false);
+			var frame = inserisciTesto();
+			var command = concreteTextInsertCommand(frame);
+			
+			inv.execute(command);
+		}
+
+		var uploadmedia = function(files){
+			Upload.uploadmedia(files, function() {
+            	console.log("vai così");
+            } , function(res) {
+            	throw new Error(res.message);
+            });
+		}
+		$scope.inserisciImmagine = function(files){
+			if(!Upload.isImage(files))
+				throw new Error("Estensione non corretta");
+
+			uploadmedia(files);
+			var fileurl = Utils.hostname() + '/files/' + Utils.getUser(token()).user + '/image/' + files[0].name;
+			inserisciImmagine(fileurl);
+		}
+		$scope.inserisciAudio = function(files){
+			if(!Upload.isAudio(files))
+				throw new Error("Estensione non corretta");
+
+			uploadmedia(files);
+		}
+		$scope.inserisciVideo = function(files){
+			if(!Upload.isVideo(files))
+				throw new Error("Estensione non corretta");
+
+			uploadmedia(files);
+			
 		}
 
 		//Gestione sfondo

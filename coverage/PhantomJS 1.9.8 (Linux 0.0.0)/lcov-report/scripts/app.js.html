@@ -15,10 +15,10 @@
 <div class="header low">
     <h1>Code coverage report for <span class="entity">scripts/app.js</span></h1>
     <h2>
-        Statements: <span class="metric">10.71% <small>(3 / 28)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">10.34% <small>(3 / 29)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Branches: <span class="metric">0% <small>(0 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Functions: <span class="metric">0% <small>(0 / 8)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Lines: <span class="metric">10.71% <small>(3 / 28)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">10.34% <small>(3 / 29)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
     <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">scripts/</a> &#187; app.js</div>
@@ -139,13 +139,7 @@
 112
 113
 114
-115
-116
-117
-118
-119
-120
-121</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+115</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -220,21 +214,14 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -248,6 +235,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -286,7 +274,7 @@ premiApp.run(<span class="fstat-no" title="function not covered" >function($log,
 <span class="cstat-no" title="statement not covered" >		if(!next.isLogin)</span>
 <span class="cstat-no" title="statement not covered" >			return;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >		var token = Main.login().getToken();</span>
+<span class="cstat-no" title="statement not covered" >		var token = Main.getToken();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >		if (Utils.isUndefined(token))</span>
 			//il token non è definito e l'utente non può accedere a questa pagina
@@ -337,24 +325,17 @@ premiApp.config(<span class="fstat-no" title="function not covered" >function($r
 <span class="cstat-no" title="statement not covered" >			return {</span>
 				'request': <span class="fstat-no" title="function not covered" >function (config) {</span>
 <span class="cstat-no" title="statement not covered" >					config.headers = config.headers || {};</span>
-<span class="cstat-no" title="statement not covered" >					if (Utils.isObject(Main.login().getToken()))</span>
-<span class="cstat-no" title="statement not covered" >						config.headers.authorization = Main.login().getToken();</span>
+<span class="cstat-no" title="statement not covered" >					if (Utils.isObject(Main.getToken())){</span>
+<span class="cstat-no" title="statement not covered" >						config.headers.Authorization = Main.getToken();</span>
+						
+					}
 					else
 <span class="cstat-no" title="statement not covered" >						console.log("token non definito ");</span>
 					
-					/*
-						if(typeof $locaStorage.token !== 'undefined'){
-							Main.login($localStorage.formData, function(){
-								//$route.reload();
-							}, function(){
-								throw new Error({message: "Impossibile verificare il token"})
-							});
-						}
-						else*/
-							
 <span class="cstat-no" title="statement not covered" >					return config;</span>
 				},
 				'responseError': <span class="fstat-no" title="function not covered" >function(response) {</span>
+<span class="cstat-no" title="statement not covered" >					console.log("response error");</span>
 <span class="cstat-no" title="statement not covered" >					if(response.status === 401 || response.status === 403) {</span>
 <span class="cstat-no" title="statement not covered" >						throw new Error(response.message);</span>
 <span class="cstat-no" title="statement not covered" >						toPages.loginpage();</span>
@@ -366,8 +347,9 @@ premiApp.config(<span class="fstat-no" title="function not covered" >function($r
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	$provide.decorator("$exceptionHandler", <span class="fstat-no" title="function not covered" >function($delegate, $injector){</span></span>
 <span class="cstat-no" title="statement not covered" >		return <span class="fstat-no" title="function not covered" >function(exception, cause){</span></span>
-<span class="cstat-no" title="statement not covered" >			$delegate(exception, cause);</span>
 <span class="cstat-no" title="statement not covered" >			alert(exception.message);</span>
+<span class="cstat-no" title="statement not covered" >			$delegate(exception, cause);</span>
+&nbsp;
 		};
 	});
 &nbsp;
@@ -381,8 +363,8 @@ premiApp.config(<span class="fstat-no" title="function not covered" >function($r
 		.icon("phone"      , "./assets/svg/phone.svg"       , 512);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	$mdThemingProvider.theme('default')</span>
-		.primaryPalette('blue')
-		.accentPalette('red');
+		.primaryPalette('indigo')
+		.accentPalette('yellow');
 }); 
 &nbsp;
 &nbsp;</pre></td></tr>
@@ -390,7 +372,7 @@ premiApp.config(<span class="fstat-no" title="function not covered" >function($r
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Jul 21 2015 16:34:25 GMT+0200 (CEST)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jul 29 2015 11:57:47 GMT+0200 (CEST)</div>
 </div>
 <script src="../prettify.js"></script>
 <script>

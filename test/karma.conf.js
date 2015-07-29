@@ -6,10 +6,14 @@ module.exports = function(config){
 
     files : [
       'bower_components/angular/angular.js',
+      'bower_components/angular-mocks/angular-*.js',
       'bower_components/angular-route/angular-route.js',
-      'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/angular-material/angular-material-mocks.js',
+      'bower_components/angular-material/angular-material.js',
+      'bower_components/angular-aria/angular-aria.js',
+      'bower_components/angular-resource/angular-resource.js',
       'scripts/*.js',
-      'test/unit/**/*.js'
+      'test/unit/*.js'
       
     ],
 
@@ -26,7 +30,8 @@ module.exports = function(config){
       'karma-coverage',
       'karma-junit-reporter',
       'karma-phantomjs-launcher',
-      'karma-coveralls'
+      'karma-coveralls',
+      'karma-requirejs'
  
     ],
     

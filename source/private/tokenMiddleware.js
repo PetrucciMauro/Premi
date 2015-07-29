@@ -16,7 +16,6 @@ var use = function(req, res, next) {
 	console.log(req.headers);
 	var token=req.headers['authorization'];
 	if (token) {
-		console.log("ok c'è token");
 		// verifies secret and checks exp
 		jwt.verify(token, secret, function(err, decoded) {
 			console.log(token);
@@ -25,15 +24,11 @@ var use = function(req, res, next) {
 				res.status(400);
 				return res.json({ success: false, message: 'Failed to authenticate token' });
 			} else {
-				console.log("ok è giusto");
 				req.user = decoded.user;
-				//res.status(200).send({user: req.user});
-				//res.end();
 				next();
 			}
 		});
 	} else {
-		console.log("nex token");
 		return res.status(403).send({
 			success: false,
 			message: 'No token provided.'

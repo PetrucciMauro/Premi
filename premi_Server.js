@@ -27,13 +27,14 @@ app.use(morgan('dev'));
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID
 
+/*
 app.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8081');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'content-type, Authorization, Data');
     res.setHeader('Access-Control-Expose-Headers','authorization');
     next();
-});
+});*/
 
 //===============
 // authentication

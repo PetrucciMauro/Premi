@@ -74,16 +74,16 @@
 				</md-button>
 				<md-menu-content width="2">
 					<md-menu-item>
-						<md-button id="backgroundEraser" ng-click="rimuoviSfondo()"><p>Elimina Sfondo Presentazione</p></md-button>
-					</md-menu-item>
-					<md-menu-item>
-						<md-button id="slideshowColor" class="colorContainer"><p id="slideshowColorActivator">Cambia colore allo sfondo</p>
-						<input type="color" ng-model="backcolor"/> <!-- Se messo appena fuori dal md-menu... FUNZIONA DIO LAMPO PERCHÉ???? -->
+						<md-button aria-label="Cambia colore sfondo" class="colorContainer" id="slideshowColor"><p>Cambia colore sfondo</p><input type="color" ng-model="backcolor" ng-change="cambiaColoreSfondo(backcolor)"/>
 						</md-button>
 					</md-menu-item>
 					<md-menu-item>
-						<md-button id="slideshowImage" class="fileContainer"><p id="slideshowBackgroundImageActivator">Scegli Immagine di Sfondo</p><input multiple type="file" id="contentBackgroundLoader" onchange="backgroundReadURL(this, 'fantoccio');" name="Inserisci Immagine di Sfondo" />
-					</md-button>
+						<md-button id="backgroundEraser" ng-click="rimuoviSfondo()"><p>Elimina Sfondo Presentazione</p></md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button aria-label="Cambia immagine di sfondo" id="slideshowImage" class="fileContainer"><p>Scegli Immagine di Sfondo</p><input type="file" onchange="angular.element(this).scope().cambiaImmagineSfondo(this.files)"/>
+						</md-button>
+					<!-- onchange="backgroundReadURL(this, 'fantoccio');"-->
 					</md-menu-item>
 				</md-menu-content>
 			</md-menu>
@@ -94,7 +94,7 @@
 		<div id="standardMenu" class="elementMenu lock-size" layout-align="center center">
 			<!--Menu delle rotazioni-->
 			<md-menu md-offset="0 -7">
-				<md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" ng-click="$mdOpenMenu(); setRotation(getRotationDegrees($('#'+active().getId())))" id="rotate">
+				<md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="rotate"> <!--QUESTO NON PUÒ ANDARE QUI PERCHÈ RIGUARDA SOLO IL BUTTON PER APRIRE IL MENU: setRotation(getRotationDegrees($('#'+active().getId())))-->
 					<md-tooltip>Ruota</md-tooltip>
 					<md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
 				</md-button>
@@ -102,7 +102,7 @@
 					<md-menu-item>
 						<md-input-content>
 							<md-button>
-								<input id="rangeRotation" type="range" min="0" max="360" step="1" value="{{element.rotation}}" oninput="rotate(active().getId(), this.value)" />
+								<input id="rangeRotation" type="range" min="0" max="360" step="1" ng-model="elementRotation" ng-change="ruotaElemento(elementRotation)"/>
 							</md-button>
 						</md-input-content>
 					</md-menu-item>
@@ -132,7 +132,7 @@
 				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
 			</md-button>
 			<div id="backgroundManage" class="md-whiteframe-z2" ng-show="backgroundManage">
-				<md-button class="menu md-button md-default-theme" id="backgroundFrameEraser"><md-tooltip>Elimina sfondo</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>
+				<md-button class="menu md-button md-default-theme" id="backgroundFrameEraser" ng-click="rimuoviSfondoFrame()"><md-tooltip>Elimina sfondo</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>
 				<!--<md-button id="loadBackground" md-ink-ripple class="md-button md-default-theme backgroundButton" onclick="loadElementBackground(id)">
 						<md-tooltip>Seleziona sfondo</md-tooltip>
 						<md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
@@ -141,13 +141,13 @@
 					<!--SFONDO FRAME -->
 					<md-tooltip>Seleziona colore di sfondo</md-tooltip>
 					<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-					<input id="backgroundFrame" class="color colorPicker" />
+					<input type="color" id="backgroundFrame" ng-model="sfondoframe" ng-change="cambiaColoreSfondoFrame(sfondoframe)"/>
 				</md-input>
 
 				<md-input id="imageFrameBackground" md-ink-ripple class="md-button md-default-theme backgroundButton">
 					<md-tooltip>Seleziona immagine di sfondo</md-tooltip>
 					<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-					<input type="file" id="frameBackgroundLoader" name="Inserisci Immagine" />
+					<input type="file" id="frameBackgroundLoader" name="Inserisci Immagine" onchange="angular.element(this).scope().cambiaImmagineSfondoFrame(this.files)"/>
 				</md-input>
 			</div>
 
@@ -176,10 +176,10 @@
 		</div>
 	</md-toolbar>
 
-	<md-content flex="" id="content" class="md-default-theme" ondblclick="zoomOut()">
+	<md-content flex="" id="content" class="md-default-theme">
 		<div id="fantoccio">
 			<div id="corner"></div>
-			<div>contenuti in mainpath: <span id="mainp"></span></div>
+			<!--<div>contenuti in mainpath: <span id="mainp"></span></div>-->
 			<div id="percorso">
 
 			</div>

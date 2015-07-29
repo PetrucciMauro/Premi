@@ -52,6 +52,7 @@ var insertEditRemove = function () {
             }
             for (var i = 0; i < private.presentazione.proper.frames.length && !found; i++) {
                 if (private.presentazione.proper.frames[i].id === id) {
+                    console.log("trovato");
                     element = private.presentazione.proper.frames[i];
                     found = true;
                 }
@@ -87,6 +88,7 @@ var insertEditRemove = function () {
             if (!found && private.presentazione.proper.background.id === id) {
                 element = private.presentazione.proper.background;
             }
+            console.log(element);
             return JSON.stringify(element);
         };
 
@@ -96,7 +98,6 @@ var insertEditRemove = function () {
         };
         public.insertFrame = function (spec) {
             var newFrame = frame(spec);
-            console.log(newFrame);
             private.presentazione.proper.frames.push(newFrame);
         };
         public.insertImage = function (spec) {

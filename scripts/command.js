@@ -88,6 +88,7 @@ var abstractCommand = function (spec) {
     return public;
 };
 
+//INSERT
 var concreteTextInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
@@ -223,6 +224,7 @@ var concreteBackgroundInsertCommand = function (spec) {
     return public;
 };
 
+//REMOVE
 var concreteTextRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
@@ -280,7 +282,6 @@ var concreteFrameRemoveCommand = function (spec) {
     return public;
 };
 
-
 var concreteSVGRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
@@ -299,7 +300,6 @@ var concreteSVGRemoveCommand = function (spec) {
     };
     return public;
 };
-
 
 var concreteAudioRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
@@ -339,7 +339,7 @@ var concreteVideoRemoveCommand = function (spec) {
     return public;
 };
 
-
+//EDITING
 var concreteEditPositionCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
@@ -366,7 +366,7 @@ var concreteEditPositionCommand = function (spec) {
 var concreteEditRotationCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
-    private.oldRotation;
+    private.oldRotation = {};
     public.doAction = function () {
         private.oldRotation.rotation = public.getEnabler().editRotation(spec);
         private.oldRotation.id = spec.id;
@@ -436,7 +436,7 @@ var concreteEditBackgroundCommand = function (spec) {
     public.doAction = function () {
         private.oldBackground = public.getEnabler().editBackground(spec);
         private.oldBackground.id = spec.id;
-        private.oldSize.tipo = "frames";
+        private.oldBackground.tipo = "frames";
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }
@@ -495,6 +495,7 @@ var concreteEditFontCommand = function (spec) {
     return public;
 };
 
+//PERCORSI
 var concreteAddToMainPathCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
@@ -551,7 +552,6 @@ var concreteAddToChoicePathCommand = function (spec) {
     };
     return public;
 };
-
 
 var concreteRemoveFromChoicePathCommand = function (spec) {
     var public = abstractCommand(spec);

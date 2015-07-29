@@ -92,20 +92,43 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//METODI PROPRI DELL'EDIT
 
 		var inv = invoker();
+		var mongo = MongoRelation(Utils.hostname(), Main.login());
 
 		//Inserimento elementi
 		$scope.inserisciFrame = function(){
 			var frame = inserisciFrame(); //view
+			var style = window.getComputedStyle(frame, null);
 
-			var command = concreteFrameInsertCommand(frame); //model
+			var spec = {
+				id: frame.id,
+				xIndex: style.x,
+				yIndex: style.y,
+				height: style.height,
+				width: style.width,
+				rotation: 0
+			};
+
+			var command = concreteFrameInsertCommand(spec); //model
 			inv.execute(command);
 		}
 		$scope.inserisciTesto = function(){
-			var frame = inserisciTesto(); //view
+			var text = inserisciTesto(); //view
+			var style = window.getComputedStyle(text, null);
 
-			var command = concreteTextInsertCommand(frame);  //model
+			var spec = {
+				id: text.id,
+				xIndex: style.x,
+				yIndex: style.y,
+				height: style.height,
+				width: style.width,
+				font: style.font
+			};
+
+			var command = concreteTextInsertCommand(spec);  //model
 			inv.execute(command);
+			console.log(insertEditRemove().getPresentazione());
 		}
+
 
 		var uploadmedia = function(files){
 			Upload.uploadmedia(files, function() {
@@ -124,10 +147,20 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			uploadmedia(files);
 
 			for(var i=0; i<files.length; ++i){
-				var fileurl = baseurl + 'image/' + files[i].name;
+				var fileurl = baseurl + 'image/' + 'background.jpg';
 				var img = inserisciImmagine(fileurl); //view
+				var style = window.getComputedStyle(text, null);
 
-				var command = concreteImageInsertCommand(img); //model
+				var spec = {
+					id: img.id,
+					xIndex: style.x,
+					yIndex: style.y,
+					height: style.height,
+					width: style.width,
+					ref: fileurl
+				};
+
+				var command = concreteImageInsertCommand(spec); //model
 				inv.execute(command);
 			}
 		}
@@ -140,8 +173,18 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'audio/' + files[i].name;
 				var audio = inserisciAudio(fileurl); //view
+				var style = window.getComputedStyle(text, null);
 
-				var command = concreteAudioInsertCommand(audio); //model
+				var spec = {
+					id: img.id,
+					xIndex: style.x,
+					yIndex: style.y,
+					height: style.height,
+					width: style.width,
+					ref: fileurl
+				};
+
+				var command = concreteAudioInsertCommand(spec); //model
 				inv.execute(command);
 			}
 		}
@@ -154,39 +197,147 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'video/' + files[i].name;
 				var video = inserisciVideo(fileurl); //view
+				var style = window.getComputedStyle(text, null);
 
-				var command = concreteVideoInsertCommand(video); //model
+				var spec = {
+					id: img.id,
+					xIndex: style.x,
+					yIndex: style.y,
+					height: style.height,
+					width: style.width,
+					ref: fileurl
+				};
+
+				var command = concreteVideoInsertCommand(spec); //model
 				inv.execute(command);
 			}
 			
 		}
 
 		//rimozione
-		$scope.rimuoviFrame = function(id){
-			if(Utils.isUndefined(insertEditRemove().getElement(id)))
-				throw new Error("Il frame non esiste");
+		$scope.rimuoviElemento = function(){
+			var id = active().getId();
+			var tipoElement = active().getTipo();
+
+			var command = {};
+			if(tipoElement === 'frame')
+				command = concreteFrameRemoveCommand(id);
+			else if(tipoElement === 'image')
+				command = concreteImageRemoveCommand(id);
+			else if(tipoElement === 'audio')
+				command = concreteAudioRemoveCommand(id);
+			else if(tipoElement === 'video')
+				command = concreteVideoRemoveCommand(id);
+			else if(tipoElement === 'text')
+				command = concreteTextRemoveCommand(id);
+			else
+				throw new Error("Elemento da eliminare non riconosciuto");
 
 			elimina(id); //della view
 
-			var rimuovi = concreteFrameRemoveCommand(id);
-			inv.execute(rimuovi);  //del model
+			inv.execute(command);  //del model
 		}
 
-		//Gestione sfondo
+		//Gestione sfondo Presentazione
 		$scope.rimuoviSfondo = function(){
-			document.getElementById('content').style.removeProperty('background');
+			var style = document.getElementById('fantoccio').style;
+			style.removeProperty('background');
+
+			var spec = {
+				color: style.backgroundColor,
+				image: style.backgroundImage
+			};
+
+			var command = concreteBackgroundInsertCommand(spec);
+			inv.execute(command);
 		}
+
+		$scope.backcolor = "#ffffff";
 		$scope.cambiaColoreSfondo = function(color){
-			console.log(color);
-			document.getElementById('content').style.backgroundColor = '#'+color;
+			var style = document.getElementById('fantoccio').style;
+			style.backgroundColor = color;
+
+			var spec = {
+				color: style.backgroundColor,
+				image: style.backgroundImage
+			};
+			
+			var sfondo = concreteBackgroundInsertCommand(spec);
+			inv.execute(sfondo);
 		}
+		$scope.cambiaImmagineSfondo = function(files){
+			if(!Upload.isImage(files))
+				throw new Error("Estensione non corretta");
+
+			uploadmedia(files);
+
+			var fileurl = baseurl + 'image/' + files[0].name;
+
+			var style = document.getElementById('fantoccio').style;
+			style.backgroundImage = "url(" + fileurl + ")";
+
+			var spec = {
+				color: style.backgroundColor,
+				image: style.backgroundImage
+			};
+
+			var command = concreteBackgroundInsertCommand(spec); //model
+			inv.execute(command);
+		}
+
+		//Gestione sfondo frame
 		$scope.cambiaColoreSfondoFrame = function(color){
-			document.getElementById('content').style.backgroundColor = '#'+color;
+			var activeFrame = active().getId();
+			
+			var style = document.getElementById(activeFrame).style;
+			style.backgroundColor = color;
+
+			var spec = {
+				id: activeFrame,
+				color: style.backgroundColor,
+				ref: style.backgroundImage
+			};
+
+			var command = concreteEditBackgroundCommand(spec);
+			inv.execute(command);
 		}
-		//$scope.backcolor = "#ffffff";
-		$scope.$watch('backcolor', function(val) {
-        	console.log('val ' + val);
-    	});
+		$scope.cambiaImmagineSfondoFrame = function(files){
+			if(!Upload.isImage(files))
+				throw new Error("Estensione non corretta");
+
+			uploadmedia(files);
+
+			var fileurl = baseurl + 'image/' + files[0].name;
+			var activeFrame = active().getId();
+
+			var style = document.getElementById(activeFrame).style;
+			style.backgroundImage = "url(" + fileurl + ")";
+
+			var spec = {
+				id: activeFrame,
+				color: style.backgroundColor,
+				ref: style.backgroundImage
+			};
+
+			var command = concreteEditBackgroundCommand(spec);
+			inv.execute(command);
+			console.log(insertEditRemove().getPresentazione());
+		}
+		$scope.rimuoviSfondoFrame = function(){
+			var activeFrame = active().getId();
+			
+			var style = document.getElementById(activeFrame).style;
+			style.removeProperty('background');
+
+			var spec = {
+				id: activeFrame,
+				color: style.backgroundColor,
+				ref: style.backgroundImage
+			};
+
+			var command = concreteEditBackgroundCommand(spec);
+			inv.execute(command);
+		}
 
 		//Gestione media
 		$scope.mediaControl = function(){
@@ -194,7 +345,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		
 	    //menu contestuali
-		var vm = this;
+		/*var vm = this; WHAT IS THIS??
 		this.announceClick = function (index) {
 		    $mdDialog.show(
               $mdDialog.alert()
@@ -202,22 +353,48 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
                 .content('You clicked the menu item at index ' + index)
                 .ok('Nice')
             );
-		};
+		};*/
+		$scope.ruotaElemento = function(value){
+			var activeElement = active().getId();
+			var tipoElement = active().getTipo();
 
-		$scope.element = { rotation: 0 };
+			if(Utils.isUndefined(activeElement))
+				return;
 
-		$scope.setRotation = function (new_rotation) {
-		    console.log("rotazione" + getRotationDegrees($('#' + active().getId())));
-		    this.element.rotation = new_rotation;
+			rotate(activeElement, value);
+
+			var spec = {
+				id: activeElement,
+				tipo: tipoElement,
+				rotation: value
+			}
+
+			var command = concreteEditRotationCommand(spec);
+			inv.execute(command);
+			console.log(insertEditRemove().getPresentazione());
 		}
+/*
+		var thisElement = function(){
+			return active().getId();
+		}
+
+		$scope.$watch(function(){
+				var div = document.getElementById(active().getId());
+				if(div)
+					return div.style;
+				return {};
+			},function(newValue, oldValue){
+				console.log("mi sto muovendo?");
+				console.log(newValue);
+				console.log(oldValue);
+		},true)
 
 	    //aggiungi al percorso principale
 		$scope.addToMain = function () {
 		    mainPath().addToMainPath(active().getId());
-		}
+		}*/
+
 	}])
-
-
 
 premiEditController.controller('BottomSheetController', ['scope',
 	function($scope) {
@@ -266,7 +443,16 @@ premiApp.directive('printChoichePaths', function ($compile) {
         }
     };
 });
-
-
+/*
+premiApp.directive('elementPosition', function($window) {
+  return {
+    link: function(scope, element) {
+    	console.log(element);
+      $window.addEventListener('drag', function() {
+          console.log("ciao");
+      }, false);
+    },
+  };
+ });*/
           
     

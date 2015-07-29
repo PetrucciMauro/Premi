@@ -413,12 +413,10 @@ var inserisciElemento=function(classe){
 	else
 		document.getElementById("elements").appendChild(div);
 
-	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"src/img/x.png\" onclick=\"angular.element(this).scope().rimuoviFrame("+div.id+")\" width=\"20em\">");//inserisce immagine x
+	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"src/img/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x
 
 	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"text-align:center\" src=\"src/img/bringfront.png\" onclick=\"portaAvanti("+div.id+");\" width=\"15em\" style=\"display: block\">");//inserisce immagine bring to front
 
-
-	
 	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"src/img/movebackward.png\" onclick=\"mandaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
 	
 	contatore++;
@@ -438,7 +436,7 @@ var inserisciElemento=function(classe){
 
 var inserisciFrame=function(){
 	var div=inserisciElemento("frame");
-	div.setAttribute("ondblclick", "zoomIn()");
+	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
 		$( div ).resizable({
 			aspectRatio: 1 / 1
@@ -592,10 +590,10 @@ $(document).mousedown(function(e) {
 			selected="frame";
 			//SFONDO FRAME
 			var att=frames[i].id;
-			var backgroundFrame=document.getElementById("backgroundFrame");
-			backgroundFrame.setAttribute("onchange","document.getElementById('"+att+"').style.backgroundColor = '#'+this.color");
-			var backgroundFrameEraser=document.getElementById("backgroundFrameEraser");
-			backgroundFrameEraser.setAttribute("onclick","document.getElementById('"+att+"').style.removeProperty ('background')");
+			//var backgroundFrame=document.getElementById("backgroundFrame");
+			//backgroundFrame.setAttribute("onchange","angular.element(this).scope().cambiaColoreSfondoFrame('"+att+"', this)");//"
+			//var backgroundFrameEraser=document.getElementById("backgroundFrameEraser");
+			//backgroundFrameEraser.setAttribute("onclick","document.getElementById('"+att+"').style.removeProperty ('background')");
 			var addToMain=document.getElementById("addToMain");
 			if(!mainPath().contains(frames[i].id)){
 				//addToMain.removeAttribute("disabled");
@@ -717,7 +715,6 @@ function deselezionaPercorso(id){
 
 
 
-
 $(document).ready(function(){
 	var main=mainPath();
 	var paths=choicePaths();
@@ -785,8 +782,8 @@ function backgroundReadURL(input, id) {
 		var reader = new FileReader();
 
 		reader.onload = function (e) {
-			if(id==="content"){
-				$("#content").css({"background":"url('"+e.target.result+"')"});
+			if(id==="fantoccio"){
+				$("#fantoccio").css({"background":"url('"+e.target.result+"')"});
 			}
 			else{
 				$("#"+id).css({"background":"url('"+e.target.result+"') no-repeat", "background-size": "100% 100%"});
@@ -797,9 +794,9 @@ function backgroundReadURL(input, id) {
 		reader.readAsDataURL(input.files[0]);
 	}
 }
-
+/*
 $("#contentBackgroundLoader").change(function(){
-	backgroundReadURL(this, "content");
+	backgroundReadURL(this, "fantoccio");
 });
 // IMMAGINE SFONDO
 
@@ -808,7 +805,7 @@ $("#frameBackgroundLoader").change(function(){
 	backgroundReadURL(this, active().getId());
 });
 //IMMAGINE SFONDO
-
+*/
 //NEWTEXT
 (function($){
 
@@ -1054,7 +1051,7 @@ $(function () {
         
 
 });
-
+/*
 angular.module('menuDemoWidth', ['ngMaterial'])
 .config(function ($mdIconProvider) {
     $mdIconProvider
@@ -1062,5 +1059,5 @@ angular.module('menuDemoWidth', ['ngMaterial'])
       .iconSet("social", 'img/icons/sets/social-icons.svg', 24);
 })
 .controller('WidthDemoCtrl', premiEditController);
-
+*/
 

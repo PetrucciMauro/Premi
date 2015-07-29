@@ -19,12 +19,13 @@ describe('accessControllerSpec', function(){
 	var controller;
 
 	beforeEach(function(){		
-        angular.mock.module('ngMaterial');
-        angular.mock.module('ngAnimate');
-		module('premiApp');
+		angular.module('ngRoute')
+		angular.module('ngMaterial');
+		angular.module('premiApp');
+		angular.module('premiService');
 		inject(function($rootScope, $controller){
 			scope = $rootScope.$new();
-			controller = $controller('accessController', { $scope : scope });
+			controller = $controller('HeaderController', { $scope : scope });
 		});
 	});
 

@@ -4,6 +4,7 @@ var premiApp = angular.module('premiApp', [
 	'ngRoute',
 	'ngMaterial',
 	'ngStorage',
+	'premiService',
 	'premiAccessController',
 	'premiHomeController',
 	'premiProfileController',

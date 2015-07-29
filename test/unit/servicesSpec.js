@@ -6,8 +6,19 @@ describe('service',function() {
   //load modules
   
   beforeEach(function(){
-     module('premiApp');
+     
+     angular.module('ngRoute');
+     angular.module('ngMaterial');
+     angular.module('ngAnimate');
+     angular.mock.module('premiApp');
+     angular.mock.module('premiService');
+     angular.module('ngStorage');
+
   });
+
+    beforeEach(inject(['$localStorage', function($localStorage){
+    this.$localStorage = $localStorage;
+  }]));
   
   // Test service availability
   it('check the existence of Main factory', inject(function(Main) {

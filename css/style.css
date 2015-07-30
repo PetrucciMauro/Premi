@@ -26,6 +26,7 @@ margin:0;
   font-weight: bold;
 }
 
+/*
 .frame { 
 	width: 10em; 
 	height: 10em; 
@@ -35,6 +36,17 @@ margin:0;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
 }
+*/
+/*TRADUTTORE*/
+.frame { 
+	width: 229.27px; 
+	height: 229.27px; 
+	border: 5px dotted #ccc;
+	position: absolute;
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+/*TRADUTTORE*/
 
 .text {
 	text-align: center; 
@@ -204,13 +216,16 @@ input.autogrow{
 
   #fantoccio{
 	border: solid black;
-	/*background-repeat: no-repeat;
-	background-size: 100% 100%;*/
   }
 
   #content{
       padding:0;
       margin-bottom:0;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
   }
 
   .highlighted{
@@ -226,10 +241,11 @@ input.autogrow{
   padding: 24px; }
 .menudemoMenuWidth .menu-demo-container {
   min-height: 200px; }
+  /*
 body {
     overflow-y: hidden !important;
 }
-
+*/
 .fileContainer, .colorContainer {
     overflow: hidden;
     position: relative;

@@ -1,5 +1,6 @@
 ﻿<link rel="stylesheet" href="css/jquery-ui.css">
 <script type="text/javascript" src="scripts/viewscripts.js"></script>
+<script type="text/json" src="scripts/presentazione.json"></script>
 <md-sidenav id="barraPercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
 	<md-list>
 		<md-list-item>
@@ -122,7 +123,7 @@
 			<!--TESTO -->
 			<md-input-container class="md-button md-default-theme inputContainer" style="width:3em height:1em">
 				<md-tooltip>Cambia dimensione testo</md-tooltip>
-				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="textSize" type="number" min="1" max="400">
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="textSize" type="number" min="1" max="400" value="31"> <!--NO MODIFICARE-->
 			</md-input-container>
 			<!--TESTO -->
 		</div>
@@ -158,7 +159,7 @@
 				</md-button>
 				<md-menu-content width="2">
 					<md-menu-item>
-						<md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton" ng-click="addToMain()">
+						<md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton" ng-click="aggiungiMainPath()">
 							<p md-menu-align-target>Aggiungi frame al percorso principare</p>
 						</md-button>
 					</md-menu-item>
@@ -176,6 +177,8 @@
 		</div>
 	</md-toolbar>
 
+
+
 	<md-content flex="" id="content" class="md-default-theme">
 		<div id="fantoccio">
 			<div id="corner"></div>
@@ -183,6 +186,8 @@
 			<div id="percorso">
 
 			</div>
+		<!--	<panzoom config="config" model="model" style="width:1300px; height: 800px"> -->
+
 			<div id="frames">
 			</div>
 			<div id="elements">

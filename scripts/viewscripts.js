@@ -1,3 +1,11 @@
+//TRADUTTORE NO MODIFICARE
+var l=screen.width;
+l=l*0.989;
+var h=l/2.06666667;
+//console.log(l);
+//console.log(h);
+document.getElementById("content").setAttribute("style","border: 1px solid black;position: absolute; width:"+l+"px; height:"+h+"px;");
+//TRADUTTORE
 
 var contatore=0;
 $(document).ready(function () {
@@ -399,19 +407,53 @@ function elimina(id){
 	clearMenu();
 }
 
-var inserisciElemento=function(classe){
+var inserisciElemento=function(classe, spec){
 	var div=document.createElement('div');
-	div.id=contatore;
+	//TRADUTTORE NON MODIFICARE
+	var vdSize=l*0.10;
+	if(classe==="video")
+		div.style.width=vdSize+"px";
+	//console.log(div.style.width);
+	//TRADUTTORE
+
 	div.style.position="absolute";
 	div.setAttribute("class", classe+" elemento");
+	div.setAttribute("onmouseup", "angular.element(this).scope().muoviElemento()");
+	div.setAttribute("onresize", "angular.element(this).scope().ridimensionaElemento()");
+
+	//TRADUTTORE EDIT
+	if(spec){
+		contatore = spec.id;
+		div.style.rotation = spec.rotation;
+		div.style.height = spec.height + "px";
+		div.style.width = spec.width + "px";
+		div.style.top = spec.top + "px";
+		div.style.left = spec.left + "px";
+		if(classe === "frame"){
+			div.style.backgroundColor = spec.backgroundColor;
+			div.style.backgroundImage = spec.backgroundImage;
+		}
+	}
+	//TRADUTTORE EDIT
+
+	div.id=contatore;
 	var idx="x"+contatore;
 	var idForward="for"+contatore;
 	var idBack="back"+contatore;
+
 	if(classe=="frame"){
+		console.log("o mio dio");
 		document.getElementById("frames").appendChild(div);
 	}
-	else
+	else{
+		console.log("par fortuna");
 		document.getElementById("elements").appendChild(div);
+	}
+
+	//TRADUTTORE EDIT
+	if(spec)
+		rotate(contatore, spec.rotation);
+	//TRADUTTORE EDIT
 
 	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"src/img/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x
 
@@ -420,6 +462,7 @@ var inserisciElemento=function(classe){
 	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"src/img/movebackward.png\" onclick=\"mandaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
 	
 	contatore++;
+
 	var xInit;
 	var yInit;
 	var heightInit;
@@ -428,14 +471,15 @@ var inserisciElemento=function(classe){
 		xInit=$(this).position().left;
 		yInit=$(this).position().top;
 	});
-	
+
 	active().select(div.id);
 
 	return div;
 }
 
-var inserisciFrame=function(){
-	var div=inserisciElemento("frame");
+var inserisciFrame=function(spec){
+	console.log("sono in frame");
+	var div=inserisciElemento("frame", spec);
 	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
 		$( div ).resizable({
@@ -446,17 +490,41 @@ var inserisciFrame=function(){
 }
 
 //NEWTEXT
-var inserisciTesto=function(){
-	var div=inserisciElemento("text");
+var inserisciTesto=function(spec){
+	console.log("ora c'è il testo");
+	var div=inserisciElemento("text", spec);
+	//TRADUTTORE
+	div.style.width="50px";
+	div.style.height="50px";
+	//TRADUTTORE
 	div.style.padding="1em";
 	var txt = document.createElement('input');
+
+	//TRADUTTORE EDIT
+	if(spec){
+		txt.fontFamily = spec.font;
+		txt.style.color = spec.color;
+		//txt.setAttribute("style","font-size: " + spec.size + "; width:1");
+		txt.value = spec.content;
+	}
+	//TRADUTTORE EDIT
+	else{
+		//TRADUTTORE
+		div.style.width="50px";
+		div.style.height="50px";
+		//TRADUTTORE
+		txt.fontFamily="Arial, Helvetica, sans-serif";
+		
+	}
+	txt.id="txt"+div.id;
+	txt.setAttribute("style","font-size: 31px; width:1");
 	txt.setAttribute("type","text");
 	txt.setAttribute("class","autogrow");
-	txt.setAttribute("style","font-size: 100%; width:1");
+	//txt.setAttribute("style","font-size: 100%; width:1");
 	txt.size=1;
 	txt.setAttribute("placeholder","Testo...");
 	txt.style.border="0";
-	txt.id="txt"+div.id;
+
 	div.appendChild(txt);
 	$( "#txt"+div.id ).focus();
 	$(function() {
@@ -470,17 +538,21 @@ var inserisciTesto=function(){
 }
 //NEWTEXT
 
-var inserisciMedia=function(x,classe){
+var inserisciMedia=function(x,classe, spec){
 	console.log(x);
 	var div=inserisciElemento(classe);
-	var url=x;
+	var url;
+	if(spec)
+		url = spec.ref;
+	else
+		url = x;
 	var type;
 	var z=scale;
 	$(div).css({
-    "-ms-transform": "scale("+1/z+")", /* IE 9 */
-    "-webkit-transform":"scale("+1/z+")", /* Chrome, Safari, Opera */
-    "transform": "scale("+1/z+")",
-});
+	    "-ms-transform": "scale("+1/z+")", /* IE 9 */
+	    "-webkit-transform":"scale("+1/z+")", /* Chrome, Safari, Opera */
+	    "transform": "scale("+1/z+")",
+	});
 	if(classe==="image")
 		type="img";
 	else if(classe==="audio")
@@ -488,6 +560,12 @@ var inserisciMedia=function(x,classe){
 	else if(classe==="video")
 		type="video";
 	var element=document.createElement(type);
+	//TRADUTTORE
+	var imgSize=l*0.10;
+	if(type==="img")
+		element.style.width=imgSize+"px";
+	//console.log(element.style.width);
+	//TRADUTTORE
 	element.setAttribute("class", "resizable");
 	element.id=type+div.id;
 	element.src=url;
@@ -497,8 +575,9 @@ var inserisciMedia=function(x,classe){
 
 }
 
-var inserisciImmagine=function(x){
-	var div = inserisciMedia(x,"image");    
+var inserisciImmagine=function(x, spec){
+	console.log(spec);
+	var div = inserisciMedia(x,"image", spec);    
 	var img = document.getElementById('img'+div.id);
 	var width = img.clientWidth;
 	var height = img.clientHeight;
@@ -510,9 +589,12 @@ var inserisciImmagine=function(x){
 	return div;
 }
 
-var inserisciVideo=function(x){
-	var div = inserisciMedia(x,"video");
+var inserisciVideo=function(x, spec){
+	var div = inserisciMedia(x,"video", spec);
 	var vid = document.getElementById('video'+div.id);
+	//TRADUTTORE
+	vid.style.padding="0";
+	//TRADUTTORE
 	vid.style.height="inherit";
 	vid.style.width="inherit";
 	var width = vid.clientWidth;
@@ -525,8 +607,8 @@ var inserisciVideo=function(x){
 	return div;
 }
 
-var inserisciAudio=function(x){
-	var div = inserisciMedia(x,"audio");
+var inserisciAudio=function(x, spec){
+	var div = inserisciMedia(x,"audio", spec);
 
 	var aud = document.getElementById('audio'+div.id);
 	$(function() {
@@ -535,8 +617,15 @@ var inserisciAudio=function(x){
 		});
 	});
 	$("#"+div.id).css({"background":"url('src/img/nota.png') no-repeat", "background-size": "100% 100%"});;
-	div.style.height="2em";
-	div.style.width="2em";
+	/*div.style.height="2em";
+	div.style.width="2em";*/
+
+	//TRADUTTORE
+	var adSize=l*0.10;
+	div.style.width=adSize+"px";
+	div.style.height=adSize+"px";
+	//console.log(div.style.width);
+	//TRADUTTORE
 	return div;
 }
 

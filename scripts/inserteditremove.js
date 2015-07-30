@@ -33,7 +33,7 @@ var insertEditRemove = function () {
         private.presentazione.proper.background.image = "undefined";
 
         public.constructPresentazione = function (newPresentazione) {
-            private.presentazione = JSON.parse(newPresentazione);
+            private.presentazione = newPresentazione;
         }
         public.getPresentazione = function () {
             return private.presentazione;
@@ -91,7 +91,29 @@ var insertEditRemove = function () {
             console.log(element);
             return JSON.stringify(element);
         };
-
+/*AGGIUNTI DA BUSETTO*/
+        public.getFrames = function(){
+            return private.presentazione.proper.frames;
+        };
+        public.getTexts = function(){
+            return private.presentazione.proper.texts;
+        };
+        public.getImages = function(){
+            return private.presentazione.proper.images;
+        };
+        public.getAudios = function(){
+            return private.presentazione.proper.audios;
+        };
+        public.getVideos = function(){
+            return private.presentazione.proper.videos;
+        };
+        public.getSVGs = function(){
+            return private.presentazione.proper.SVGs;
+        };
+        public.getBackground = function(){
+            return private.presentazione.proper.background;
+        };
+/*AGGIUNTI DA BUSETTO*/
         public.insertText = function (spec) {
             var newText = text(spec);
             private.presentazione.proper.texts.push(newText);

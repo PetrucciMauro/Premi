@@ -2,10 +2,11 @@
 
 var premiEditController = angular.module('premiEditController', ['premiService'])
 
-premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet',
-	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet) {
+premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet','$http',
+	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet,$http) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
+
 		//Metodi per il reindirizzamento
 		$scope.goEdit = function(slideId){
 			toPages.editpage(slideId);
@@ -122,8 +123,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				height: style.height,
 				width: style.width,
 				font: style.font
+				//scalable: 
 			};
-
 			var command = concreteTextInsertCommand(spec);  //model
 			inv.execute(command);
 			console.log(insertEditRemove().getPresentazione());
@@ -162,6 +163,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				var command = concreteImageInsertCommand(spec); //model
 				inv.execute(command);
+
+				console.log(document);
 			}
 		}
 		$scope.inserisciAudio = function(files){
@@ -273,7 +276,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var fileurl = baseurl + 'image/' + files[0].name;
 
-			var style = document.getElementById('fantoccio').style;
+			var style = document.getElementById('content').style;
 			style.backgroundImage = "url(" + fileurl + ")";
 
 			var spec = {
@@ -358,9 +361,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var activeElement = active().getId();
 			var tipoElement = active().getTipo();
 
-			if(Utils.isUndefined(activeElement))
-				return;
-
 			rotate(activeElement, value);
 
 			var spec = {
@@ -373,27 +373,293 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			inv.execute(command);
 			console.log(insertEditRemove().getPresentazione());
 		}
-/*
-		var thisElement = function(){
-			return active().getId();
+
+		//VEDERE SE E' POSSIBILE VELOCIZZARE QUESTI DUE:
+		//muoviElemento: risponde a mouseup -> si attiva anche se l'elemento non è stato spostato
+		$scope.muoviElemento = function(){
+			var tipoElement = active().getTipo();
+			var idElement = active().getId();
+			var style = document.getElementById(idElement).style;
+
+			var spec = {
+				id: idElement,
+				tipo: tipoElement,
+				yIndex: style.top,
+				xIndex: style.left
+			}
+
+			var command = concreteEditPositionCommand(spec);
+			inv.execute(command);
+		}
+		//ridimensiona: risponde a onresize -> si attiva sempre ad ogni minimo ridimensionamento
+		$scope.ridimensionaElemento = function(){
+			var tipoElement = active().getTipo();
+			var idElement = active().getId();
+			var style = document.getElementById(idElement).style;
+
+			var spec = {
+				id: idElement,
+				tipo: tipoElement,
+				height: style.height,
+				width: style.width
+			}
+
+			var command = concreteEditSizeCommand(spec);
+			inv.execute(command);
 		}
 
-		$scope.$watch(function(){
-				var div = document.getElementById(active().getId());
-				if(div)
-					return div.style;
-				return {};
-			},function(newValue, oldValue){
-				console.log("mi sto muovendo?");
-				console.log(newValue);
-				console.log(oldValue);
-		},true)
-
 	    //aggiungi al percorso principale
-		$scope.addToMain = function () {
-		    mainPath().addToMainPath(active().getId());
-		}*/
+		$scope.aggiungiMainPath = function () {
+			var activeElement = active().getId();
+			console.log(activeElement);
+		    mainPath().addToMainPath(active().getId(),0);
+		}
 
+		$scope.config = {};
+		$scope.model = {};
+		
+		//INSERTEDITREMOVE RIMETTERE JSON.PARSE SU CONSTRUCT
+		var translateEdit = function(json){
+			//MANCANO I PERCORSI!!!!! DA FARE CON GIOVANNI
+			var ins = insertEditRemove();
+			ins.constructPresentazione(json);
+
+			//RICREO I FRAME
+			/*var frames = ins.getFrames();
+			for(var i=0; i<frames.length; ++i){
+				var frame = frames[i];
+				var spec = {
+					id: frame.id,
+					left: frame.xIndex,
+					top: frame.yIndex,
+					height: frame.height,
+					width: frame.width,
+					rotation: frame.rotation,
+					backgroundColor: frame.backgroundcolor,
+					backgroundImage: frame.backgroundimage
+				};
+				inserisciFrame(spec);
+			}*/
+
+			//RICREO I TESTI
+			var texts = ins.getTexts();
+			for(var i=0; i< texts.length; ++i){
+				var text = texts[i];
+				var spec = {
+					id: text.id,
+					left: text.xIndex,
+					top: text.yIndex,
+					height: text.height,
+					width: text.width,
+					rotation: text.rotation,
+					content: text.content,
+					font: text.font,
+					color: text.color
+				};
+				inserisciTesto(spec);
+			}
+
+			//RICREO IL BACKGROUND
+			{
+				var background = ins.getBackground();
+
+				var style = document.getElementById('fantoccio').style;
+				style.backgroundColor = background.color;
+				style.backgroundImage = "url(" + background.url + ")";
+			}
+			//RICREO FILE MEDIA
+			//Immagini
+			var imgs = ins.getImages();
+			for(var i=0; i< imgs.length; ++i){
+				var img = imgs[i];
+				var spec = {
+					id: img.id,
+					left: img.xIndex,
+					top: img.yIndex,
+					height: img.height,
+					width: img.width,
+					rotation: img.rotation,
+					ref: img.url
+				};
+				inserisciImmagine(undefined, spec);
+			}
+			//Audio
+			var audios = ins.getAudios();
+			for(var i=0; i< audios.length; ++i){
+				var audio = audios[i];
+				var spec = {
+					id: audio.id,
+					left: audio.xIndex,
+					top: audio.yIndex,
+					height: audio.height,
+					width: audio.width,
+					rotation: audio.rotation,
+					ref: audio.url
+				};
+				inserisciAudio(undefined, spec);
+			}
+			//Video
+			var videos = ins.getVideos();
+			for(var i=0; i< videos.length; ++i){
+				var video = videos[i];
+				var spec = {
+					id: video.id,
+					left: video.xIndex,
+					top: video.yIndex,
+					height: video.height,
+					width: video.width,
+					rotation: video.rotation,
+					ref: video.url
+				};
+				inserisciVideo(undefined, spec);
+			}
+			//SVG
+			/*var SVGs = ins.getSVGs();
+			for(var i=0; i< SVGs.length; ++i){
+				var svg = SVGs[i];
+				var spec = {
+					id: svg.id,
+					left: svg.xIndex,
+					top: svg.yIndex,
+					height: svg.height,
+					width: svg.width,
+					rotation: svg.rotation,
+					ref: svg.url
+				};
+				inserisciSVG(undefined, spec);
+			}*/
+
+		};
+		//translateEdit(SharedData.forEdit());
+		var myJson = {
+    "meta":
+            {
+                "id": 1,
+                "data_ultima_modifica": 2015,
+                "titolo": "presentazione di prova"
+            },
+    "proper": {
+        "paths": {
+            "main": [2,12],
+            "choices": [{
+                    "pathId": 0,
+                    "choicePath": [80]
+                }, {
+                    "pathId": 1,
+                    "choicePath": [11]
+                }]
+        },
+        "texts": [
+            {
+                "id": 1,
+                "xIndex": 10,
+                "yIndex": 20,
+				"scalable": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "content": "babba",
+                "font": "arial",
+                "color": "red"
+            },
+            {
+                "id": 7,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 32,
+                "height": 1,
+                "width": 134,
+                "content": "babba2",
+                "font": "times",
+                "color": "black"
+            }],
+        "frames": [
+        	{
+                "id": 2,
+                "xIndex": 0,
+                "yIndex": 0,
+                "rotation": 180,
+                "height": 200,
+                "width": 300,
+                "bookmark": 1,
+                "backgroundimage": "prova",
+                "backgroundcolor": "rgba(2,23,244,1)"
+            },
+            {
+                "id": 11,
+                "xIndex": 100,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 500,
+                "width": 100,
+                "bookmark": 1,
+                "backgroundimage": "prova",
+                "backgroundcolor": "rgba(40,50,200,2)"
+            },
+            {
+                "id": 12,
+                "xIndex": 10,
+                "yIndex": 60,
+                "rotation": 2,
+                "height": 150,
+                "width": 130,
+                "bookmark": 1,
+                "backgroundimage": "prova",
+                "backgroundcolor": "rgba(2,23,244,1)"
+            }],
+        "images": [{
+                "id": 3,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "url": "files/legolas/image/background.jpg"
+            }],
+        "SVGs": [{
+                "id": 6,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "shape": "0,2,3,4",
+                "color": "rgba(2,23,244,1)"
+            }],
+        "audios": [{
+                "id": 4,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13
+            }],
+        "videos": [{
+                "id": 5,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13
+            }],
+        "background": {
+				"id": 0,
+                "xIndex": 0,
+                "yIndex": 0,
+                "rotation": 0,
+                "height": 0,
+                "width": 0,
+				"url": "files/legolas/image/background.jpg",
+				"color": "rgba(31,23,22,1)"
+        }
+    }
+};
+		translateEdit(myJson);
+		/*TRADUTT. PER MANUEL
+		TESTO: appendere al json questi valori:
+			-top e left che già c'è nel model
+			-top e left dell'input ossia id="txt+id"
+			-*/
 	}])
 
 premiEditController.controller('BottomSheetController', ['scope',
@@ -443,16 +709,5 @@ premiApp.directive('printChoichePaths', function ($compile) {
         }
     };
 });
-/*
-premiApp.directive('elementPosition', function($window) {
-  return {
-    link: function(scope, element) {
-    	console.log(element);
-      $window.addEventListener('drag', function() {
-          console.log("ciao");
-      }, false);
-    },
-  };
- });*/
           
     

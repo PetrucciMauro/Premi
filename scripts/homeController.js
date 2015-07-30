@@ -75,4 +75,8 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 
 			console.log(mongo);
 		};
+
+		$scope.salvaManifest = function(slide){
+			
+		}
 }])

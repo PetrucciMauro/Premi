@@ -1,32 +1,33 @@
 /*
 * Name :  accessControllerSpec.js
 * Module : UnitTest
-* Location : 
+* Location : test/unit
 *
 * History :
 * Version       Date        Programmer                  Description
 * =================================================================================================
-* 
-*
-* 
+* 0.0.1        30/07/2015   Petrucci Mauro              Unit test for Header Controller
 * =================================================================================================
 *
 */
 
-describe('accessControllerSpec', function(){
+describe('Header Controller Test', function(){
 
 	var scope;
 	var controller;
 
 	beforeEach(function(){		
-		angular.module('ngRoute')
-		angular.module('ngMaterial');
-		angular.module('premiApp');
-		angular.module('premiService');
-		inject(function($rootScope, $controller){
+     angular.module('ngRoute');
+     angular.module('ngMaterial');
+     angular.module('ngAnimate');
+     angular.mock.module('premiApp');
+     angular.mock.module('premiService');
+     angular.module('ngStorage');
+		inject(['$rootScope','$controller','$localStorage',function($rootScope, $controller,$localStorage){
+			this.$localStorage= $localStorage;
 			scope = $rootScope.$new();
 			controller = $controller('HeaderController', { $scope : scope });
-		});
+		}]);
 	});
 
 	it('controller is defined', function() {
@@ -35,3 +36,5 @@ describe('accessControllerSpec', function(){
 
 
 });
+
+

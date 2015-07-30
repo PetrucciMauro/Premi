@@ -11,7 +11,9 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 
 		//istanziazione di mongoRelation
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
+		$scope.mongo = mongo;
 		var allSS = mongo.getPresentationsMeta();
+		$scope.allSS =  allSS;
 
 		var update = function(){
 			allSS = mongo.getPresentationsMeta();

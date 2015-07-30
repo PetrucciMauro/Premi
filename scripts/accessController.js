@@ -120,6 +120,7 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 			if(notgo) return;
 
 			var formData = getData();
+ 
 
 			//richiamata la registrazione
 			Main.register(formData, function() {	//function richiamata in caso di successo

@@ -28,6 +28,8 @@ module.exports = function(config){
 
     frameworks: ['jasmine'],
 
+    
+
     plugins : [
       'karma-jasmine',
       'karma-coverage',

@@ -23,7 +23,8 @@ describe('Authentication Controller Test', function(){
      angular.mock.module('premiApp');
      angular.mock.module('premiService');
      angular.module('ngStorage');
-		inject(['$rootScope','$controller','$localStorage',function($rootScope, $controller,$localStorage){
+		inject(['$rootScope','$controller','$localStorage','$http' ,function($rootScope, $controller,$localStorage,$http){
+			this.$http = $http;
 			this.$localStorage= $localStorage;
 			scope = $rootScope.$new();
 			controller = $controller('HomeController', { $scope : scope });

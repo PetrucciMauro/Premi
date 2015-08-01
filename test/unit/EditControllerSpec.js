@@ -6,7 +6,7 @@
 * History :
 * Version       Date        Programmer                  Description
 * =================================================================================================
-* 0.0.1        30/07/2015   Petrucci Mauro              Unit test for Home Controller
+* 0.0.1        30/07/2015   Petrucci Mauro              Unit test for EditController
 * =================================================================================================
 *
 */
@@ -27,7 +27,7 @@ describe('Authentication Controller Test', function(){
 			this.$http = $http;
 			this.$localStorage= $localStorage;
 			scope = $rootScope.$new();
-			controller = $controller('HomeController', { $scope : scope });
+			controller = $controller('EditController', { $scope : scope });
 		}]);
 	});
 
@@ -38,23 +38,3 @@ describe('Authentication Controller Test', function(){
 	it('display_limit is defined', function() {
 		expect(scope.display_limit).toBeDefined();
 	});
-
-
-/*
-    			it('mongo is defined', function() {
-		expect(scope.mongo).toBeDefined();
-	});
-
-
-				it('all slideshow is defined', function() {
-		expect(scope.allSS).toBeDefined();
-	});*/
-
-
-
-
-
-
-
-});
-

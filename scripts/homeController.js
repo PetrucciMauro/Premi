@@ -6,14 +6,19 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 	function($scope, Main, toPages, Utils, $window) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
+		else
+		{   //nel caso l'utente sia loggato instanzia queste variabili.
+			var mongo = MongoRelation(Utils.hostname(), Main.login());
+			$scope.mongo = mongo;
+			var allSS = mongo.getPresentationsMeta();
+			$scope.allSS =  allSS;
 
+
+		}
+		
 		$scope.display_limit = 50;
 
 		//istanziazione di mongoRelation
-		var mongo = MongoRelation(Utils.hostname(), Main.login());
-		$scope.mongo = mongo;
-		var allSS = mongo.getPresentationsMeta();
-		$scope.allSS =  allSS;
 
 		var update = function(){
 			allSS = mongo.getPresentationsMeta();

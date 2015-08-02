@@ -61,7 +61,7 @@ var MongoRelation = function(hostname, auth_obj){
 	
 	that.renamePresentation = function(name_presentation, new_name){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/presentations/'+name_presentation+'/'+new_name, false);
+		req.open('POST', host+'/private/api/presentations/'+name_presentation+'/rename/'+new_name, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
@@ -82,7 +82,7 @@ var MongoRelation = function(hostname, auth_obj){
 	
 	that.deleteElement = function(name_presentation, typeObj, id_element){
 		var req = new XMLHttpRequest();
-		req.open('DELETE', host+'/private/api/presentations/'+name_presentation+'/'+typeObj+id_element, true);
+		req.open('DELETE', host+'/private/api/presentations/'+name_presentation+'/'+typeObj+'/'+id_element, true);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);

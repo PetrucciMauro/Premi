@@ -14,11 +14,10 @@ var post = function(req, res){
 																								
 	MongoClient.connect(database, function(err, db) {
 							  if(err) throw err;
-							  var id_pres = req.originalUrl.split("/")[4];
+							  var oldName_pres = req.originalUrl.split("/")[4];
 							  var name_pres = req.originalUrl.split("/")[6];
-							  
-							  var objectId = new ObjectID(id_pres);
-							  db.collection('presentations'+req.user).update({ '_id': objectId }, {$set: { 'meta.titolo' : name_pres }}, function(err, doc){
+
+							  db.collection('presentations'+req.user).update({ 'meta.titolo': oldName_pres }, {$set: { 'meta.titolo' : name_pres }}, function(err, doc){
 																							 if(err) throw err;
 																							 
 																							 res.json({

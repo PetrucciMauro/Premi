@@ -14,9 +14,8 @@ var get = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
 							  if(err) throw err;
-							  var id_pres = req.originalUrl.split("/")[4];
-							  var objectId = new ObjectID(id_pres);
-							  db.collection('presentations'+req.user).findOne({ '_id': objectId }, function(err, doc){
+							  var name_pres = req.originalUrl.split("/")[4];
+							  db.collection('presentations'+req.user).findOne({ 'meta.titolo': name_pres }, function(err, doc){
 																							  if(err) throw err;
 																							  
 																							  res.json({
@@ -33,14 +32,13 @@ var del = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
 							  if(err) throw err;
-							  var id_pres = req.originalUrl.split("/")[4];
-							  var objectId = new ObjectID(id_pres);
-							  db.collection('presentations'+req.user).remove({ '_id': objectId }, function(err, removed){
+							  var name_pres = req.originalUrl.split("/")[4];
+							  db.collection('presentations'+req.user).remove({ 'meta.titolo': name_pres }, function(err, removed){
 																							 if(err) throw err;
 																																																																				
 																							 res.json({
 																										 success: true,
-																										 message: 'removed presentation _id: '+id_pres
+																										 message: 'removed presentation: '+name_pres
 																										 });
 																							 db.close();
 																							 

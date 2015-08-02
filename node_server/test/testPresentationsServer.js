@@ -108,9 +108,9 @@ describe("Presentations", function(){
 				MongoClient.connect(database, function(err, db) {
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											  var id_presentation = doc._id;
+																											  //var id_presentation = doc._id;
 																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/new/presentazione_copia/'+id_presentation, false);
+																											  req.open('POST', host+'/private/api/presentations/new/presentazione_copia/'+'presentazione_prova', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.send();
 																											  assert.equal(200, req.status);
@@ -142,10 +142,10 @@ describe("Presentations", function(){
 				MongoClient.connect(database, function(err, db) {
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											  var id_presentation = doc._id;
+																											  //var id_presentation = doc._id;
 
 																											  var req = new XMLHttpRequest();
-																											  req.open('GET', host+'/private/api/presentations/'+id_presentation, false);
+																											  req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.send();
 																											  var jsonResponse = JSON.parse(req.responseText);
@@ -172,10 +172,10 @@ describe("Presentations", function(){
 				MongoClient.connect(database, function(err, db) {
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											  var id_presentation = doc._id;
+																											 // var id_presentation = doc._id;
 
 																											  var req = new XMLHttpRequest();
-																											  req.open('DELETE', host+'/private/api/presentations/'+id_presentation, false);
+																											  req.open('DELETE', host+'/private/api/presentations/'+'presentazione_prova', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.send();
 																											  assert.equal(200, req.status);
@@ -212,7 +212,7 @@ describe("Presentations", function(){
 																											  var id_presentation = doc._id;
 																											  
 																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/'+id_presentation+'/rename/presentazione_renamed', false);
+																											  req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/rename/presentazione_renamed', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.send();
 																											  assert.equal(200, req.status);
@@ -230,6 +230,60 @@ describe("Presentations", function(){
 
 describe("Presentation's elements", function(){
 		
+			it("DeleteElement", function(done){
+				var req = new XMLHttpRequest();
+				register(req);
+				
+				var req = new XMLHttpRequest();
+				authenticate(req);
+				var token = req.getResponseHeader("Authorization");
+				
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/presentations/new/presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				
+				MongoClient.connect(database, function(err, db) {
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
+																											  if(err) return done(err);
+																											  //var id_presentation = doc._id;
+																											  
+																											  var req = new XMLHttpRequest();
+																											  req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
+																											  req.setRequestHeader("Authorization", token);
+																											  req.setRequestHeader("Content-Type", 'Application/json');
+																											  var body = { "element": {
+																											  "id": 3,
+																											  "xIndex": 10,
+																											  "yIndex": 20,
+																											  "rotation": 2,
+																											  "height": 15,
+																											  "width": 13,
+																											  "type": "image"
+																											  }
+																											  };
+																											  req.send(JSON.stringify(body));
+																											  var jsonResponse = JSON.parse(req.responseText);
+																											  assert.equal(true, jsonResponse.success);
+																											  
+																											  var req = new XMLHttpRequest();
+																											  req.open('DELETE', host+'/private/api/presentations/'+'presentazione_prova'+'/delete/image/3', false);
+																											  req.setRequestHeader("Authorization", token);
+																											  req.send()
+																											  assert.equal(200, req.status);
+																											  
+																											  var req = new XMLHttpRequest();
+																											  req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
+																											  req.setRequestHeader("Authorization", token);
+																											  req.send();
+																											  var jsonResponse = JSON.parse(req.responseText);
+																											  
+																											  assert.equal(0, jsonResponse.message.proper.images.length);
+																											  done();
+																											  });
+										  });
+				});
+			
 			it("PostElement", function(done){
 				var req = new XMLHttpRequest();
 				register(req);
@@ -246,10 +300,10 @@ describe("Presentation's elements", function(){
 				MongoClient.connect(database, function(err, db) {
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											  var id_presentation = doc._id;
+																											  //var id_presentation = doc._id;
 				
 																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/'+id_presentation+'/element', false);
+																											  req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.setRequestHeader("Content-Type", 'Application/json');
 																											  var body = { "element": {
@@ -291,10 +345,10 @@ describe("Presentation's elements", function(){
 				MongoClient.connect(database, function(err, db) {
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											  var id_presentation = doc._id;
+																											  //var id_presentation = doc._id;
 																											  
 																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/'+id_presentation+'/element', false);
+																											  req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.setRequestHeader("Content-Type", 'Application/json');
 																											  var body = { "element": {
@@ -312,7 +366,7 @@ describe("Presentation's elements", function(){
 																											  assert.equal(true, jsonResponse.success);
 																											  
 																											  var req = new XMLHttpRequest();
-																											  req.open('PUT', host+'/private/api/presentations/'+id_presentation+'/element', false);
+																											  req.open('PUT', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.setRequestHeader("Content-Type", 'Application/json');
 																											  var body = { "element": {
@@ -332,66 +386,12 @@ describe("Presentation's elements", function(){
 																											  assert.equal(true, jsonResponse.success);
 																											  
 																											  var req = new XMLHttpRequest();
-																											  req.open('GET', host+'/private/api/presentations/'+id_presentation, false);
+																											  req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.send();
 																											  var jsonResponse = JSON.parse(req.responseText);
 																											  
 																											  assert.equal(1000, jsonResponse.message.proper.images[0].xIndex);
-																											  done();
-																											  });
-										  });
-				});
-
-			it("DeleteElement", function(done){
-				var req = new XMLHttpRequest();
-				register(req);
-				
-				var req = new XMLHttpRequest();
-				authenticate(req);
-				var token = req.getResponseHeader("Authorization");
-				
-				var req = new XMLHttpRequest();
-				req.open('POST', host+'/private/api/presentations/new/presentazione_prova', false);
-				req.setRequestHeader("Authorization", token);
-				req.send();
-				
-				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
-																											  if(err) return done(err);
-																											  var id_presentation = doc._id;
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/'+id_presentation+'/element', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.setRequestHeader("Content-Type", 'Application/json');
-																											  var body = { "element": {
-																											  "id": 3,
-																											  "xIndex": 10,
-																											  "yIndex": 20,
-																											  "rotation": 2,
-																											  "height": 15,
-																											  "width": 13,
-																											  "type": "image"
-																											  }
-																											  };
-																											  req.send(JSON.stringify(body));
-																											  var jsonResponse = JSON.parse(req.responseText);
-																											  assert.equal(true, jsonResponse.success);
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('DELETE', host+'/private/api/presentations/'+id_presentation+'/delete/image/3', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.send()
-																											  assert.equal(200, req.status);
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('GET', host+'/private/api/presentations/'+id_presentation, false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.send();
-																											  var jsonResponse = JSON.parse(req.responseText);
-																											  
-																											  assert.equal(0, jsonResponse.message.proper.images.length);
 																											  done();
 																											  });
 										  });

@@ -14,11 +14,10 @@ var put = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
 							  if(err) throw err;
-							  var id_pres = req.originalUrl.split("/")[4];
+							  var name_pres = req.originalUrl.split("/")[4];
 							  var id_element = req.body.element.id;
 							  console.log(id_element); // ***
 							  
-							  var objectId_pres = new ObjectID(id_pres);
 							  var new_element = req.body.element;
 							  console.log(new_element); // ***
 
@@ -65,7 +64,7 @@ var put = function(req, res){
 							  var path_to_element = field_path+".$";
 							  var to_set = {};
 							  to_set[path_to_element] = new_element;
-							  var query = {"_id": objectId_pres};
+							  var query = {"meta.titolo": name_pres};
 							  query[path_to_id_element] = id_element ;
 							  
 							  db.collection("presentations"+req.user).update(query, {"$set" : to_set }, function(err,doc){
@@ -94,10 +93,9 @@ var post = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
 							  if(err) throw err;
-							  var id_pres = req.originalUrl.split("/")[4];
+							  var name_pres = req.originalUrl.split("/")[4];
 							  var id_element = req.body.element.id;
 							  
-							  var objectId_pres = new ObjectID(id_pres);
 							  var new_element = req.body.element;
 							  if(new_element == null){ res.json({
 																			success: false,
@@ -139,9 +137,9 @@ var post = function(req, res){
 							  var to_push = {};
 							  to_push[field_path] = new_element;
 							  
-							  db.collection('presentations'+req.user).update({'_id': objectId_pres}, {$push : to_push},{'upsert' : true},  function(err, doc){
+							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, {$push : to_push},{'upsert' : true},  function(err, doc){
 																							 if(err) throw err;
-																							 
+
 																							 res.json({
 																										 success: true,
 																										 message: 'element inserted '+new_element.type																																																																																																			});

@@ -14,12 +14,11 @@ var del = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
 							  if(err) throw err;
-							  var id_pres = req.originalUrl.split("/")[4];
+							  var name_pres = req.originalUrl.split("/")[4];
 							  
 							  var type_element = req.originalUrl.split("/")[6];
 							  var id_element = req.originalUrl.split("/")[7];
 							  
-							  var objectId_pres = new ObjectID(id_pres);
 							  var field_path = "";
 							  
 							  switch(type_element) {
@@ -57,7 +56,7 @@ var del = function(req, res){
 							  to_pull[field_path] = to_id;
 							  console.log(to_pull);
 							  
-							  db.collection('presentations'+req.user).update({'_id': objectId_pres}, { $pull : to_pull }, function(err, doc){
+							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, { $pull : to_pull }, function(err, doc){
 																							 if(err) throw err;
 																							 res.json({
 																										 success: true,

@@ -357,8 +357,8 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 			//PAGINA DI ESECUZIONE
 			executionpage: function(slideId) {
 				var success = function(){
-					$location.path('/private/execution');
-					SharedData.forExecution(slideId);
+						$location.path('/private/execution');
+						SharedData.forExecution(slideId);
 				};
 				return sendRequest('/private/execution.html', success, error);
 			},

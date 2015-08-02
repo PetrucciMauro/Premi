@@ -8,7 +8,8 @@ var premiApp = angular.module('premiApp', [
 	'premiAccessController',
 	'premiHomeController',
 	'premiProfileController',
-	'premiEditController'
+	'premiEditController',
+	'premiExecutionController'
 	]);
 
 premiApp.run(function($log, $rootScope, Main, Utils, toPages){
@@ -63,6 +64,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			isLogin: true
 		}).
 		otherwise({
+			
 			redirectTo: '/login'
 		});
 

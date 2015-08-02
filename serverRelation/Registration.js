@@ -12,7 +12,7 @@ var Registration = function(hostname){
 		req.setRequestHeader("Authorization", user+":"+password);
 		req.send();
 		var serverResponse = JSON.parse(req.responseText);
-		messageState = serverResponse.message;
+		messageState = serverResponse.success;
 		return serverResponse.success;
 		return
 	};
@@ -21,5 +21,5 @@ var Registration = function(hostname){
 	};
 	
 	return that;
+	
 };
-

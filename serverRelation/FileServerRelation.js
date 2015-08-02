@@ -105,4 +105,3 @@ var FileServerRelation = function(hostname, auth_obj){
 	
 	return that;
 };
-

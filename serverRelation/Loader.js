@@ -27,7 +27,7 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 		return true;
 	};
 	
-	that.addDelete = function( id_element){
+	that.addDelete = function(typeObj, id_element){
 		var found = false;
 		var pos = -1;
 		for(int i=0; i < toInsert.length; i++){
@@ -44,10 +44,10 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 		}
 		if (found == true){
 			toUpdate.splice(index, 1);
-			toDelete.push(id_element)
+			toDelete.push({id_element, typeObj});
 			return true
 		}
-		toDelete.push(id_element);
+		toDelete.push({"id" : id_element, "type" : typeObj});
 		return true;
 	};
 	
@@ -59,7 +59,7 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 			mongoRelation.updateElement(showElements.getPresentationId, showElements.getElement(toUpdate[i]));
 		};
 		for(int i=0; i < toDelete.length; i++){
-			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i]);
+			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id );
 		};
 		return true;
 	};

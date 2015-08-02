@@ -26,14 +26,22 @@ var MongoRelation = function(hostname, auth_obj){
 		req.send();
 		var res = JSON.parse(req.responseText);
 		messageState = res.success;
-		return res.id_pres;
+		return res.success;
 	};
 	
-	//... rename presentation
-	
-	that.getPresentation = function(nameNewPresentation){
+	that.newCopyPresentation = function(nameOldPresentation,nameNewPresentation){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/presentations/'+nameNewPresentation, false);
+		req.open('POST', host+'/private/api/presentations/new/'+nameOldPresentation+nameNewPresentation, false);
+		req.setRequestHeader("Authorization", auth.getToken());
+		req.send();
+		var res = JSON.parse(req.responseText);
+		messageState = res.success;
+		return res.success;
+	};
+	
+	that.getPresentation = function(namePresentation){
+		var req = new XMLHttpRequest();
+		req.open('POST', host+'/private/api/presentations/'+namePresentation, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
@@ -41,14 +49,14 @@ var MongoRelation = function(hostname, auth_obj){
 		return res.message;
 	};
 	
-	that.deletePresentation = function(presentation_id){
+	that.deletePresentation = function(namePresentation){
 		var req = new XMLHttpRequest();
-		req.open('DELETE', host+'/private/api/presentations/'+presentation_id, false);
+		req.open('DELETE', host+'/private/api/presentations/'+namePresentation, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
 		messageState = res.success;
-		return res.message;
+		return res.success;
 	};
 	
 	that.renamePresentation = function(name_presentation, new_name){
@@ -72,15 +80,16 @@ var MongoRelation = function(hostname, auth_obj){
 		return res.success;
 	};
 	
-	that.deleteElement = function(name_presentation, id_element){
+	that.deleteElement = function(name_presentation, typeObj, id_element){
 		var req = new XMLHttpRequest();
-		req.open('DELETE', host+'/private/api/presentations/'+name_presentation+'/'+id_element, true);
+		req.open('DELETE', host+'/private/api/presentations/'+name_presentation+'/'+typeObj+id_element, true);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
 		messageState = res.success;
 		return res.success;
 	};
+	 
 
 	that.newElement = function(name_presentation, new_element){
 		var req = new XMLHttpRequest();

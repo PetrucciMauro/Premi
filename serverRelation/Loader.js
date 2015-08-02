@@ -18,7 +18,7 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 	
 	that.addUpdate = function( id_element){
 		var found = false;
-		for(i=0; i < toUpdate.length; i++){
+		for(int i=0; i < toUpdate.length; i++){
 			if(toUpdate[i]== id_element){found = true;}
 		}
 		if(found == false){
@@ -30,7 +30,7 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 	that.addDelete = function( id_element){
 		var found = false;
 		var pos = -1;
-		for(i=0; i < toInsert.length; i++){
+		for(int i=0; i < toInsert.length; i++){
 			if(toInsert[i]== id_element){found = true; pos=i;}
 		}
 		if (found == true) {
@@ -39,7 +39,7 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 		}
 		found = false;
 		pos = -1;
-		for(i=0; i < toUpdate.length; i++){
+		for(int i=0; i < toUpdate.length; i++){
 			if(toUpdate[i]== id_element){found = true; pos=i;}
 		}
 		if (found == true){
@@ -52,13 +52,13 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 	};
 	
 	that.update = function(){
-		for(i=0; i < toInsert.length; i++){
+		for(int i=0; i < toInsert.length; i++){
 			mongoRelation.newElement(showElements.getPresentationId, showElements.getElement(toInsert[i]));
 		};
-		for(i=0; i < toUpdate.length; i++){
+		for(int i=0; i < toUpdate.length; i++){
 			mongoRelation.updateElement(showElements.getPresentationId, showElements.getElement(toUpdate[i]));
 		};
-		for(i=0; i < toDelete.length; i++){
+		for(int i=0; i < toDelete.length; i++){
 			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i]);
 		};
 		return true;

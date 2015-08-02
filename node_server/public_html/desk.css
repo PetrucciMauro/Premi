@@ -1,0 +1,351 @@
+#titolo {
+    float: right;
+    width: 82%;
+    background-image: url("images/Mountains2.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    height: 140px;
+}
+
+#titolo h1{
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    text-align: center;
+}
+
+
+#header {
+    float: left;
+    width: 100%;
+}
+
+#breadcrumb {
+    float: left;
+    width: 100%;
+    background-color: #99CC00;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#breadcrumb p {
+    color: white;
+}
+
+#breadcrumb a{
+    color: white;
+    text-decoration:underline;
+}
+
+
+#logo {
+    float: left;
+    width: 17%;
+    height: 140px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#logo img {
+    height: 140px;
+    width: 100%;
+}
+
+
+#login #username , #password {
+    width: 8em;
+    height: 1.2em;
+}
+
+#login {
+    float: right;
+    width: 68%;
+    text-align: right;
+    padding-right: 1%;
+}
+
+
+#dovesiete {
+    float: left;
+    width: 29%;
+    padding-left: 1%;
+}
+
+#nav {
+    float: left;
+    width: 17%;
+}
+
+#nav li {
+    list-style-type: none;
+    padding: 0.3em;
+    margin: 0.1em;
+    border-width: 1px;
+    border-bottom: solid #DDDDDD;
+}
+
+a:hover, a:visited, a:link, a:active
+{
+    text-decoration: none;
+}
+
+li:hover {
+    text-decoration: underline;
+}
+
+#nav ul {
+    line-height: 1.5em;
+    padding-left:0;
+}
+
+#nav .CurrentLink {
+    background-image: url("images/sign.png");
+    background-repeat: no-repeat;
+    padding-left: 2em;
+    font-weight: bolder;
+}
+
+#container {
+    float: right;
+    width: 78%;
+    border-left: solid #99CC00;
+    padding-right: 2%;
+    padding-left: 2%;
+    min-height: 25em;
+}
+
+.note {
+    width: 100%;
+    min-height: 160px;
+    box-shadow: 0 3px 6px rgba(0,0,0,.25);
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.25);
+    -moz-box-shadow: 0 3px 6px rgba(0,0,0,.25);
+    margin-top: 2em;
+    float: right;
+    margin-right: 3%;
+    background-color: white;
+    /*border: solid #3333FF;*/
+}
+
+#avvisi {
+    float: right;
+    width: 18%;
+}
+
+#avvisi .note.sticky1 .text {
+    margin: 10px;
+    font-family: 'The Girl Next Door', cursive;
+    word-wrap: break-word;
+}
+#avvisi .note.sticky2 .text {
+    margin: 10px;
+    font-family: 'The Girl Next Door', cursive;
+    word-wrap: break-word;
+}
+
+#section {
+    float: left;
+    width: 78%;
+}
+
+#container p {
+    line-height: 1.5em;
+    /*padding-bottom: 2em;*/
+}
+
+#avvisi p {
+    line-height: 1em;
+    padding-bottom: 0;
+}
+
+#footer {
+    float: right;
+    width: 100%;
+    border-top: solid #99CC00;
+}
+
+#footer li {
+    display: inline;
+    list-style-type: none;
+    padding-right: 1em;
+}
+
+#footer ul {
+    text-align: center;
+}
+
+#footer p {
+    text-align: center;
+}
+
+#titolo {
+    text-align: center;
+    font-family: sans-serif;
+    color: white;
+}
+
+
+/* attivita, registrazione ,gestisci */
+#indice h2{
+    font-weight:normal;
+    padding-left: 1em;
+}
+
+#indice {
+    border: solid #99CC00;
+    margin-right: 60%;
+    background-color: white;
+}
+#indice ul{
+    list-style-type: none;
+    line-height: 1.5em;
+}
+#content dd{
+    padding-bottom: 2em;
+    padding-top: 1em;
+}
+
+#content dt{
+    padding-top: 2em;
+    border-top: solid #99CC00;
+}
+
+#sectionR{
+    float: left;
+    margin-top: 2em;
+    margin-bottom: 4em;
+    padding-left: 1em;
+    padding-bottom: 1em;
+    padding-right: 1em;
+}
+
+/* Scroll to Top */
+.scroll-to-top{
+        position: fixed;
+        background-image:url("images/topIcon2.png");
+        background-repeat: no-repeat;
+        cursor: pointer;
+        margin-bottom: 1em;
+        right: 0px;
+        bottom: 0px;
+        width:40px;
+        height: 40px;
+        padding-right: 1em;
+        z-index: 999;
+}
+
+.scrollNoJs{
+    position: fixed;
+    cursor: pointer;
+    margin-bottom: 1em;
+    right: 0px;
+    bottom: 0px;
+    width:40px;
+    height: 40px;
+    padding-right: 1em;
+    z-index: 999;
+    display:none;
+}
+
+#googleMap{
+    width: 500px;
+    height: 400px;
+}
+
+/* css commenti */
+
+.post .commenti{
+    display:none;
+    margin-top: 2%;
+    margin-right: 5%;
+    border:  dotted #99CC00;
+    border-width: 1px;
+    padding-left: 2%;
+    padding-right: 2%;
+    max-height: 30%;
+    max-width: 400px;
+    max-height: 400px;
+    overflow:scroll
+}
+
+.post .commenti.open{
+    display:block;
+}
+
+.post .commenti .commento{
+    margin-bottom:1em;
+}
+
+.post .commenti .commento p{
+    margin-bottom:0px;
+    border: solid #99CC00;
+    border-width: 1px;
+    padding: 2%;
+    overflow:scroll;
+}
+
+.post .commenti h2{
+    font-size: 70%;
+}
+
+.post p{
+    font-size: 90%;
+}
+
+.post .commenti p{
+    font-size: 80%;
+}
+
+.commento .dataCommento{
+    font-size: 70%;
+}
+
+.post h1{
+    font-size: 150%;
+}
+
+.post{
+    border: solid #99CC00;
+    border-width: 2px;
+    margin-top:1em;
+    padding-left:1em;
+    padding-right:1em;
+    padding-bottom:1em;
+}
+
+.last{
+    margin-bottom: 1em;
+}
+
+.nuovoCommento textarea{
+    width:90%;
+    border: 1px solid #99CC00;
+}
+
+.closeButton{
+    background:url(images/openIcon.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width:35px;
+    height:35px
+}
+
+.openButton{
+    background:url(images/closeIcon.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width:35px;
+    height:35px
+}
+/* nuovo da integrare nel css mobile */
+.commentiInseriti .commento span {
+    font-size: 50%;
+}
+
+.post .nuovoCommento label{
+    display: none;
+}
+
+
+
+
+
+
+

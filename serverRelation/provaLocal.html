@@ -16,9 +16,9 @@
 	 <script>
 		 $( "#button0" ).click(function() {
 									  $("#span0").text('click!');
-									  var auth = Authentication('http://localhost:8081');
-									  auth.authenticate('3','ciaociao');
-									  var frel = FileServerRelation('http://localhost:8081', auth);
+									  var auth = Authentication('http://localhost:8080');
+									  auth.authenticate('junior','goku');
+									  var frel = FileServerRelation('http://localhost:8080', auth);
 									  $("#span0").text(frel.renameImage('prova.pdf','evvai.pdf'));
 									  });
 									  

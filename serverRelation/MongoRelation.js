@@ -33,7 +33,7 @@ var MongoRelation = function(hostname, auth_obj){
 	
 	that.getPresentation = function(nameNewPresentation){
 		var req = new XMLHttpRequest();
-		req.open('GET', host+'/private/api/presentations/'+nameNewPresentation, false);
+		req.open('POST', host+'/private/api/presentations/'+nameNewPresentation, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
@@ -47,13 +47,13 @@ var MongoRelation = function(hostname, auth_obj){
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
-		messageState = res.message;
-		return res.success;
+		messageState = res.success;
+		return res.message;
 	};
 	
 	that.renamePresentation = function(name_presentation, new_name){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/presentations/'+name_presentation+'/rename/'+new_name, false);
+		req.open('POST', host+'/private/api/presentations/'+name_presentation+'/'+new_name, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);

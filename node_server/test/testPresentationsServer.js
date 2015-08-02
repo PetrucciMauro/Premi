@@ -51,7 +51,7 @@ describe("Presentations", function(){
 				var token = req.getResponseHeader("Authorization");
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').insert({'meta': {'name': 'presentazione_prova'}, 'proper': {} }, function(err, doc){
+										  db.collection('presentations'+'provaname').insert({'meta': {'titolo': 'presentazione_prova'}, 'proper': {} }, function(err, doc){
 																											 if(err) return done(err);
 																											 assert.notEqual(null, doc);
 																											 
@@ -62,7 +62,7 @@ describe("Presentations", function(){
 																											 var jsonResponse = JSON.parse(req.responseText);
 																											 
 																											 assert.equal(200, req.status);
-																											 assert.equal('presentazione_prova', jsonResponse.message[0].name);
+																											 assert.equal('presentazione_prova', jsonResponse.message[0].titolo);
 																											 done();
 
 																											 });
@@ -84,9 +84,9 @@ describe("Presentations", function(){
 				req.send();
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											  assert.equal('presentazione_prova', doc.meta.name);
+																											  assert.equal('presentazione_prova', doc.meta.titolo);
 																											  done();
 																											  });
 										  });
@@ -106,7 +106,7 @@ describe("Presentations", function(){
 				req.send();
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  var id_presentation = doc._id;
 																											  var req = new XMLHttpRequest();
@@ -116,7 +116,7 @@ describe("Presentations", function(){
 																											  assert.equal(200, req.status);
 																											  
 																											  MongoClient.connect(database, function(err, db) {
-																																		 db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_copia'}, function(err, doc){
+																																		 db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_copia'}, function(err, doc){
 																																																			 if(err) return done(err);
 																																																			 assert.notEqual(null, doc);
 																																																			 done();
@@ -140,7 +140,7 @@ describe("Presentations", function(){
 				req.send();
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  var id_presentation = doc._id;
 
@@ -150,7 +150,7 @@ describe("Presentations", function(){
 																											  req.send();
 																											  var jsonResponse = JSON.parse(req.responseText);
 																											  
-																											  assert.equal('presentazione_prova', jsonResponse.message.meta.name);
+																											  assert.equal('presentazione_prova', jsonResponse.message.meta.titolo);
 																											  done();
 																											  });
 										  });
@@ -170,7 +170,7 @@ describe("Presentations", function(){
 				req.send();
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  var id_presentation = doc._id;
 
@@ -181,7 +181,7 @@ describe("Presentations", function(){
 																											  assert.equal(200, req.status);
 																											  
 																											  MongoClient.connect(database, function(err, db) {
-																																		 db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+																																		 db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																																																			 if(err) return done(err);
 																																																			 assert.equal(null, doc);
 																																																			 done();
@@ -207,7 +207,7 @@ describe("Presentations", function(){
 
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  var id_presentation = doc._id;
 																											  
@@ -219,7 +219,7 @@ describe("Presentations", function(){
 																											  
 																											  db.collection('presentations'+'provaname').findOne({'_id' : id_presentation}, function(err, doc){
 																																												  if(err) return done(err);
-																																												  assert.equal('presentazione_renamed',doc.meta.name);
+																																												  assert.equal('presentazione_renamed',doc.meta.titolo);
 																																												  done();
 																																												  });
 																											  });
@@ -244,7 +244,7 @@ describe("Presentation's elements", function(){
 				req.send();
 
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  var id_presentation = doc._id;
 				
@@ -266,7 +266,7 @@ describe("Presentation's elements", function(){
 																											  req.send(JSON.stringify(body));
 																											  assert.equal(200, req.status);
 																											  
-																											  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+																											  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																																												  if(err) return done(err);
 																																												  assert.equal(3, doc.proper.images[0].id);
 																																												  done();
@@ -289,7 +289,7 @@ describe("Presentation's elements", function(){
 				req.send();
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  var id_presentation = doc._id;
 																											  
@@ -357,7 +357,7 @@ describe("Presentation's elements", function(){
 				req.send();
 				
 				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.name': 'presentazione_prova'}, function(err, doc){
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  var id_presentation = doc._id;
 																											  

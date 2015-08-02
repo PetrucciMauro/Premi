@@ -20,7 +20,7 @@ var post = function(req, res){
 							  db.collection('presentations'+req.user).findOne({ '_id': objectId }, function(err, doc){
 																							  if(err) throw err;
 																							  var new_presentation = doc;
-																							  new_presentation.meta.name = name_pres;
+																							  new_presentation.meta.titolo = name_pres;
 																							  delete new_presentation._id;
 																							  db.collection('presentations'+req.user).insert(new_presentation, function(err, result){
 																																							 if(err) throw err;

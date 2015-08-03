@@ -455,11 +455,11 @@ var inserisciElemento=function(classe, spec){
 		rotate(contatore, spec.rotation);
 	//TRADUTTORE EDIT
 
-	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"src/img/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x
+	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"assets/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x
 
-	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"text-align:center\" src=\"src/img/bringfront.png\" onclick=\"portaAvanti("+div.id+");\" width=\"15em\" style=\"display: block\">");//inserisce immagine bring to front
+	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"text-align:center\" src=\"assets/bringfront.png\" onclick=\"portaAvanti("+div.id+");\" width=\"15em\" style=\"display: block\">");//inserisce immagine bring to front
 
-	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"src/img/movebackward.png\" onclick=\"mandaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
+	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"assets/movebackward.png\" onclick=\"mandaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
 	
 	contatore++;
 
@@ -616,7 +616,7 @@ var inserisciAudio=function(x, spec){
 			aspectRatio: 1 / 1
 		});
 	});
-	$("#"+div.id).css({"background":"url('src/img/nota.png') no-repeat", "background-size": "100% 100%"});;
+	$("#"+div.id).css({"background":"url('assets/nota.png') no-repeat", "background-size": "100% 100%"});;
 	/*div.style.height="2em";
 	div.style.width="2em";*/
 

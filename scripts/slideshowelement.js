@@ -61,6 +61,7 @@ var frame = function (spec) {
     that.bookmark=spec.bookmark||0;
     that.backgroundimage=spec.backgroundimage||"undefined";
     that.backgroundcolor=spec.backgroundcolor||"rgba(0,0,0,0)";
+    that.zIndex=spec.zIndex;
         
     //ritorna that
     return that;
@@ -78,7 +79,7 @@ var SVG = function (spec) {
 //oggetti background
 var background = function (spec) {
     var that = slideShowElement(spec);
-    that.url = spec.ref;
+    that.url = spec.ref || "";
     that.color = spec.color;
     //ritorna that
     return that;

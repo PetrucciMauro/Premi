@@ -1,6 +1,6 @@
 ﻿<link rel="stylesheet" href="css/jquery-ui.css">
 <script type="text/javascript" src="scripts/viewscripts.js"></script>
-<script type="text/json" src="scripts/presentazione.json"></script>
+
 <md-sidenav id="barraPercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
 	<md-list>
 		<md-list-item>
@@ -64,6 +64,9 @@
 					</md-menu-item>
 					<md-menu-item>
 						<md-button id="insertAudio" class="fileContainer"><p id="insertAudioActivator">Inserisci Audio</p><input multiple type="file" id="audioLoader" name="Inserisci Audio" onchange="angular.element(this).scope().inserisciAudio(this.files)"/></md-button>
+					</md-menu-item>
+					<md-menu-item>
+						<md-button id="esegui" ng-click="eseguiSS()"><p id="eseguiPresentazione">Esegui Presentazione</p></md-button>
 					</md-menu-item>
 				</md-menu-content>
 			</md-menu>

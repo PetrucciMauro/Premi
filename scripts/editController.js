@@ -2,8 +2,8 @@
 
 var premiEditController = angular.module('premiEditController', ['premiService'])
 
-premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet','$http',
-	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet,$http) {
+premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet','$http', '$location',
+	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet,$http, $location) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
 
@@ -98,19 +98,22 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//Inserimento elementi
 		$scope.inserisciFrame = function(){
 			var frame = inserisciFrame(); //view
+			var myframe = $("#" + frame.id);
 			var style = window.getComputedStyle(frame, null);
 
 			var spec = {
 				id: frame.id,
-				xIndex: style.x,
-				yIndex: style.y,
-				height: style.height,
-				width: style.width,
-				rotation: 0
+				xIndex: myframe.position().left,
+				yIndex: myframe.position().top,
+				height: myframe.outerHeight(),
+				width: myframe.outerWidth(),
+				rotation: 0,
+				zIndex: myframe.zIndex()
 			};
-
+			$scope.rimuoviSfondo();
 			var command = concreteFrameInsertCommand(spec); //model
 			inv.execute(command);
+			console.log(insertEditRemove().getPresentazione());
 		}
 		$scope.inserisciTesto = function(){
 			var text = inserisciTesto(); //view
@@ -243,7 +246,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//Gestione sfondo Presentazione
 		$scope.rimuoviSfondo = function(){
-			var style = document.getElementById('fantoccio').style;
+			var style = document.getElementById('content').style;
 			style.removeProperty('background');
 
 			var spec = {
@@ -257,7 +260,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		$scope.backcolor = "#ffffff";
 		$scope.cambiaColoreSfondo = function(color){
-			var style = document.getElementById('fantoccio').style;
+			var style = document.getElementById('content').style;
 			style.backgroundColor = color;
 
 			var spec = {
@@ -413,6 +416,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var activeElement = active().getId();
 			console.log(activeElement);
 		    mainPath().addToMainPath(active().getId(),0);
+		}
+
+		$scope.eseguiSS = function(){
+			var presentazione = insertEditRemove().getPresentazione();
+			console.log(presentazione);
+			SharedData.forEditManuel(presentazione);
+			//toPages.executionpage();
+			$location.path('private/execution');
 		}
 
 		$scope.config = {};
@@ -654,7 +665,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
         }
     }
 };
-		translateEdit(myJson);
+		//translateEdit(myJson);
 		/*TRADUTT. PER MANUEL
 		TESTO: appendere al json questi valori:
 			-top e left che già c'è nel model

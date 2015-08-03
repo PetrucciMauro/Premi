@@ -12,9 +12,8 @@ var Registration = function(hostname){
 		req.setRequestHeader("Authorization", user+":"+password);
 		req.send();
 		var serverResponse = JSON.parse(req.responseText);
-		messageState = serverResponse.success;
+		messageState = serverResponse.message;
 		return serverResponse.success;
-		return
 	};
 	that.getMessage = function(){
 		return messageState;

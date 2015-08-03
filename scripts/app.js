@@ -61,11 +61,20 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		when('/private/execution', {
 			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
-			isLogin: true
+			isLogin: true,
+			//reloadOnSearch: false
+		}).
+		when('/private/execution:rest*', {
+			templateUrl: 'private_html/execution.html',
+			controller: 'ExecutionController',
+			isLogin: true,
+			//reloadOnSearch: false
 		}).
 		otherwise({
-			
-			redirectTo: '/login'
+			redirectTo: function(){
+				console.log("redirect from"+window.location.href);
+
+				return '/login';}
 		});
 
 	$httpProvider.interceptors.push(['$rootScope', '$q', 'Main', 'Utils',

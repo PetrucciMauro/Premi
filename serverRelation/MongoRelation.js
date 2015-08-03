@@ -40,8 +40,9 @@ var MongoRelation = function(hostname, auth_obj){
 	};
 	
 	that.getPresentation = function(namePresentation){
+		console.log(namePresentation);
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/presentations/'+namePresentation, false);
+		req.open('GET', host+'/private/api/presentations/'+namePresentation, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);

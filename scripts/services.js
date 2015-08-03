@@ -343,7 +343,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 			//Le seguenti pagine sono tutte accessibili solo dopo essersi autenticati al server
 			//PAGINA HOME
 			homepage: function() {
-				var success = function(){$location.path('/private/home');};
+				var success = function(){$location.path('/private/home');window.location.reload();};
 				return sendRequest('/private/home.html', success, error);
 			},
 			//PAGINA EDIT
@@ -380,6 +380,8 @@ premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 		var idExecution = undefined;
 		//per l'edit
 		var idEdit = undefined;
+
+		var idEditManuel = undefined;
 
 		var shared = {
 			forExecution: function(idSlideShow) {
@@ -420,6 +422,11 @@ premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 				}
 
 				return idEdit;
+			},
+			forEditManuel: function(json){
+				if(json)
+				idEditManuel = json;
+				return idEditManuel;
 			}
 		};
 

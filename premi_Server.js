@@ -76,8 +76,6 @@ app.use('/private', express.static('private_html'));
 var Middleware = require('./source/private/tokenMiddleware.js');
 
 var privateRoutes = express.Router();
-//app.post('/private*', privateRoutes);
-//app.get('/private*', privateRoutes);
 app.use('/private', privateRoutes);
 
 privateRoutes.use(Middleware.use);
@@ -152,7 +150,7 @@ var RenameVideo = require('./source/private/files/videos/RenameVideo.js');
 
 filesRoutes.post('/video/[^/]+/[^/]+', RenameVideo.post );
 
-
+ 
 //=====================//////////////////////////////////////////////////////////////////////////////////////////
 // presentations_server
 //=====================///////////////////////////////////////////////////////////////////////////////////////////

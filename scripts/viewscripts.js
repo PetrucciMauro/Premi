@@ -2,11 +2,9 @@
 var l=screen.width;
 l=l*0.989;
 var h=l/2.06666667;
-//console.log(l);
-//console.log(h);
 document.getElementById("content").setAttribute("style","border: 1px solid black;position: absolute; width:"+l+"px; height:"+h+"px;");
 //TRADUTTORE
-
+var zindex = 0;
 var contatore=0;
 $(document).ready(function () {
         var origin;
@@ -392,12 +390,26 @@ function clearMenu(){
 	}
 }
 
-function elimina(id){
+function elimina(id) {
+    var frames = document.getElementById("frames").children;
+    for (var i = 0; i < frames.length; i++) {
+        if (frames[i].style.getPropertyValue("z-index") > document.getElementById(id).style.getPropertyValue("z-index")) {
+            frames[i].style.zIndex = frames[i].style.zIndex - 1;
+        }
+    }
+
+    var elements = document.getElementById("elements").children;
+    for (var i = 0; i < elements.length; i++) {
+        if (elements[i].style.getPropertyValue("z-index") > $("#" + id).style.zIndex) {
+            elements[i].style.zIndex = elements[i].style.zIndex - 1;
+        }
+    }
+
+    zindex--;
 	if($("#"+id).hasClass("frame")){
 
 		mainPath().deleteFrame(id);
 		choicePaths().deleteFrame(id);
-		
 	}
 	active().deselect();
 	$("#"+id).remove();
@@ -415,11 +427,13 @@ var inserisciElemento=function(classe, spec){
 	//console.log(div.style.width);
 	//TRADUTTORE
 
-	div.style.position="absolute";
+	div.style.position = "absolute";
+	div.style.zIndex = zindex;
+	zindex++;
 	div.setAttribute("class", classe+" elemento");
 	div.setAttribute("onmouseup", "angular.element(this).scope().muoviElemento()");
 	div.setAttribute("onresize", "angular.element(this).scope().ridimensionaElemento()");
-
+	div.setAttribute("onresize", "angular.element(this).scope().ridimensionaElemento()");
 	//TRADUTTORE EDIT
 	if(spec){
 		contatore = spec.id;
@@ -631,18 +645,44 @@ var inserisciAudio=function(x, spec){
 
 function resize(elem, percent) { elem.style.fontSize = percent; }
 
-function portaAvanti(id){
-	var original=$("#"+id).zIndex();
-	$("#"+id).css({"z-index": original+1});
-	if(original==0){
-		document.getElementById("back"+id).style.opacity = '1';
-		document.getElementById("back"+id).style.WebkitTransition = 'opacity 0.5s';
-		document.getElementById("back"+id).style.MozTransition = 'opacity 0.5s';
-	}
+function getElementByZIndex(zvalue) {
+    var el;
+    var found = false;
+    var frames = document.getElementById("frames").children;
+    for (var i = 0; i < frames.length && !found; i++) {
+        if (frames[i].style.getPropertyValue("z-index") == zvalue) {
+            el = frames[i];
+            found = true;
+        }
+    }
+
+    var elements = document.getElementById("elements").children;
+    for (var i = 0; i < elements.length && !found; i++) {
+        if (elements[i].style.getPropertyValue("z-index") == zvalue) {
+            el = elements[i];
+            found = true;
+        }
+    }
+    return el;
+}
+
+function portaAvanti(id) {
+    var original = $("#" + id).zIndex();
+    var superior = getElementByZIndex(original + 1);
+    if (superior) {
+        superior.style.zIndex = original;
+        $("#" + id).css({ "z-index": original + 1 });
+        if (original == 0) {
+            document.getElementById("back" + id).style.opacity = '1';
+            document.getElementById("back" + id).style.WebkitTransition = 'opacity 0.5s';
+            document.getElementById("back" + id).style.MozTransition = 'opacity 0.5s';
+        }
+    }
 }
 
 function mandaDietro(id){
-	if($("#"+id).zIndex()>0){
+    if ($("#" + id).zIndex() > 0) {
+        getElementByZIndex($("#" + id).zIndex() - 1).style.zIndex = $("#" + id).zIndex();
 		$("#"+id).css({"z-index": $("#"+id).zIndex()-1});
 	}
 	if($("#"+id).zIndex()==0){

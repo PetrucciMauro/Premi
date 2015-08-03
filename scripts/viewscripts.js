@@ -44,11 +44,11 @@ var active=function(){
 			document.getElementById("x"+id).style.opacity = '1';
 			document.getElementById("x"+id).style.WebkitTransition = 'opacity 0.5s';
 			document.getElementById("x"+id).style.MozTransition = 'opacity 0.5s';
-
-			document.getElementById("for"+id).style.opacity = '1';
-			document.getElementById("for"+id).style.WebkitTransition = 'opacity 0.5s';
-			document.getElementById("for"+id).style.MozTransition = 'opacity 0.5s';
-			
+			if($("#"+id).zIndex()!=zindex-1){
+			    document.getElementById("for"+id).style.opacity = '1';
+			    document.getElementById("for"+id).style.WebkitTransition = 'opacity 0.5s';
+			    document.getElementById("for"+id).style.MozTransition = 'opacity 0.5s';
+			}
 			if($("#"+id).zIndex()>0){
 				document.getElementById("back"+id).style.opacity = '1';
 				document.getElementById("back"+id).style.WebkitTransition = 'opacity 0.5s';
@@ -470,7 +470,7 @@ var inserisciElemento=function(classe, spec){
 
 	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"assets/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x
 
-	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"text-align:center\" src=\"assets/bringfront.png\" onclick=\"portaAvanti("+div.id+");\" width=\"15em\" style=\"display: block\">");//inserisce immagine bring to front
+	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"opacity: 0; text-align:center\" src=\"assets/bringfront.png\" onclick=\"portaAvanti("+div.id+");\" width=\"15em\" >");//inserisce immagine bring to front
 
 	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"assets/movebackward.png\" onclick=\"mandaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
 	
@@ -678,16 +678,25 @@ function portaAvanti(id) {
             document.getElementById("back" + id).style.MozTransition = 'opacity 0.5s';
         }
     }
+    if ($("#" + id).zIndex() == zindex-1) {
+        document.getElementById("for" + id).style.opacity = '0';
+    }
+
 }
 
 function mandaDietro(id){
     if ($("#" + id).zIndex() > 0) {
+  
         getElementByZIndex($("#" + id).zIndex() - 1).style.zIndex = $("#" + id).zIndex();
 		$("#"+id).css({"z-index": $("#"+id).zIndex()-1});
-	}
+		document.getElementById("for" + id).style.opacity = '1';
+		document.getElementById("for" + id).style.WebkitTransition = 'opacity 0.5s';
+		document.getElementById("for" + id).style.MozTransition = 'opacity 0.5s';
+    }
 	if($("#"+id).zIndex()==0){
 		document.getElementById("back"+id).style.opacity = '0';
 	}
+
 }
 
 function toggleElement(id) { 

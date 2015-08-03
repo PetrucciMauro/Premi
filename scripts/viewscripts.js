@@ -163,7 +163,6 @@ var mainPath=function(){
                 for (var i = 0; i < private.percorso.length; i++) {
                     s = s + " " + private.percorso[i];
                 }
-                document.getElementById("mainp").innerHTML = s;
                 document.getElementById("addToMain").removeAttribute("onclick");
                 selezionaPercorso(id);
             }

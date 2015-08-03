@@ -44,7 +44,7 @@ var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 		}
 		if (found == true){
 			toUpdate.splice(index, 1);
-			toDelete.push({id_element, typeObj});
+			toDelete.push({"id" :id_element, "type" : typeObj});
 			return true
 		}
 		toDelete.push({"id" : id_element, "type" : typeObj});

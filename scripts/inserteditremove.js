@@ -33,7 +33,7 @@ var insertEditRemove = function () {
         private.presentazione.proper.background.image = "undefined";
 
         public.constructPresentazione = function (newPresentazione) {
-            private.presentazione = newPresentazione;
+            private.presentazione = JSON.parse(newPresentazione);
         }
         public.getPresentazione = function () {
             return private.presentazione;

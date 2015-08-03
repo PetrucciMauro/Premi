@@ -2,8 +2,8 @@
 
 var premiExecutionController = angular.module('premiExecutionController', ['premiService'])
 
-premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'toPages', 'Utils', '$route',
-	function($scope, Main, toPages, Utils, $route) {
+premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'toPages', 'Utils', '$route', 'SharedData',
+	function($scope, Main, toPages, Utils, $route, SharedData) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
 
@@ -18,8 +18,11 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    $("#premiHeader").hide();
 	    $("#premiFooter").hide();
 
-    	impress().init();
-    	impress().showMenu();
+	    //TRANSLATION
+	    translateImpress(SharedData.forEditManuel());
+
+    	//impress().init();
+    	//impress().showMenu();
 
 	    var home = angular.element($("#homeButton"));
 	    home.on("click", function(){

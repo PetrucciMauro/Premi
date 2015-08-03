@@ -125,7 +125,6 @@ premiService.factory('Main', ['Utils', '$localStorage',
 
 premiService.factory('Upload', ['$http','Main','Utils',
 	function($http,Main,Utils){
-		console.log("Ecco l'upload");
 		var baseUrl = Utils.hostname();
 		var token = Main.login().getToken();
 

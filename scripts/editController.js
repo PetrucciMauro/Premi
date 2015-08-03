@@ -2,8 +2,8 @@
 
 var premiEditController = angular.module('premiEditController', ['premiService'])
 
-premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet','$http', '$location',
-	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet,$http, $location) {
+premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet', '$location',
+	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet, $location) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
 
@@ -98,34 +98,33 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//Inserimento elementi
 		$scope.inserisciFrame = function(){
 			var frame = inserisciFrame(); //view
-			var myframe = $("#" + frame.id);
-			var style = window.getComputedStyle(frame, null);
+			var style = $("#" + frame.id);
 
 			var spec = {
 				id: frame.id,
-				xIndex: myframe.position().left,
-				yIndex: myframe.position().top,
-				height: myframe.outerHeight(),
-				width: myframe.outerWidth(),
+				xIndex: style.position().left,
+				yIndex: style.position().top,
+				height: style.outerHeight(),
+				width: style.outerWidth(),
 				rotation: 0,
-				zIndex: myframe.zIndex()
+				zIndex: style.zIndex()
 			};
-			$scope.rimuoviSfondo();
+
 			var command = concreteFrameInsertCommand(spec); //model
 			inv.execute(command);
-			console.log(insertEditRemove().getPresentazione());
 		}
 		$scope.inserisciTesto = function(){
 			var text = inserisciTesto(); //view
-			var style = window.getComputedStyle(text, null);
+			var style = $("#" + text.id);
 
 			var spec = {
 				id: text.id,
-				xIndex: style.x,
-				yIndex: style.y,
-				height: style.height,
-				width: style.width,
-				font: style.font
+				xIndex: style.position().left,
+				yIndex: style.position().top,
+				height: style.outerHeight(),
+				width: style.outerWidth(),
+				rotation: 0,
+				//font: style.font COME SI FA A RITORNARE IL FONT?
 				//scalable: 
 			};
 			var command = concreteTextInsertCommand(spec);  //model
@@ -153,14 +152,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'image/' + 'background.jpg';
 				var img = inserisciImmagine(fileurl); //view
-				var style = window.getComputedStyle(text, null);
+				var style = $("#" + img.id);
 
 				var spec = {
 					id: img.id,
-					xIndex: style.x,
-					yIndex: style.y,
-					height: style.height,
-					width: style.width,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
+					height: style.outerHeight(),
+					width: style.outerWidth(),
+					rotation: 0,
 					ref: fileurl
 				};
 
@@ -179,14 +179,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'audio/' + files[i].name;
 				var audio = inserisciAudio(fileurl); //view
-				var style = window.getComputedStyle(text, null);
+				var style = $("#" + audio.id);
 
 				var spec = {
-					id: img.id,
-					xIndex: style.x,
-					yIndex: style.y,
-					height: style.height,
-					width: style.width,
+					id: audio.id,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
+					height: style.outerHeight(),
+					width: style.outerWidth(),
+					rotation: 0,
 					ref: fileurl
 				};
 
@@ -203,14 +204,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'video/' + files[i].name;
 				var video = inserisciVideo(fileurl); //view
-				var style = window.getComputedStyle(text, null);
+				var style = $("#" + video.id);
 
 				var spec = {
-					id: img.id,
-					xIndex: style.x,
-					yIndex: style.y,
-					height: style.height,
-					width: style.width,
+					id: video.id,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
+					height: style.outerHeight(),
+					width: style.outerWidth(),
+					rotation: 0,
 					ref: fileurl
 				};
 
@@ -249,6 +251,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var style = document.getElementById('content').style;
 			style.removeProperty('background');
 
+			//QUALI VALORI DARE??
+
 			var spec = {
 				color: style.backgroundColor,
 				image: style.backgroundImage
@@ -261,6 +265,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.backcolor = "#ffffff";
 		$scope.cambiaColoreSfondo = function(color){
 			var style = document.getElementById('content').style;
+			var x = $("#content");
+			console.log(x);
 			style.backgroundColor = color;
 
 			var spec = {
@@ -382,14 +388,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.muoviElemento = function(){
 			var tipoElement = active().getTipo();
 			var idElement = active().getId();
-			var style = document.getElementById(idElement).style;
+			var style = $("#" + idElement);
 
 			var spec = {
 				id: idElement,
 				tipo: tipoElement,
-				yIndex: style.top,
-				xIndex: style.left
-			}
+				yIndex: style.position().top,
+				xIndex: style.position().left
+			};
 
 			var command = concreteEditPositionCommand(spec);
 			inv.execute(command);
@@ -398,14 +404,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.ridimensionaElemento = function(){
 			var tipoElement = active().getTipo();
 			var idElement = active().getId();
-			var style = document.getElementById(idElement).style;
+			var style = $("#" + idElement);
 
 			var spec = {
 				id: idElement,
 				tipo: tipoElement,
-				height: style.height,
-				width: style.width
-			}
+				height: style.outerHeight(),
+				width: style.outerWidth()
+			};
 
 			var command = concreteEditSizeCommand(spec);
 			inv.execute(command);
@@ -421,7 +427,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.eseguiSS = function(){
 			var presentazione = insertEditRemove().getPresentazione();
 			console.log(presentazione);
-			SharedData.forEditManuel(presentazione);
+			SharedData.forEditManuel(myJson);
 			//toPages.executionpage();
 			$location.path('private/execution');
 		}

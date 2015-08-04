@@ -26,7 +26,7 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 	var translateImpress = function(json){
 		var contStep=1;
 		var choiceSteps=[];
-		var presentation="<div id=\"impress\">";
+		var presentation="";//<div id=\"impress\">";
 
 		if(json.proper.background.url!="0")
 			presentation+="<div class=\"step sfondo\" data-scale=\"10\"style=\"background: url('"+json.proper.background.url+"');background-size:100% 100%\"></div>";
@@ -153,9 +153,9 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 				presentation+="<div class=\"step testo\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+">"+json.proper.texts[i].content+"</div>";
 			}
 			console.log(presentation);
-			presentation+="</div>";
+			//presentation+="</div>";
 
-			$("#appendImpress").append(presentation);
+			$("#impress").append(presentation);
 			var api=impress();
 			api.init();
 			api.showMenu();

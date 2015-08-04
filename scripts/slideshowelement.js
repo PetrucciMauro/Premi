@@ -25,7 +25,6 @@ var text = function (spec) {
     that.content = spec.content;
     that.font = spec.font;
     that.color = spec.color;
-   // that.scalable = spec.scalable;
     //ritorna that
     return that;
 };

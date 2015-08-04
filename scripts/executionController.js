@@ -24,12 +24,34 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
     	//impress().init();
     	//impress().showMenu();
 
-	    var home = angular.element($("#homeButton"));
-	    home.on("click", function(){
+	    var goHome = angular.element($("#homeButton"));
+	    goHome.on("click", function(){
+	    	$("#premiHeader").show();
+	    	$("#premiFooter").show();
 	    	var hash = window.location.hash;
 	    	var array = hash.split("%23");
 
 	    	window.location.hash = array[0];
 	    	toPages.homepage();
 	    });
+
+	    var goEdit = angular.element($("#editButton"));
+	    goEdit.on("click", function(){
+	    	$("#premiHeader").show();
+	    	$("#premiFooter").show();
+	    	var hash = window.location.hash;
+	    	var array = hash.split("%23");
+
+	    	window.location.hash = array[0];
+	    	toPages.editpage();
+	    });
+
+	    /*var goEdit = angular.element($("#editButton"));
+	    goEdit.on("click", function(){
+	    	var hash = window.location.hash;
+	    	var array = hash.split("%23");
+
+	    	window.location.hash = array[0];
+	    	toPages.homepage();
+	    });*/
 }])

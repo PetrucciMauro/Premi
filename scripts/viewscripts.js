@@ -433,7 +433,6 @@ var inserisciElemento=function(classe, spec){
 	div.setAttribute("class", classe+" elemento");
 	div.setAttribute("onmouseup", "angular.element(this).scope().muoviElemento()");
 	div.setAttribute("onresize", "angular.element(this).scope().ridimensionaElemento()");
-	div.setAttribute("onresize", "angular.element(this).scope().ridimensionaElemento()");
 	//TRADUTTORE EDIT
 	if(spec){
 		contatore = spec.id;
@@ -455,11 +454,9 @@ var inserisciElemento=function(classe, spec){
 	var idBack="back"+contatore;
 
 	if(classe=="frame"){
-		console.log("o mio dio");
 		document.getElementById("frames").appendChild(div);
 	}
 	else{
-		console.log("par fortuna");
 		document.getElementById("elements").appendChild(div);
 	}
 
@@ -470,9 +467,9 @@ var inserisciElemento=function(classe, spec){
 
 	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"assets/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x
 
-	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"opacity: 0; text-align:center\" src=\"assets/bringfront.png\" onclick=\"portaAvanti("+div.id+");\" width=\"15em\" >");//inserisce immagine bring to front
+	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"opacity: 0; text-align:center\" src=\"assets/bringfront.png\" onclick=\"angular.element(this).scope().portaAvanti("+div.id+");\" width=\"15em\" >");//inserisce immagine bring to front
 
-	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"assets/movebackward.png\" onclick=\"mandaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
+	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"assets/movebackward.png\" onclick=\"angular.element(this).scope().portaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
 	
 	contatore++;
 
@@ -491,7 +488,6 @@ var inserisciElemento=function(classe, spec){
 }
 
 var inserisciFrame=function(spec){
-	console.log("sono in frame");
 	var div=inserisciElemento("frame", spec);
 	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
@@ -504,7 +500,6 @@ var inserisciFrame=function(spec){
 
 //NEWTEXT
 var inserisciTesto=function(spec){
-	console.log("ora c'è il testo");
 	var div=inserisciElemento("text", spec);
 	//TRADUTTORE
 	div.style.width="50px";

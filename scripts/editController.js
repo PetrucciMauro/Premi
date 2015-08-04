@@ -8,11 +8,16 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			toPages.loginpage();
 
 		//Metodi per il reindirizzamento
-		$scope.goEdit = function(slideId){
-			toPages.editpage(slideId);
-		}
-		$scope.goExecute = function(slideId){
-			toPages.executionpage(slideId);
+		$scope.goExecute = function(){
+			var presentazione = insertEditRemove().getPresentazione();
+			console.log(presentazione);
+			SharedData.forEditManuel(presentazione);
+			$location.path('private/execution');
+
+			/*
+			//BISOGNA ANCHE SALVARLA!
+			toPages.executionpage(insertEditRemove().getIdPresentazione());
+			*/	
 		}
 
 		$scope.toggleList = function() {
@@ -57,7 +62,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				$scope.rotation = false;
 		}
 		//per far apparire il div corretto e far sparire quelli eventualmenti aperti
-		//which-> variabile per ng-show || id-> id del div su cui applicare il toggleElement
+		//id-> id del div su cui applicare il toggleElement
 		$scope.show = function(id){
 			backgroundManage(false);
 			slideShowBackgroundManage(false);
@@ -76,9 +81,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				throw new Error("Elemento non riconosciuto");
 			
 			toggleElement(id);
-		}
-		var mainpath = function() {
-			return mainPath();
 		}
 		//Bottom Sheet
 		$scope.showPathBottomSheet = function($event) {
@@ -102,8 +104,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				id: frame.id,
-				xIndex: style.position().left,
-				yIndex: style.position().top,
+				left: style.position().left,
+				top: style.position().top,
 				height: style.outerHeight(),
 				width: style.outerWidth(),
 				rotation: 0,
@@ -116,16 +118,20 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.inserisciTesto = function(){
 			var text = inserisciTesto(); //view
 			var style = $("#" + text.id);
+			console.log(style);
+			var thistext = $("#txt" + text.id);
 
 			var spec = {
 				id: text.id,
-				xIndex: style.position().left,
-				yIndex: style.position().top,
-				height: style.outerHeight(),
-				width: style.outerWidth(),
+				left: style.position().left,
+				top: style.position().top,
+				height: thistext.height(),
+				width: thistext.width(),
+				waste: thistext.position().left,
+				size: thistext.css("font-size"),
 				rotation: 0,
-				//font: style.font COME SI FA A RITORNARE IL FONT?
-				//scalable: 
+				font: style.css("font-family"),
+				zIndex: style.zIndex()
 			};
 			var command = concreteTextInsertCommand(spec);  //model
 			inv.execute(command);
@@ -153,15 +159,18 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var fileurl = baseurl + 'image/' + 'background.jpg';
 				var img = inserisciImmagine(fileurl); //view
 				var style = $("#" + img.id);
+				var immagine = $("#img" + img.id);
 
 				var spec = {
 					id: img.id,
-					xIndex: style.position().left,
-					yIndex: style.position().top,
-					height: style.outerHeight(),
-					width: style.outerWidth(),
+					left: style.position().left,
+					top: style.position().top,
+					height: immagine.height(),
+					width: immagine.width(),
+					waste: (immagine.width() - immagine.outerWidth())/2,
 					rotation: 0,
-					ref: fileurl
+					ref: fileurl,
+					zIndex: style.zIndex()
 				};
 
 				var command = concreteImageInsertCommand(spec); //model
@@ -178,17 +187,21 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'audio/' + files[i].name;
+				fileurl.replace(/\s/g, "%");
+				//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
+				console.log(fileurl);
 				var audio = inserisciAudio(fileurl); //view
 				var style = $("#" + audio.id);
 
 				var spec = {
 					id: audio.id,
-					xIndex: style.position().left,
-					yIndex: style.position().top,
-					height: style.outerHeight(),
-					width: style.outerWidth(),
+					left: style.position().left,
+					top: style.position().top,
+					height: style.height(),
+					width: style.width(),
 					rotation: 0,
-					ref: fileurl
+					ref: fileurl,
+					zIndex: style.zIndex()
 				};
 
 				var command = concreteAudioInsertCommand(spec); //model
@@ -205,15 +218,18 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var fileurl = baseurl + 'video/' + files[i].name;
 				var video = inserisciVideo(fileurl); //view
 				var style = $("#" + video.id);
+				var thisvideo = $("#video" + video.id);
 
 				var spec = {
 					id: video.id,
-					xIndex: style.position().left,
-					yIndex: style.position().top,
-					height: style.outerHeight(),
-					width: style.outerWidth(),
+					left: style.position().left,
+					top: style.position().top,
+					height: thisvideo.outerHeight(),
+					width: thisvideo.outerWidth(),
+					waste: (thisvideo.width() - thisvideo.outerWidth())/2,
 					rotation: 0,
-					ref: fileurl
+					ref: fileurl,
+					zIndex: style.zIndex()
 				};
 
 				var command = concreteVideoInsertCommand(spec); //model
@@ -255,7 +271,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				color: style.backgroundColor,
-				image: style.backgroundImage
+				image: style.backgroundImage,
+				width: l,
+				height: h
 			};
 
 			var command = concreteBackgroundInsertCommand(spec);
@@ -271,7 +289,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				color: style.backgroundColor,
-				image: style.backgroundImage
+				image: style.backgroundImage,
+				width: l,
+				height: h
 			};
 			
 			var sfondo = concreteBackgroundInsertCommand(spec);
@@ -290,7 +310,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				color: style.backgroundColor,
-				image: style.backgroundImage
+				image: style.backgroundImage,
+				width: l,
+				height: h
 			};
 
 			var command = concreteBackgroundInsertCommand(spec); //model
@@ -355,17 +377,19 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.mediaControl = function(){
 			mediaControl();
 		}
+
+		$scope.annullaModifica = function(){
+			if(!invoker().getUndoStack())
+				return;
+			invoker().undo();
+			console.log(insertEditRemove().getPresentazione());
+		}
+		$scope.ripristinaModifica = function(){
+			if(!invoker().getRedoStack())
+				return;
+			invoker().redo();
+		}
 		
-	    //menu contestuali
-		/*var vm = this; WHAT IS THIS??
-		this.announceClick = function (index) {
-		    $mdDialog.show(
-              $mdDialog.alert()
-                .title('You clicked!')
-                .content('You clicked the menu item at index ' + index)
-                .ok('Nice')
-            );
-		};*/
 		$scope.ruotaElemento = function(value){
 			var activeElement = active().getId();
 			var tipoElement = active().getTipo();
@@ -380,7 +404,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var command = concreteEditRotationCommand(spec);
 			inv.execute(command);
-			console.log(insertEditRemove().getPresentazione());
 		}
 
 		//VEDERE SE E' POSSIBILE VELOCIZZARE QUESTI DUE:
@@ -393,8 +416,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var spec = {
 				id: idElement,
 				tipo: tipoElement,
-				yIndex: style.position().top,
-				xIndex: style.position().left
+				top: style.position().top,
+				left: style.position().left
 			};
 
 			var command = concreteEditPositionCommand(spec);
@@ -408,10 +431,36 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				id: idElement,
-				tipo: tipoElement,
-				height: style.outerHeight(),
-				width: style.outerWidth()
+				tipo: tipoElement
 			};
+
+			if(tipoElement === "frame"){
+				spec.height = style.outerHeight();
+				spec.width = style.outerWidth();
+			}
+			else if(tipoElement === "text"){
+				var thistext = $("#txt" + idElement);
+				spec.height = thistext.height();
+				spec.width = thistext.width();
+				spec.waste = thistext.position().left;
+			}
+			else if(tipoElement === "image"){
+				var immagine = $("#image" + idElement);
+				spec.height = immagine.height();
+				spec.width = immagine.width();
+				spec.waste = (immagine.width() - immagine.outerWidth())/2;
+			}
+			else if(tipoElement === "audio"){
+				spec.height = style.height();
+				spec.width = style.width();
+			}
+			else if(tipoElement === "video"){
+				var thisvideo = $("#video" + idElement);
+				spec.height = thisvideo.outerHeight();
+				spec.width = thisvideo.outerWidth();
+				spec.waste = (thisvideo.width() - thisvideo.outerWidth())/2;
+			}
+			console.log(spec);
 
 			var command = concreteEditSizeCommand(spec);
 			inv.execute(command);
@@ -422,41 +471,77 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var activeElement = active().getId();
 			console.log(activeElement);
 		    mainPath().addToMainPath(active().getId(),0);
+
+		    var spec = {
+		    	//pos: ??,
+		    	id: activeElement
+		    };
+
+		    var command = concreteAddToMainPathCommand(spec);
+			inv.execute(command);
 		}
 
-		$scope.eseguiSS = function(){
-			var presentazione = insertEditRemove().getPresentazione();
-			console.log(presentazione);
-			SharedData.forEditManuel(myJson);
-			//toPages.executionpage();
-			$location.path('private/execution');
+		$scope.rimuoviMainPath = function () {
+			var activeElement = active().getId();
+			console.log(activeElement);
+		    //mainPath().addToMainPath(active().getId(),0);
+
+			var spec = {
+		    	id: activeElement
+		    };
+
+		    var command = concreteRemoveFromMainPathCommand(spec);
+			inv.execute(command);
+		}
+
+		$scope.portaAvanti = function(id){
+			portaAvanti(id);
+
+			var style = $("#" + id);
+
+			var spec = {
+				zIndex: style.zIndex()
+			};
+
+			//MODEL: CHI RICHIAMO?
+		}
+		$scope.portaDietro = function(id){
+			mandaDietro(id);
+
+			var style = $("#" + id);
+
+			var spec = {
+				zIndex: style.zIndex()
+			};
+			
+			//MODEL: CHI RICHIAMO?
 		}
 
 		$scope.config = {};
 		$scope.model = {};
 		
-		//INSERTEDITREMOVE RIMETTERE JSON.PARSE SU CONSTRUCT
 		var translateEdit = function(json){
 			//MANCANO I PERCORSI!!!!! DA FARE CON GIOVANNI
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
 
 			//RICREO I FRAME
-			/*var frames = ins.getFrames();
+			var frames = ins.getFrames();
 			for(var i=0; i<frames.length; ++i){
 				var frame = frames[i];
 				var spec = {
 					id: frame.id,
-					left: frame.xIndex,
-					top: frame.yIndex,
+					left: frame.left,
+					top: frame.top,
 					height: frame.height,
 					width: frame.width,
+					zIndex: frame.zIndex,
 					rotation: frame.rotation,
 					backgroundColor: frame.backgroundcolor,
 					backgroundImage: frame.backgroundimage
 				};
 				inserisciFrame(spec);
-			}*/
+			}
 
 			//RICREO I TESTI
 			var texts = ins.getTexts();
@@ -464,10 +549,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var text = texts[i];
 				var spec = {
 					id: text.id,
-					left: text.xIndex,
-					top: text.yIndex,
+					left: text.left,
+					top: text.top,
 					height: text.height,
 					width: text.width,
+					zIndex: frame.zIndex,
+					waste: frame.waste,
 					rotation: text.rotation,
 					content: text.content,
 					font: text.font,
@@ -480,7 +567,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			{
 				var background = ins.getBackground();
 
-				var style = document.getElementById('fantoccio').style;
+				var style = document.getElementById('content').style;
 				style.backgroundColor = background.color;
 				style.backgroundImage = "url(" + background.url + ")";
 			}
@@ -491,10 +578,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var img = imgs[i];
 				var spec = {
 					id: img.id,
-					left: img.xIndex,
-					top: img.yIndex,
+					left: img.left,
+					top: img.top,
 					height: img.height,
 					width: img.width,
+					zIndex: frame.zIndex,
+					waste: frame.waste,
 					rotation: img.rotation,
 					ref: img.url
 				};
@@ -506,10 +595,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var audio = audios[i];
 				var spec = {
 					id: audio.id,
-					left: audio.xIndex,
-					top: audio.yIndex,
+					left: audio.left,
+					top: audio.top,
 					height: audio.height,
 					width: audio.width,
+					zIndex: frame.zIndex,
 					rotation: audio.rotation,
 					ref: audio.url
 				};
@@ -521,170 +611,128 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var video = videos[i];
 				var spec = {
 					id: video.id,
-					left: video.xIndex,
-					top: video.yIndex,
+					left: video.left,
+					top: video.top,
 					height: video.height,
 					width: video.width,
+					waste: frame.waste,
+					zIndex: frame.zIndex,
 					rotation: video.rotation,
 					ref: video.url
 				};
 				inserisciVideo(undefined, spec);
 			}
-			//SVG
-			/*var SVGs = ins.getSVGs();
-			for(var i=0; i< SVGs.length; ++i){
-				var svg = SVGs[i];
-				var spec = {
-					id: svg.id,
-					left: svg.xIndex,
-					top: svg.yIndex,
-					height: svg.height,
-					width: svg.width,
-					rotation: svg.rotation,
-					ref: svg.url
-				};
-				inserisciSVG(undefined, spec);
-			}*/
 
 		};
-		//translateEdit(SharedData.forEdit());
+		//translateEdit(SharedData.getPresentazione());
 		var myJson = {
-    "meta":
-            {
-                "id": 1,
-                "data_ultima_modifica": 2015,
-                "titolo": "presentazione di prova"
-            },
-    "proper": {
-        "paths": {
-            "main": [2,12],
-            "choices": [{
-                    "pathId": 0,
-                    "choicePath": [80]
-                }, {
-                    "pathId": 1,
-                    "choicePath": [11]
-                }]
-        },
-        "texts": [
-            {
-                "id": 1,
-                "xIndex": 10,
-                "yIndex": 20,
-				"scalable": 20,
-                "rotation": 2,
-                "height": 15,
-                "width": 13,
-                "content": "babba",
-                "font": "arial",
-                "color": "red"
-            },
-            {
-                "id": 7,
-                "xIndex": 10,
-                "yIndex": 20,
-                "rotation": 32,
-                "height": 1,
-                "width": 134,
-                "content": "babba2",
-                "font": "times",
-                "color": "black"
-            }],
-        "frames": [
-        	{
-                "id": 2,
-                "xIndex": 0,
-                "yIndex": 0,
-                "rotation": 180,
-                "height": 200,
-                "width": 300,
-                "bookmark": 1,
-                "backgroundimage": "prova",
-                "backgroundcolor": "rgba(2,23,244,1)"
-            },
-            {
-                "id": 11,
-                "xIndex": 100,
-                "yIndex": 20,
-                "rotation": 2,
-                "height": 500,
-                "width": 100,
-                "bookmark": 1,
-                "backgroundimage": "prova",
-                "backgroundcolor": "rgba(40,50,200,2)"
-            },
-            {
-                "id": 12,
-                "xIndex": 10,
-                "yIndex": 60,
-                "rotation": 2,
-                "height": 150,
-                "width": 130,
-                "bookmark": 1,
-                "backgroundimage": "prova",
-                "backgroundcolor": "rgba(2,23,244,1)"
-            }],
-        "images": [{
-                "id": 3,
-                "xIndex": 10,
-                "yIndex": 20,
-                "rotation": 2,
-                "height": 15,
-                "width": 13,
-                "url": "files/legolas/image/background.jpg"
-            }],
-        "SVGs": [{
-                "id": 6,
-                "xIndex": 10,
-                "yIndex": 20,
-                "rotation": 2,
-                "height": 15,
-                "width": 13,
-                "shape": "0,2,3,4",
-                "color": "rgba(2,23,244,1)"
-            }],
-        "audios": [{
-                "id": 4,
-                "xIndex": 10,
-                "yIndex": 20,
-                "rotation": 2,
-                "height": 15,
-                "width": 13
-            }],
-        "videos": [{
-                "id": 5,
-                "xIndex": 10,
-                "yIndex": 20,
-                "rotation": 2,
-                "height": 15,
-                "width": 13
-            }],
-        "background": {
-				"id": 0,
-                "xIndex": 0,
-                "yIndex": 0,
-                "rotation": 0,
-                "height": 0,
-                "width": 0,
-				"url": "files/legolas/image/background.jpg",
-				"color": "rgba(31,23,22,1)"
-        }
-    }
-};
-		//translateEdit(myJson);
-		/*TRADUTT. PER MANUEL
-		TESTO: appendere al json questi valori:
-			-top e left che già c'è nel model
-			-top e left dell'input ossia id="txt+id"
-			-*/
-	}])
+		    "meta":
+		            {
+		                "id": 1,
+		                "data_ultima_modifica": 2015,
+		                "titolo": "presentazione di prova"
+		            },
+		    "proper": {
+		        "paths": {
+		            "main": [2,12],
+		            "choices": [{
+		                    "pathId": 0,
+		                    "choicePath": [80]
+		                }, {
+		                    "pathId": 1,
+		                    "choicePath": [11]
+		                }]
+		        },
+		        "texts": [
+		            {
+		                "id": 1,
+		                "left": 10,
+		                "top": 20,
+						"scalable": 20,
+		                "rotation": 2,
+		                "height": 15,
+		                "width": 13,
+		                "zIndex": 3,
+		                "waste": 2,
+		                "content": "babba",
+		                "font": "arial",
+		                "color": "red"
+		            }],
+		        "frames": [
+		        	{
+		                "id": 2,
+		                "left": 0,
+		                "top": 0,
+		                "rotation": 180,
+		                "height": 200,
+		                "width": 300,
+		                "zIndex": 1,
+		                "bookmark": 1,
+		                "backgroundimage": "",
+		                "backgroundcolor": "rgba(2,23,244,1)"
+		            },
+		            {
+		                "id": 11,
+		                "left": 100,
+		                "top": 20,
+		                "rotation": 2,
+		                "height": 500,
+		                "width": 100,
+		                "zIndex": 2,
+		                "bookmark": 1,
+		                "backgroundimage": "",
+		                "backgroundcolor": "rgba(40,50,200,2)"
+		            }],
+		        "images": [{
+		                "id": 3,
+		                "left": 10,
+		                "top": 20,
+		                "rotation": 2,
+		                "height": 15,
+		                "width": 13,
+		                "zIndex": 10,
+		                "waste": 1,
+		                "url": "files/legolas/image/background.jpg"
+		            }],
+		        "audios": [{
+		                "id": 4,
+		                "left": 10,
+		                "top": 20,
+		                "rotation": 2,
+		                "height": 15,
+		                "width": 13,
+		                "zIndex": 1,
+		            }],
+		        "videos": [{
+		                "id": 5,
+		                "left": 10,
+		                "top": 20,
+		                "rotation": 2,
+		                "height": 15,
+		                "width": 13,
+		                "zIndex": 1,
+		                "waste": 3
+		            }],
+		        "background": {
+						"id": 0,
+		                "left": 0,
+		                "top": 0,
+		                "rotation": 0,
+		                "height": 0,
+		                "width": 0,
+						"url": "files/legolas/image/background.jpg",
+						"color": "rgba(31,23,22,1)"
+		        }
+		    }
+		};
+}])
 
 premiEditController.controller('BottomSheetController', ['scope',
 	function($scope) {
 		$scope.stampa = function(){
 			return mainPath().stampaPercorso();
 		}
-	}])
+}])
 
 
 premiApp.directive('printPath', function ($compile) {

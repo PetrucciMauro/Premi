@@ -342,22 +342,24 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 			//Le seguenti pagine sono tutte accessibili solo dopo essersi autenticati al server
 			//PAGINA HOME
 			homepage: function() {
-				var success = function(){$location.path('/private/home');window.location.reload();};
+				var success = function(){$location.path('/private/home');};
 				return sendRequest('/private/home.html', success, error);
 			},
 			//PAGINA EDIT
 			editpage: function(slideId) {
 				var success = function(){
 					$location.path('/private/edit');
-					SharedData.forEdit(slideId);
+					if(Utils.isObject(slideId))
+						SharedData.getPresentazione(slideId);
 				};
 				return sendRequest('/private/edit.html', success, error);
 			},
 			//PAGINA DI ESECUZIONE
 			executionpage: function(slideId) {
 				var success = function(){
-						$location.path('/private/execution');
-						SharedData.forExecution(slideId);
+					$location.path('/private/execution');
+					if(Utils.isObject(slideId))
+						SharedData.getPresentazione(slideId);
 				};
 				return sendRequest('/private/execution.html', success, error);
 			},
@@ -374,53 +376,30 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 	function(Utils, $localStorage, Main){
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
-		//ricordano l'id della presentazione su cui lavorare
-		//per l'esecuzione
-		var idExecution = undefined;
-		//per l'edit
-		var idEdit = undefined;
+		//ricorda l'id della presentazione su cui lavorare
+		var myPresentation = undefined;
 
 		var idEditManuel = undefined;
 
 		var shared = {
-			forExecution: function(idSlideShow) {
+			getPresentazione: function(idSlideShow) {
 				var idss = {};
 
 				if(Utils.isUndefined(idSlideShow)){
 					if(Utils.isObject(idExecution))
 						return idExecution;
 
-					if(Utils.isObject($localStorage.idExecution))
-						idss = $localStorage.idExecution;
+					if(Utils.isObject($localStorage.idMyPresentation))
+						idss = $localStorage.idMyPresentation;
 				}
 				else
 					idss = idSlideShow;
 
 				if(Utils.isObject(idss)){
-					idExecution = JSON.stringify(mongo.getPresentation(idss));
-					$localStorage.idEdit = idss;
+					myPresentation = JSON.stringify(mongo.getPresentation(idss));
+					$localStorage.idMyPresentation = idss;
 				}
-				return idExecution;
-			},
-			forEdit: function(idSlideShow) {
-				var idss = {};
-
-				if(Utils.isUndefined(idSlideShow)){
-					if(Utils.isObject(idEdit))
-						return idEdit;
-
-					if(Utils.isObject($localStorage.idEdit))
-						idss = $localStorage.idEdit;
-				}
-				else
-					idss = idSlideShow;
-
-				if(Utils.isObject(idss)){
-					idEdit = JSON.stringify(mongo.getPresentation(idss));
-					$localStorage.idEdit = idss;
-				}
-
-				return idEdit;
+				return myPresentation;
 			},
 			forEditManuel: function(json){
 				if(json)

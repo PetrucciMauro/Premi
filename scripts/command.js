@@ -16,6 +16,7 @@ var invoker = function () {
             com.doAction();
             private.undoStack.push(com);
             private.redoStack = [];
+            console.log("eseguo");
         };
         public.undo = function () {
             var temp = private.undoStack.pop();
@@ -158,7 +159,7 @@ var concreteFrameInsertCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            //controller.update(public.getId());
+            angular.element($("#frames")).scope().inserisciFrame(spec);
         }
         var obj = public.getObj();
         obj.action = "insert";
@@ -166,6 +167,7 @@ var concreteFrameInsertCommand = function (spec) {
     };
     public.undoAction = function () {
         public.getEnabler().removeFrame(public.getId());
+        angular.element($("#frames")).scope().rimuoviElemento(spec);
         var obj = public.getObj();
         obj.action = "delete";
         return obj;

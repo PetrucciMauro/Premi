@@ -431,8 +431,7 @@ var inserisciElemento=function(classe, spec){
 	div.style.zIndex = zindex;
 	zindex++;
 	div.setAttribute("class", classe+" elemento");
-	div.setAttribute("onmouseup", "angular.element(this).scope().muoviElemento()");
-	div.setAttribute("onresize", "angular.element(this).scope().ridimensionaElemento()");
+	
 	//TRADUTTORE EDIT
 	if(spec){
 		contatore = spec.id;
@@ -492,7 +491,10 @@ var inserisciFrame=function(spec){
 	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
 		$( div ).resizable({
-			aspectRatio: 1 / 1
+		    aspectRatio: 1 / 1,
+		    stop: function(event, ui) {
+		        angular.element(this).scope().ridimensionaElemento()
+		    }
 		});
 	});
 	return div;
@@ -536,7 +538,10 @@ var inserisciTesto=function(spec){
 	div.appendChild(txt);
 	$( "#txt"+div.id ).focus();
 	$(function() {
-		$( div ).resizable({
+	    $(div).resizable({
+	        stop: function (event, ui) {
+	            angular.element(this).scope().ridimensionaElemento()
+	        }
 		});
 	});
 	$(function(){
@@ -591,7 +596,10 @@ var inserisciImmagine=function(x, spec){
 	var height = img.clientHeight;
 	$(function() {
 		$(img).resizable({
-			aspectRatio: width / height
+		    aspectRatio: width / height,
+		    stop: function(event, ui) {
+		    angular.element(this).scope().ridimensionaElemento()
+		}
 		});
 	});
 	return div;
@@ -609,7 +617,10 @@ var inserisciVideo=function(x, spec){
 	var height = vid.clientHeight;
 	$(function() {
 		$(div).resizable({
-			aspectRatio: width / height
+		    aspectRatio: width / height,
+		    stop: function (event, ui) {
+		        angular.element(this).scope().ridimensionaElemento()
+		    }
 		});
 	});
 	return div;
@@ -621,7 +632,10 @@ var inserisciAudio=function(x, spec){
 	var aud = document.getElementById('audio'+div.id);
 	$(function() {
 		$(div).resizable({
-			aspectRatio: 1 / 1
+		    aspectRatio: 1 / 1,
+		    stop: function (event, ui) {
+		        angular.element(this).scope().ridimensionaElemento()
+		    }
 		});
 	});
 	$("#"+div.id).css({"background":"url('assets/nota.png') no-repeat", "background-size": "100% 100%"});;
@@ -1099,7 +1113,10 @@ function updateDraggable(){
             left: (event.clientX - click.x + original.left)/(scale/100),
             top:  (event.clientY - click.y + original.top) /(scale/100)
         };
-    }
+    },
+    stop: function (event, ui) {
+        angular.element(this).scope().muoviElemento()
+	}
 });
 
 $(".droppable").droppable({

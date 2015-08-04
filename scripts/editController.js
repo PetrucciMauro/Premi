@@ -111,23 +111,30 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			inv.execute(sfondo);
 		};
 		setBackground();
-		$scope.inserisciFrame = function(){
-			var frame = inserisciFrame(); //view
-			var style = $("#" + frame.id);
+		$scope.inserisciFrame = function (spec) {
+		    var frame = inserisciFrame(spec);
+		    if (Utils.isUndefined(spec)) {
+		        console.log("entra");
+		        //view
+		        var style = $("#" + frame.id);
 
-			var spec = {
-				id: frame.id,
-				xIndex: style.position().left,
-				yIndex: style.position().top,
-				height: style.outerHeight(),
-				width: style.outerWidth(),
-				rotation: 0,
-				zIndex: style.zIndex()
-			};
+		        var spec = {
+		            id: frame.id,
+		            xIndex: style.position().left,
+		            yIndex: style.position().top,
+		            height: style.outerHeight(),
+		            width: style.outerWidth(),
+		            rotation: 0,
+		            zIndex: style.zIndex()
 
-			var command = concreteFrameInsertCommand(spec); //model
-			inv.execute(command);
 
+		        };
+
+		        var command = concreteFrameInsertCommand(spec); //model
+		        inv.execute(command);
+		    }
+		    else
+		        console.log("non entra");
 
 		}
 		$scope.inserisciTesto = function(){
@@ -256,27 +263,31 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		//rimozione
-		$scope.rimuoviElemento = function(){
-			var id = active().getId();
-			var tipoElement = active().getTipo();
+		$scope.rimuoviElemento = function (spec) {
+		    if (Utils.isUndefined(spec)) {
+		        var id = active().getId();
+		        var tipoElement = active().getTipo();
 
-			var command = {};
-			if(tipoElement === 'frame')
-				command = concreteFrameRemoveCommand(id);
-			else if(tipoElement === 'image')
-				command = concreteImageRemoveCommand(id);
-			else if(tipoElement === 'audio')
-				command = concreteAudioRemoveCommand(id);
-			else if(tipoElement === 'video')
-				command = concreteVideoRemoveCommand(id);
-			else if(tipoElement === 'text')
-				command = concreteTextRemoveCommand(id);
-			else
-				throw new Error("Elemento da eliminare non riconosciuto");
-
+		        var command = {};
+		        if (tipoElement === 'frame')
+		            command = concreteFrameRemoveCommand(id);
+		        else if (tipoElement === 'image')
+		            command = concreteImageRemoveCommand(id);
+		        else if (tipoElement === 'audio')
+		            command = concreteAudioRemoveCommand(id);
+		        else if (tipoElement === 'video')
+		            command = concreteVideoRemoveCommand(id);
+		        else if (tipoElement === 'text')
+		            command = concreteTextRemoveCommand(id);
+		        else
+		            throw new Error("Elemento da eliminare non riconosciuto");
+		        inv.execute(command);  //del model
+		    }
+		    else
+		        id = spec.id;
 			elimina(id); //della view
 
-			inv.execute(command);  //del model
+			
 		}
 
 		//Gestione sfondo Presentazione
@@ -398,13 +409,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			mediaControl();
 		}
 
-		$scope.annullaModifica = function(){
+		$scope.undo = function(){
 			if(!invoker().getUndoStack())
 				return;
 			invoker().undo();
 			console.log(insertEditRemove().getPresentazione());
 		}
-		$scope.ripristinaModifica = function(){
+		$scope.redo = function(){
 			if(!invoker().getRedoStack())
 				return;
 			invoker().redo();

@@ -19,14 +19,16 @@ var invoker = function () {
         };
         public.undo = function () {
             var temp = private.undoStack.pop();
-            temp.undoAction();
+            var obj=temp.undoAction();
             private.redoStack.push(temp);
+            return obj;
         };
         public.redo = function () {
             if (private.redoStack.length > 0) {
                 var temp = private.redoStack.pop();
-                temp.doAction();
+                var obj = temp.doAction();
                 private.undoStack.push(temp);
+                return obj;
             }
         };
         public.getUndoStack = function () {
@@ -108,10 +110,13 @@ var concreteTextInsertCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "insert";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeText(public.getId());
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "delete";
         return obj;
         //controller.remove(id)
@@ -130,10 +135,13 @@ var concreteImageInsertCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "insert";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeImage(public.getId());
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "delete";
         return obj;
         //controller.remove(id)
@@ -152,10 +160,13 @@ var concreteFrameInsertCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "insert";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeFrame(public.getId());
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "delete";
         return obj;
         //controller.remove(id)
@@ -174,10 +185,13 @@ var concreteSVGInsertCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "insert";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeSVG(public.getId());
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "delete";
         return obj;
         //controller.remove(id)
@@ -196,10 +210,13 @@ var concreteAudioInsertCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "insert";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeAudio(public.getId());
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "delete";
         return obj;
         //controller.remove(id)
@@ -218,10 +235,13 @@ var concreteVideoInsertCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "insert";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeVideo(public.getId());
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "delete";
         return obj;
         //controller.remove(id)
@@ -241,10 +261,13 @@ var concreteBackgroundInsertCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "insert";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().insertBackground(private.oldBackground);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "delete";
         return obj;
         //controller.remove(id);
@@ -265,10 +288,13 @@ var concreteTextRemoveCommand = function (spec) {
         else {
             //controller.remove(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "delete";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().insertText(private.oldText);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "insert";
         return obj;
         //controller.update(id);
@@ -287,10 +313,14 @@ var concreteImageRemoveCommand = function (spec) {
         else {
             //controller.remove(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "delete";
+        return obj;
+
     };
     public.undoAction = function () {
         public.getEnabler().insertImage(private.oldImage);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "insert";
         return obj;
         //controller.update(id);
@@ -309,10 +339,14 @@ var concreteFrameRemoveCommand = function (spec) {
         else {
             //controller.remove(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "delete";
+        return obj;
+
     };
     public.undoAction = function () {
         public.getEnabler().insertFrame(private.oldFrame);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "insert";
         return obj;
         //controller.update(id);
@@ -331,10 +365,14 @@ var concreteSVGRemoveCommand = function (spec) {
         else {
             //controller.remove(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "delete";
+        return obj;
+
     };
     public.undoAction = function () {
         public.getEnabler().insertSVG(private.oldSVG);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "insert";
         return obj;
         //controller.update(id);
@@ -353,10 +391,14 @@ var concreteAudioRemoveCommand = function (spec) {
         else {
             //controller.remove(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "delete";
+        return obj;
+
     };
     public.undoAction = function () {
         public.getEnabler().insertAudio(private.oldAudio);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "insert";
         return obj;
         //controller.update(id);
@@ -375,10 +417,14 @@ var concreteVideoRemoveCommand = function (spec) {
         else {
             //controller.remove(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "delete";
+        return obj;
+
     };
     public.undoAction = function () {
         public.getEnabler().insertVideo(private.oldVideo);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "insert";
         return obj;
         //controller.update(id);
@@ -402,10 +448,13 @@ var concreteEditPositionCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editPosition(private.oldPosition);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "edit";
         return obj;
         //controller.update(public.getId());
@@ -427,10 +476,13 @@ var concreteEditRotationCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editPosition(private.oldRotation);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "edit";
         return obj;
         //controller.update(public.getId());
@@ -452,10 +504,13 @@ var concreteEditSizeCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editSize(private.oldSize);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "edit";
         return obj;
         //controller.update(public.getId());
@@ -477,10 +532,13 @@ var concreteEditContentCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editContent(private.oldContent);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "edit";
         return obj;
         //controller.update(public.getId());
@@ -502,10 +560,13 @@ var concreteEditBackgroundCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editBackground(private.oldBackground);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "edit";
         return obj;
         //controller.update(public.getId());
@@ -527,10 +588,13 @@ var concreteEditColorCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editColor(private.oldColor);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "edit";
         return obj;
         //controller.update(public.getId());
@@ -552,10 +616,13 @@ var concreteEditFontCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editColor(private.oldFont);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "edit";
         return obj;
         //controller.update(public.getId());
@@ -575,10 +642,13 @@ var concreteAddToMainPathCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "editPath";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeFrameFromMainPath(spec.id);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "editPath";
         return obj;
         //controller.update(public.getId());
@@ -597,10 +667,13 @@ var concreteRemoveFromMainPathCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "editPath";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().addFrameToMainPath(oldFrame);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "editPath";
         return obj;
         //controller.update(public.getId());
@@ -619,10 +692,13 @@ var concreteAddToChoicePathCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "editPath";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().removeFrameFromChoicePath(spec);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "editPath";
         return obj;
         //controller.update(public.getId());
@@ -641,10 +717,13 @@ var concreteRemoveFromChoicePathCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "editPath";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().addFrameToChoicePath(oldFrame);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "editPath";
         return obj;
         //controller.update(public.getId());
@@ -663,10 +742,13 @@ var concreteNewChoicePathCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "editPath";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().deleteChoicePath(pathId);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "editPath";
         return obj;
         //controller.update(public.getId());
@@ -685,10 +767,13 @@ var concreteDeleteChoicePathCommand = function (spec) {
         else {
             //controller.update(public.getId());
         }
+        var obj = public.getObj();
+        obj.action = "editPath";
+        return obj;
     };
     public.undoAction = function () {
         public.getEnabler().addChoicePath(oldPath);
-        obj = public.getObj();
+        var obj = public.getObj();
         obj.action = "editPath";
         return obj;
         //controller.update(public.getId());

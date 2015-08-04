@@ -1,0 +1,8 @@
+/* Scroll to Top se non javascript abilitato */
+
+.scroll-to-top{
+    display:none;
+}
+.scrollNoJs{
+    display:block;
+}

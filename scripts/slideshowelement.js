@@ -13,6 +13,7 @@ function slideShowElement(spec) {
     that.xIndex = spec.xIndex || 0;
     that.yIndex = spec.yIndex || 0;
     that.rotation = spec.rotation || 0;
+    that.zIndex = spec.zIndex;
     that.height = spec.height || 0;
     that.width = spec.width || 0;
     

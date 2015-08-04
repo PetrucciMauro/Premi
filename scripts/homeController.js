@@ -12,7 +12,7 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		$scope.mongo = mongo;
 		var allSS = mongo.getPresentationsMeta();
 		$scope.allSS =  allSS;
-		
+		}
 		$scope.display_limit = 50;
 
 		//istanziazione di mongoRelation
@@ -178,5 +178,5 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		$scope.salvaManifest = function(slideId){
 			//CHI RICHIAMO?
 		}
-		}
+		
 }])

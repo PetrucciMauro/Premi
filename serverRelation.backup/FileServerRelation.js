@@ -1,5 +1,3 @@
-//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
 var FileServerRelation = function(hostname, auth_obj){
 	
 	// private_fields
@@ -107,5 +105,3 @@ var FileServerRelation = function(hostname, auth_obj){
 	
 	return that;
 };
-
-//exports.FileServerRelation = FileServerRelation;

@@ -1,4 +1,4 @@
-var Loader = function(mongoRelation_obj, showElements_obj){
+var FileServerRelation = function(mongoRelation_obj, showElements_obj){
 	
 	// private_fields
 	var mongoRelation = mongoRelation_obj;
@@ -43,8 +43,8 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 			if(toUpdate[i]== id_element){found = true; pos=i;}
 		}
 		if (found == true){
-			toUpdate.splice(pos, 1);
-			toDelete.push({"id" : id_element, "type" : typeObj});
+			toUpdate.splice(index, 1);
+			toDelete.push({"id" :id_element, "type" : typeObj});
 			return true
 		}
 		toDelete.push({"id" : id_element, "type" : typeObj});
@@ -53,19 +53,17 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	
 	that.update = function(){
 		for(var i=0; i < toInsert.length; i++){
-			mongoRelation.newElement(showElements.getPresentationId(), showElements.getElement(toInsert[i]), null);
+			mongoRelation.newElement(showElements.getPresentationId, showElements.getElement(toInsert[i]));
 		};
 		for(var i=0; i < toUpdate.length; i++){
-			mongoRelation.updateElement(showElements.getPresentationId(), showElements.getElement(toUpdate[i]), null);
+			mongoRelation.updateElement(showElements.getPresentationId, showElements.getElement(toUpdate[i]));
 		};
 		for(var i=0; i < toDelete.length; i++){
-			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id, null);
+			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id );
 		};
 		return true;
 	};
 	
 	return that;
 };
-
-//exports.Loader = Loader;
 

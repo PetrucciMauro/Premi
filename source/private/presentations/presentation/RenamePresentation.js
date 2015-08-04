@@ -11,28 +11,23 @@ var ObjectID = require('mongodb').ObjectID
 // resource
 //=========
 var post = function(req, res){
-	
+																								
 	MongoClient.connect(database, function(err, db) {
-		if(err) throw err;
-		var id_pres = req.originalUrl.split("/")[4];
-		var name_pres = req.originalUrl.split("/")[6];
-		
-		console.log("sono in rinomina");
-		console.log(id_pres);
-		console.log(name_pres);
+							  if(err) throw err;
+							  var oldName_pres = req.originalUrl.split("/")[4];
+							  var name_pres = req.originalUrl.split("/")[6];
 
-		var objectId = new ObjectID(id_pres);
-		db.collection('presentations'+req.user).update({ '_id': objectId }, {$set: { 'meta.name' : name_pres }}, function(err, doc){
-			if(err) throw err;
-			
-			res.json({
-				success: true,
-				message: 'renamed presentation: '+name_pres
-			});
-			db.close();
-			
-		});
-	});
+							  db.collection('presentations'+req.user).update({ 'meta.titolo': oldName_pres }, {$set: { 'meta.titolo' : name_pres }}, function(err, doc){
+																							 if(err) throw err;
+																							 
+																							 res.json({
+																										 success: true,
+																										 message: 'renamed presentation: '+name_pres
+																										 });
+																							 db.close();
+																							 
+																							 });
+							  });
 };
 
 

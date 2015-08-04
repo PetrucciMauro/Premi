@@ -174,7 +174,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 			return ris;
 		};
 		var upload = {
-			uploadmedia: function(files, success, error) {				
+			uploadmedia: function(files, callback) {				
 				if(Utils.isUndefined(files))
 					throw new Error("Attenzione! Il file non è definito.");
 
@@ -187,9 +187,19 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					var uploadUrl = getUrlFormat(files[i]) + getFileName(files[i].name);
 
 					var req = new XMLHttpRequest();
-					req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, false);
+					req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, true);
 					req.setRequestHeader("Authorization", token);
+					req.onload = function (e) {
+						var res = JSON.parse(req.responseText);
+						console.log("ok");
+						if(res.status == 200)
+							callback();
+						else
+							return false;
+
+					};
 					req.send(formData);
+
 
 					//var res = JSON.parse(req.responseText);
 					//console.log(req.responseText);

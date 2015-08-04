@@ -1,5 +1,3 @@
-//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
 var MongoRelation = function(hostname, auth_obj){
 	
 	// private_fields
@@ -71,50 +69,37 @@ var MongoRelation = function(hostname, auth_obj){
 		return res.success;
 	};
 	
-	that.updateElement = function(name_presentation, element_updated, callback){
-		
+	that.updateElement = function(name_presentation, element_updated){
 		var req = new XMLHttpRequest();
-		req.open("PUT", host+'/private/api/presentations/'+name_presentation+'/element', true);
+		req.open('PUT', host+'/private/api/presentations/'+name_presentation+'/element', true);
 		req.setRequestHeader("Authorization", auth.getToken());
-		req.setRequestHeader("Content-Type", "application/json");
-		var objSend = {}; objSend["element"] = element_updated;
-		req.onload = function (e) {
-			var res = JSON.parse(req.responseText);
-			messageState = res.success;
-			//return res.success;
-			callback();
-		};
-		req.send(JSON.stringify(objSend));
+		req.setRequestHeader("Content-type", "application/json");
+		req.send(JSON.stringify({"element": element_updated}));
+		var res = JSON.parse(req.responseText);
+		messageState = res.success;
+		return res.success;
 	};
 	
-	that.deleteElement = function(name_presentation, typeObj, id_element, callback){
+	that.deleteElement = function(name_presentation, typeObj, id_element){
 		var req = new XMLHttpRequest();
-		req.open("DELETE", host+'/private/api/presentations/'+name_presentation+'/delete/'+typeObj+'/'+id_element, true);
+		req.open('DELETE', host+'/private/api/presentations/'+name_presentation+'/'+typeObj+'/'+id_element, true);
 		req.setRequestHeader("Authorization", auth.getToken());
-		req.onload = function (e) {
-			var res = JSON.parse(req.responseText);
-			messageState = res.success;
-			//return res.success;
-			callback();
-		};
 		req.send();
+		var res = JSON.parse(req.responseText);
+		messageState = res.success;
+		return res.success;
 	};
 	 
 
-	that.newElement = function(name_presentation, new_element, callback){
-		
+	that.newElement = function(name_presentation, new_element){
 		var req = new XMLHttpRequest();
-		req.open("POST", host+'/private/api/presentations/'+name_presentation+'/element', true);
+		req.open('POST', host+'/private/api/presentations/'+name_presentation+'/element', true);
 		req.setRequestHeader("Authorization", auth.getToken());
-		req.setRequestHeader("Content-Type", "application/json");
-		var objSend = {}; objSend["element"] = new_element;
-		req.onload = function (e) {
-			var res = JSON.parse(req.responseText);
-			messageState = res.success;
-			//return res.success;
-			callback();
-		};
-		req.send(JSON.stringify(objSend));
+		req.setRequestHeader("Content-type", "application/json");
+		req.send(JSON.stringify({"element": new_element}));
+		var res = JSON.parse(req.responseText);
+		messageState = res.success;
+		return res.success;
 	};
 	
 	that.getMessage = function(){
@@ -123,6 +108,4 @@ var MongoRelation = function(hostname, auth_obj){
 	
 	return that;
 };
-
-//exports.MongoRelation = MongoRelation;
 

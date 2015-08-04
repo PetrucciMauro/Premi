@@ -11,6 +11,9 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
 		$scope.mongo = mongo;
 		var allSS = mongo.getPresentationsMeta();
+		
+		
+		console.log(allSS);
 		$scope.allSS =  allSS;
 		}
 		$scope.display_limit = 50;

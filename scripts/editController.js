@@ -12,6 +12,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var presentazione = insertEditRemove().getPresentazione();
 			console.log(presentazione);
 			SharedData.forEditManuel(presentazione);
+			console.log(presentazione);
 			$location.path('private/execution');
 
 			/*
@@ -96,6 +97,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		var inv = invoker();
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
+		//var loader = Loader(mongo);
 
 		//Inserimento elementi
 		$scope.inserisciFrame = function(){
@@ -104,8 +106,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				id: frame.id,
-				left: style.position().left,
-				top: style.position().top,
+				xIndex: style.position().left,
+				yIndex: style.position().top,
 				height: style.outerHeight(),
 				width: style.outerWidth(),
 				rotation: 0,
@@ -114,6 +116,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var command = concreteFrameInsertCommand(spec); //model
 			inv.execute(command);
+
+
 		}
 		$scope.inserisciTesto = function(){
 			var text = inserisciTesto(); //view
@@ -123,8 +127,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				id: text.id,
-				left: style.position().left,
-				top: style.position().top,
+				xIndex: style.position().left,
+				yIndex: style.position().top,
 				height: thistext.height(),
 				width: thistext.width(),
 				waste: thistext.position().left,
@@ -139,12 +143,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 
-		var uploadmedia = function(files){
+		var uploadmedia = function(files, callback){
 			Upload.uploadmedia(files, function() {
             	console.log("vai così");
-            } , function(res) {
+            }, function(res) {
             	throw new Error(res.message);
-            });
+            }, callback);
 		}
 		//url dove sono salvati i file dell'utente corrente
 		var baseurl = 'files/' + Main.getUser().user + '/';
@@ -153,7 +157,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(!Upload.isImage(files))
 				throw new Error("Estensione non corretta");
 
-			uploadmedia(files);
+			uploadmedia(files, function(){
 
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'image/' + 'background.jpg';
@@ -163,8 +167,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				var spec = {
 					id: img.id,
-					left: style.position().left,
-					top: style.position().top,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
 					height: immagine.height(),
 					width: immagine.width(),
 					waste: (immagine.width() - immagine.outerWidth())/2,
@@ -178,12 +182,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				console.log(document);
 			}
+		});
 		}
 		$scope.inserisciAudio = function(files){
 			if(!Upload.isAudio(files))
 				throw new Error("Estensione non corretta");
 
-			uploadmedia(files);
+			uploadmedia(files, function(){
 
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'audio/' + files[i].name;
@@ -195,8 +200,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				var spec = {
 					id: audio.id,
-					left: style.position().left,
-					top: style.position().top,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
 					height: style.height(),
 					width: style.width(),
 					rotation: 0,
@@ -207,12 +212,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var command = concreteAudioInsertCommand(spec); //model
 				inv.execute(command);
 			}
+		});
 		}
 		$scope.inserisciVideo = function(files){
 			if(!Upload.isVideo(files))
 				throw new Error("Estensione non corretta");
 
-			uploadmedia(files);
+			uploadmedia(files, function(){
 
 			for(var i=0; i<files.length; ++i){
 				var fileurl = baseurl + 'video/' + files[i].name;
@@ -222,8 +228,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				var spec = {
 					id: video.id,
-					left: style.position().left,
-					top: style.position().top,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
 					height: thisvideo.outerHeight(),
 					width: thisvideo.outerWidth(),
 					waste: (thisvideo.width() - thisvideo.outerWidth())/2,
@@ -235,7 +241,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var command = concreteVideoInsertCommand(spec); //model
 				inv.execute(command);
 			}
-			
+			});
 		}
 
 		//rimozione
@@ -339,7 +345,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(!Upload.isImage(files))
 				throw new Error("Estensione non corretta");
 
-			uploadmedia(files);
+			uploadmedia(files, function(){
 
 			var fileurl = baseurl + 'image/' + files[0].name;
 			var activeFrame = active().getId();
@@ -356,6 +362,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 			console.log(insertEditRemove().getPresentazione());
+		});
 		}
 		$scope.rimuoviSfondoFrame = function(){
 			var activeFrame = active().getId();
@@ -416,8 +423,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var spec = {
 				id: idElement,
 				tipo: tipoElement,
-				top: style.position().top,
-				left: style.position().left
+				yIndex: style.position().top,
+				xIndex: style.position().left
 			};
 
 			var command = concreteEditPositionCommand(spec);
@@ -531,8 +538,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var frame = frames[i];
 				var spec = {
 					id: frame.id,
-					left: frame.left,
-					top: frame.top,
+					xIndex: frame.xIndex,
+					yIndex: frame.yIndex,
 					height: frame.height,
 					width: frame.width,
 					zIndex: frame.zIndex,
@@ -549,8 +556,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var text = texts[i];
 				var spec = {
 					id: text.id,
-					left: text.left,
-					top: text.top,
+					xIndex: text.xIndex,
+					yIndex: text.yIndex,
 					height: text.height,
 					width: text.width,
 					zIndex: frame.zIndex,
@@ -578,8 +585,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var img = imgs[i];
 				var spec = {
 					id: img.id,
-					left: img.left,
-					top: img.top,
+					xIndex: img.xIndex,
+					yIndex: img.yIndex,
 					height: img.height,
 					width: img.width,
 					zIndex: frame.zIndex,
@@ -595,8 +602,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var audio = audios[i];
 				var spec = {
 					id: audio.id,
-					left: audio.left,
-					top: audio.top,
+					left: audio.xIndex,
+					yIndex: audio.yIndex,
 					height: audio.height,
 					width: audio.width,
 					zIndex: frame.zIndex,
@@ -611,8 +618,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var video = videos[i];
 				var spec = {
 					id: video.id,
-					left: video.left,
-					top: video.top,
+					left: video.xIndex,
+					yIndex: video.yIndex,
 					height: video.height,
 					width: video.width,
 					waste: frame.waste,

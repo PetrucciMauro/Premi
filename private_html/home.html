@@ -13,13 +13,12 @@
 <div layout="row" class="col-8 right-pres">
 	<dl class="slideshows">
 		<dd ng-repeat="slide in getSS() track by $index | limitTo: display_limit" class="slide">
-			<md-button class="md-raised md-cornered submit" ng-click="goEdit(slide._id)">Edit</md-button>
-			<md-button class="md-raised md-cornered submit" ng-click="goExecute(slide._id)">Esegui</md-button>
-			<md-button class="md-raised md-cornered submit" ng-click="deleteSlideShow(slide._id)">Elimina</md-button>
-			<md-button class="md-raised md-cornered submit" ng-click="renameSlideShow(slide._id)">Rinomina</md-button>
-			<md-button class="md-raised md-cornered submit" ng-click="salvaManifest(slide._id)">Salva</md-button>
-			<span  ng-bind="slide._id"></span>
-			<span  ng-bind="slide.meta.name"></span>
+			<md-button class="md-raised md-cornered submit" ng-click="goEdit(slide.titolo)">Edit</md-button>
+			<md-button class="md-raised md-cornered submit" ng-click="goExecute(slide.titolo)">Esegui</md-button>
+			<md-button class="md-raised md-cornered submit" ng-click="deleteSlideShow(slide.titolo)">Elimina</md-button>
+			<md-button class="md-raised md-cornered submit" ng-click="renameSlideShow(slide.titolo)">Rinomina</md-button>
+			<md-button class="md-raised md-cornered submit" ng-click="salvaManifest(slide.titolo)">Salva</md-button>
+			<span  ng-bind="slide.titolo"></span>
 
 		</dd>
 	</dl>

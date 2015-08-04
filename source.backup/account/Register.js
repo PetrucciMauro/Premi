@@ -24,7 +24,6 @@ var post = function(req, res) {
 																		db.collection('users').insert({'username': user, 'password': pass}, function(err, doc){
 																												if(err) throw err;
 																												console.dir('called insert()');
-																												res.status(200);
 																												res.json({
 																															success: true,
 																															message: 'User '+user+' registered'

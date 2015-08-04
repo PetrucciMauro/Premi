@@ -5,7 +5,7 @@ var h=l/2.06666667;
 document.getElementById("content").setAttribute("style","border: 1px solid black;position: absolute; width:"+l+"px; height:"+h+"px;");
 //TRADUTTORE
 var zindex = 0;
-var contatore=0;
+var contatore=1;
 $(document).ready(function () {
         var origin;
         $("#sortable").sortable({

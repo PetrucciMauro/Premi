@@ -752,7 +752,7 @@ $(document).mousedown(function(e) {
 			}
 			//SFONDO FRAME
 		}
-		else if($(event.target).is('#fantoccio') || $(event.target).is('#content')|| $(event.target).parents().is('#elements')){
+		else if( $(event.target).is('#content')|| $(event.target).parents().is('#elements')){
 			console.log("deselect");
 			active().deselect();
 		}
@@ -780,7 +780,7 @@ $(document).mousedown(function(e) {
 			//SFONDO FRAME
 		}
 
-		else if($(event.target).is('#fantoccio') || $(event.target).is('#content') || $(event.target).parents().is("#elements")){
+		else if( $(event.target).is('#content') || $(event.target).parents().is("#elements")){
 			active().deselect();
 		}
 	}
@@ -928,8 +928,8 @@ function backgroundReadURL(input, id) {
 		var reader = new FileReader();
 
 		reader.onload = function (e) {
-			if(id==="fantoccio"){
-				$("#fantoccio").css({"background":"url('"+e.target.result+"')"});
+			if(id==="content"){
+				$("#content").css({"background":"url('"+e.target.result+"')"});
 			}
 			else{
 				$("#"+id).css({"background":"url('"+e.target.result+"') no-repeat", "background-size": "100% 100%"});
@@ -1036,15 +1036,15 @@ function zoomIn() {
     var ntop = (document.getElementById(active().getId()).style.top);
     var elements = document.getElementById("frames").children;
     console.log("radianti " + rotRad);
-    var yCenter = document.getElementById("fantoccio").offsetHeight / 2;
-    var xCenter = document.getElementById("fantoccio").offsetWidth / 2;
+    var yCenter = document.getElementById("content").offsetHeight / 2;
+    var xCenter = document.getElementById("content").offsetWidth / 2;
     var width = document.getElementById(active().getId()).offsetWidth;
     var height = document.getElementById(active().getId()).offsetHeight;
     var devX = ((0 - width / 2 - 6) * Math.cos(-rotRad) + (height / 2 + 6) * Math.sin(-rotRad) + width / 2 + 6);
     var devY = ((width / 2 + 6) * Math.sin(-rotRad) + (height / 2 + 6) * Math.cos(-rotRad) - height / 2 - 6);
     var val = (0 - parseFloat(nleft) + (1 / 2) * document.getElementById(active().getId()).offsetWidth) + " " + (0 - parseFloat(ntop) + (1 / 2) * document.getElementById(active().getId()).offsetHeight);
-    $("#fantoccio").append('<div height="2em" width="2em" style="top: ' + (parseFloat(ntop) - devY) + 'px; left: ' + (parseFloat(nleft) + devX) + 'px; background-color: red"/>');
-    $("#fantoccio").css({
+    $("#content").append('<div height="2em" width="2em" style="top: ' + (parseFloat(ntop) - devY) + 'px; left: ' + (parseFloat(nleft) + devX) + 'px; background-color: red"/>');
+    $("#content").css({
         //"position": "absolute",
         /*"left": (0 - ((parseFloat(nleft) + devX - xCenter) * Math.cos(0 - rotRad) + (parseFloat(ntop) - devY - yCenter) * Math.sin(0 - rotRad) + xCenter)) + "px",
         "top": (0 - (0 - (parseFloat(nleft) + devX - xCenter) * Math.sin(0 - rotRad) + (parseFloat(ntop) - devY - yCenter) * Math.cos(0 - rotRad) + yCenter)) + "px",*/
@@ -1069,7 +1069,7 @@ function zoomOut() {
         $("#content").css({ "overflow": "hidden" });
         var elements = document.getElementById("frames").children;
 
-        $("#fantoccio").css({
+        $("#content").css({
             "zoom": z + "%",
             "position": "relative",
             "left": 0,
@@ -1105,7 +1105,7 @@ function updateDraggable(){
         
         
     },
-	containment: "fantoccio",
+	containment: "content",
     drag: function(event, ui){
     var original = ui.originalPosition;
         // jQuery will simply use the same object we alter here
@@ -1160,11 +1160,7 @@ out: function(event, ui) {
 });
 }
 
-$(document).ready(function () {
-    $("#fantoccio").height($("#content").height()*0.9);
-    console.log("altezza content", document.getElementById("content").style.height)
 
-});
 
 
 function flash(id) {

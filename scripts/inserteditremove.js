@@ -113,6 +113,11 @@ var insertEditRemove = function () {
         public.getBackground = function(){
             return private.presentazione.proper.background;
         };
+
+        public.getPaths = function () {
+            return private.presentazione.proper.paths;
+        };
+
 /*AGGIUNTI DA BUSETTO*/
         public.insertText = function (spec) {
             var newText = text(spec);

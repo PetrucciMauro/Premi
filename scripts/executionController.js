@@ -28,6 +28,7 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    goHome.on("click", function(){
 	    	$("#premiHeader").show();
 	    	$("#premiFooter").show();
+	    	$("#impressMenu").remove();
 	    	var hash = window.location.hash;
 	    	var array = hash.split("%23");
 
@@ -39,6 +40,7 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    goEdit.on("click", function(){
 	    	$("#premiHeader").show();
 	    	$("#premiFooter").show();
+	    	$("#impressMenu").remove();
 	    	var hash = window.location.hash;
 	    	var array = hash.split("%23");
 

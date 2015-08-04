@@ -17,7 +17,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			/*
 			//BISOGNA ANCHE SALVARLA!
-			toPages.executionpage(insertEditRemove().getIdPresentazione());
+			toPages.executionpage(insertEditRemove().getTitoloPresentazione());
 			*/	
 		}
 
@@ -100,6 +100,17 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//var loader = Loader(mongo);
 
 		//Inserimento elementi
+		var setBackground = function(){
+			var spec = {
+				color: "rgba(255,255,255,1)",
+				image: undefined,
+				width: l,
+				height: h
+			};
+			var sfondo = concreteBackgroundInsertCommand(spec);
+			inv.execute(sfondo);
+		};
+		setBackground();
 		$scope.inserisciFrame = function(){
 			var frame = inserisciFrame(); //view
 			var style = $("#" + frame.id);
@@ -277,7 +288,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				color: style.backgroundColor,
-				image: style.backgroundImage,
+				ref: style.backgroundImage,
 				width: l,
 				height: h
 			};
@@ -313,6 +324,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var style = document.getElementById('content').style;
 			style.backgroundImage = "url(" + fileurl + ")";
+
+			console.log(l);
 
 			var spec = {
 				color: style.backgroundColor,

@@ -78,7 +78,7 @@ var SVG = function (spec) {
 //oggetti background
 var background = function (spec) {
     var that = slideShowElement(spec);
-    that.url = spec.ref || "";
+    that.image = spec.image || "";
     that.color = spec.color;
     //ritorna that
     return that;

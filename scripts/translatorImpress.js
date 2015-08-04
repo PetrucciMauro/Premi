@@ -1,4 +1,5 @@
 function framePosition(left,top,width,screenWidth,screenHeight){
+	console.log(left + " " + top + " " +width+" "+screenWidth+" "+screenHeight);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
 	return position;
 }
@@ -28,9 +29,9 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 		var choiceSteps=[];
 		var presentation="";//<div id=\"impress\">";
 
-		if(json.proper.background.url!="0" || json.proper.background.url!="undefined")
+		if(json.proper.background.image!="0" && json.proper.background.image!= undefined)
 			presentation+="<div class=\"step sfondo\" data-scale=\"10\"style=\"background: url('"+json.proper.background.url+"');background-size:100% 100%\"></div>";
-		else if(json.proper.background.color!="0")
+		else if(json.proper.background.color!="0"&& json.proper.background.color!= undefined)
 			presentation+="<div class=\"step sfondo\" data-scale=\"10\"style=\"background-color:"+json.proper.background.color+";\"></div>";
 		else
 			presentation+="<div class=\"step sfondo\" data-scale=\"10\"></div>";
@@ -108,7 +109,7 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 				var bookmark="";
 				if(json.proper.frames[i].bookmark)
 					bookmark=" bookmark ";
-				presentation+="<div class=\"step extraFrame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
+				presentation+="<div class=\"step frame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
 			}
 		}
 		for(i=0; i<json.proper.frames.length; i++){
@@ -129,7 +130,7 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 					var bookmark="";
 					if(json.proper.frames[i].bookmark)
 						bookmark=" bookmark ";
-					presentation+="<div class=\"step frame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
+					presentation+="<div class=\"step extraFrame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
 				}
 			}
 			for(i=0; i<json.proper.images.length; i++){

@@ -6,6 +6,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	var toInsert = [];
 	var toUpdate = [];
 	var toDelete = [];
+	var toPath = false;
 	
 	//public_fields
 	var that = {};
@@ -51,6 +52,10 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		return true;
 	};
 	
+	that.addPAth = function(){
+		toPath = true;
+	};
+	
 	that.update = function(){
 		for(var i=0; i < toInsert.length; i++){
 			mongoRelation.newElement(showElements.getPresentationId(), showElements.getElement(toInsert[i]), null);
@@ -61,6 +66,8 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		for(var i=0; i < toDelete.length; i++){
 			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id, null);
 		};
+		if(toPath == true){ var pathElement = showElements.getPaths(); mongoRelation.updatePath(pathElement); };
+		toPath = false;
 		return true;
 	};
 	

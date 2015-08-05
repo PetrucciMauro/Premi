@@ -269,8 +269,8 @@ var insertEditRemove = function () {
 
             for (var i = 0; i < private.presentazione.proper.frames.length && !found; i++) {
                 if (private.presentazione.proper.frames[i].id === spec.id) {
-                    oldBackground.backgroundimage = private.presentazione.proper.frames[i].backgroundimage;
-                    oldBackground.backgroundcolor = private.presentazione.proper.frames[i].backgroundcolor;
+                    oldBackground.ref = private.presentazione.proper.frames[i].backgroundimage;
+                    oldBackground.color = private.presentazione.proper.frames[i].backgroundcolor;
                     private.presentazione.proper.frames[i].backgroundimage = spec.ref;
                     private.presentazione.proper.frames[i].backgroundcolor = spec.color;
                     found = true;

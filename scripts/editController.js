@@ -525,28 +525,28 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			loader.addUpdate(activeFrame);
 		}
-		$scope.muoviElemento = function(spec){
-			if(Utils.isObject(spec)){
-			    var style = document.getElementById(spec.id);
-				style.style.top = spec.yIndex+"px";
-				style.style.left = spec.xIndex+"px";
-				return;
-			}
-			var tipoElement = active().getTipo();
-			var idElement = active().getId();
-			var style = $("#" + idElement);
+		$scope.muoviElemento = function (spec) {
+		    if (Utils.isObject(spec)) {
+		        var style = document.getElementById(spec.id);
+		        style.style.top = spec.yIndex + "px";
+		        style.style.left = spec.xIndex + "px";
+		        return;
+		    }
+		    var tipoElement = active().getTipo();
+		    var idElement = active().getId();
+		    var style = $("#" + idElement);
 
-			var spec = {
-				id: idElement,
-				tipo: tipoElement,
-				yIndex: style.position().top,
-				xIndex: style.position().left
-			};
+		    var spec = {
+		        id: idElement,
+		        tipo: tipoElement,
+		        yIndex: style.position().top,
+		        xIndex: style.position().left
+		    };
 
-			var command = concreteEditPositionCommand(spec);
-			inv.execute(command);
+		    var command = concreteEditPositionCommand(spec);
+		    inv.execute(command);
 
-			loader.addUpdate(idElement);
+		    loader.addUpdate(idElement);
 		}
 		$scope.ridimensionaElemento = function(spec){
 			if(Utils.isObject(spec)){

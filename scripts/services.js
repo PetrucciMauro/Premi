@@ -292,17 +292,20 @@ premiService.factory('Utils', [
 			},
 			//Metodi che determinano se un oggetto è definito o meno
 			isUndefined: function(object){
+				var ris = false;
 				if(!object)
-					return true;
-				if(typeof object === 'undefined')
-					return true;
-				if(typeof object === 'null')
-					return true;
-				if(object === 'null')
-					return true;
-				if(object === 'undefined')
-					return true;
-				return false;
+					ris = true;
+				else if(typeof object === 'undefined')
+					ris = true;
+				else if(typeof object === 'null')
+					ris = true;
+				else if(object === 'null')
+					ris = true;
+				else if(object === 'undefined')
+					ris = true;
+				else if(object.length === 0)
+					ris = true;
+				return ris;
 			},
 			isObject: function(object){
 				return !utilities.isUndefined(object);

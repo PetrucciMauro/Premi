@@ -30,7 +30,7 @@ var insertEditRemove = function () {
         private.presentazione.proper.videos = new Array();
         private.presentazione.proper.background = {};
         private.presentazione.proper.background.color = "rgba(255,255,255,1)";
-        private.presentazione.proper.background.image = "undefined";
+        private.presentazione.proper.background.image = "";
 
         public.constructPresentazione = function (newPresentazione) {
             private.presentazione = JSON.parse(newPresentazione);
@@ -146,7 +146,7 @@ var insertEditRemove = function () {
         public.insertBackground = function (spec) {
             var oldBackground = {};
             oldBackground = private.presentazione.proper.background;
-            private.presentazione.proper.background = spec;
+            private.presentazione.proper.background = background(spec);
             return oldBackground;
         };
 

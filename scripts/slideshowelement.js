@@ -59,8 +59,8 @@ var video = function (spec) {
 var frame = function (spec) {
     var that = slideShowElement(spec);
     that.bookmark=spec.bookmark||0;
-    that.backgroundimage=spec.backgroundimage||"undefined";
-    that.backgroundcolor=spec.backgroundcolor||"rgba(0,0,0,0)";
+    that.ref=spec.backgroundimage||"";
+    that.backgroundcolor=spec.backgroundcolor||"rgb(255,255,255,1)";
     that.zIndex=spec.zIndex;
         
     //ritorna that
@@ -80,7 +80,7 @@ var SVG = function (spec) {
 var background = function (spec) {
     var that = slideShowElement(spec);
     that.image = spec.image || "";
-    that.color = spec.color;
+    that.color = spec.color || "rgb(255,255,255,1)";
     //ritorna that
     return that;
 };

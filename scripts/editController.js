@@ -285,6 +285,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//rimozione
 		$scope.rimuoviElemento = function(spec){
+			console.log(spec);
 			if(Utils.isObject(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
 				elimina(spec.id); //della view
 				return;
@@ -338,7 +339,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteBackgroundInsertCommand(spec);
 			inv.execute(command);
 
-			loader.addUpload(0);
+			//loader.addUpload(0);
 		}
 
 		$scope.backcolor = "#ffffff";
@@ -356,7 +357,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
-			loader.addUpload(0);
+			//loader.addUpload(0);
 		}
 		$scope.cambiaImmagineSfondo = function(files){
 			if(!Upload.isImage(files))
@@ -379,12 +380,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteBackgroundInsertCommand(spec); //model
 			inv.execute(command);
 
-			loader.addUpload(0);
+			//loader.addUpload(0);
 			});
 		}
 
 		//Gestione sfondo frame
 		$scope.updateSfondoFrame = function(spec){
+			console.log(spec);
 			var style = document.getElementById(spec.id).style;
 			style.backgroundColor = spec.color;
 			if(Utils.isObject(spec.ref))
@@ -407,7 +409,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			loader.addUpload(activeFrame);
+			//loader.addUpload(activeFrame);
 		}
 		$scope.cambiaImmagineSfondoFrame = function(files){
 			if(!Upload.isImage(files))
@@ -431,7 +433,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			inv.execute(command);
 			console.log(insertEditRemove().getPresentazione());
 
-			loader.addUpload(activeFrame);
+			//loader.addUpload(activeFrame);
 		});
 		}
 		$scope.rimuoviSfondoFrame = function(){
@@ -449,7 +451,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			loader.addUpload(activeFrame);
+			//loader.addUpload(activeFrame);
 		}
 
 		//Gestione media
@@ -603,17 +605,23 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    //aggiungi al percorso principale
 		$scope.aggiungiMainPath = function (spec) {
 			if(Utils.isObject(spec)){
-				mainPath().addToMainPath(spec.id,0);
+				mainPath().addToMainPath(spec.id,spec.pos);
 				return;
 			}
 
 			var activeElement = active().getId();
 		    mainPath().addToMainPath(activeElement,0);
 
-		    var spec = {
-		    	//pos: ??,
+			var spec = {
 		    	id: activeElement
 		    };
+		    var trovato = false;
+		    var percorso = mainPath().getPercorso();
+		    for(var i=0; i < percorso.length && !trovato; ++i)
+		    	if(percorso[i] == activeElement){
+		    		spec.pos = i;
+		    		trovato = true;
+		    	}
 
 		    var command = concreteAddToMainPathCommand(spec);
 			inv.execute(command);
@@ -623,11 +631,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		$scope.rimuoviMainPath = function (spec) {
 			if(Utils.isObject(spec)){
-				//mainPath().addToMainPath(spec.id,0);
+				mainPath().removeFromMainPath(spec.id);
 				return;
 			}
 			var activeElement = active().getId();
-		    //mainPath().addToMainPath(active().getId(),0);
+		    mainPath().removeFromMainPath(active().getId());
 
 			var spec = {
 		    	id: activeElement
@@ -674,19 +682,27 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			ins.constructPresentazione(json);
 
 			//RICREO IL BACKGROUND
-			{
 			var background = ins.getBackground();
 
 			//vedere come gestire il ridimensionamento degli elementi
 			//in base a l e h della view
-
-			var style = document.getElementById('content').style;
-			style.backgroundColor = background.color;
-			if(Utils.isObject(background.url))
-				style.backgroundImage = "url(" + background.url + ")";
-			else
-				style.backgroundImage = "";
-
+			if(Utils.isObject(background)){
+				var style = document.getElementById('content').style;
+				style.backgroundColor = background.color;
+				if(Utils.isObject(background.url))
+					style.backgroundImage = "url(" + background.url + ")";
+				else
+					style.backgroundImage = "";
+			}
+			else {
+				var spec = {
+					height: h,
+					width: l
+				};
+				var sfondo = concreteBackgroundInsertCommand(spec);
+				inv.execute(sfondo);
+				console.log(insertEditRemove().getPresentazione());
+				//loader.addUpload(0);
 			}
 
 			//RICREO I FRAME

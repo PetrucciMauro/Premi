@@ -1,4 +1,4 @@
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 var FileServerRelation = function(hostname, auth_obj){
 	
@@ -108,4 +108,4 @@ var FileServerRelation = function(hostname, auth_obj){
 	return that;
 };
 
-exports.FileServerRelation = FileServerRelation;
+//exports.FileServerRelation = FileServerRelation;

@@ -74,5 +74,5 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	return that;
 };
 
-exports.Loader = Loader;
+//exports.Loader = Loader;
 

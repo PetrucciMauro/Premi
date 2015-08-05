@@ -1,4 +1,4 @@
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 var MongoRelation = function(hostname, auth_obj){
 	
@@ -139,5 +139,5 @@ var MongoRelation = function(hostname, auth_obj){
 	return that;
 };
 
-exports.MongoRelation = MongoRelation;
+//exports.MongoRelation = MongoRelation;
 

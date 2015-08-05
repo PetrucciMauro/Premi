@@ -30,5 +30,5 @@ var Authentication = function(hostname){
 	return that;
 };
 
-exports.Authentication = Authentication;
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+//exports.Authentication = Authentication;
+//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;

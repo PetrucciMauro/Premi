@@ -24,5 +24,5 @@ var Registration = function(hostname){
 	
 };
 
-exports.Registration = Registration;
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+//exports.Registration = Registration;
+//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;

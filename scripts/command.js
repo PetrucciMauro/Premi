@@ -109,7 +109,7 @@ var concreteTextInsertCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            //controller.update(public.getId());
+            angular.element($("#content")).scope().inserisciTesto(spec);
         }
         var obj = public.getObj();
         obj.action = "insert";
@@ -119,6 +119,7 @@ var concreteTextInsertCommand = function (spec) {
         public.getEnabler().removeText(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
+        angular.element($("#content")).scope().rimuoviElemento(spec);
         return obj;
         //controller.remove(id)
     };
@@ -144,6 +145,7 @@ var concreteImageInsertCommand = function (spec) {
         public.getEnabler().removeImage(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
+        angular.element($("#content")).scope().rimuoviElemento(spec);
         return obj;
         //controller.remove(id)
     };
@@ -159,7 +161,7 @@ var concreteFrameInsertCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            angular.element($("#frames")).scope().inserisciFrame(spec);
+            angular.element($("#content")).scope().inserisciFrame(spec);
         }
         var obj = public.getObj();
         obj.action = "insert";
@@ -167,11 +169,10 @@ var concreteFrameInsertCommand = function (spec) {
     };
     public.undoAction = function () {
         public.getEnabler().removeFrame(public.getId());
-        angular.element($("#frames")).scope().rimuoviElemento(spec);
+        angular.element($("#content")).scope().rimuoviElemento(spec);
         var obj = public.getObj();
         obj.action = "delete";
         return obj;
-        //controller.remove(id)
     };
     return public;
 };
@@ -195,8 +196,8 @@ var concreteSVGInsertCommand = function (spec) {
         public.getEnabler().removeSVG(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
+        angular.element($("#content")).scope().rimuoviElemento(spec);
         return obj;
-        //controller.remove(id)
     };
     return public;
 };
@@ -220,8 +221,8 @@ var concreteAudioInsertCommand = function (spec) {
         public.getEnabler().removeAudio(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
+        angular.element($("#content")).scope().rimuoviElemento(spec);
         return obj;
-        //controller.remove(id)
     };
     return public;
 };
@@ -245,8 +246,8 @@ var concreteVideoInsertCommand = function (spec) {
         public.getEnabler().removeVideo(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
+        angular.element($("#content")).scope().rimuoviElemento(spec);
         return obj;
-        //controller.remove(id)
     };
     return public;
 };
@@ -271,9 +272,8 @@ var concreteBackgroundInsertCommand = function (spec) {
         public.getEnabler().insertBackground(private.oldBackground);
         var obj = public.getObj();
         obj.action = "delete";
+        angular.element($("#content")).scope().rimuoviSfondo(spec);//BISOGNA PASSARE I DATI DEL VECCHIO BCKGR
         return obj;
-        //controller.remove(id);
-        //controller.update(oldBackground.id);
     };
     return public;
 };
@@ -298,8 +298,8 @@ var concreteTextRemoveCommand = function (spec) {
         public.getEnabler().insertText(private.oldText);
         var obj = public.getObj();
         obj.action = "insert";
+        angular.element($("#content")).scope().inserisciTesto(spec);
         return obj;
-        //controller.update(id);
     };
     return public;
 };
@@ -317,6 +317,7 @@ var concreteImageRemoveCommand = function (spec) {
         }
         var obj = public.getObj();
         obj.action = "delete";
+        angular.element($("#content")).scope().inserisciImmagine(spec);
         return obj;
 
     };
@@ -350,8 +351,8 @@ var concreteFrameRemoveCommand = function (spec) {
         public.getEnabler().insertFrame(private.oldFrame);
         var obj = public.getObj();
         obj.action = "insert";
+        angular.element($("#content")).scope().inserisciFrame(spec);
         return obj;
-        //controller.update(id);
     };
     return public;
 };
@@ -376,8 +377,8 @@ var concreteSVGRemoveCommand = function (spec) {
         public.getEnabler().insertSVG(private.oldSVG);
         var obj = public.getObj();
         obj.action = "insert";
+        angular.element($("#content")).scope().inserisciSVG(spec);
         return obj;
-        //controller.update(id);
     };
     return public;
 };
@@ -402,8 +403,8 @@ var concreteAudioRemoveCommand = function (spec) {
         public.getEnabler().insertAudio(private.oldAudio);
         var obj = public.getObj();
         obj.action = "insert";
+        angular.element($("#content")).scope().inserisciAudio(spec);
         return obj;
-        //controller.update(id);
     };
     return public;
 };
@@ -428,8 +429,8 @@ var concreteVideoRemoveCommand = function (spec) {
         public.getEnabler().insertVideo(private.oldVideo);
         var obj = public.getObj();
         obj.action = "insert";
+        angular.element($("#content")).scope().inserisciVideo(spec);
         return obj;
-        //controller.update(id);
     };
     return public;
 };
@@ -458,8 +459,8 @@ var concreteEditPositionCommand = function (spec) {
         public.getEnabler().editPosition(private.oldPosition);
         var obj = public.getObj();
         obj.action = "edit";
+        angular.element($("#content")).scope().muoviElemento(spec);//PASSARE OLD POSITION
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
@@ -486,8 +487,8 @@ var concreteEditRotationCommand = function (spec) {
         public.getEnabler().editPosition(private.oldRotation);
         var obj = public.getObj();
         obj.action = "edit";
+        angular.element($("#content")).scope().ruotaElemento(spec);//PASSARE OLD ROTATION
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
@@ -514,8 +515,8 @@ var concreteEditSizeCommand = function (spec) {
         public.getEnabler().editSize(private.oldSize);
         var obj = public.getObj();
         obj.action = "edit";
+        angular.element($("#content")).scope().ridimensionaElemento(spec);//PASSARE OLD SIZE
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
@@ -570,8 +571,8 @@ var concreteEditBackgroundCommand = function (spec) {
         public.getEnabler().editBackground(private.oldBackground);
         var obj = public.getObj();
         obj.action = "edit";
+        angular.element($("#content")).scope().rimuoviSfondoFrame(spec);//PASSARE OLD BCKGR
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
@@ -652,8 +653,8 @@ var concreteAddToMainPathCommand = function (spec) {
         public.getEnabler().removeFrameFromMainPath(spec.id);
         var obj = public.getObj();
         obj.action = "editPath";
+        angular.element($("#content")).scope().aggiungiMainPath(spec);
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
@@ -677,8 +678,8 @@ var concreteRemoveFromMainPathCommand = function (spec) {
         public.getEnabler().addFrameToMainPath(oldFrame);
         var obj = public.getObj();
         obj.action = "editPath";
+        angular.element($("#content")).scope().rimuoviMainPath(spec);
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };

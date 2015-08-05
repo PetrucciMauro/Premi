@@ -396,8 +396,8 @@ premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 				var idss = {};
 
 				if(Utils.isUndefined(idSlideShow)){
-					if(Utils.isObject(idExecution))
-						return idExecution;
+					if(Utils.isObject(myPresentation))
+						return myPresentation;
 
 					if(Utils.isObject($localStorage.idMyPresentation))
 						idss = $localStorage.idMyPresentation;

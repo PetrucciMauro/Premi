@@ -6,7 +6,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	var toInsert = [];
 	var toUpdate = [];
 	var toDelete = [];
-	var toPath = false;
+	var toPaths = false;
 	
 	//public_fields
 	var that = {};
@@ -52,8 +52,8 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		return true;
 	};
 	
-	that.addPAth = function(){
-		toPath = true;
+	that.addPAths = function(){
+		toPaths = true;
 	};
 	
 	that.update = function(){
@@ -66,7 +66,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		for(var i=0; i < toDelete.length; i++){
 			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id, null);
 		};
-		if(toPath == true){ var pathElement = showElements.getPaths(); mongoRelation.updatePath(pathElement); };
+		if(toPath == true){ mongoRelation.updatePath(showElements.getPresentationId(), showElements.getPaths()); };
 		toPath = false;
 		return true;
 	};

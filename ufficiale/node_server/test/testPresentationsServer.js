@@ -15,6 +15,7 @@ var config = function(done){
 																																	 var dir= __dirname+'/../files/';
 																																	 rmdir.sync(dir);
 																																	 fs.mkdirSync(dir);
+																																	 db.close();
 																																	 done();
 																																	 });
 																	  });
@@ -63,6 +64,7 @@ describe("Presentations", function(){
 																											 
 																											 assert.equal(200, req.status);
 																											 assert.equal('presentazione_prova', jsonResponse.message[0].titolo);
+																											 db.close();
 																											 done();
 
 																											 });
@@ -87,6 +89,7 @@ describe("Presentations", function(){
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
 																											  assert.equal('presentazione_prova', doc.meta.titolo);
+																											  db.close();
 																											  done();
 																											  });
 										  });
@@ -105,26 +108,44 @@ describe("Presentations", function(){
 				req.setRequestHeader("Authorization", token);
 				req.send();
 				
-				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
-																											  if(err) return done(err);
+				//MongoClient.connect(database, function(err, db) {
+				//						  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
+				//																							  if(err) return done(err);
 																											  //var id_presentation = doc._id;
-																											  var req = new XMLHttpRequest();
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/presentations/new/presentazione_copia/'+'presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				assert.equal(200, req.status);
+				
+				MongoClient.connect(database, function(err, db) {
+										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_copia'}, function(err, doc){
+																											  if(err) return done(err);
+																											  assert.notEqual(null, doc);
+																											  
 																											  req.open('POST', host+'/private/api/presentations/new/presentazione_copia/'+'presentazione_prova', false);
 																											  req.setRequestHeader("Authorization", token);
 																											  req.send();
 																											  assert.equal(200, req.status);
 																											  
-																											  MongoClient.connect(database, function(err, db) {
-																																		 db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_copia'}, function(err, doc){
-																																																			 if(err) return done(err);
-																																																			 assert.notEqual(null, doc);
-																																																			 done();
-																																																			 });
-																																		 });
+																											  var cursor = db.collection('presentations'+'provaname').find();
+																											  
+																											  cursor.toArray(function(err, docs){
+																																  var counter = 0;
+																																  assert.equal(2, docs.length);
+																																  for(var i=0; i<docs.length; i++){
+																																  if(docs[i].meta.titolo == "presentazione_copia"){counter++}
+																																  }
+																																  assert.equal(1, counter);
+																																  db.close();
+																																  done();
+																																  });
 																											  });
+										  
 										  });
 				});
+										//  });
+				//});
 			
 			it("GetPresentation", function(done){
 				var req = new XMLHttpRequest();
@@ -151,6 +172,7 @@ describe("Presentations", function(){
 																											  var jsonResponse = JSON.parse(req.responseText);
 																											  
 																											  assert.equal('presentazione_prova', jsonResponse.message.meta.titolo);
+																											  db.close();
 																											  done();
 																											  });
 										  });
@@ -169,27 +191,28 @@ describe("Presentations", function(){
 				req.setRequestHeader("Authorization", token);
 				req.send();
 				
+				//MongoClient.connect(database, function(err, db) {
+				//						  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
+				//																							  if(err) return done(err);
+																											 // var id_presentation = doc._id;
+
+				var req = new XMLHttpRequest();
+				req.open('DELETE', host+'/private/api/presentations/'+'presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				assert.equal(200, req.status);
+																											  
 				MongoClient.connect(database, function(err, db) {
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											 // var id_presentation = doc._id;
-
-																											  var req = new XMLHttpRequest();
-																											  req.open('DELETE', host+'/private/api/presentations/'+'presentazione_prova', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.send();
-																											  assert.equal(200, req.status);
-																											  
-																											  MongoClient.connect(database, function(err, db) {
-																																		 db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
-																																																			 if(err) return done(err);
-																																																			 assert.equal(null, doc);
-																																																			 done();
-																																																			 });
-																																		 });
+																											  assert.equal(null, doc);
+																											  db.close();
+																											  done();
 																											  });
 										  });
 				});
+				//						  });
+				//});
 			
 			
 			it("RenamePresentation", function(done){
@@ -220,6 +243,7 @@ describe("Presentations", function(){
 																											  db.collection('presentations'+'provaname').findOne({'_id' : id_presentation}, function(err, doc){
 																																												  if(err) return done(err);
 																																												  assert.equal('presentazione_renamed',doc.meta.titolo);
+																																												  db.close();
 																																												  done();
 																																												  });
 																											  });
@@ -230,7 +254,7 @@ describe("Presentations", function(){
 
 describe("Presentation's elements", function(){
 		
-			it("DeleteElement", function(done){
+			it("DeleteElement", function(/*done*/){
 				var req = new XMLHttpRequest();
 				register(req);
 				
@@ -243,46 +267,46 @@ describe("Presentation's elements", function(){
 				req.setRequestHeader("Authorization", token);
 				req.send();
 				
-				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
-																											  if(err) return done(err);
+				//MongoClient.connect(database, function(err, db) {
+				//						  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
+				//																							  if(err) return done(err);
 																											  //var id_presentation = doc._id;
 																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.setRequestHeader("Content-Type", 'Application/json');
-																											  var body = { "element": {
-																											  "id": 3,
-																											  "xIndex": 10,
-																											  "yIndex": 20,
-																											  "rotation": 2,
-																											  "height": 15,
-																											  "width": 13,
-																											  "type": "image"
-																											  }
-																											  };
-																											  req.send(JSON.stringify(body));
-																											  var jsonResponse = JSON.parse(req.responseText);
-																											  assert.equal(true, jsonResponse.success);
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('DELETE', host+'/private/api/presentations/'+'presentazione_prova'+'/delete/image/3', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.send()
-																											  assert.equal(200, req.status);
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.send();
-																											  var jsonResponse = JSON.parse(req.responseText);
-																											  
-																											  assert.equal(0, jsonResponse.message.proper.images.length);
-																											  done();
-																											  });
-										  });
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
+				req.setRequestHeader("Authorization", token);
+				req.setRequestHeader("Content-Type", 'Application/json');
+				var body = { "element": {
+				"id": 3,
+				"xIndex": 10,
+				"yIndex": 20,
+				"rotation": 2,
+				"height": 15,
+				"width": 13,
+				"type": "image"
+				}
+				};
+				req.send(JSON.stringify(body));
+				var jsonResponse = JSON.parse(req.responseText);
+				assert.equal(true, jsonResponse.success);
+				
+				var req = new XMLHttpRequest();
+				req.open('DELETE', host+'/private/api/presentations/'+'presentazione_prova'+'/delete/image/3', false);
+				req.setRequestHeader("Authorization", token);
+				req.send()
+				assert.equal(200, req.status);
+				
+				var req = new XMLHttpRequest();
+				req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				var jsonResponse = JSON.parse(req.responseText);
+				
+				assert.equal(0, jsonResponse.message.proper.images.length);
+				//done();
 				});
+				//						  });
+				//});
 			
 			it("PostElement", function(done){
 				var req = new XMLHttpRequest();
@@ -297,39 +321,41 @@ describe("Presentation's elements", function(){
 				req.setRequestHeader("Authorization", token);
 				req.send();
 
+				//MongoClient.connect(database, function(err, db) {
+				//						  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
+				//																							  if(err) return done(err);
+				//var id_presentation = doc._id;
+				
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
+				req.setRequestHeader("Authorization", token);
+				req.setRequestHeader("Content-Type", 'Application/json');
+				var body = { "element": {
+				"id": 3,
+				"xIndex": 10,
+				"yIndex": 20,
+				"rotation": 2,
+				"height": 15,
+				"width": 13,
+				"type": "image"
+				}
+				};
+				
+				req.send(JSON.stringify(body));
+				assert.equal(200, req.status);
 				MongoClient.connect(database, function(err, db) {
 										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
 																											  if(err) return done(err);
-																											  //var id_presentation = doc._id;
-				
-																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.setRequestHeader("Content-Type", 'Application/json');
-																											  var body = { "element": {
-																											  "id": 3,
-																											  "xIndex": 10,
-																											  "yIndex": 20,
-																											  "rotation": 2,
-																											  "height": 15,
-																											  "width": 13,
-																											  "type": "image"
-																											  }
-																											  };
-
-																											  req.send(JSON.stringify(body));
-																											  assert.equal(200, req.status);
-																											  
-																											  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
-																																												  if(err) return done(err);
-																																												  assert.equal(3, doc.proper.images[0].id);
-																																												  done();
-																																												  });
+																											  assert.equal(3, doc.proper.images[0].id);
+																											  db.close();
+																											  done();
 																											  });
 										  });
 				});
-
-			it("PutElement", function(done){
+				//});
+			
+			it("PutPaths", function(){
+				
 				var req = new XMLHttpRequest();
 				register(req);
 				
@@ -342,62 +368,103 @@ describe("Presentation's elements", function(){
 				req.setRequestHeader("Authorization", token);
 				req.send();
 				
-				MongoClient.connect(database, function(err, db) {
-										  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
-																											  if(err) return done(err);
-																											  //var id_presentation = doc._id;
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.setRequestHeader("Content-Type", 'Application/json');
-																											  var body = { "element": {
-																											  "id": 3,
-																											  "xIndex": 10,
-																											  "yIndex": 20,
-																											  "rotation": 2,
-																											  "height": 15,
-																											  "width": 13,
-																											  "type": "image"
-																											  }
-																											  };
-																											  req.send(JSON.stringify(body));
-																											  var jsonResponse = JSON.parse(req.responseText);
-																											  assert.equal(true, jsonResponse.success);
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('PUT', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.setRequestHeader("Content-Type", 'Application/json');
-																											  var body = { "element": {
-																											  "id": 3,
-																											  "xIndex": 1000,
-																											  "yIndex": 2000,
-																											  "rotation": 2,
-																											  "height": 15,
-																											  "width": 13,
-																											  "type": "image"
-																											  }
-																											  };
-																											  req.send(JSON.stringify(body));
-
-																											  assert.equal(200, req.status);
-																											  var jsonResponse = JSON.parse(req.responseText);
-																											  assert.equal(true, jsonResponse.success);
-																											  
-																											  var req = new XMLHttpRequest();
-																											  req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
-																											  req.setRequestHeader("Authorization", token);
-																											  req.send();
-																											  var jsonResponse = JSON.parse(req.responseText);
-																											  
-																											  assert.equal(1000, jsonResponse.message.proper.images[0].xIndex);
-																											  done();
-																											  });
-										  });
+				var req = new XMLHttpRequest();
+				req.open('PUT', host+'/private/api/presentations/presentazione_prova/paths', false);
+				req.setRequestHeader("Authorization", token);
+				req.setRequestHeader("Content-Type", 'Application/json');
+				var paths_obj = {"element" : {
+				"main": [2,12],
+				"choices": [{
+								"pathId": 0,
+								"choicePath": [80],
+								"type": "choice" //new!
+								}, {
+								"pathId": 1,
+								"choicePath": [11],
+								"type": "choice" //new!
+								}]
+				}
+				};
+				req.send(JSON.stringify(paths_obj));
+				
+				var req = new XMLHttpRequest();
+				req.open('GET', host+'/private/api/presentations/presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				var jsonResponse = JSON.parse(req.responseText);
+				assert.equal(80, jsonResponse.message.proper.paths.choices[0].choicePath);
+				
 				});
+
+			it("PutElement", function(/*done*/){
+				var req = new XMLHttpRequest();
+				register(req);
+				
+				var req = new XMLHttpRequest();
+				authenticate(req);
+				var token = req.getResponseHeader("Authorization");
+				
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/presentations/new/presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				
+				//MongoClient.connect(database, function(err, db) {
+				//						  db.collection('presentations'+'provaname').findOne({'meta.titolo': 'presentazione_prova'}, function(err, doc){
+				//																							  if(err) return done(err);
+				//var id_presentation = doc._id;
+																											  
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
+				req.setRequestHeader("Authorization", token);
+				req.setRequestHeader("Content-Type", 'Application/json');
+				var body = { "element": {
+				"id": 3,
+				"xIndex": 10,
+				"yIndex": 20,
+				"rotation": 2,
+				"height": 15,
+				"width": 13,
+				"type": "image"
+				}
+				};
+				req.send(JSON.stringify(body));
+				var jsonResponse = JSON.parse(req.responseText);
+				assert.equal(true, jsonResponse.success);
+				
+				var req = new XMLHttpRequest();
+				req.open('PUT', host+'/private/api/presentations/'+'presentazione_prova'+'/element', false);
+				req.setRequestHeader("Authorization", token);
+				req.setRequestHeader("Content-Type", 'Application/json');
+				var body = { "element": {
+				"id": 3,
+				"xIndex": 1000,
+				"yIndex": 2000,
+				"rotation": 2,
+				"height": 15,
+				"width": 13,
+				"type": "image"
+				}
+				};
+				req.send(JSON.stringify(body));
+				
+				assert.equal(200, req.status);
+				var jsonResponse = JSON.parse(req.responseText);
+				assert.equal(true, jsonResponse.success);
+				
+				var req = new XMLHttpRequest();
+				req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				var jsonResponse = JSON.parse(req.responseText);
+				
+				assert.equal(1000, jsonResponse.message.proper.images[0].xIndex);
+				//done();
+				});
+			});
+//});
 			
-});
+//});
 
 
 

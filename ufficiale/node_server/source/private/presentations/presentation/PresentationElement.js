@@ -16,10 +16,10 @@ var put = function(req, res){
 							  if(err) throw err;
 							  var name_pres = req.originalUrl.split("/")[4];
 							  var id_element = req.body.element.id;
-							  console.log(id_element); // ***
+							 // console.log(id_element); // ***
 							  
 							  var new_element = req.body.element;
-							  console.log(new_element); // ***
+							  //console.log(new_element); // ***
 
 							  
 							  if(new_element == null){ res.json({
@@ -134,13 +134,14 @@ var post = function(req, res){
 							  }
 							  var to_push = {};
 							  to_push[field_path] = new_element;
-							  console.log(to_push);
+							  //console.log(to_push);
 							  
 							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, {$push : to_push},{'upsert' : true},  function(err, doc){
 																							 if(err) throw err;
-
+																							 
 																							 res.json({
-																										 success: true,																																																																																																		});
+																										 success: true
+																										 });
 																							 db.close();
 																							 });
 							  });

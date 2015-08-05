@@ -24,7 +24,7 @@ var get = function(req, res) {
 							  db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
 																		if(err) throw err;
 																		if(doc == null){
-																		db.close();
+																		
 																		res.status(400);
 																		res.json({
 																					success: false,
@@ -43,6 +43,7 @@ var get = function(req, res) {
 																										  });
 																		res.end(json);
 																		}
+																		db.close();
 																		});
 							  
 							  console.dir('called findOne()');

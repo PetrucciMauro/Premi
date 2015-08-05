@@ -117,12 +117,12 @@ var MongoRelation = function(hostname, auth_obj){
 		req.send(JSON.stringify(objSend));
 	};
 	
-	that.updatePath = function(elementPath, callback){
+	that.updatePaths = function(name_presentation, elementPath, callback){
 		var req = new XMLHttpRequest();
-		req.open("PUT", host+'/private/api/presentations/'+name_presentation+'/path', true);
+		req.open("PUT", host+'/private/api/presentations/'+name_presentation+'/paths', true);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.setRequestHeader("Content-Type", "application/json");
-		var objSend = {}; objSend["element"] = new_element;
+		var objSend = {}; objSend["element"] = elementPath;
 		req.onload = function (e) {
 			var res = JSON.parse(req.responseText);
 			messageState = res.success;

@@ -54,7 +54,7 @@ var del = function(req, res){
 							  var id_element = parseInt(id_element, 10);
 							  to_id["id"] = id_element;
 							  to_pull[field_path] = to_id;
-							  console.log(to_pull);
+							  //console.log(to_pull);
 							  
 							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, { $pull : to_pull }, function(err, doc){
 																							 if(err) throw err;

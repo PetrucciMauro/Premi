@@ -110,7 +110,7 @@ describe("Presentations", function(done){
 				var mongoRel = MongoRelation(host, auth);
 				mongoRel.newPresentation("prova_presentazione");
 
-				mongoRel.newPresentation("prova_presentazione","nuova_presentazione");
+				mongoRel.newCopyPresentation("prova_presentazione","nuova_presentazione");
 				
 				var metas = mongoRel.getPresentationsMeta();
 				assert.equal(2, metas.length);
@@ -251,7 +251,40 @@ describe("Presentations", function(done){
 																		 });
 										  });
 				});
+			
+			it("updatePaths", function(done){
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				
+				var mongoRel = MongoRelation(host, auth);
+				mongoRel.newPresentation("prova_presentazione");
+				
+				var obj_paths = {
+				"main": [2,12],
+				"choices": [{
+								"pathId": 0,
+								"choicePath": [80],
+								"type": "choice" //new!
+								}, {
+								"pathId": 1,
+								"choicePath": [11],
+								"type": "choice" //new!
+								}]
+				};
+			
+				mongoRel.updatePaths("prova_presentazione", obj_paths, function(){
+											
+											var pres = mongoRel.getPresentation("prova_presentazione");
+											assert.equal(12, pres.proper.paths.main[1]);
+											done();
+											});
+				
+				});
 			});
+
 
 /*describe("Loader", function(done){
 			

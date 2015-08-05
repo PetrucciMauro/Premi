@@ -192,6 +192,12 @@ presentationRoutes.put('/[^/]+/element', PresentationElement.put );
 
 presentationRoutes.post('/[^/]+/element', PresentationElement.post );
 
+// PresentationPaths
+
+var PresentationPath = require('./source/private/presentations/presentation/PresentationPath.js');
+
+presentationRoutes.put('/[^/]+/paths', PresentationPath.put );
+
 
 //==================
 // start the server

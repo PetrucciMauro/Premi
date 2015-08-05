@@ -4,7 +4,7 @@ var premiApp = angular.module('premiApp', [
 	'ngRoute',
 	'ngMaterial',
 	'ngStorage',
-	'routeScripts',
+	//'routeScripts',
 	'premiService',
 	'premiAccessController',
 	'premiHomeController',
@@ -57,20 +57,20 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		when('/private/edit', {
 			templateUrl: 'private_html/edit.html',
 			controller: 'EditController',
-			isLogin: true,
-			js: ['scripts/viewscripts.js']
+			isLogin: true
+			//js: ['scripts/viewscripts.js']
 		}).
 		when('/private/execution', {
 			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
-			isLogin: true,
-			js: ['lib/impress.js']
+			isLogin: true
+			//js: ['lib/impress.js']
 		}).
 		when('/private/execution:rest*', {
 			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
-			isLogin: true,
-			js: ['lib/impress.js']
+			isLogin: true
+			//js: ['lib/impress.js']
 		}).
 		otherwise({
 			redirectTo: function(){

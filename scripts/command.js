@@ -449,7 +449,7 @@ var concreteEditPositionCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            //controller.update(public.getId());
+            angular.element($("#content")).scope().muoviElemento(spec);//PASSARE OLD POSITION
         }
         var obj = public.getObj();
         obj.action = "edit";

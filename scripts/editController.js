@@ -527,9 +527,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		$scope.muoviElemento = function(spec){
 			if(Utils.isObject(spec)){
-				var style = document.getElementById(spec.id).style;
-				style.top = spec.yIndex;
-				style.left = spec.xIndex;
+			    var style = document.getElementById(spec.id);
+				style.style.top = spec.yIndex+"px";
+				style.style.left = spec.xIndex+"px";
 				return;
 			}
 			var tipoElement = active().getTipo();

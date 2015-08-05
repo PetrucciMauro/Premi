@@ -104,7 +104,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			console.log("partito il save");
 		}
 
-		$interval(save, 10000);
+		/*$interval(save, 10000);
+		$scope.$on("$locationChangeStart", function(){
+		    save();
+		});*/
 
 		$scope.salvaPresentazione = save();
 		//Inserimento elementi
@@ -171,7 +174,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//url dove sono salvati i file dell'utente corrente
 		var baseurl = 'files/' + Main.getUser().user + '/';
 
-		$scope.inserisciImmagine = function(files){
+		$scope.inserisciImmagine = function(files, spec){
+			if(Utils.isObject(spec)){
+				inserisciImmagine(spec.ref, spec);
+				return;
+			}
+
 			if(!Upload.isImage(files))
 				throw new Error("Estensione non corretta");
 
@@ -204,6 +212,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		});
 		}
 		$scope.inserisciAudio = function(files){
+			if(Utils.isObject(spec)){
+				inserisciAudio(spec.ref, spec);
+				return;
+			}
+
 			if(!Upload.isAudio(files))
 				throw new Error("Estensione non corretta");
 
@@ -235,6 +248,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		});
 		}
 		$scope.inserisciVideo = function(files){
+			if(Utils.isObject(spec)){
+				inserisciVideo(spec.ref, spec);
+				return;
+			}
+
 			if(!Upload.isVideo(files))
 				throw new Error("Estensione non corretta");
 
@@ -313,11 +331,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var spec = {
 				color: style.backgroundColor,
-				ref: style.backgroundImage,
+				image: style.backgroundImage,
 				width: l,
 				height: h
 			};
-
+			console.log(spec);
 			var command = concreteBackgroundInsertCommand(spec);
 			inv.execute(command);
 
@@ -345,14 +363,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(!Upload.isImage(files))
 				throw new Error("Estensione non corretta");
 
-			uploadmedia(files);
+			uploadmedia(files, function(){
 
 			var fileurl = baseurl + 'image/' + files[0].name;
 
 			var style = document.getElementById('content').style;
 			style.backgroundImage = "url(" + fileurl + ")";
-
-			console.log(l);
 
 			var spec = {
 				color: style.backgroundColor,
@@ -365,6 +381,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			inv.execute(command);
 
 			loader.addUpload(0);
+			});
 		}
 
 		//Gestione sfondo frame
@@ -442,6 +459,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			mediaControl();
 		}
 
+
 		$scope.annullaModifica = function(){
 			if(!inv.getUndoStack())
 				return;
@@ -486,7 +504,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 		}
 		
-		$scope.ruotaElemento = function(value){
+		$scope.ruotaElemento = function(value, spec){
+			if(Utils.isObject(spec)){
+				rotate(spec.id, value);
+				return;
+			}
 			var activeElement = active().getId();
 			var tipoElement = active().getTipo();
 
@@ -503,12 +525,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			loader.addUpdate(activeFrame);
 		}
-
-		//VEDERE SE E' POSSIBILE VELOCIZZARE QUESTI DUE:
-		//muoviElemento: risponde a mouseup -> si attiva anche se l'elemento non è stato spostato
 		$scope.muoviElemento = function(spec){
 			if(Utils.isObject(spec)){
-				//come faccio?
+				var style = document.getElementById(spec.id).style;
+				style.top = spec.yIndex;
+				style.left = spec.xIndex;
 				return;
 			}
 			var tipoElement = active().getTipo();
@@ -527,10 +548,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			loader.addUpdate(idElement);
 		}
-		//ridimensiona: risponde a onresize -> si attiva sempre ad ogni minimo ridimensionamento
-		$scope.ridimensionaElemento = function(){
+		$scope.ridimensionaElemento = function(spec){
 			if(Utils.isObject(spec)){
-				//come faccio?
+				var style = document.getElementById(spec.id).style;
+				style.height = spec.height;
+				style.width = spec.width;
 				return;
 			}
 			var tipoElement = active().getTipo();

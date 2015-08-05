@@ -724,6 +724,8 @@ function hideElement(el) {
 }
 
 $(document).mousedown(function(e) {
+	if(document.getElementById("content") == undefined)
+		return;
 	var frames = document.getElementById("frames").children;
 	var selected="undefined";
 

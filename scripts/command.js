@@ -122,7 +122,6 @@ var concreteTextInsertCommand = function (spec) {
         obj.action = "delete";
         angular.element($("#content")).scope().rimuoviElemento(spec);
         return obj;
-        //controller.remove(id)
     };
     return public;
 };
@@ -136,7 +135,7 @@ var concreteImageInsertCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            //controller.update(public.getId());
+            angular.element($("#content")).scope().inserisciImmagine(undefined, spec);
         }
         var obj = public.getObj();
         obj.action = "insert";
@@ -460,7 +459,7 @@ var concreteEditPositionCommand = function (spec) {
         public.getEnabler().editPosition(private.oldPosition);
         var obj = public.getObj();
         obj.action = "edit";
-        angular.element($("#content")).scope().muoviElemento(spec);//PASSARE OLD POSITION
+        angular.element($("#content")).scope().muoviElemento(private.oldPosition);//PASSARE OLD POSITION
         return obj;
     };
     return public;
@@ -488,7 +487,7 @@ var concreteEditRotationCommand = function (spec) {
         public.getEnabler().editPosition(private.oldRotation);
         var obj = public.getObj();
         obj.action = "edit";
-        angular.element($("#content")).scope().ruotaElemento(spec);//PASSARE OLD ROTATION
+        angular.element($("#content")).scope().ruotaElemento(private.oldRotation);//PASSARE OLD ROTATION
         return obj;
     };
     return public;
@@ -516,7 +515,7 @@ var concreteEditSizeCommand = function (spec) {
         public.getEnabler().editSize(private.oldSize);
         var obj = public.getObj();
         obj.action = "edit";
-        angular.element($("#content")).scope().ridimensionaElemento(spec);//PASSARE OLD SIZE
+        angular.element($("#content")).scope().ridimensionaElemento(private.oldSize);//PASSARE OLD SIZE
         return obj;
     };
     return public;
@@ -572,7 +571,7 @@ var concreteEditBackgroundCommand = function (spec) {
         public.getEnabler().editBackground(private.oldBackground);
         var obj = public.getObj();
         obj.action = "edit";
-        angular.element($("#content")).scope().rimuoviSfondoFrame(spec);//PASSARE OLD BCKGR
+        angular.element($("#content")).scope().rimuoviSfondoFrame(private.oldBackground);//PASSARE OLD BCKGR
         return obj;
     };
     return public;

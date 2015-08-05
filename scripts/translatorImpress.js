@@ -28,7 +28,7 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 		var contStep=1;
 		var choiceSteps=[];
 		var presentation="";//<div id=\"impress\">";
-
+		json = JSON.parse(json);
 		if(json.proper.background.image!="0" && json.proper.background.image!= undefined)
 			presentation+="<div class=\"step sfondo\" data-scale=\"10\"style=\"background: url('"+json.proper.background.url+"');background-size:100% 100%\"></div>";
 		else if(json.proper.background.color!="0"&& json.proper.background.color!= undefined)

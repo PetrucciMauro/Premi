@@ -6,6 +6,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	var toInsert = [];
 	var toUpdate = [];
 	var toDelete = [];
+	var toPaths = false;
 	
 	//public_fields
 	var that = {};
@@ -51,21 +52,27 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		return true;
 	};
 	
+	that.addPAths = function(){
+		toPaths = true;
+	};
+	
 	that.update = function(){
 		for(var i=0; i < toInsert.length; i++){
-			mongoRelation.newElement(showElements.getPresentazione().meta.titolo, showElements.getElement(toInsert[i]), null);
+			mongoRelation.newElement(showElements.getPresentationId(), showElements.getElement(toInsert[i]), null);
 		};
 		for(var i=0; i < toUpdate.length; i++){
-			mongoRelation.updateElement(showElements.getPresentazione().meta.titolo, showElements.getElement(toUpdate[i]), null);
+			mongoRelation.updateElement(showElements.getPresentationId(), showElements.getElement(toUpdate[i]), null);
 		};
 		for(var i=0; i < toDelete.length; i++){
-			mongoRelation.deleteElement(showElements.getPresentazione().meta.titolo, toDelete[i].typeObj, toDelete[i].id, null);
+			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id, null);
 		};
+		if(toPath == true){ mongoRelation.updatePath(showElements.getPresentationId(), showElements.getPaths()); };
+		toPath = false;
 		return true;
 	};
 	
 	return that;
 };
 
-//exports.Loader = Loader;
+exports.Loader = Loader;
 

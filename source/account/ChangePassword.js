@@ -29,6 +29,8 @@ var post = function(req, res) {
 																															success: true,
 																															message: 'Password updated'
 																															});
+																												db.close();
+																												
 																												});
 																		}
 																		else{
@@ -37,7 +39,9 @@ var post = function(req, res) {
 																					success: false,
 																					message: 'Username or password not correct'
 																					});
-																																																				}
+																		db.close();
+																		}
+																		
 																		
 																		});
 							  });

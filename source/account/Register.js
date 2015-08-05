@@ -33,6 +33,7 @@ var post = function(req, res) {
 																												fs.mkdirSync(__dirname+'/../../files/'+user+'/image');
 																												fs.mkdirSync(__dirname+'/../../files/'+user+'/video');
 																												fs.mkdirSync(__dirname+'/../../files/'+user+'/audio');
+																												db.close();
 																												});
 																		}
 																		else{
@@ -41,7 +42,9 @@ var post = function(req, res) {
 																					success: false,
 																					message: 'Username already registered'
 																					});
+																		db.close();
 																		}
+																		
 																		
 																		});
 							  });

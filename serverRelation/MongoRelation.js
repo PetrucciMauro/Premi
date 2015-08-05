@@ -1,4 +1,4 @@
-//var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 var MongoRelation = function(hostname, auth_obj){
 	
@@ -117,6 +117,21 @@ var MongoRelation = function(hostname, auth_obj){
 		req.send(JSON.stringify(objSend));
 	};
 	
+	that.updatePaths = function(name_presentation, elementPath, callback){
+		var req = new XMLHttpRequest();
+		req.open("PUT", host+'/private/api/presentations/'+name_presentation+'/paths', true);
+		req.setRequestHeader("Authorization", auth.getToken());
+		req.setRequestHeader("Content-Type", "application/json");
+		var objSend = {}; objSend["element"] = elementPath;
+		req.onload = function (e) {
+			var res = JSON.parse(req.responseText);
+			messageState = res.success;
+			//return res.success;
+			callback();
+		};
+		req.send(JSON.stringify(objSend));
+	};
+	
 	that.getMessage = function(){
 		return messageState;
 	};
@@ -124,5 +139,5 @@ var MongoRelation = function(hostname, auth_obj){
 	return that;
 };
 
-//exports.MongoRelation = MongoRelation;
+exports.MongoRelation = MongoRelation;
 

@@ -17,6 +17,7 @@ var invoker = function () {
             private.undoStack.push(com);
             private.redoStack = [];
             console.log("eseguo");
+            
         };
         public.undo = function () {
             var temp = private.undoStack.pop();

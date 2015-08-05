@@ -66,8 +66,8 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		for(var i=0; i < toDelete.length; i++){
 			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id, null);
 		};
-		if(toPath == true){ mongoRelation.updatePath(showElements.getPresentationId(), showElements.getPaths()); };
-		toPath = false;
+		if(toPaths == true){ mongoRelation.updatePath(showElements.getPresentationId(), showElements.getPaths()); };
+		toPaths = false;
 		return true;
 	};
 	

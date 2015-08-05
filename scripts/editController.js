@@ -314,16 +314,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		//Gestione sfondo Presentazione
-		$scope.rimuoviSfondo = function(spec){
-			if(Utils.isObject(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
-				var style = document.getElementById('content').style;
-				style.backgroundColor = spec.color;
-				if(Utils.isObject(spec.ref))
-					style.backgroundImage = "url(" + spec.ref + ")";
-				else
-					style.backgroundImage = "";
-				return;
-			}
+		$scope.updateSfondo = function(spec){
+			var style = document.getElementById('content').style;
+			style.backgroundColor = spec.color;
+			if(Utils.isObject(spec.ref))
+				style.backgroundImage = "url(" + spec.ref + ")";
+			else
+				style.backgroundImage = "";
+		}
+		$scope.rimuoviSfondo = function(){
 			var style = document.getElementById('content').style;
 			style.removeProperty('background');
 
@@ -385,6 +384,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		//Gestione sfondo frame
+		$scope.updateSfondoFrame = function(spec){
+			var style = document.getElementById(spec.id).style;
+			style.backgroundColor = spec.color;
+			if(Utils.isObject(spec.ref))
+				style.backgroundImage = "url(" + spec.ref + ")";
+			else
+				style.backgroundImage = "";
+		}
 		$scope.cambiaColoreSfondoFrame = function(color){
 			var activeFrame = active().getId();
 			
@@ -427,16 +434,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			loader.addUpload(activeFrame);
 		});
 		}
-		$scope.rimuoviSfondoFrame = function(spec){
-			if(Utils.isObject(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
-				var style = document.getElementById(spec.id).style;
-				style.backgroundColor = spec.color;
-				if(Utils.isObject(spec.ref))
-					style.backgroundImage = "url(" + spec.ref + ")";
-				else
-					style.backgroundImage = "";
-				return;
-			}
+		$scope.rimuoviSfondoFrame = function(){
 			var activeFrame = active().getId();
 			
 			var style = document.getElementById(activeFrame).style;
@@ -507,95 +505,99 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.ruotaElemento = function(value, spec){
 			if(Utils.isObject(spec)){
 				rotate(spec.id, value);
-				return;
 			}
-			var activeElement = active().getId();
-			var tipoElement = active().getTipo();
+			else{
+				var activeElement = active().getId();
+				var tipoElement = active().getTipo();
 
-			rotate(activeElement, value);
+				rotate(activeElement, value);
 
-			var spec = {
-				id: activeElement,
-				tipo: tipoElement,
-				rotation: value
+				var spec = {
+					id: activeElement,
+					tipo: tipoElement,
+					rotation: value
+				}
+
+				var command = concreteEditRotationCommand(spec);
+				inv.execute(command);
+
+				loader.addUpdate(activeFrame);
 			}
-
-			var command = concreteEditRotationCommand(spec);
-			inv.execute(command);
-
-			loader.addUpdate(activeFrame);
 		}
-		$scope.muoviElemento = function (spec) {
-		    if (Utils.isObject(spec)) {
-		        var style = document.getElementById(spec.id);
-		        style.style.top = spec.yIndex + "px";
-		        style.style.left = spec.xIndex + "px";
-		        return;
-		    }
-		    var tipoElement = active().getTipo();
-		    var idElement = active().getId();
-		    var style = $("#" + idElement);
 
-		    var spec = {
-		        id: idElement,
-		        tipo: tipoElement,
-		        yIndex: style.position().top,
-		        xIndex: style.position().left
-		    };
+		$scope.muoviElemento = function(spec){
+			if(Utils.isObject(spec)){
+				var style = document.getElementById(spec.id).style;
+				style.top = spec.yIndex + "px";
+				style.left = spec.xIndex + "px";
+			}
+			else{
+				var tipoElement = active().getTipo();
+				var idElement = active().getId();
+				var style = $("#" + idElement);
 
-		    var command = concreteEditPositionCommand(spec);
-		    inv.execute(command);
+				var spec = {
+					id: idElement,
+					tipo: tipoElement,
+					yIndex: style.position().top,
+					xIndex: style.position().left
+				};
 
-		    loader.addUpdate(idElement);
+				var command = concreteEditPositionCommand(spec);
+				inv.execute(command);
+
+				loader.addUpdate(idElement);
+			}
 		}
 		$scope.ridimensionaElemento = function(spec){
 			if(Utils.isObject(spec)){
 				var style = document.getElementById(spec.id).style;
-				style.height = spec.height;
-				style.width = spec.width;
-				return;
+				style.height = spec.height + "px";
+				style.width = spec.width + "px";
 			}
-			var tipoElement = active().getTipo();
-			var idElement = active().getId();
-			var style = $("#" + idElement);
+			else{
+				var tipoElement = active().getTipo();
+				var idElement = active().getId();
+				var style = $("#" + idElement);
 
-			var spec = {
-				id: idElement,
-				tipo: tipoElement
-			};
+				var spec = {
+					id: idElement,
+					tipo: tipoElement
+				};
 
-			if(tipoElement === "frame"){
-				spec.height = style.outerHeight();
-				spec.width = style.outerWidth();
-			}
-			else if(tipoElement === "text"){
-				var thistext = $("#txt" + idElement);
-				spec.height = thistext.height();
-				spec.width = thistext.width();
-				spec.waste = thistext.position().left;
-			}
-			else if(tipoElement === "image"){
-				var immagine = $("#image" + idElement);
-				spec.height = immagine.height();
-				spec.width = immagine.width();
-				spec.waste = (immagine.width() - immagine.outerWidth())/2;
-			}
-			else if(tipoElement === "audio"){
-				spec.height = style.height();
-				spec.width = style.width();
-			}
-			else if(tipoElement === "video"){
-				var thisvideo = $("#video" + idElement);
-				spec.height = thisvideo.outerHeight();
-				spec.width = thisvideo.outerWidth();
-				spec.waste = (thisvideo.width() - thisvideo.outerWidth())/2;
-			}
-			console.log(spec);
+				if(tipoElement === "frame"){
+					spec.height = style.outerHeight();
+					spec.width = style.outerWidth();
+				}
+				else if(tipoElement === "text"){
+					var thistext = $("#txt" + idElement);
+					spec.height = thistext.height();
+					spec.width = thistext.width();
+					spec.waste = thistext.position().left;
+				}
+				else if(tipoElement === "image"){
+					var immagine = $("#image" + idElement);
+					spec.height = immagine.height();
+					spec.width = immagine.width();
+					spec.waste = (immagine.width() - immagine.outerWidth())/2;
+				}
+				else if(tipoElement === "audio"){
+					spec.height = style.height();
+					spec.width = style.width();
+				}
+				else if(tipoElement === "video"){
+					var thisvideo = $("#video" + idElement);
+					spec.height = thisvideo.outerHeight();
+					spec.width = thisvideo.outerWidth();
+					spec.waste = (thisvideo.width() - thisvideo.outerWidth())/2;
+				}
+				console.log(spec);
 
-			var command = concreteEditSizeCommand(spec);
-			inv.execute(command);
+				var command = concreteEditSizeCommand(spec);
+				inv.execute(command);
 
-			loader.addUpdate(idElement);
+				loader.addUpdate(idElement);
+			}
 		}
 
 	    //aggiungi al percorso principale

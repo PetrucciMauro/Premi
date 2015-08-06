@@ -181,6 +181,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 				if(!checkExtension(files))
 					throw new Error("Estensione non riconosciuta dal sistema.");
 
+				console.log("upload");
 				for(var i=0; i<files.length; ++i){
 					var formData = new FormData();
 					formData.append("file", files[i]);
@@ -189,21 +190,19 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					var req = new XMLHttpRequest();
 					req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, true);
 					req.setRequestHeader("Authorization", token);
-					req.onload = function (e) {
+					/*req.onload = function (e) {
 						var res = JSON.parse(req.responseText);
 						console.log("ok");
-						if(res.status == 200)
+						if(res.status == 204)
 							callback();
 						else
 							return false;
 
-					};
+					};*/
 					req.send(formData);
-
-
-					//var res = JSON.parse(req.responseText);
-					//console.log(req.responseText);
 				}
+
+				callback();
 			},
 			isImage: function(files){
 				return checkExtension(files, image);

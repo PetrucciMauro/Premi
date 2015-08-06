@@ -154,11 +154,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 
 		var uploadmedia = function(files, callback){
-			Upload.uploadmedia(files, function() {
-            	console.log("vai così");
-            }, function(res) {
-            	throw new Error(res.message);
-            }, callback);
+			Upload.uploadmedia(files, callback);
 		}
 		//url dove sono salvati i file dell'utente corrente
 		var baseurl = 'files/' + Main.getUser().user + '/';
@@ -178,7 +174,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		        uploadmedia(files, function () {
 
 		            for (var i = 0; i < files.length; ++i) {
-		                var fileurl = baseurl + 'image/' + 'background.jpg';
+		                var fileurl = baseurl + 'image/' + files[i].name;
 		                var img = inserisciImmagine(fileurl); //view
 		                var style = $("#" + img.id);
 		                var immagine = $("#img" + img.id);
@@ -198,7 +194,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		                var command = concreteImageInsertCommand(spec); //model
 		                inv.execute(command);
 
-		                console.log(document);
 		                loader.addInsert(img.id);
 		            }
 

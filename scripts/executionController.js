@@ -47,6 +47,5 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    	window.location.hash = array[0];*/
 	    	$route.current = lastRoute;
 	    	toPages.editpage();
-	    	$route.reload();
 	    });
 }])

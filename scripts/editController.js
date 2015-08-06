@@ -87,7 +87,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//METODI PROPRI DELL'EDIT
 		var save = function(){
-			loader.update();
+			//loader.update();
 			console.log("partito il save");
 		}
 
@@ -445,7 +445,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(!inv.getUndoStack())
 				return;
 			var annulla = inv.undo(); //insert edit delete editpath
-			
+			console.log(insertEditRemove().getPresentazione());
+
 			switch(annulla.action){
 				case "insert": 
 					loader.addInsert(annulla.id);
@@ -466,7 +467,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				return;
 
 			var annulla = inv.redo(); //insert edit delete editpath
-			
+			console.log(insertEditRemove().getPresentazione());
+
 			switch(annulla.action){
 				case "insert": 
 					loader.addInsert(annulla.id);

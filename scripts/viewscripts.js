@@ -161,6 +161,7 @@ var mainPath=function(){
                 for (var i = 0; i < private.percorso.length; i++) {
                     s = s + " " + private.percorso[i];
                 }
+                if (document.getElementById("addToMain"))
                 document.getElementById("addToMain").removeAttribute("onclick");
                 selezionaPercorso(id);
             }
@@ -192,6 +193,7 @@ var mainPath=function(){
 				    s = s + " " + private.percorso[i];
 				}
 				deselezionaPercorso(popped.id);
+				if (document.getElementById("addToMain"))
 				document.getElementById("addToMain").setAttribute("onclick", "mainPath().addToMainPath(" + popped.id + ")");;
 				document.getElementById(id).style.removeProperty('border');
 			return popped;

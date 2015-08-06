@@ -118,7 +118,7 @@
 					<md-menu-item>
 						<md-input-content>
 							<md-button>
-								<input id="rangeRotation" type="range" min="0" max="360" step="1" ng-model="elementRotation" ng-change="ruotaElemento(elementRotation)"/>
+								<input id="rangeRotation" type="range" min="0" max="360" step="1" ng-model="elementRotation" ng-change="ruotaElemento(elementRotation)" aria-label="Ruota l'elemento"/>
 							</md-button>
 						</md-input-content>
 					</md-menu-item>
@@ -132,13 +132,13 @@
 			<!--TESTO -->
 			<md-input-container class="md-button md-default-theme inputContainer" style="width:3em, height:1em">
 				<md-tooltip>Cambia colore testo</md-tooltip>
-				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="colorText" class="color" />
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="colorText" class="color" aria-label="Cambia il colore del tuo testo"/>
 			</md-input-container>
 			<!--TESTO -->
 			<!--TESTO -->
 			<md-input-container class="md-button md-default-theme inputContainer" style="width:3em height:1em">
 				<md-tooltip>Cambia dimensione testo</md-tooltip>
-				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="textSize" type="number" min="1" max="400" value="31"> <!--NO MODIFICARE-->
+				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="textSize" type="number" min="1" max="400" value="31" aria-label="Cambia le dimensioni del tuo testo"> <!--NO MODIFICARE-->
 			</md-input-container>
 			<!--TESTO -->
 		</div>

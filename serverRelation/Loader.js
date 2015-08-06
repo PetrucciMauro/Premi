@@ -73,15 +73,15 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	
 	that.update = function(){
 		for(var i=0; i < toInsert.length; i++){
-			mongoRelation.newElement(showElements.getPresentationId(), showElements.getElement(toInsert[i]), null);
+			mongoRelation.newElement(showElements.getPresentazione().meta.titolo, showElements.getElement(toInsert[i]), null);
 		};
 		for(var i=0; i < toUpdate.length; i++){
-			mongoRelation.updateElement(showElements.getPresentationId(), showElements.getElement(toUpdate[i]), null);
+			mongoRelation.updateElement(showElements.getPresentazione().meta.titolo, showElements.getElement(toUpdate[i]), null);
 		};
 		for(var i=0; i < toDelete.length; i++){
-			mongoRelation.deleteElement(showElements.getPresentationId(), toDelete[i].typeObj, toDelete[i].id, null);
+			mongoRelation.deleteElement(showElements.getPresentazione().meta.titolo, toDelete[i].typeObj, toDelete[i].id, null);
 		};
-		if(toPaths == true){ mongoRelation.updatePaths(showElements.getPresentationId(), showElements.getPaths()); };
+		if(toPaths == true){ mongoRelation.updatePaths(showElements.getPresentazione().meta.titolo, showElements.getPaths()); };
 		toPath = false;
 		return true;
 	};

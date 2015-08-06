@@ -79,6 +79,7 @@ var SVG = function (spec) {
 //oggetti background
 var background = function (spec) {
     var that = slideShowElement(spec);
+    that.id = 0;
     that.image = spec.image || "";
     that.color = spec.color || "rgba(255,255,255,0)";
     //ritorna that

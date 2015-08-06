@@ -92,7 +92,8 @@ var insertEditRemove = function () {
                 element = private.presentazione.proper.background;
             }
             console.log(element);
-            return JSON.stringify(element);
+            //return JSON.stringify(element);
+			  return element;
         };
 /*AGGIUNTI DA BUSETTO*/
         public.getFrames = function(){

@@ -56,7 +56,7 @@ var put = function(req, res){
 							  default:
 							  res.json({
 										  success: false,
-										  message: 'element type: '+type_element+' not known'
+										  message: 'element type: '+new_element.type+' not known'
 										  });
 							  return;
 							  };

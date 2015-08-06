@@ -83,7 +83,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}).then(function() {
 				console.log("fatto")
 			});
-		};
+		}; 
 
 		//METODI PROPRI DELL'EDIT
 		var save = function(){
@@ -169,36 +169,32 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		        if (!Upload.isImage(files))
 		            throw new Error("Estensione non corretta");
 
-		        uploadmedia(files, function () {
+		        uploadmedia(files, function (file) {
+	                var fileurl = baseurl + 'image/' + file.name;
+	                var img = inserisciImmagine(fileurl); //view
+	                var style = $("#" + img.id);
+	                var immagine = $("#img" + img.id);
 
-		            for (var i = 0; i < files.length; ++i) {
-		                var fileurl = baseurl + 'image/' + files[i].name;
-		                var img = inserisciImmagine(fileurl); //view
-		                var style = $("#" + img.id);
-		                var immagine = $("#img" + img.id);
+	                var spec = {
+	                    id: img.id,
+	                    xIndex: style.position().left,
+	                    yIndex: style.position().top,
+	                    height: immagine.height(),
+	                    width: immagine.width(),
+	                    waste: (immagine.width() - immagine.outerWidth()) / 2,
+	                    rotation: 0,
+	                    ref: fileurl,
+	                    zIndex: style.zIndex()
+	                };
 
-		                var spec = {
-		                    id: img.id,
-		                    xIndex: style.position().left,
-		                    yIndex: style.position().top,
-		                    height: immagine.height(),
-		                    width: immagine.width(),
-		                    waste: (immagine.width() - immagine.outerWidth()) / 2,
-		                    rotation: 0,
-		                    ref: fileurl,
-		                    zIndex: style.zIndex()
-		                };
+	                var command = concreteImageInsertCommand(spec); //model
+	                inv.execute(command);
 
-		                var command = concreteImageInsertCommand(spec); //model
-		                inv.execute(command);
-
-		                loader.addInsert(img.id);
-		            }
-
+	                loader.addInsert(img.id);
 		        });
 		    }
 		}
-		$scope.inserisciAudio = function(files){
+		$scope.inserisciAudio = function(files, spec){
 			if(Utils.isObject(spec)){
 				inserisciAudio(spec.ref, spec);
 			}
@@ -206,34 +202,33 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(!Upload.isAudio(files))
 					throw new Error("Estensione non corretta");
 
-				uploadmedia(files, function(){
-					for(var i=0; i<files.length; ++i){
-						var fileurl = baseurl + 'audio/' + files[i].name;
-						fileurl.replace(/\s/g, "%");
-						//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
-						console.log(fileurl);
-						var audio = inserisciAudio(fileurl); //view
-						var style = $("#" + audio.id);
+				uploadmedia(files, function(file){
+					var fileurl = baseurl + 'audio/' + file.name;
+					fileurl.replace(/\s/g, "%");
+					//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
+					console.log(fileurl);
+					var audio = inserisciAudio(fileurl); //view
+					var style = $("#" + audio.id);
 
-						var spec = {
-							id: audio.id,
-							xIndex: style.position().left,
-							yIndex: style.position().top,
-							height: style.height(),
-							width: style.width(),
-							rotation: 0,
-							ref: fileurl,
-							zIndex: style.zIndex()
-						};
+					var spec = {
+						id: audio.id,
+						xIndex: style.position().left,
+						yIndex: style.position().top,
+						height: style.height(),
+						width: style.width(),
+						rotation: 0,
+						ref: fileurl,
+						zIndex: style.zIndex()
+					};
 
-						var command = concreteAudioInsertCommand(spec); //model
-						inv.execute(command);
-						loader.addInsert(audio.id);
-					}
+					var command = concreteAudioInsertCommand(spec); //model
+					inv.execute(command);
+
+					loader.addInsert(audio.id);
 				});
 			}
 		}
-		$scope.inserisciVideo = function(files){
+		$scope.inserisciVideo = function(files, spec){
 			if(Utils.isObject(spec)){
 				inserisciVideo(spec.ref, spec);
 			}
@@ -241,29 +236,27 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(!Upload.isVideo(files))
 					throw new Error("Estensione non corretta");
 
-				uploadmedia(files, function(){
-					for(var i=0; i<files.length; ++i){
-						var fileurl = baseurl + 'video/' + files[i].name;
-						var video = inserisciVideo(fileurl); //view
-						var style = $("#" + video.id);
-						var thisvideo = $("#video" + video.id);
+				uploadmedia(files, function(file){
+					var fileurl = baseurl + 'video/' + file.name;
+					var video = inserisciVideo(fileurl); //view
+					var style = $("#" + video.id);
+					var thisvideo = $("#video" + video.id);
 
-						var spec = {
-							id: video.id,
-							xIndex: style.position().left,
-							yIndex: style.position().top,
-							height: thisvideo.outerHeight(),
-							width: thisvideo.outerWidth(),
-							waste: (thisvideo.width() - thisvideo.outerWidth())/2,
-							rotation: 0,
-							ref: fileurl,
-							zIndex: style.zIndex()
-						};
+					var spec = {
+						id: video.id,
+						xIndex: style.position().left,
+						yIndex: style.position().top,
+						height: thisvideo.outerHeight(),
+						width: thisvideo.outerWidth(),
+						waste: (thisvideo.width() - thisvideo.outerWidth())/2,
+						rotation: 0,
+						ref: fileurl,
+						zIndex: style.zIndex()
+					};
 
-						var command = concreteVideoInsertCommand(spec); //model
-						inv.execute(command);
-						loader.addInsert(video.id);
-					}
+					var command = concreteVideoInsertCommand(spec); //model
+					inv.execute(command);
+					loader.addInsert(video.id);
 				});
 			}
 		}
@@ -396,7 +389,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpdate(activeFrame);
+			loader.addUpdate(activeFrame);
 		}
 		$scope.cambiaImmagineSfondoFrame = function(files){
 			if(!Upload.isImage(files))
@@ -420,7 +413,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			inv.execute(command);
 			console.log(insertEditRemove().getPresentazione());
 
-			//loader.addUpdate(activeFrame);
+			loader.addUpdate(activeFrame);
 		});
 		}
 		$scope.rimuoviSfondoFrame = function(){
@@ -438,7 +431,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpdate(activeFrame);
+			loader.addUpdate(activeFrame);
 		}
 
 		//Gestione media

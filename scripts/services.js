@@ -182,8 +182,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					throw new Error("Estensione non riconosciuta dal sistema.");
 
 				console.log("upload");
-				var call = true;
-				for(var i=0; i<files.length && call; ++i){
+				for(var i=0; i<files.length; ++i){
 					var formData = new FormData();
 					formData.append("file", files[i]);
 					var uploadUrl = getUrlFormat(files[i]) + getFileName(files[i].name);
@@ -191,24 +190,16 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					var req = new XMLHttpRequest();
 					req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, true);
 					req.setRequestHeader("Authorization", token);
-					console.log("prima");
-					var res = JSON.parse(req.responseText);
-					console.log("dopo");
-					/*if(res.status !== 204)
-						call = false;*/
-					/*req.onload = function (e) {
-						var res = JSON.parse(req.responseText);
-						console.log("ok");
-						if(res.status == 204)
-							callback();
-						else
-							return false;
-
-					};*/
+					var after = function(file){
+						callback(file);
+					}
+					var error = function(){
+						throw new Error("Impossibile caricare i file");
+					}
+					req.onload = after(files[i]);
+					req.onerror = error;
 					req.send(formData);
 				}
-				if(call)
-					callback();
 			},
 			isImage: function(files){
 				return checkExtension(files, image);

@@ -349,7 +349,7 @@ describe("Presentations", function(done){
 
 describe("fileServerRelation", function(){
 			
-			it("getMetas", function(){
+			it("getMetasImages", function(){
 				
 				var reg = Registration(host);
 				reg.register("user","pass");
@@ -364,6 +364,258 @@ describe("fileServerRelation", function(){
 				assert.equal(0, metas.length);
 				
 				});
+			
+			it("getMetasAudios", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				var metas = fileServerRel.getAudiosMeta();
+				
+				assert.equal(0, metas.length);
+				
+				});
+			
+			it("getMetasVideos", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				var metas = fileServerRel.getVideosMeta();
+				
+				assert.equal(0, metas.length);
+				
+				});
+			
+			it("deleteImages", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				var token = auth.getToken();
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				// insert e delete
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/files/image/provaFile', false);
+				req.setRequestHeader("Authorization", token);
+				
+				var boundary = "----------------------------344cf"
+				req.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+				var body = '';
+				body += '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="file"; filename="afile"';
+				body += "data";
+				body += '"\r\n\r\n';
+				body += JSON.stringify({"file2" : {"provatesto":"testodiprova"}});
+				body += '\r\n'
+				body += '--' + boundary + '--';
+				
+				req.send(body);
+
+				fileServerRel.deleteImage("provafile");
+				
+				var metas = fileServerRel.getImagesMeta();
+				
+				assert.equal(0, metas.length);
+				
+				});
+			
+			it("deleteAudio", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				var token = auth.getToken();
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				// insert e delete
+				
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/files/audio/provaFile', false);
+				req.setRequestHeader("Authorization", token);
+				
+				var boundary = "----------------------------344cf"
+				req.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+				var body = '';
+				body += '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="file"; filename="afile"';
+				body += "data";
+				body += '"\r\n\r\n';
+				body += JSON.stringify({"file2" : {"provatesto":"testodiprova"}});
+				body += '\r\n'
+				body += '--' + boundary + '--';
+				
+				req.send(body);
+				
+				fileServerRel.deleteAudio("provafile");
+				
+				var metas = fileServerRel.getAudiosMeta();
+				
+				assert.equal(0, metas.length);
+
+				
+				});
+
+			it("deleteVideo", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				var token = auth.getToken();
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				// insert e delete
+				
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/files/video/provaFile', false);
+				req.setRequestHeader("Authorization", token);
+				
+				var boundary = "----------------------------344cf"
+				req.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+				var body = '';
+				body += '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="file"; filename="afile"';
+				body += "data";
+				body += '"\r\n\r\n';
+				body += JSON.stringify({"file2" : {"provatesto":"testodiprova"}});
+				body += '\r\n'
+				body += '--' + boundary + '--';
+				
+				req.send(body);
+				
+				fileServerRel.deleteVideo("provafile");
+				
+				var metas = fileServerRel.getVideosMeta();
+				
+				assert.equal(0, metas.length);
+				
+				});
+			
+			it("renameImage", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				var token = auth.getToken();
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				// insert e rename
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/files/image/provaFile', false);
+				req.setRequestHeader("Authorization", token);
+				
+				var boundary = "----------------------------344cf"
+				req.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+				var body = '';
+				body += '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="file"; filename="afile"';
+				body += "data";
+				body += '"\r\n\r\n';
+				body += JSON.stringify({"file2" : {"provatesto":"testodiprova"}});
+				body += '\r\n'
+				body += '--' + boundary + '--';
+				
+				req.send(body);
+				
+				fileServerRel.renameImage("provaFile","newNameFile");
+				
+				var metas = fileServerRel.getImagesMeta();
+				
+				assert.equal("newNameFile", metas[0]);
+				
+				});
+			
+			it("renameAudio", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				var token = auth.getToken();
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				// insert e rename
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/files/audio/provaFile', false);
+				req.setRequestHeader("Authorization", token);
+				
+				var boundary = "----------------------------344cf"
+				req.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+				var body = '';
+				body += '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="file"; filename="afile"';
+				body += "data";
+				body += '"\r\n\r\n';
+				body += JSON.stringify({"file2" : {"provatesto":"testodiprova"}});
+				body += '\r\n'
+				body += '--' + boundary + '--';
+				
+				req.send(body);
+				
+				fileServerRel.renameAudio("provaFile","newNameFile");
+				
+				var metas = fileServerRel.getAudiosMeta();
+				
+				assert.equal("newNameFile", metas[0]);
+				
+				});
+			
+			it("renameVideo", function(){
+				
+				var reg = Registration(host);
+				reg.register("user","pass");
+				
+				var auth = Authentication(host);
+				auth.authenticate("user","pass");
+				var token = auth.getToken();
+				
+				var fileServerRel = FileServerRelation(host, auth);
+				
+				// insert e rename
+				var req = new XMLHttpRequest();
+				req.open('POST', host+'/private/api/files/video/provaFile', false);
+				req.setRequestHeader("Authorization", token);
+				
+				var boundary = "----------------------------344cf"
+				req.setRequestHeader("Content-Type", 'multipart/form-data; boundary=' + boundary);
+				var body = '';
+				body += '--' + boundary + '\r\n' + 'Content-Disposition: form-data; name="file"; filename="afile"';
+				body += "data";
+				body += '"\r\n\r\n';
+				body += JSON.stringify({"file2" : {"provatesto":"testodiprova"}});
+				body += '\r\n'
+				body += '--' + boundary + '--';
+				
+				req.send(body);
+				
+				fileServerRel.renameVideo("provaFile","newNameFile");
+				
+				var metas = fileServerRel.getVideosMeta();
+				
+				assert.equal("newNameFile", metas[0]);
+				
+				});
+
 			});
 
 

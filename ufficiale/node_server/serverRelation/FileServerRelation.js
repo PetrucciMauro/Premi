@@ -83,7 +83,7 @@ var FileServerRelation = function(hostname, auth_obj){
 	
 	that.renameAudio = function(filename, new_name){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/files/audio/'+filename, false);
+		req.open('POST', host+'/private/api/files/audio/'+filename+'/'+new_name, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);
@@ -93,7 +93,7 @@ var FileServerRelation = function(hostname, auth_obj){
 	
 	that.renameVideo = function(filename, new_name){
 		var req = new XMLHttpRequest();
-		req.open('POST', host+'/private/api/files/video/'+filename, false);
+		req.open('POST', host+'/private/api/files/video/'+filename+'/'+new_name, false);
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.send();
 		var res = JSON.parse(req.responseText);

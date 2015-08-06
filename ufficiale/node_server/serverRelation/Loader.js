@@ -13,8 +13,18 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	
 	//public_methods
 	that.addInsert = function( id_element){
-		toInsert.push(id_element);
-		return true;
+		
+		for(var i=0; i < toDelete.length; i++){
+			if(toDelete[i]== id_element){found = true; pos=i;}
+		}
+		if (found == true) {
+			toInsert.splice(pos, 1);
+			toUpdate(id_element);
+			return true;
+		}
+		else{
+			toInsert.push(id_element);
+		}
 	};
 	
 	that.addUpdate = function( id_element){
@@ -23,9 +33,14 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 			if(toUpdate[i]== id_element){found = true;}
 		}
 		if(found == false){
-			toUpdate.push(id_element);
+			for(var i=0; i < toInsert.length; i++){
+				if(toInsert[i] == id_element){found = true;}
+			}
+			if(found == false){
+				toUpdate.push(id_element);
+			}
+			return true;
 		}
-		return true;
 	};
 	
 	that.addDelete = function(typeObj, id_element){

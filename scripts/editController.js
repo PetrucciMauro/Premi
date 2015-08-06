@@ -106,53 +106,51 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.inserisciFrame = function(spec){
 			var frame = inserisciFrame(spec); //view
 
-			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
-				return;
+			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
+				var style = $("#" + frame.id);
 
-			var style = $("#" + frame.id);
+				var spec = {
+					id: frame.id,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
+					height: style.outerHeight(),
+					width: style.outerWidth(),
+					rotation: 0,
+					zIndex: style.zIndex()
+				};
 
-			var spec = {
-				id: frame.id,
-				xIndex: style.position().left,
-				yIndex: style.position().top,
-				height: style.outerHeight(),
-				width: style.outerWidth(),
-				rotation: 0,
-				zIndex: style.zIndex()
-			};
+				var command = concreteFrameInsertCommand(spec); //model
+				inv.execute(command);
 
-			var command = concreteFrameInsertCommand(spec); //model
-			inv.execute(command);
-
-			loader.addInsert(frame.id);
+				loader.addInsert(frame.id);
+			}
 		}
 		$scope.inserisciTesto = function(spec){
 			var text = inserisciTesto(spec); //view
 
-			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
-				return;
-			
-			var style = $("#" + text.id);
-			console.log(style);
-			var thistext = $("#txt" + text.id);
+			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
+				var style = $("#" + text.id);
+				console.log(style);
+				var thistext = $("#txt" + text.id);
 
-			var spec = {
-				id: text.id,
-				xIndex: style.position().left,
-				yIndex: style.position().top,
-				height: thistext.height(),
-				width: thistext.width(),
-				waste: thistext.position().left,
-				size: thistext.css("font-size"),
-				rotation: 0,
-				font: style.css("font-family"),
-				zIndex: style.zIndex()
-			};
-			var command = concreteTextInsertCommand(spec);  //model
-			inv.execute(command);
-			console.log(insertEditRemove().getPresentazione());
+				var spec = {
+					id: text.id,
+					xIndex: style.position().left,
+					yIndex: style.position().top,
+					height: thistext.height(),
+					width: thistext.width(),
+					waste: thistext.position().left,
+					size: thistext.css("font-size"),
+					rotation: 0,
+					font: style.css("font-family"),
+					zIndex: style.zIndex()
+				};
+				var command = concreteTextInsertCommand(spec);  //model
+				inv.execute(command);
+				console.log(insertEditRemove().getPresentazione());
 
-			loader.addInsert(text.id);
+				loader.addInsert(text.id);
+			}
 		}
 
 
@@ -165,11 +163,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.inserisciImmagine = function (files, spec) {
 		    console.log("inserisci immagine");
 		    if (Utils.isObject(spec)) {
-
 		        inserisciImmagine(spec.ref, spec);
-
 		    }
-
 		    else {
 		        if (!Upload.isImage(files))
 		            throw new Error("Estensione non corretta");
@@ -206,73 +201,71 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.inserisciAudio = function(files){
 			if(Utils.isObject(spec)){
 				inserisciAudio(spec.ref, spec);
-				return;
 			}
+			else {
+				if(!Upload.isAudio(files))
+					throw new Error("Estensione non corretta");
 
-			if(!Upload.isAudio(files))
-				throw new Error("Estensione non corretta");
+				uploadmedia(files, function(){
+					for(var i=0; i<files.length; ++i){
+						var fileurl = baseurl + 'audio/' + files[i].name;
+						fileurl.replace(/\s/g, "%");
+						//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
+						console.log(fileurl);
+						var audio = inserisciAudio(fileurl); //view
+						var style = $("#" + audio.id);
 
-			uploadmedia(files, function(){
+						var spec = {
+							id: audio.id,
+							xIndex: style.position().left,
+							yIndex: style.position().top,
+							height: style.height(),
+							width: style.width(),
+							rotation: 0,
+							ref: fileurl,
+							zIndex: style.zIndex()
+						};
 
-			for(var i=0; i<files.length; ++i){
-				var fileurl = baseurl + 'audio/' + files[i].name;
-				fileurl.replace(/\s/g, "%");
-				//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
-				console.log(fileurl);
-				var audio = inserisciAudio(fileurl); //view
-				var style = $("#" + audio.id);
-
-				var spec = {
-					id: audio.id,
-					xIndex: style.position().left,
-					yIndex: style.position().top,
-					height: style.height(),
-					width: style.width(),
-					rotation: 0,
-					ref: fileurl,
-					zIndex: style.zIndex()
-				};
-
-				var command = concreteAudioInsertCommand(spec); //model
-				inv.execute(command);
-				loader.addInsert(audio.id);
+						var command = concreteAudioInsertCommand(spec); //model
+						inv.execute(command);
+						loader.addInsert(audio.id);
+					}
+				});
 			}
-		});
 		}
 		$scope.inserisciVideo = function(files){
 			if(Utils.isObject(spec)){
 				inserisciVideo(spec.ref, spec);
-				return;
 			}
+			else{
+				if(!Upload.isVideo(files))
+					throw new Error("Estensione non corretta");
 
-			if(!Upload.isVideo(files))
-				throw new Error("Estensione non corretta");
+				uploadmedia(files, function(){
+					for(var i=0; i<files.length; ++i){
+						var fileurl = baseurl + 'video/' + files[i].name;
+						var video = inserisciVideo(fileurl); //view
+						var style = $("#" + video.id);
+						var thisvideo = $("#video" + video.id);
 
-			uploadmedia(files, function(){
+						var spec = {
+							id: video.id,
+							xIndex: style.position().left,
+							yIndex: style.position().top,
+							height: thisvideo.outerHeight(),
+							width: thisvideo.outerWidth(),
+							waste: (thisvideo.width() - thisvideo.outerWidth())/2,
+							rotation: 0,
+							ref: fileurl,
+							zIndex: style.zIndex()
+						};
 
-			for(var i=0; i<files.length; ++i){
-				var fileurl = baseurl + 'video/' + files[i].name;
-				var video = inserisciVideo(fileurl); //view
-				var style = $("#" + video.id);
-				var thisvideo = $("#video" + video.id);
-
-				var spec = {
-					id: video.id,
-					xIndex: style.position().left,
-					yIndex: style.position().top,
-					height: thisvideo.outerHeight(),
-					width: thisvideo.outerWidth(),
-					waste: (thisvideo.width() - thisvideo.outerWidth())/2,
-					rotation: 0,
-					ref: fileurl,
-					zIndex: style.zIndex()
-				};
-
-				var command = concreteVideoInsertCommand(spec); //model
-				inv.execute(command);
-				loader.addInsert(video.id);
+						var command = concreteVideoInsertCommand(spec); //model
+						inv.execute(command);
+						loader.addInsert(video.id);
+					}
+				});
 			}
-			});
 		}
 
 		//rimozione
@@ -325,8 +318,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
-				height: h,
-				id: 0
+				height: h
 			};
 			console.log(spec);
 			var command = concreteBackgroundInsertCommand(spec);
@@ -344,8 +336,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
-				height: h,
-				id: 0
+				height: h
 			};
 			
 			var sfondo = concreteBackgroundInsertCommand(spec);
@@ -368,8 +359,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
-				height: h,
-				id: 0
+				height: h
 			};
 
 			var command = concreteBackgroundInsertCommand(spec); //model
@@ -406,7 +396,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpload(activeFrame);
+			//loader.addUpdate(activeFrame);
 		}
 		$scope.cambiaImmagineSfondoFrame = function(files){
 			if(!Upload.isImage(files))
@@ -430,7 +420,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			inv.execute(command);
 			console.log(insertEditRemove().getPresentazione());
 
-			//loader.addUpload(activeFrame);
+			//loader.addUpdate(activeFrame);
 		});
 		}
 		$scope.rimuoviSfondoFrame = function(){
@@ -448,7 +438,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpload(activeFrame);
+			//loader.addUpdate(activeFrame);
 		}
 
 		//Gestione media
@@ -458,46 +448,45 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 
 		$scope.annullaModifica = function(){
-			if(!inv.getUndoStack())
-				return;
-			var annulla = inv.undo(); //insert edit delete editpath
-			console.log(insertEditRemove().getPresentazione());
+			if(inv.getUndoStack()){
+				var annulla = inv.undo(); //insert edit delete editpath
+				console.log(insertEditRemove().getPresentazione());
 
-			switch(annulla.action){
-				case "insert": 
-					loader.addInsert(annulla.id);
-					break;
-				case "edit": 
-					loader.addUpdate(annulla.id);
-					break;
-				case "delete": 
-					loader.addDelete(annulla.type, annulla.id);
-					break;
-				case "editpath": 
-					loader.addPaths();
-					break;
+				switch(annulla.action){
+					case "insert": 
+						loader.addInsert(annulla.id);
+						break;
+					case "edit": 
+						loader.addUpdate(annulla.id);
+						break;
+					case "delete": 
+						loader.addDelete(annulla.type, annulla.id);
+						break;
+					case "editpath": 
+						loader.addPaths();
+						break;
+				}
 			}
 		}
 		$scope.ripristinaModifica = function(){
-			if(!inv.getRedoStack())
-				return;
+			if(inv.getRedoStack()){
+				var annulla = inv.redo(); //insert edit delete editpath
+				console.log(insertEditRemove().getPresentazione());
 
-			var annulla = inv.redo(); //insert edit delete editpath
-			console.log(insertEditRemove().getPresentazione());
-
-			switch(annulla.action){
-				case "insert": 
-					loader.addInsert(annulla.id);
-					break;
-				case "edit": 
-					loader.addUpdate(annulla.id);
-					break;
-				case "delete": 
-					loader.addDelete(annulla.type, annulla.id);
-					break;
-				case "editpath": 
-					loader.addPaths();
-					break;
+				switch(annulla.action){
+					case "insert": 
+						loader.addInsert(annulla.id);
+						break;
+					case "edit": 
+						loader.addUpdate(annulla.id);
+						break;
+					case "delete": 
+						loader.addDelete(annulla.type, annulla.id);
+						break;
+					case "editpath": 
+						loader.addPaths();
+						break;
+				}
 			}
 		}
 		
@@ -603,45 +592,46 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.aggiungiMainPath = function (spec) {
 			if(Utils.isObject(spec)){
 				mainPath().addToMainPath(spec.id,spec.pos);
-				return;
 			}
+			else {
+				var activeElement = active().getId();
+			    mainPath().addToMainPath(activeElement,0);
 
-			var activeElement = active().getId();
-		    mainPath().addToMainPath(activeElement,0);
+				var spec = {
+			    	id: activeElement
+			    };
+			    var trovato = false;
+			    var percorso = mainPath().getPercorso();
+			    for(var i=0; i < percorso.length && !trovato; ++i)
+			    	if(percorso[i] == activeElement){
+			    		spec.pos = i;
+			    		trovato = true;
+			    	}
 
-			var spec = {
-		    	id: activeElement
-		    };
-		    var trovato = false;
-		    var percorso = mainPath().getPercorso();
-		    for(var i=0; i < percorso.length && !trovato; ++i)
-		    	if(percorso[i] == activeElement){
-		    		spec.pos = i;
-		    		trovato = true;
-		    	}
+			    var command = concreteAddToMainPathCommand(spec);
+				inv.execute(command);
 
-		    var command = concreteAddToMainPathCommand(spec);
-			inv.execute(command);
-
-			loader.addPaths();
+				loader.addPaths();
+			}
 		}
 
 		$scope.rimuoviMainPath = function (spec) {
 			if(Utils.isObject(spec)){
 				mainPath().removeFromMainPath(spec.id);
-				return;
 			}
-			var activeElement = active().getId();
-		    mainPath().removeFromMainPath(active().getId());
+			else{
+				var activeElement = active().getId();
+			    mainPath().removeFromMainPath(active().getId());
 
-			var spec = {
-		    	id: activeElement
-		    };
+				var spec = {
+			    	id: activeElement
+			    };
 
-		    var command = concreteRemoveFromMainPathCommand(spec);
-			inv.execute(command);
+			    var command = concreteRemoveFromMainPathCommand(spec);
+				inv.execute(command);
 
-			loader.addPaths();
+				loader.addPaths();
+			}
 		}
 
 		$scope.portaAvanti = function(id){
@@ -676,13 +666,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		var impostaPrimoSfondo = function(){
 			var spec = {
 				height: h,
-				width: l,
-				id: 0
+				width: l
 			};
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
-			loader.addUpload(0);
+			loader.addUpdate(0);
 		}
 		
 		var translateEdit = function(json){

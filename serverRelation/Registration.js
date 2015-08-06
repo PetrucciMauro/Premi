@@ -14,7 +14,6 @@ var Registration = function(hostname){
 		var serverResponse = JSON.parse(req.responseText);
 		messageState = serverResponse.success;
 		return serverResponse.success;
-		return
 	};
 	that.getMessage = function(){
 		return messageState;

@@ -22,7 +22,7 @@ premiService.factory('Main', ['Utils', '$localStorage',
 		var value = function(){
 			if(Utils.isUndefined(login.getToken()) && Utils.isObject($localStorage.formData))
 				if(!login.authenticate($localStorage.formData.username, $localStorage.formData.password))
-					throw new Error({message: login.getMessage()});
+					throw new Error(login.getMessage());
 		};
 
 		value();
@@ -128,7 +128,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 		var baseUrl = Utils.hostname();
 		var token = function(){
 			return Main.getToken();
-		}
+		};
 
 		//Formati accettati per l'upload
 		var image = ['image/jpeg', 'image/gif','image/png'];
@@ -175,6 +175,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 
 			return ris;
 		};
+		
 		var upload = {
 			uploadmedia: function(files, callback) {				
 				if(Utils.isUndefined(files))
@@ -183,7 +184,12 @@ premiService.factory('Upload', ['$http','Main','Utils',
 				if(!checkExtension(files))
 					throw new Error("Estensione non riconosciuta dal sistema.");
 
-				console.log("upload");
+				var thisFile;
+				var getFile = function(file){
+					if(Utils.isObject(file))
+						thisFile = file;
+					return thisFile;
+				}
 				for(var i=0; i<files.length; ++i){
 					var formData = new FormData();
 					formData.append("file", files[i]);
@@ -192,14 +198,15 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					var req = new XMLHttpRequest();
 					req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, true);
 					req.setRequestHeader("Authorization", token());
-					var after = function(file){
-						callback(file);
+					getFile(files[i]);
+					var after = function(){
+						callback(getFile());
 					}
 					var error = function(){
 						throw new Error("Impossibile caricare i file");
 					}
-					req.onload = after(files[i]);
 					req.onerror = error;
+					req.onload = after;
 					req.send(formData);
 				}
 			},
@@ -386,7 +393,10 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 
 premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 	function(Utils, $localStorage, Main){
-		var mongo = MongoRelation(Utils.hostname(), Main.login());
+		var login = function(){
+			return Main.login();
+		};
+		var mongo = MongoRelation(Utils.hostname(), login());
 		//ricorda l'id della presentazione su cui lavorare
 		var myPresentation = undefined;
 

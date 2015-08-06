@@ -172,7 +172,6 @@ var mainPath=function(){
             var index = new Array();
             var position;
             var found = false;
-            console.log("sort " + id+ $("#sort"+id).length);
             if ($("#sort" + id).length) {
                 console.log("sort " + id);
                 $("#sort" + id).remove();
@@ -192,7 +191,7 @@ var mainPath=function(){
 				for (var i = 0; i < private.percorso.length; i++) {
 				    s = s + " " + private.percorso[i];
 				}
-				document.getElementById("mainp").innerHTML = s;
+				deselezionaPercorso(popped.id);
 				document.getElementById("addToMain").setAttribute("onclick", "mainPath().addToMainPath(" + popped.id + ")");;
 				document.getElementById(id).style.removeProperty('border');
 			return popped;

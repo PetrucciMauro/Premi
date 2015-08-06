@@ -15,9 +15,9 @@ var insertEditRemove = function () {
 
         private.presentazione = {};
         private.presentazione.meta = {};
-        private.presentazione.data_ultima_modifica;
+        private.presentazione.meta.data_ultima_modifica;
         private.presentazione.id;
-        private.presentazione.titolo;
+        private.presentazione.meta.titolo;
         private.presentazione.proper = {};
         private.presentazione.proper.paths = {};
         private.presentazione.proper.paths.main = new Array();
@@ -37,6 +37,9 @@ var insertEditRemove = function () {
         }
         public.getPresentazione = function () {
             return private.presentazione;
+        };
+        public.getPresentationName = function () {
+            return private.presentazione.meta.titolo;
         };
         public.getIdPresentazione = function () {
             return private.presentazione.id;

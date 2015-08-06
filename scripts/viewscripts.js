@@ -551,7 +551,8 @@ var inserisciTesto=function(spec){
 //NEWTEXT
 
 var inserisciMedia=function(x,classe, spec){
-	console.log(x);
+    console.log(x);
+    
 	var div=inserisciElemento(classe);
 	var url;
 	if(spec)
@@ -588,7 +589,8 @@ var inserisciMedia=function(x,classe, spec){
 }
 
 var inserisciImmagine=function(x, spec){
-	console.log(spec);
+    console.log(spec);
+    
 	var div = inserisciMedia(x,"image", spec);    
 	var img = document.getElementById('img'+div.id);
 	var width = img.clientWidth;

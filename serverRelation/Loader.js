@@ -15,11 +15,11 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	that.addInsert = function( id_element){
 		var found = false;
 		for(var i=0; i < toDelete.length; i++){
-			if(toDelete[i]== id_element){found = true; pos=i;}
+			if(toDelete[i].id == id_element){found = true; pos=i;}
 		}
 		if (found == true) {
-			toInsert.splice(pos, 1);
-			toUpdate(id_element);
+			toDelete.splice(pos, 1);
+			toUpdate.push(id_element);
 			return true;
 		}
 		else{
@@ -71,21 +71,41 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		toPaths = true;
 	};
 	
-	that.update = function(){
+	that.update = function(call){
+		
+		var test_obj = function(callback){
+			var that = {};
+			
+			var counter = toDelete.length + toInsert.length + toUpdate.length;
+			if(toPaths == true) { counter++; }
+			
+			that.done = function(){
+				counter--;
+				if(counter == 0){
+					callback();
+				}
+			};
+			return that;
+		};
+		
+		var toCall = test_obj(call);
+		
 		for(var i=0; i < toInsert.length; i++){
-			mongoRelation.newElement(showElements.getPresentazione().meta.titolo, showElements.getElement(toInsert[i]), null);
+			mongoRelation.newElement(showElements.getPresentationName(), showElements.getElement(toInsert[i]), toCall.done);
 		};
 		for(var i=0; i < toUpdate.length; i++){
-			mongoRelation.updateElement(showElements.getPresentazione().meta.titolo, showElements.getElement(toUpdate[i]), null);
+			mongoRelation.updateElement(showElements.getPresentationName(), showElements.getElement(toUpdate[i]), toCall.done);
 		};
 		for(var i=0; i < toDelete.length; i++){
-			mongoRelation.deleteElement(showElements.getPresentazione().meta.titolo, toDelete[i].typeObj, toDelete[i].id, null);
+			mongoRelation.deleteElement(showElements.getPresentationName(), toDelete[i].type, toDelete[i].id, toCall.done);
 		};
-		if(toPaths == true){ mongoRelation.updatePaths(showElements.getPresentazione().meta.titolo, showElements.getPaths()); };
+		if(toPaths == true){ mongoRelation.updatePaths(showElements.getPresentationName(), showElements.getPaths()); };
 		toPath = false;
+		toDelete = [];
+		toInsert = [];
+		toUpdate = [];
 		return true;
 	};
-	
 	return that;
 };
 

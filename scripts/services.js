@@ -126,7 +126,9 @@ premiService.factory('Main', ['Utils', '$localStorage',
 premiService.factory('Upload', ['$http','Main','Utils',
 	function($http,Main,Utils){
 		var baseUrl = Utils.hostname();
-		var token = Main.login().getToken();
+		var token = function(){
+			return Main.getToken();
+		}
 
 		//Formati accettati per l'upload
 		var image = ['image/jpeg', 'image/gif','image/png'];
@@ -189,7 +191,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 
 					var req = new XMLHttpRequest();
 					req.open('POST', baseUrl +'/private/api/files/'+uploadUrl, true);
-					req.setRequestHeader("Authorization", token);
+					req.setRequestHeader("Authorization", token());
 					var after = function(file){
 						callback(file);
 					}
@@ -210,8 +212,8 @@ premiService.factory('Upload', ['$http','Main','Utils',
 			isVideo: function(files){
 				return checkExtension(files, video);
 			},
-			getFileUrl: function(){
-				return 'files/' + Utils.getUser()
+			getFileUrl: function(file){
+				return 'files/' + Main.getUser().user + '/' + getUrlFormat(file) + file.name;
 			}
 		}
 

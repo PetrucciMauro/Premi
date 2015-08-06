@@ -157,8 +157,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		var uploadmedia = function(files, callback){
 			Upload.uploadmedia(files, callback);
 		}
-		//url dove sono salvati i file dell'utente corrente
-		var baseurl = 'files/' + Main.getUser().user + '/';
 
 		$scope.inserisciImmagine = function (files, spec) {
 		    console.log("inserisci immagine");
@@ -170,7 +168,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		            throw new Error("Estensione non corretta");
 
 		        uploadmedia(files, function (file) {
-	                var fileurl = baseurl + 'image/' + file.name;
+	                var fileurl = Upload.getFileUrl(file);
 	                var img = inserisciImmagine(fileurl); //view
 	                var style = $("#" + img.id);
 	                var immagine = $("#img" + img.id);
@@ -203,7 +201,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					throw new Error("Estensione non corretta");
 
 				uploadmedia(files, function(file){
-					var fileurl = baseurl + 'audio/' + file.name;
+					var fileurl = Upload.getFileUrl(file);
 					fileurl.replace(/\s/g, "%");
 					//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
 					console.log(fileurl);
@@ -237,7 +235,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					throw new Error("Estensione non corretta");
 
 				uploadmedia(files, function(file){
-					var fileurl = baseurl + 'video/' + file.name;
+					var fileurl = Upload.getFileUrl(file);
 					var video = inserisciVideo(fileurl); //view
 					var style = $("#" + video.id);
 					var thisvideo = $("#video" + video.id);

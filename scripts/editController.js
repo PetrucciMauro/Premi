@@ -92,9 +92,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		$interval(save, 10000);
-		$scope.$on("$locationChangeStart", function(){
-		    save();
-		});
+		var intervalSave = $interval(save, 10000);
+ 		$scope.$on("$locationChangeStart", function(){
+ 		    save();
+		    $interval.cancel(intervalSave);
+		    intervalSave = undefined;
+ 		});
 
 		$scope.salvaPresentazione = function(){
 			save();
@@ -322,13 +325,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
-				height: h
+				height: h,
+				id: 0
 			};
 			console.log(spec);
 			var command = concreteBackgroundInsertCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpload(0);
+			loader.addUpdate(0);
 		}
 
 		$scope.backcolor = "#ffffff";
@@ -340,13 +344,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
-				height: h
+				height: h,
+				id: 0
 			};
 			
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
-			//loader.addUpload(0);
+			loader.addUpdate(0);
 		}
 		$scope.cambiaImmagineSfondo = function(files){
 			if(!Upload.isImage(files))
@@ -363,13 +368,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
-				height: h
+				height: h,
+				id: 0
 			};
 
 			var command = concreteBackgroundInsertCommand(spec); //model
 			inv.execute(command);
 
-			//loader.addUpload(0);
+			loader.addUpdate(0);
 			});
 		}
 
@@ -468,7 +474,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					loader.addDelete(annulla.type, annulla.id);
 					break;
 				case "editpath": 
-					loader.addPath();
+					loader.addPaths();
 					break;
 			}
 		}
@@ -490,7 +496,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					loader.addDelete(annulla.type, annulla.id);
 					break;
 				case "editpath": 
-					loader.addPath();
+					loader.addPaths();
 					break;
 			}
 		}
@@ -617,7 +623,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		    var command = concreteAddToMainPathCommand(spec);
 			inv.execute(command);
 
-			loader.addPath();
+			loader.addPaths();
 		}
 
 		$scope.rimuoviMainPath = function (spec) {
@@ -635,7 +641,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		    var command = concreteRemoveFromMainPathCommand(spec);
 			inv.execute(command);
 
-			loader.addPath();
+			loader.addPaths();
 		}
 
 		$scope.portaAvanti = function(id){
@@ -666,6 +672,18 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		$scope.config = {};
 		$scope.model = {};
+
+		var impostaPrimoSfondo = function(){
+			var spec = {
+				height: h,
+				width: l,
+				id: 0
+			};
+			var sfondo = concreteBackgroundInsertCommand(spec);
+			inv.execute(sfondo);
+
+			loader.addUpload(0);
+		}
 		
 		var translateEdit = function(json){
 			//MANCANO I PERCORSI!!!!! DA FARE CON GIOVANNI
@@ -685,16 +703,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				else
 					style.backgroundImage = "";
 			}
-			else {
-				var spec = {
-					height: h,
-					width: l
-				};
-				var sfondo = concreteBackgroundInsertCommand(spec);
-				inv.execute(sfondo);
-				console.log(insertEditRemove().getPresentazione());
-				//loader.addUpload(0);
-			}
+			else 
+				impostaPrimoSfondo();
 
 			//RICREO I FRAME
 			var frames = ins.getFrames();
@@ -796,17 +806,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		if(Utils.isObject(SharedData.getPresentazione())){
 			translateEdit(SharedData.getPresentazione());
 		}
-		else{
-			//IMPOSTO LO SFONDO
-			var spec = {
-				color: "rgba(255,255,255,1)",
-				image: undefined,
-				width: l,
-				height: h
-			};
-			var sfondo = concreteBackgroundInsertCommand(spec);
-			inv.execute(sfondo);
-		}
+		else
+			impostaPrimoSfondo();
 
 }])
 

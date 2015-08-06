@@ -161,6 +161,8 @@ var mainPath=function(){
                 for (var i = 0; i < private.percorso.length; i++) {
                     s = s + " " + private.percorso[i];
                 }
+                var element = document.getElementById(id);
+                element.innerHTML = element.innerHTML + "<div class='md-chip'>ciaociao</div>";
                 if (document.getElementById("addToMain"))
                 document.getElementById("addToMain").removeAttribute("onclick");
                 selezionaPercorso(id);

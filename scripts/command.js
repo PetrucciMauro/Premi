@@ -571,6 +571,7 @@ var concreteEditBackgroundCommand = function (spec) {
         public.getEnabler().editBackground(private.oldBackground);
         var obj = public.getObj();
         obj.action = "edit";
+        console.log(JSON.stringify(private.oldBackground));
         angular.element($("#content")).scope().updateSfondoFrame(private.oldBackground);//PASSARE OLD BCKGR
         return obj;
     };

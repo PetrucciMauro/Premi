@@ -148,6 +148,7 @@ var insertEditRemove = function () {
         };
         public.insertBackground = function (spec) {
             var oldBackground = {};
+            spec.id = 0;
             oldBackground = private.presentazione.proper.background;
             private.presentazione.proper.background = background(spec);
             return oldBackground;

@@ -63,13 +63,15 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 		when('/private/execution', {
 			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
-			isLogin: true
+			isLogin: true,
+			reloadOnSearch: false
 			//js: ['lib/impress.js']
 		}).
 		when('/private/execution:rest*', {
 			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
-			isLogin: true
+			isLogin: true,
+			reloadOnSearch: false
 			//js: ['lib/impress.js']
 		}).
 		otherwise({

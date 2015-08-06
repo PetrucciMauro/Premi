@@ -13,7 +13,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	
 	//public_methods
 	that.addInsert = function( id_element){
-		
+		var found = false;
 		for(var i=0; i < toDelete.length; i++){
 			if(toDelete[i]== id_element){found = true; pos=i;}
 		}

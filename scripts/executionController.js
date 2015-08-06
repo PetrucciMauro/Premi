@@ -27,13 +27,12 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    	$("#premiHeader").show();
 	    	$("#premiFooter").show();
 	    	$("#impressMenu").remove();
-	    	var hash = window.location.hash;
+	    	/*var hash = window.location.hash;
 	    	var array = hash.split("%23");
-	    	alert($route.current);
-	    	window.location.hash = array[0];
-	    	alert($route.current);
+
+	    	window.location.hash = array[0];*/
+	    	$route.current = lastRoute;
 	    	toPages.homepage();
-	    	//$route.reload();
 	    });
 
 	    var goEdit = angular.element($("#editButton"));
@@ -42,10 +41,11 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    	$("#premiHeader").show();
 	    	$("#premiFooter").show();
 	    	$("#impressMenu").remove();
-	    	var hash = window.location.hash;
+	    	/*var hash = window.location.hash;
 	    	var array = hash.split("%23");
 
-	    	window.location.hash = array[0];
+	    	window.location.hash = array[0];*/
+	    	$route.current = lastRoute;
 	    	toPages.editpage();
 	    	$route.reload();
 	    });

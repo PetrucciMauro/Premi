@@ -91,9 +91,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			console.log("partito il save");
 		}
 
-		$interval(save, 10000);
+		var intervalSave = $interval(save, 10000);
 		$scope.$on("$locationChangeStart", function(){
 		    save();
+		    $interval.cancel(intervalSave);
+		    intervalSave = undefined;
 		});
 
 		$scope.salvaPresentazione = function(){
@@ -320,7 +322,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteBackgroundInsertCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpload(0);
+			loader.addUpdate(0);
 		}
 
 		$scope.backcolor = "#ffffff";
@@ -338,7 +340,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
-			//loader.addUpload(0);
+			loader.addUpdate(0);
 		}
 		$scope.cambiaImmagineSfondo = function(files){
 			if(!Upload.isImage(files))
@@ -361,7 +363,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteBackgroundInsertCommand(spec); //model
 			inv.execute(command);
 
-			//loader.addUpload(0);
+			loader.addUpdate(0);
 			});
 		}
 
@@ -389,7 +391,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpload(activeFrame);
+			loader.addUpdate(activeFrame);
 		}
 		$scope.cambiaImmagineSfondoFrame = function(files){
 			if(!Upload.isImage(files))
@@ -412,7 +414,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpload(activeFrame);
+			loader.addUpdate(activeFrame);
 		});
 		}
 		$scope.rimuoviSfondoFrame = function(){
@@ -430,7 +432,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
-			//loader.addUpload(activeFrame);
+			loader.addUpdate(activeFrame);
 		}
 
 		//Gestione media
@@ -603,7 +605,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			    var command = concreteAddToMainPathCommand(spec);
 				inv.execute(command);
 
-				//loader.addPath();
+				loader.addPaths();
 			}
 		}
 
@@ -621,7 +623,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			    var command = concreteRemoveFromMainPathCommand(spec);
 				inv.execute(command);
 
-				loader.addPath();
+				loader.addPaths();
 			}
 		}
 
@@ -661,7 +663,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			};
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
-			//loader.addUpload(0);
+			loader.addUpdate(0);
 		}
 		
 		var translateEdit = function(json){

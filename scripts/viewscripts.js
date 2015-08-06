@@ -377,11 +377,6 @@ function rotate(el,value) {
 
 
 
-
-
-
-
-
 function clearMenu(){
 	var hideEles = document.getElementById("contextual-menu").children;
 	for(var i = 0; i < hideEles.length; i++) {
@@ -393,14 +388,14 @@ function clearMenu(){
 function elimina(id) {
     var frames = document.getElementById("frames").children;
     for (var i = 0; i < frames.length; i++) {
-        if (frames[i].style.getPropertyValue("z-index") > document.getElementById(id).style.getPropertyValue("z-index")) {
+        if (frames[i].id === id && frames[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
             frames[i].style.zIndex = frames[i].style.zIndex - 1;
         }
     }
 
     var elements = document.getElementById("elements").children;
     for (var i = 0; i < elements.length; i++) {
-        if (elements[i].style.getPropertyValue("z-index") > $("#" + id).style.zIndex) {
+        if (elements[i].id === id && elements[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
             elements[i].style.zIndex = elements[i].style.zIndex - 1;
         }
     }
@@ -431,10 +426,13 @@ var inserisciElemento=function(classe, spec){
 	div.style.zIndex = zindex;
 	zindex++;
 	div.setAttribute("class", classe+" elemento");
-	
+	var id = contatore;
+
 	//TRADUTTORE EDIT
 	if(spec){
-		contatore = spec.id;
+		if(contatore < spec.id)//in contatore si salva l'id maggiore
+			contatore = spec.id;
+		id = spec.id;
 		div.style.rotation = spec.rotation;
 		div.style.height = spec.height + "px";
 		div.style.width = spec.width + "px";
@@ -447,10 +445,10 @@ var inserisciElemento=function(classe, spec){
 	}
 	//TRADUTTORE EDIT
 
-	div.id=contatore;
-	var idx="x"+contatore;
-	var idForward="for"+contatore;
-	var idBack="back"+contatore;
+	div.id=id;
+	var idx="x"+id;
+	var idForward="for"+id;
+	var idBack="back"+id;
 
 	if(classe=="frame"){
 		document.getElementById("frames").appendChild(div);
@@ -461,7 +459,7 @@ var inserisciElemento=function(classe, spec){
 
 	//TRADUTTORE EDIT
 	if(spec)
-		rotate(contatore, spec.rotation);
+		rotate(id, spec.rotation);
 	//TRADUTTORE EDIT
 
 	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"assets/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x

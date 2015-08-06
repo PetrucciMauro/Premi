@@ -13,7 +13,7 @@ function slideShowElement(spec) {
     that.xIndex = spec.xIndex || 0;
     that.yIndex = spec.yIndex || 0;
     that.rotation = spec.rotation || 0;
-    that.zIndex = spec.zIndex;
+    that.zIndex = spec.zIndex || 0;
     that.height = spec.height || 0;
     that.width = spec.width || 0;
     
@@ -59,8 +59,8 @@ var video = function (spec) {
 var frame = function (spec) {
     var that = slideShowElement(spec);
     that.bookmark=spec.bookmark||0;
-    that.ref=spec.backgroundimage||"";
-    that.backgroundcolor=spec.backgroundcolor||"rgb(255,255,255,1)";
+    that.ref=spec.ref||"";
+    that.color=spec.color||"rgba(255,255,255,0)";
     that.zIndex=spec.zIndex;
         
     //ritorna that
@@ -80,7 +80,7 @@ var SVG = function (spec) {
 var background = function (spec) {
     var that = slideShowElement(spec);
     that.image = spec.image || "";
-    that.color = spec.color || "rgb(255,255,255,1)";
+    that.color = spec.color || "rgba(255,255,255,0)";
     //ritorna that
     return that;
 };

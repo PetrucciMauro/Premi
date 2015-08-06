@@ -7,6 +7,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
 
+		var inv = invoker();
+		var mongo = MongoRelation(Utils.hostname(), Main.login());
+		var loader = Loader(mongo, insertEditRemove());
+
 		//Metodi per il reindirizzamento
 		$scope.goExecute = function(){
 			var presentazione = insertEditRemove().getPresentazione();
@@ -16,7 +20,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			$location.path('private/execution');
 
 			/*
-			//BISOGNA ANCHE SALVARLA!
+			loader.update();
 			toPages.executionpage(insertEditRemove().getTitoloPresentazione());
 			*/	
 		}
@@ -39,28 +43,16 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//Menu a comparsa
 		var backgroundManage = function(bool){
-			if(bool)
-				$scope.backgroundManage = true;
-			else
-				$scope.backgroundManage = false;
+			$scope.backgroundManage = bool;
 		}
 		var slideShowBackgroundManage = function(bool){
-			if(bool)
-				$scope.slideShowBackgroundManage = true;
-			else
-				$scope.slideShowBackgroundManage = false;
+			$scope.slideShowBackgroundManage = bool;
 		}
 		var pathsManage = function(bool){
-			if(bool)
-				$scope.pathsManage = true;
-			else
-				$scope.pathsManage = false;
+			$scope.pathsManage = bool;
 		}
 		var rotation = function(bool){
-			if(bool)
-				$scope.rotation = true;
-			else
-				$scope.rotation = false;
+			$scope.rotation = bool;
 		}
 		//per far apparire il div corretto e far sparire quelli eventualmenti aperti
 		//id-> id del div su cui applicare il toggleElement
@@ -94,22 +86,19 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		};
 
 		//METODI PROPRI DELL'EDIT
-
-		var inv = invoker();
-		var mongo = MongoRelation(Utils.hostname(), Main.login());
-		var loader = Loader(mongo, insertEditRemove());
-
 		var save = function(){
-			loader.update();
+			//loader.update();
 			console.log("partito il save");
 		}
 
-		/*$interval(save, 10000);
+		$interval(save, 10000);
 		$scope.$on("$locationChangeStart", function(){
 		    save();
-		});*/
+		});
 
-		$scope.salvaPresentazione = save();
+		$scope.salvaPresentazione = function(){
+			save();
+		}
 		//Inserimento elementi
 		$scope.inserisciFrame = function(spec){
 			var frame = inserisciFrame(spec); //view
@@ -286,32 +275,32 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//rimozione
 		$scope.rimuoviElemento = function(spec){
 			console.log(spec);
-			if(Utils.isObject(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
+			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
 				elimina(spec.id); //della view
-				return;
+			else{
+				var id = active().getId();
+				var tipoElement = active().getTipo();
+
+				var command = {};
+				if(tipoElement === 'frame')
+					command = concreteFrameRemoveCommand(id);
+				else if(tipoElement === 'image')
+					command = concreteImageRemoveCommand(id);
+				else if(tipoElement === 'audio')
+					command = concreteAudioRemoveCommand(id);
+				else if(tipoElement === 'video')
+					command = concreteVideoRemoveCommand(id);
+				else if(tipoElement === 'text')
+					command = concreteTextRemoveCommand(id);
+				else
+					throw new Error("Elemento da eliminare non riconosciuto");
+
+				elimina(id); //della view
+
+				inv.execute(command);  //del model
+
+				loader.addDelete(tipoElement, id);
 			}
-			var id = active().getId();
-			var tipoElement = active().getTipo();
-
-			var command = {};
-			if(tipoElement === 'frame')
-				command = concreteFrameRemoveCommand(id);
-			else if(tipoElement === 'image')
-				command = concreteImageRemoveCommand(id);
-			else if(tipoElement === 'audio')
-				command = concreteAudioRemoveCommand(id);
-			else if(tipoElement === 'video')
-				command = concreteVideoRemoveCommand(id);
-			else if(tipoElement === 'text')
-				command = concreteTextRemoveCommand(id);
-			else
-				throw new Error("Elemento da eliminare non riconosciuto");
-
-			elimina(id); //della view
-
-			inv.execute(command);  //del model
-
-			loader.addDelete(tipoElement, id);
 		}
 
 		//Gestione sfondo Presentazione
@@ -389,6 +378,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			console.log(spec);
 			var style = document.getElementById(spec.id).style;
 			style.backgroundColor = spec.color;
+			console.log(style.backgroundColor);
 			if(Utils.isObject(spec.ref))
 				style.backgroundImage = "url(" + spec.ref + ")";
 			else
@@ -398,6 +388,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var activeFrame = active().getId();
 			
 			var style = document.getElementById(activeFrame).style;
+			console.log(style.backgroundColor);
 			style.backgroundColor = color;
 
 			var spec = {
@@ -405,7 +396,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				ref: style.backgroundImage
 			};
-
+			console.log(spec);
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
@@ -717,8 +708,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					width: frame.width,
 					zIndex: frame.zIndex,
 					rotation: frame.rotation,
-					backgroundColor: frame.backgroundcolor,
-					backgroundImage: frame.backgroundimage
+					color: frame.color,
+					ref: frame.ref
 				};
 				inserisciFrame(spec);
 			}

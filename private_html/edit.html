@@ -44,14 +44,18 @@
 
 		<!--Menu generico delle presentazioni-->
 		<div id="slideShowMenu" class="lock-size" layout="row" layout-align="center center">
-            <md-button class="menu md-button md-default-theme" aria-label="Annulla" ng-click="annullaModifica()">
-                <md-tooltip>Annulla</md-tooltip><md-icon md-svg-src="assets/svg/undoIcon.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-            </md-button>
-            <md-button class="menu md-button md-default-theme" aria-label="Ripristina" ng-click="ripristinaModifica()">
-                <md-tooltip>Ripristina</md-tooltip><md-icon md-svg-src="assets/svg/redoIcon.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-            </md-button>
-            <!--Menu di inserimento-->
-            
+			<span flex></span>
+			<md-button class="menu md-button md-default-theme" aria-label="Annulla" ng-click="salvaPresentazione()">
+				<md-tooltip>Salva</md-tooltip><md-icon md-svg-src="assets/svg/save.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+			</md-button>
+			<md-button class="menu md-button md-default-theme" aria-label="Annulla" ng-click="annullaModifica()">
+				<md-tooltip>Annulla</md-tooltip><md-icon md-svg-src="assets/svg/undoIcon.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+			</md-button>
+			<md-button class="menu md-button md-default-theme" aria-label="Ripristina" ng-click="ripristinaModifica()">
+				<md-tooltip>Ripristina</md-tooltip><md-icon md-svg-src="assets/svg/redoIcon.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+			</md-button>
+			<!--Menu di inserimento-->
+			
 			<md-menu md-offset="0 -7">
 				<md-button class="menu md-button md-default-theme" aria-label="Apri menu inserimento elementi" ng-click="$mdOpenMenu()">
 					<md-tooltip>Inserisci elemento</md-tooltip><md-icon md-svg-src="assets/svg/insertElementIcon.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
@@ -77,7 +81,7 @@
 					</md-menu-item>
 				</md-menu-content>
 			</md-menu>
-            
+			
 			<!--Menu di inserimento-->
 			<!--Menu di gestione sfondo-->
 			<md-menu md-offset="0 -7">

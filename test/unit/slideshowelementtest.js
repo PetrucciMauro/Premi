@@ -1,27 +1,27 @@
 
 describe('slideshowtest', function() {
-  var $jsText=text({id: 1, xIndex: 10, yIndex: 20, rotation: 2, height: 15, width: 13, content: "babba", font:"arial", color:"black"});
-  var $jsFrame=frame({id: 2, xIndex: 10, yIndex: 20, rotation: 2, height: 15, width: 13, bookmark: 1, backgroundimage:"prova", backgroundcolor:"rgba(2,23,244,1)"});
-  var $jsImage=image({id: 3, xIndex: 10, yIndex: 20, rotation: 2, height: 15, width: 13, ref: "http:\\www.repubblica.it"});
-  var $jsAudio=audio({id: 4, xIndex: 10, yIndex: 20, rotation: 2, height: 15, width: 13, ref: "http:\\www.repubblica.it"});
-  var $jsVideo=video({id: 5, xIndex: 10, yIndex: 20, rotation: 2, height: 15, width: 13, ref: "http:\\www.repubblica.it"});
-  var $jsBackground=background({id: 10, ref: "http:\\www.repubblica.it", color:"rgba(2,23,244,1)"});
+  var $jsText=text({id: 1, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, content: "babba", font:"arial", color:"black"});
+  var $jsFrame=frame({id: 2, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, bookmark: 1, ref:"prova", color:"rgb(2,23,244,1)"});
+  var $jsImage=image({id: 3, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, ref: "http:\\www.repubblica.it"});
+  var $jsAudio=audio({id: 4, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, ref: "http:\\www.repubblica.it"});
+  var $jsVideo=video({id: 5, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, ref: "http:\\www.repubblica.it"});
+  var $jsBackground=background({id: 0, image: "http:\\www.repubblica.it", color:"rgb(2,23,244,1)"});
 
-  var $jsSVG=SVG({id: 6, xIndex: 10, yIndex: 20, rotation: 2, height: 15, width: 13, bookmark: 1, color:"rgba(2,23,244,1)", shape: "0,2,3,4"});
+  var $jsSVG=SVG({id: 6, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, bookmark: 1, color:"rgb(2,23,244,1)", shape: "0,2,3,4"});
   var pres = insertEditRemove();
   var newPres = '{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[],"frames":[],"images":[],"SVGs":[],"audios":[],"videos":[],"background":[]}}';
   pres.constructPresentazione(newPres);
   pres.insertText($jsText);
-  var $jsTextDue = text({id: 7, xIndex: 10, yIndex: 20, rotation: 32, height: 1, width: 134, content: "babba2", font: "times", color: "black"});
+  var $jsTextDue = text({id: 7, xIndex: 10, yIndex: 20, rotation: 32, zIndex: 0, height: 1, width: 134, content: "babba2", font: "times", color: "black"});
   pres.insertText($jsTextDue);
   pres.insertImage($jsImage);
   pres.insertAudio($jsAudio);
   pres.insertVideo($jsVideo);
   pres.insertFrame($jsFrame);
   pres.insertSVG($jsSVG);
-  var $back = background({id: 8, ref: "http:\\www.repubblica.it", color: "rgba(2,23,244,1)"});
+  var $back = background({id: 0, image: "http:\\www.repubblica.it", color: "rgb(2,23,244,1)"});
   pres.insertBackground($back);
-  var $back2 = background({id: 9, ref: "http:\\www.facebook.com", color: "rgba(31,23,22,1)"});
+  var $back2 = background({id: 0, image: "http:\\www.facebook.com", color: "rgb(31,23,22,1)"});
   pres.insertBackground($back2);
   /*var $newPos = {id: 1, tipo: "text", xIndex:114, yIndex:32};
   pres.editPosition($newPos);*/
@@ -42,31 +42,31 @@ var sv;
 var texDue;
 
     it('verifyTextConstruction', function(){
-      expect (JSON.stringify($jsText)).toEqual('{"id":1,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"content":"babba","font":"arial","color":"black"}');
+      expect (JSON.stringify($jsText)).toEqual('{"id":1,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"content":"babba","font":"arial","color":"black"}');
     });
     it('verifyFrameConstruction', function(){
-      expect (JSON.stringify($jsFrame)).toEqual('{"id":2,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"bookmark":1,"backgroundimage":"prova","backgroundcolor":"rgba(2,23,244,1)"}');
+      expect (JSON.stringify($jsFrame)).toEqual('{"id":2,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"bookmark":1,"ref":"prova","color":"rgb(2,23,244,1)"}');
     });
     it('verifyImageConstruction', function(){
-      expect (JSON.stringify($jsImage)).toEqual('{"id":3,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"url":"http:\\\\www.repubblica.it"}');
+      expect (JSON.stringify($jsImage)).toEqual('{"id":3,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"url":"http:\\\\www.repubblica.it"}');
     });
     it('verifyAudioConstruction', function(){
-      expect (JSON.stringify($jsAudio)).toEqual('{"id":4,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"url":"http:\\\\www.repubblica.it"}');
+      expect (JSON.stringify($jsAudio)).toEqual('{"id":4,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"url":"http:\\\\www.repubblica.it"}');
     });
     it('verifyVideoConstruction', function(){
-      expect (JSON.stringify($jsVideo)).toEqual('{"id":5,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"url":"http:\\\\www.repubblica.it"}');
+      expect (JSON.stringify($jsVideo)).toEqual('{"id":5,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"url":"http:\\\\www.repubblica.it"}');
     });
     it('verifyBackgroundConstruction', function(){
-      expect (JSON.stringify($jsBackground)).toEqual('{"id":10,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.repubblica.it","color":"rgba(2,23,244,1)"}');
+      expect (JSON.stringify($jsBackground)).toEqual('{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.repubblica.it","color":"rgb(2,23,244,1)"}');
     });
     it('verifySVGConstruction', function(){
-      expect (JSON.stringify($jsSVG)).toEqual('{"id":6,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"shape":"0,2,3,4","color":"rgba(2,23,244,1)"}');
+      expect (JSON.stringify($jsSVG)).toEqual('{"id":6,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"shape":"0,2,3,4","color":"rgb(2,23,244,1)"}');
     });
     it('verifySingleton', function(){
       expect (printPres).toEqual(printPresDue);
     });
     it('verifyInsertions', function(){
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":10,"yIndex":20,"rotation":32,"height":1,"width":134,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"bookmark":1,"backgroundimage":"prova","backgroundcolor":"rgba(2,23,244,1)"}],"images":[{"id":3,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13}],"SVGs":[{"id":6,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13,"shape":"0,2,3,4","color":"rgba(2,23,244,1)"}],"audios":[{"id":4,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13}],"videos":[{"id":5,"xIndex":10,"yIndex":20,"rotation":2,"height":15,"width":13}],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":10,"yIndex":20,"rotation":32,"zIndex":0,"height":1,"width":134,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"bookmark":1,"ref":"prova","color":"rgb(2,23,244,1)"}],"images":[{"id":3,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13}],"SVGs":[{"id":6,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"shape":"0,2,3,4","color":"rgb(2,23,244,1)"}],"audios":[{"id":4,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13}],"videos":[{"id":5,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');
     });
     it('verifyEditPosition', function(){
       texUno = pres.editPosition({id: 1, tipo: "text", xIndex:100, yIndex: 200});
@@ -77,7 +77,7 @@ var texDue;
       sv = pres.editPosition({id: 6, tipo: "SVG", xIndex:100, yIndex: 200});
       texDue = pres.editPosition({id: 7, tipo: "text", xIndex:300, yIndex: 400});
       printPres=JSON.stringify(pres.getPresentazione());
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":2,"height":15,"width":13,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":32,"height":1,"width":134,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":2,"height":15,"width":13,"bookmark":1,"backgroundimage":"prova","backgroundcolor":"rgba(2,23,244,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":2,"height":15,"width":13}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":2,"height":15,"width":13,"shape":"0,2,3,4","color":"rgba(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":2,"height":15,"width":13}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":2,"height":15,"width":13}],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":2,"zIndex":0,"height":15,"width":13,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":32,"zIndex":0,"height":1,"width":134,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":2,"zIndex":0,"height":15,"width":13,"bookmark":1,"ref":"prova","color":"rgb(2,23,244,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":2,"zIndex":0,"height":15,"width":13}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":2,"zIndex":0,"height":15,"width":13,"shape":"0,2,3,4","color":"rgb(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":2,"zIndex":0,"height":15,"width":13}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":2,"zIndex":0,"height":15,"width":13}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');
     });
 it('verifyOldPosition', function(){
       expect (texUno.xIndex).toEqual(10);
@@ -104,7 +104,7 @@ it('verifyOldPosition', function(){
       sv.rotation=pres.editRotation({id: 6, tipo: "SVG", rotation: 360});
       texDue.rotation=pres.editRotation({id: 7, tipo: "text", rotation: 360});
       printPres=JSON.stringify(pres.getPresentazione());
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"height":15,"width":13,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"height":1,"width":134,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"height":15,"width":13,"bookmark":1,"backgroundimage":"prova","backgroundcolor":"rgba(2,23,244,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"height":15,"width":13}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"height":15,"width":13,"shape":"0,2,3,4","color":"rgba(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"height":15,"width":13}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"height":15,"width":13}],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":15,"width":13,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"zIndex":0,"height":1,"width":134,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":15,"width":13,"bookmark":1,"ref":"prova","color":"rgb(2,23,244,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":15,"width":13}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":15,"width":13,"shape":"0,2,3,4","color":"rgb(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":15,"width":13}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":15,"width":13}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');
     });
 it('verifyOldRotation', function(){
       expect (texUno.rotation).toEqual(2);
@@ -124,7 +124,7 @@ it('verifyEditSize', function(){
       sv=pres.editSize({id: 6, tipo: "SVG", height: 100, width: 800});
       texDue=pres.editSize({id: 7, tipo: "text", height: 200, width: 500});
       printPres=JSON.stringify(pres.getPresentazione());
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"height":200,"width":500,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"bookmark":1,"backgroundimage":"prova","backgroundcolor":"rgba(2,23,244,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"shape":"0,2,3,4","color":"rgba(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"zIndex":0,"height":200,"width":500,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"bookmark":1,"ref":"prova","color":"rgb(2,23,244,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"shape":"0,2,3,4","color":"rgb(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');
     });
 
 it('verifyOldSize', function(){
@@ -144,34 +144,34 @@ it('verifyOldSize', function(){
       expect (texDue.width).toEqual(134);
    });
 it('verifyEditBackground', function(){
-      fram=pres.editBackground({ref: "www.w3c.org", color: "rgba(1,2,3,1)", tipo: "frame", id: 2});
+      fram=pres.editBackground({ref: "www.w3c.org", color: "rgb(1,2,3,1)", tipo: "frame", id: 2});
       printPres=JSON.stringify(pres.getPresentazione());
-       expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"height":200,"width":500,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"bookmark":1,"backgroundimage":"www.w3c.org","backgroundcolor":"rgba(1,2,3,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"shape":"0,2,3,4","color":"rgba(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');
+       expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"content":"babba","font":"arial","color":"black"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"zIndex":0,"height":200,"width":500,"content":"babba2","font":"times","color":"black"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"bookmark":1,"ref":"www.w3c.org","color":"rgb(1,2,3,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"shape":"0,2,3,4","color":"rgb(2,23,244,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');
       
     });
 
 it('verifyOldBackground', function(){
-      expect (fram.backgroundimage).toEqual("prova");
-      expect (fram.backgroundcolor).toEqual("rgba(2,23,244,1)");
+      expect (fram.ref).toEqual("prova");
+      expect (fram.color).toEqual("rgb(2,23,244,1)");
    });
 
 it('verifyEditColor', function(){
-      texUno=pres.editColor({id: 1, tipo: "text", color: "rgba(1,2,3,1)"});
-      sv=pres.editColor({id: 6, tipo: "SVG", color: "rgba(1,2,3,1)"});
-      texDue=pres.editColor({id: 7, tipo: "text", color: "rgba(1,2,3,1)"});
+      texUno=pres.editColor({id: 1, tipo: "text", color: "rgb(1,2,3,1)"});
+      sv=pres.editColor({id: 6, tipo: "SVG", color: "rgb(1,2,3,1)"});
+      texDue=pres.editColor({id: 7, tipo: "text", color: "rgb(1,2,3,1)"});
       printPres=JSON.stringify(pres.getPresentazione());
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"content":"babba","font":"arial","color":"rgba(1,2,3,1)"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"height":200,"width":500,"content":"babba2","font":"times","color":"rgba(1,2,3,1)"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"bookmark":1,"backgroundimage":"www.w3c.org","backgroundcolor":"rgba(1,2,3,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"shape":"0,2,3,4","color":"rgba(1,2,3,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"content":"babba","font":"arial","color":"rgb(1,2,3,1)"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"zIndex":0,"height":200,"width":500,"content":"babba2","font":"times","color":"rgb(1,2,3,1)"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"bookmark":1,"ref":"www.w3c.org","color":"rgb(1,2,3,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"shape":"0,2,3,4","color":"rgb(1,2,3,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');
     });
 it('verifyOldColor', function(){
       expect (texUno).toEqual('black');
-      expect (sv).toEqual('rgba(2,23,244,1)');
+      expect (sv).toEqual('rgb(2,23,244,1)');
       expect (texDue).toEqual('black');
     });
 
 it('verifyEditShape', function(){
       sv=pres.editShape({id: 6, tipo: "SVG", shape: "square"});
       printPres=JSON.stringify(pres.getPresentazione());
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"content":"babba","font":"arial","color":"rgba(1,2,3,1)"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"height":200,"width":500,"content":"babba2","font":"times","color":"rgba(1,2,3,1)"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"bookmark":1,"backgroundimage":"www.w3c.org","backgroundcolor":"rgba(1,2,3,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"shape":"square","color":"rgba(1,2,3,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"content":"babba","font":"arial","color":"rgb(1,2,3,1)"},{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"zIndex":0,"height":200,"width":500,"content":"babba2","font":"times","color":"rgb(1,2,3,1)"}],"frames":[{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"bookmark":1,"ref":"www.w3c.org","color":"rgb(1,2,3,1)"}],"images":[{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"SVGs":[{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"shape":"square","color":"rgb(1,2,3,1)"}],"audios":[{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"videos":[{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');
     });
 
 it('verifyOldShape', function(){
@@ -186,16 +186,16 @@ it('verifyOldShape', function(){
       sv=pres.removeSVG(6);
       vid=pres.removeVideo(5);
       printPres=JSON.stringify(pres.getPresentazione());
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"height":200,"width":500,"content":"babba2","font":"times","color":"rgba(1,2,3,1)"}],"frames":[],"images":[],"SVGs":[],"audios":[],"videos":[],"background":{"id":9,"xIndex":0,"yIndex":0,"rotation":0,"height":0,"width":0,"url":"http:\\\\www.facebook.com","color":"rgba(31,23,22,1)"}}}');;
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":7,"xIndex":300,"yIndex":400,"rotation":360,"zIndex":0,"height":200,"width":500,"content":"babba2","font":"times","color":"rgb(1,2,3,1)"}],"frames":[],"images":[],"SVGs":[],"audios":[],"videos":[],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)"}}}');;
     });
 
         it('verifyOldObject', function(){
-      expect (JSON.stringify(texUno)).toEqual('{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"content":"babba","font":"arial","color":"rgba(1,2,3,1)"}');
-      expect (JSON.stringify(fram)).toEqual('{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"bookmark":1,"backgroundimage":"www.w3c.org","backgroundcolor":"rgba(1,2,3,1)"}');
-      expect (JSON.stringify(img)).toEqual('{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}');
-      expect (JSON.stringify(aud)).toEqual('{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}');
-      expect (JSON.stringify(vid)).toEqual('{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800}');
-      expect (JSON.stringify(sv)).toEqual('{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"height":100,"width":800,"shape":"square","color":"rgba(1,2,3,1)"}');
+      expect (JSON.stringify(texUno)).toEqual('{"id":1,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"content":"babba","font":"arial","color":"rgb(1,2,3,1)"}');
+      expect (JSON.stringify(fram)).toEqual('{"id":2,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"bookmark":1,"ref":"www.w3c.org","color":"rgb(1,2,3,1)"}');
+      expect (JSON.stringify(img)).toEqual('{"id":3,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}');
+      expect (JSON.stringify(aud)).toEqual('{"id":4,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}');
+      expect (JSON.stringify(vid)).toEqual('{"id":5,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800}');
+      expect (JSON.stringify(sv)).toEqual('{"id":6,"xIndex":100,"yIndex":200,"rotation":360,"zIndex":0,"height":100,"width":800,"shape":"square","color":"rgb(1,2,3,1)"}');
     });
     
   });

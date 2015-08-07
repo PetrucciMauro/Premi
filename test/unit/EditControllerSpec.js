@@ -11,7 +11,7 @@
 *
 */
 
-describe('Authentication Controller Test', function(){
+describe('Edit Controller Test', function(){
 
 	var scope;
 	var controller;

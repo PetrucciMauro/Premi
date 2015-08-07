@@ -20,8 +20,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			$location.path('private/execution');
 
 			/*
-			loader.update();
-			toPages.executionpage(insertEditRemove().getTitoloPresentazione());
+			var reindirizza = function(){
+				toPages.executionpage(insertEditRemove().getTitoloPresentazione());
+			}
+			loader.update(reindirizza);
+			
 			*/	
 		}
 
@@ -503,7 +506,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var command = concreteEditRotationCommand(spec);
 				inv.execute(command);
 
-				loader.addUpdate(activeFrame);
+				loader.addUpdate(activeElement);
 			}
 		}
 

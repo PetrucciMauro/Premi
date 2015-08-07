@@ -1,0 +1,133 @@
+{
+    "meta":
+            {
+                "id": 1,
+                "data_ultima_modifica": 2015,
+                "titolo": "presentazione di prova"
+            },
+    "proper": {
+        "paths": {
+            "main": [2,12],
+            "choices": [{
+                "pathId": 0,
+                "choicePath": [80],
+		"type": "choice" //new!
+            }, {
+                "pathId": 1,
+                "choicePath": [11],
+		"type": "choice" //new!
+            }]
+        },
+        "texts": [
+            {
+                "id": 1,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "content": "babba",
+                "font": "arial",
+                "color": "black",
+		"type": "text" //new!
+            },
+            {
+                "id": 7,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 32,
+                "height": 1,
+                "width": 134,
+                "content": "babba2",
+                "font": "times",
+                "color": "black",
+		"type": "text" //new!
+		
+n            }],
+        "frames": [{
+                "id": 2,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "bookmark": 1,
+                "backgroundimage": "prova",
+                "backgroundcolor": "rgba(2,23,244,1)",
+		"type": "frame" //new!
+            },
+            {
+                "id": 11,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "bookmark": 1,
+                "backgroundimage": "prova",
+                "backgroundcolor": "rgba(2,23,244,1)",
+		"type": "frame" //new!
+            },
+            {
+                "id": 12,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "bookmark": 1,
+                "backgroundimage": "prova",
+                "backgroundcolor": "rgba(2,23,244,1)",
+		"type": "frame" //new!
+            }],
+        "images": [{
+                "id": 3,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+		"type": "image" //new!
+            }],
+        "SVGs": [{
+                "id": 6,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+                "shape": "0,2,3,4",
+                "color": "rgba(2,23,244,1)",
+		"type": "SVG" //new!
+            }],
+        "audios": [{
+                "id": 4,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+		"type": "audio" //new!
+            }],
+        "videos": [{
+                "id": 5,
+                "xIndex": 10,
+                "yIndex": 20,
+                "rotation": 2,
+                "height": 15,
+                "width": 13,
+		"type": "video" //new!
+            }],
+        "background": {
+            "id": 9,
+            "xIndex": 0,
+            "yIndex": 0,
+            "rotation": 0,
+            "height": 0,
+            "width": 0,
+            "url": "http:\\www.facebook.com",
+            "color": "rgba(31,23,22,1)",
+	    "type": "background" //new!
+        }
+    }
+}

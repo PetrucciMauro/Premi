@@ -162,7 +162,7 @@ var mainPath=function(){
                     s = s + " " + private.percorso[i];
                 }
                 var element = document.getElementById(id);
-                element.innerHTML = element.innerHTML + "<div class='md-chip'>ciaociao</div>";
+               // element.innerHTML = "<div class='chipcontainer'><div class='chip' id='chip"+id+"'>"+(pos+1)+"</div></div>"+element.innerHTML ;
                 if (document.getElementById("addToMain"))
                 document.getElementById("addToMain").removeAttribute("onclick");
                 selezionaPercorso(id);
@@ -204,11 +204,6 @@ var mainPath=function(){
 		that.setPath = function (newPath) {
 		    private.percorso.length=0;
 		    private.percorso = newPath;
-		    var s = "";
-		    for (var i = 0; i < private.percorso.length; i++) {
-		        s = s + " " + private.percorso[i];
-		    }
-		    document.getElementById("mainp").innerHTML = s;
 		}
 
 		that.deleteFrame=function(id){
@@ -1189,8 +1184,10 @@ $(function () {
             var temp = new Array();
             var ids = new Array();
             $("#sortable md-list-item").each(function (index, item) {
-                ids.push(mainPath().getAssociation($(item).attr("id")));
-                
+                id = mainPath().getAssociation($(item).attr("id"));
+                ids.push(id);
+               /* var chip = document.getElementById("chip" + id);
+                chip.innerHTML = index + 1;*/
             });
             mainPath().setPath(ids);
             

@@ -1,0 +1,19 @@
+<html>
+    
+    <body>
+        
+    <form id="upload_form" enctype="multipart/form-data" method="POST" action="http://localhost:8080/private/api/files/image/provaetta">
+        <input type="file" name="immagine" id="file_form"/>
+        <input type="submit" value="Upload" />
+    </form>
+
+    </body>
+    
+    <script src="jquery.js"></script>
+    <script>
+        $( "#file_form" ).change(function() {
+                                 var  name= (($('input[type=file]').val()).split('\\'))[2];
+                                 $("#file_form").attr('name', name);
+                              });
+    </script>
+</html>

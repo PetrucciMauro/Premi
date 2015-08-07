@@ -23,9 +23,9 @@ function slideShowElement(spec) {
 //oggetti text
 var text = function (spec) {
     var that = slideShowElement(spec);
-    that.content = spec.content;
-    that.font = spec.font;
-    that.color = spec.color;
+    that.content = spec.content || "";
+    that.font = spec.font || "Arial";
+    that.color = spec.color || "black";
     that.type = "text";
     //ritorna that
     return that;
@@ -34,7 +34,7 @@ var text = function (spec) {
 //oggetti image
 var image = function (spec) {
     var that = slideShowElement(spec);
-    that.url = spec.ref;
+    that.url = spec.ref || "";
     that.type = "image";
     //ritorna that
     return that;
@@ -43,7 +43,7 @@ var image = function (spec) {
 //oggetti audio
 var audio = function (spec) {
     var that = slideShowElement(spec);
-    that.url = spec.ref;
+    that.url = spec.ref || "";
     that.type = "audio";
     //ritorna that
     return that;
@@ -74,8 +74,8 @@ var frame = function (spec) {
 //oggetti SVG
 var SVG = function (spec) {
     var that = slideShowElement(spec);
-    that.shape = spec.shape;
-    that.color = spec.color;
+    that.shape = spec.shape || "";
+    that.color = spec.color || "";
     that.type = "SVG";
         
     //ritorna that

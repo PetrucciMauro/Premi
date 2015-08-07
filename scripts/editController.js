@@ -443,6 +443,23 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			mediaControl();
 		}
 
+        $scope.aggiornaTesto = function(textId, textContent){
+			var spec = {
+				id: textId,
+				content: textContent
+			};
+
+
+			var command = concreteEditContentCommand (spec);
+			inv.execute(command);
+
+			loader.addUpdate(textId);
+		}
+
+		//Gestione media
+		$scope.mediaControl = function(){
+			mediaControl();
+		}
 
 		$scope.annullaModifica = function(){
 			if(inv.getUndoStack()){

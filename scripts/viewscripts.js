@@ -526,7 +526,8 @@ var inserisciTesto=function(spec){
 	txt.id="txt"+div.id;
 	txt.setAttribute("style","font-size: 31px; width:1");
 	txt.setAttribute("type","text");
-	txt.setAttribute("class","autogrow");
+	txt.setAttribute("class", "autogrow");
+	txt.setAttribute("onblur", "aggiornaTesto(" + div.id + ", this)");
 	//txt.setAttribute("style","font-size: 100%; width:1");
 	txt.size=1;
 	txt.setAttribute("placeholder","Testo...");
@@ -650,6 +651,9 @@ var inserisciAudio=function(x, spec){
 	return div;
 }
 
+function aggiornaTesto(id, element) {
+    angular.element(document.getElementById("content")).scope().aggiornaTesto(id, element.value);
+}
 
 function resize(elem, percent) { elem.style.fontSize = percent; }
 

@@ -89,6 +89,7 @@ var insertEditRemove = function () {
             }
 
             if (!found && private.presentazione.proper.background.id === id) {
+                console.log("background");
                 element = private.presentazione.proper.background;
             }
             console.log(element);

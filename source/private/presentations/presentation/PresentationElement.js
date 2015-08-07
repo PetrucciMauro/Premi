@@ -31,7 +31,7 @@ var put = function(req, res){
 							  
 							  
 							  var field_path = "";
-							  
+							  var type_element = new_element.type;
 							  switch(new_element.type) {
 							  case 'text':
 							  field_path = "proper.texts";
@@ -103,7 +103,7 @@ var post = function(req, res){
 							  }
 							  
 							  var field_path;
-							  
+							  var type_element = new_element.type;
 							  switch(new_element.type) {
 							  case 'text':
 							  field_path = 'proper.texts';

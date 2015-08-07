@@ -86,8 +86,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}; 
 
 		//METODI PROPRI DELL'EDIT
+		var salvato = function(){
+			console.log("Salvato con successo");
+		}
 		var save = function(){
-			//loader.update();
+			loader.update(salvato);
 			console.log("partito il save");
 		}
 
@@ -784,6 +787,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		};
 		
 		if(Utils.isObject(SharedData.getPresentazione())){
+			console.log(SharedData.getPresentazione());
 			translateEdit(SharedData.getPresentazione());
 		}
 		else

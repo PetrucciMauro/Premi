@@ -154,6 +154,7 @@ var mainPath=function(){
             return private.percorso;
         }
         that.addToMainPath = function (id, position) {
+            console.log("richiamato add to main")
             if (!mainPath().contains(id)) {
                 var pos = position || private.percorso.length;
                 private.percorso.splice(pos, 0, id);
@@ -824,13 +825,15 @@ function countChar(val) {
 function selezionaPercorso(id){
 	if (mainPath().getPercorso().indexOf(id)>-1){
 
-		for (var i=0; i<mainPath().getPercorso().length; i++){
+	    for (var i = 0; i < mainPath().getPercorso().length; i++) {
+	        if (document.getElementById(mainPath().getPercorso()[i]))
 			document.getElementById(mainPath().getPercorso()[i]).style.border= "0.25em solid red"
 		}
 	}
 	for (var i=0; i<choicePaths().getPercorsi().length; i++){
 		if (choicePaths().getPercorsi()[i].path.indexOf(id)>-1){
-			for (var j=0; j<choicePaths().getPercorsi()[i].path.length; j++){
+		    for (var j = 0; j < choicePaths().getPercorsi()[i].path.length; j++) {
+		        if (document.getElementById(mainPath().getPercorso()[i]).path[j])
 				document.getElementById(choicePaths().getPercorsi()[i].path[j]).style.border= "0.25em solid #"+choicePaths().getPercorsi()[i].selectionColor;
 			}
 		}

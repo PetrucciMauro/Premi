@@ -26,6 +26,7 @@ var text = function (spec) {
     that.content = spec.content;
     that.font = spec.font;
     that.color = spec.color;
+    that.type = "text";
     //ritorna that
     return that;
 };
@@ -34,6 +35,7 @@ var text = function (spec) {
 var image = function (spec) {
     var that = slideShowElement(spec);
     that.url = spec.ref;
+    that.type = "image";
     //ritorna that
     return that;
 };
@@ -42,6 +44,7 @@ var image = function (spec) {
 var audio = function (spec) {
     var that = slideShowElement(spec);
     that.url = spec.ref;
+    that.type = "audio";
     //ritorna that
     return that;
 };
@@ -50,6 +53,7 @@ var audio = function (spec) {
 var video = function (spec) {
     var that = slideShowElement(spec);
     that.url = spec.ref;
+    that.type = "video";
         
     //ritorna that
     return that;
@@ -61,7 +65,8 @@ var frame = function (spec) {
     that.bookmark=spec.bookmark||0;
     that.ref=spec.ref||"";
     that.color=spec.color||"rgba(255,255,255,0)";
-    that.zIndex=spec.zIndex;
+    that.zIndex = spec.zIndex;
+    that.type = "frame";
         
     //ritorna that
     return that;
@@ -71,6 +76,7 @@ var SVG = function (spec) {
     var that = slideShowElement(spec);
     that.shape = spec.shape;
     that.color = spec.color;
+    that.type = "SVG";
         
     //ritorna that
     return that;
@@ -82,6 +88,7 @@ var background = function (spec) {
     that.id = 0;
     that.image = spec.image || "";
     that.color = spec.color || "rgba(255,255,255,0)";
+    that.type = "background";
     //ritorna that
     return that;
 };

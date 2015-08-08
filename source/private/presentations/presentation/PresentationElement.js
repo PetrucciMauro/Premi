@@ -14,12 +14,13 @@ var put = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
 							  if(err) throw err;
+							  console.log(req.body.element);
 							  var name_pres = req.originalUrl.split("/")[4];
 							  var id_element = req.body.element.id;
 							 // console.log(id_element); // ***
 							  
 							  var new_element = req.body.element;
-							  //console.log(new_element); // ***
+							   // ***
 
 							  
 							  if(new_element == null){ res.json({

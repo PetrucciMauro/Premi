@@ -19,6 +19,9 @@ var del = function(req, res){
 							  var type_element = req.originalUrl.split("/")[6];
 							  var id_element = req.originalUrl.split("/")[7];
 							  
+							  console.log(type_element);
+							  console.log(id_element);
+							  
 							  var field_path = "";
 							  
 							  switch(type_element) {
@@ -27,6 +30,7 @@ var del = function(req, res){
 							  break;
 							  case 'frame':
 							  field_path = 'proper.frames';
+							  break;
 							  case 'image':
 							  field_path = 'proper.images';
 							  break;
@@ -51,10 +55,10 @@ var del = function(req, res){
 							  }
 							  var to_pull = {};
 							  var to_id = {};
-							  var id_element = parseInt(id_element, 10);
+							  var id_element = /*parseInt(*/id_element/*, 10)*/;
 							  to_id["id"] = id_element;
 							  to_pull[field_path] = to_id;
-							  //console.log(to_pull);
+							  console.log(to_pull);
 							  
 							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, { $pull : to_pull }, function(err, doc){
 																							 if(err) throw err;

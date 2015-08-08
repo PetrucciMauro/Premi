@@ -711,7 +711,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			//RICREO I FRAME
 			var frames = ins.getFrames();
-			for(var i=0; i<frames.length; ++i){
+			for (var i = 0; i < frames.length; ++i) {
+                
+			    console.log("frames " + i);
 				var frame = frames[i];
 				var spec = {
 					id: frame.id,
@@ -729,28 +731,32 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			//RICREO I TESTI
 			var texts = ins.getTexts();
-			for(var i=0; i< texts.length; ++i){
-				var text = texts[i];
+			for (var i = 0; i < texts.length; ++i) {
+			    
+			    var text = texts[i];
+			    console.log("texts " + JSON.stringify(text));
 				var spec = {
 					id: text.id,
 					xIndex: text.xIndex,
 					yIndex: text.yIndex,
 					height: text.height,
 					width: text.width,
-					zIndex: frame.zIndex,
-					waste: frame.waste,
+					zIndex: text.zIndex,
+					waste: text.waste,
 					rotation: text.rotation,
 					content: text.content,
 					font: text.font,
 					color: text.color
 				};
+				console.log("spec " + spec);
 				inserisciTesto(spec);
 			}
 
 			//RICREO FILE MEDIA
 			//Immagini
 			var imgs = ins.getImages();
-			for(var i=0; i< imgs.length; ++i){
+			for (var i = 0; i < imgs.length; ++i) {
+			    console.log("imgs " + i);
 				var img = imgs[i];
 				var spec = {
 					id: img.id,
@@ -758,8 +764,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					yIndex: img.yIndex,
 					height: img.height,
 					width: img.width,
-					zIndex: frame.zIndex,
-					waste: frame.waste,
+					zIndex: img.zIndex,
+					waste: img.waste,
 					rotation: img.rotation,
 					ref: img.url
 				};
@@ -767,7 +773,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 			//Audio
 			var audios = ins.getAudios();
-			for(var i=0; i< audios.length; ++i){
+			for (var i = 0; i < audios.length; ++i) {
+			    console.log("audios " + i);
 				var audio = audios[i];
 				var spec = {
 					id: audio.id,
@@ -775,7 +782,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					yIndex: audio.yIndex,
 					height: audio.height,
 					width: audio.width,
-					zIndex: frame.zIndex,
+					zIndex: audio.zIndex,
 					rotation: audio.rotation,
 					ref: audio.url
 				};
@@ -783,7 +790,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 			//Video
 			var videos = ins.getVideos();
-			for(var i=0; i< videos.length; ++i){
+			for (var i = 0; i < videos.length; ++i) {
+			    console.log("videos " + i);
 				var video = videos[i];
 				var spec = {
 					id: video.id,
@@ -791,8 +799,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					yIndex: video.yIndex,
 					height: video.height,
 					width: video.width,
-					waste: frame.waste,
-					zIndex: frame.zIndex,
+					waste: video.waste,
+					zIndex: video.zIndex,
 					rotation: video.rotation,
 					ref: video.url
 				};

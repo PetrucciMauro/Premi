@@ -48,47 +48,47 @@ var insertEditRemove = function () {
             var element;
             var found = false;
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
-                if (private.presentazione.proper.texts[i].id === id) {
+                if (parseInt(private.presentazione.proper.texts[i].id) == parseInt(id)) {
                     element = private.presentazione.proper.texts[i];
                     found = true;
                 }
             }
             for (var i = 0; i < private.presentazione.proper.frames.length && !found; i++) {
-                if (private.presentazione.proper.frames[i].id === id) {
+                if (parseInt(private.presentazione.proper.frames[i].id) == parseInt(id)) {
                     console.log("trovato");
                     element = private.presentazione.proper.frames[i];
                     found = true;
                 }
             }
             for (var i = 0; i < private.presentazione.proper.images.length && !found; i++) {
-                if (private.presentazione.proper.images[i].id === id) {
+                if (parseInt(private.presentazione.proper.images[i].id) == parseInt(id)) {
                     element = private.presentazione.proper.images[i];
                     found = true;
                 }
             }
 
             for (var i = 0; i < private.presentazione.proper.SVGs.length && !found; i++) {
-                if (private.presentazione.proper.SVGs[i].id === id) {
+                if (parseInt(private.presentazione.proper.SVGs[i].id) == parseInt(id)) {
                     element = private.presentazione.proper.SVGs[i];
                     found = true;
                 }
             }
 
             for (var i = 0; i < private.presentazione.proper.audios.length && !found; i++) {
-                if (private.presentazione.proper.audios[i].id === id) {
+                if (parseInt(private.presentazione.proper.audios[i].id) == parseInt(id)) {
                     element = private.presentazione.proper.audios[i];
                     found = true;
                 }
             }
 
             for (var i = 0; i < private.presentazione.proper.videos.length && !found; i++) {
-                if (private.presentazione.proper.videos[i].id === id) {
+                if (parseInt(private.presentazione.proper.videos[i].id) == parseInt(id)) {
                     element = private.presentazione.proper.videos[i];
                     found = true;
                 }
             }
 
-            if (!found && private.presentazione.proper.background.id === id) {
+            if (!found && parseInt(private.presentazione.proper.background.id) == parseInt(id)) {
                 console.log("background");
                 element = private.presentazione.proper.background;
             }

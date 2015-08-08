@@ -537,6 +537,7 @@ var concreteEditContentCommand = function (spec) {
         }
         var obj = public.getObj();
         obj.action = "edit";
+        console.log(spec.id+" "+JSON.stringify(public.getEnabler().getPresentazione()));
         return obj;
     };
     public.undoAction = function () {
@@ -565,6 +566,7 @@ var concreteEditBackgroundCommand = function (spec) {
         }
         var obj = public.getObj();
         obj.action = "edit";
+        
         return obj;
     };
     public.undoAction = function () {

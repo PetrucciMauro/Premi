@@ -317,7 +317,9 @@ var insertEditRemove = function () {
             var found = false;
             var oldContent;
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
-                if (private.presentazione.proper.texts[i].id === spec.id) {
+                console.log(private.presentazione.proper.texts[i].id + " " + spec.id);
+                if (private.presentazione.proper.texts[i].id == parseInt(spec.id)) {
+                    console.log("entro");
                     oldContent = private.presentazione.proper.texts[i].content;
                     private.presentazione.proper.texts[i].content = spec.content;
                     found = true;

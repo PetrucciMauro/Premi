@@ -39,6 +39,7 @@ var put = function(req, res){
 							  break;
 							  case 'frame':
 							  field_path = "proper.frames";
+							  break;
 							  case 'image':
 							  field_path = "proper.images";
 							  break;
@@ -111,6 +112,7 @@ var post = function(req, res){
 							  break;
 							  case 'frame':
 							  field_path = 'proper.frames';
+							  break;
 							  case 'image':
 							  field_path = 'proper.images';
 							  break;

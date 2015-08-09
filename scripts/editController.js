@@ -6,11 +6,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet, $location, $interval) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
-
+		else
+		{
 		var inv = invoker();
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
 		var loader = Loader(mongo, insertEditRemove());
-
+        }
 		//Metodi per il reindirizzamento
 		$scope.goExecute = function(){
 			var presentazione = insertEditRemove().getPresentazione();
@@ -688,7 +689,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			loader.addUpdate(0);
 		}
 		
-		var translateEdit = function(json){
+	var translateEdit = function(json){
 			//MANCANO I PERCORSI!!!!! DA FARE CON GIOVANNI
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
@@ -871,4 +872,4 @@ premiApp.directive('printChoichePaths', function ($compile) {
     };
 });
           
-    
+   

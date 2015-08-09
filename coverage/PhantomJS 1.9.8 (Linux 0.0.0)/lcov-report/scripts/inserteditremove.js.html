@@ -15,10 +15,10 @@
 <div class="header medium">
     <h1>Code coverage report for <span class="entity">scripts/inserteditremove.js</span></h1>
     <h2>
-        Statements: <span class="metric">61% <small>(183 / 300)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">60.39% <small>(186 / 308)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Branches: <span class="metric">37.5% <small>(42 / 112)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Functions: <span class="metric">56.41% <small>(22 / 39)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Lines: <span class="metric">61% <small>(183 / 300)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">53.66% <small>(22 / 41)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">60.39% <small>(186 / 308)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
     <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">scripts/</a> &#187; inserteditremove.js</div>
@@ -456,7 +456,20 @@
 429
 430
 431
-432</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -501,6 +514,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -545,8 +561,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -570,6 +588,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
@@ -597,6 +620,7 @@
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">2</span>
 <span class="cline-any cline-yes">2</span>
 <span class="cline-any cline-yes">2</span>
 <span class="cline-any cline-yes">2</span>
@@ -768,6 +792,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -904,9 +930,9 @@ var insertEditRemove = function () {
 &nbsp;
         private.presentazione = {};
         private.presentazione.meta = {};
-        private.presentazione.data_ultima_modifica;
+        private.presentazione.meta.data_ultima_modifica;
         private.presentazione.id;
-        private.presentazione.titolo;
+        private.presentazione.meta.titolo;
         private.presentazione.proper = {};
         private.presentazione.proper.paths = {};
         private.presentazione.proper.paths.main = new Array();
@@ -919,13 +945,16 @@ var insertEditRemove = function () {
         private.presentazione.proper.videos = new Array();
         private.presentazione.proper.background = {};
         private.presentazione.proper.background.color = "rgba(255,255,255,1)";
-        private.presentazione.proper.background.image = "undefined";
+        private.presentazione.proper.background.image = "";
 &nbsp;
         public.constructPresentazione = function (newPresentazione) {
             private.presentazione = JSON.parse(newPresentazione);
         }
         public.getPresentazione = function () {
             return private.presentazione;
+        };
+        public.getPresentationName = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return private.presentazione.meta.titolo;</span>
         };
         public.getIdPresentazione = <span class="fstat-no" title="function not covered" >function () {</span>
 <span class="cstat-no" title="statement not covered" >            return private.presentazione.id;</span>
@@ -934,51 +963,53 @@ var insertEditRemove = function () {
 <span class="cstat-no" title="statement not covered" >            var element;</span>
 <span class="cstat-no" title="statement not covered" >            var found = false;</span>
 <span class="cstat-no" title="statement not covered" >            for (var i = 0; i &lt; private.presentazione.proper.texts.length &amp;&amp; !found; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.texts[i].id === id) {</span>
+<span class="cstat-no" title="statement not covered" >                if (parseInt(private.presentazione.proper.texts[i].id) == parseInt(id)) {</span>
 <span class="cstat-no" title="statement not covered" >                    element = private.presentazione.proper.texts[i];</span>
 <span class="cstat-no" title="statement not covered" >                    found = true;</span>
                 }
             }
 <span class="cstat-no" title="statement not covered" >            for (var i = 0; i &lt; private.presentazione.proper.frames.length &amp;&amp; !found; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.frames[i].id === id) {</span>
+<span class="cstat-no" title="statement not covered" >                if (parseInt(private.presentazione.proper.frames[i].id) == parseInt(id)) {</span>
 <span class="cstat-no" title="statement not covered" >                    console.log("trovato");</span>
 <span class="cstat-no" title="statement not covered" >                    element = private.presentazione.proper.frames[i];</span>
 <span class="cstat-no" title="statement not covered" >                    found = true;</span>
                 }
             }
 <span class="cstat-no" title="statement not covered" >            for (var i = 0; i &lt; private.presentazione.proper.images.length &amp;&amp; !found; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.images[i].id === id) {</span>
+<span class="cstat-no" title="statement not covered" >                if (parseInt(private.presentazione.proper.images[i].id) == parseInt(id)) {</span>
 <span class="cstat-no" title="statement not covered" >                    element = private.presentazione.proper.images[i];</span>
 <span class="cstat-no" title="statement not covered" >                    found = true;</span>
                 }
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            for (var i = 0; i &lt; private.presentazione.proper.SVGs.length &amp;&amp; !found; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.SVGs[i].id === id) {</span>
+<span class="cstat-no" title="statement not covered" >                if (parseInt(private.presentazione.proper.SVGs[i].id) == parseInt(id)) {</span>
 <span class="cstat-no" title="statement not covered" >                    element = private.presentazione.proper.SVGs[i];</span>
 <span class="cstat-no" title="statement not covered" >                    found = true;</span>
                 }
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            for (var i = 0; i &lt; private.presentazione.proper.audios.length &amp;&amp; !found; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.audios[i].id === id) {</span>
+<span class="cstat-no" title="statement not covered" >                if (parseInt(private.presentazione.proper.audios[i].id) == parseInt(id)) {</span>
 <span class="cstat-no" title="statement not covered" >                    element = private.presentazione.proper.audios[i];</span>
 <span class="cstat-no" title="statement not covered" >                    found = true;</span>
                 }
             }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            for (var i = 0; i &lt; private.presentazione.proper.videos.length &amp;&amp; !found; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.videos[i].id === id) {</span>
+<span class="cstat-no" title="statement not covered" >                if (parseInt(private.presentazione.proper.videos[i].id) == parseInt(id)) {</span>
 <span class="cstat-no" title="statement not covered" >                    element = private.presentazione.proper.videos[i];</span>
 <span class="cstat-no" title="statement not covered" >                    found = true;</span>
                 }
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (!found &amp;&amp; private.presentazione.proper.background.id === id) {</span>
+<span class="cstat-no" title="statement not covered" >            if (!found &amp;&amp; parseInt(private.presentazione.proper.background.id) == parseInt(id)) {</span>
+<span class="cstat-no" title="statement not covered" >                console.log("background");</span>
 <span class="cstat-no" title="statement not covered" >                element = private.presentazione.proper.background;</span>
             }
 <span class="cstat-no" title="statement not covered" >            console.log(element);</span>
-<span class="cstat-no" title="statement not covered" >            return JSON.stringify(element);</span>
+            //return JSON.stringify(element);
+<span class="cstat-no" title="statement not covered" >			  return element;</span>
         };
 /*AGGIUNTI DA BUSETTO*/
         public.getFrames = <span class="fstat-no" title="function not covered" >function(){</span>
@@ -1002,6 +1033,11 @@ var insertEditRemove = function () {
         public.getBackground = <span class="fstat-no" title="function not covered" >function(){</span>
 <span class="cstat-no" title="statement not covered" >            return private.presentazione.proper.background;</span>
         };
+&nbsp;
+        public.getPaths = <span class="fstat-no" title="function not covered" >function () {</span>
+<span class="cstat-no" title="statement not covered" >            return private.presentazione.proper.paths;</span>
+        };
+&nbsp;
 /*AGGIUNTI DA BUSETTO*/
         public.insertText = function (spec) {
             var newText = text(spec);
@@ -1029,8 +1065,9 @@ var insertEditRemove = function () {
         };
         public.insertBackground = function (spec) {
             var oldBackground = {};
+            spec.id = 0;
             oldBackground = private.presentazione.proper.background;
-            private.presentazione.proper.background = spec;
+            private.presentazione.proper.background = background(spec);
             return oldBackground;
         };
 &nbsp;
@@ -1153,10 +1190,10 @@ var insertEditRemove = function () {
 &nbsp;
             for (var i = 0; i &lt; private.presentazione.proper.frames.length &amp;&amp; !found; i++) {
                 <span class="missing-if-branch" title="else path not taken" >E</span>if (private.presentazione.proper.frames[i].id === spec.id) {
-                    oldBackground.backgroundimage = private.presentazione.proper.frames[i].backgroundimage;
-                    oldBackground.backgroundcolor = private.presentazione.proper.frames[i].backgroundcolor;
-                    private.presentazione.proper.frames[i].backgroundimage = spec.ref;
-                    private.presentazione.proper.frames[i].backgroundcolor = spec.color;
+                    oldBackground.ref = private.presentazione.proper.frames[i].ref;
+                    oldBackground.color = private.presentazione.proper.frames[i].color;
+                    private.presentazione.proper.frames[i].ref = spec.ref;
+                    private.presentazione.proper.frames[i].color = spec.color;
                     found = true;
                 }
             }
@@ -1195,7 +1232,9 @@ var insertEditRemove = function () {
 <span class="cstat-no" title="statement not covered" >            var found = false;</span>
 <span class="cstat-no" title="statement not covered" >            var oldContent;</span>
 <span class="cstat-no" title="statement not covered" >            for (var i = 0; i &lt; private.presentazione.proper.texts.length &amp;&amp; !found; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.texts[i].id === spec.id) {</span>
+<span class="cstat-no" title="statement not covered" >                console.log(private.presentazione.proper.texts[i].id + " " + spec.id);</span>
+<span class="cstat-no" title="statement not covered" >                if (private.presentazione.proper.texts[i].id == parseInt(spec.id)) {</span>
+<span class="cstat-no" title="statement not covered" >                    console.log("entro");</span>
 <span class="cstat-no" title="statement not covered" >                    oldContent = private.presentazione.proper.texts[i].content;</span>
 <span class="cstat-no" title="statement not covered" >                    private.presentazione.proper.texts[i].content = spec.content;</span>
 <span class="cstat-no" title="statement not covered" >                    found = true;</span>
@@ -1323,7 +1362,7 @@ var insertEditRemove = function () {
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Aug 03 2015 16:52:24 GMT+0200 (CEST)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Aug 09 2015 12:23:34 GMT+0200 (CEST)</div>
 </div>
 <script src="../prettify.js"></script>
 <script>

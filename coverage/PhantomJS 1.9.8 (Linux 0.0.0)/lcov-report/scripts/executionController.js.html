@@ -15,10 +15,10 @@
 <div class="header low">
     <h1>Code coverage report for <span class="entity">scripts/executionController.js</span></h1>
     <h2>
-        Statements: <span class="metric">10.53% <small>(2 / 19)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">7.14% <small>(2 / 28)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Branches: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Functions: <span class="metric">0% <small>(0 / 3)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Lines: <span class="metric">10.53% <small>(2 / 19)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 4)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">7.14% <small>(2 / 28)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
     <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">scripts/</a> &#187; executionController.js</div>
@@ -56,7 +56,26 @@
 29
 30
 31
-32</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -76,6 +95,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -83,6 +103,24 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -91,8 +129,8 @@
 &nbsp;
 var premiExecutionController = angular.module('premiExecutionController', ['premiService'])
 &nbsp;
-premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'toPages', 'Utils', '$route',
-<span class="fstat-no" title="function not covered" >	function($scope, Main, toPages, Utils, $route) {</span>
+premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'toPages', 'Utils', '$route', 'SharedData',
+<span class="fstat-no" title="function not covered" >	function($scope, Main, toPages, Utils, $route, SharedData) {</span>
 <span class="cstat-no" title="statement not covered" >		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato</span>
 <span class="cstat-no" title="statement not covered" >			toPages.loginpage();</span>
 &nbsp;
@@ -107,23 +145,42 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 <span class="cstat-no" title="statement not covered" >	    $("#premiHeader").hide();</span>
 <span class="cstat-no" title="statement not covered" >	    $("#premiFooter").hide();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    	impress().init();</span>
-<span class="cstat-no" title="statement not covered" >    	impress().showMenu();</span>
+	    //TRANSLATION
+<span class="cstat-no" title="statement not covered" >	    console.log(SharedData.getPresentazione());</span>
+<span class="cstat-no" title="statement not covered" >	    translateImpress(SharedData.getPresentazione());</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >	    var home = angular.element($("#homeButton"));</span>
-<span class="cstat-no" title="statement not covered" >	    home.on("click", <span class="fstat-no" title="function not covered" >function(){</span></span>
-<span class="cstat-no" title="statement not covered" >	    	var hash = window.location.hash;</span>
-<span class="cstat-no" title="statement not covered" >	    	var array = hash.split("%23");</span>
+<span class="cstat-no" title="statement not covered" >	    var goHome = angular.element($("#homeButton"));</span>
+<span class="cstat-no" title="statement not covered" >	    goHome.on("click", <span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >	    	$("#premiHeader").show();</span>
+<span class="cstat-no" title="statement not covered" >	    	$("#premiFooter").show();</span>
+<span class="cstat-no" title="statement not covered" >	    	$("#impressMenu").remove();</span>
+	    	/*var hash = window.location.hash;
+	    	var array = hash.split("%23");
 &nbsp;
-<span class="cstat-no" title="statement not covered" >	    	window.location.hash = array[0];</span>
+	    	window.location.hash = array[0];*/
+<span class="cstat-no" title="statement not covered" >	    	$route.current = lastRoute;</span>
 <span class="cstat-no" title="statement not covered" >	    	toPages.homepage();</span>
+	    });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >	    var goEdit = angular.element($("#editButton"));</span>
+<span class="cstat-no" title="statement not covered" >	    goEdit.on("click", <span class="fstat-no" title="function not covered" >function(){</span></span>
+<span class="cstat-no" title="statement not covered" >	    	console.log("edit");</span>
+<span class="cstat-no" title="statement not covered" >	    	$("#premiHeader").show();</span>
+<span class="cstat-no" title="statement not covered" >	    	$("#premiFooter").show();</span>
+<span class="cstat-no" title="statement not covered" >	    	$("#impressMenu").remove();</span>
+	    	/*var hash = window.location.hash;
+	    	var array = hash.split("%23");
+&nbsp;
+	    	window.location.hash = array[0];*/
+<span class="cstat-no" title="statement not covered" >	    	$route.current = lastRoute;</span>
+<span class="cstat-no" title="statement not covered" >	    	toPages.editpage();</span>
 	    });
 }])</pre></td></tr>
 </table></pre>
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Mon Aug 03 2015 16:52:24 GMT+0200 (CEST)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Aug 09 2015 12:23:34 GMT+0200 (CEST)</div>
 </div>
 <script src="../prettify.js"></script>
 <script>

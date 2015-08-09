@@ -48,7 +48,7 @@ var insertEditRemove = function () {
             var element;
             var found = false;
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
-                if (parseInt(private.presentazione.proper.texts[i].id == parseInt(id)) {
+                if (private.presentazione.proper.texts[i].id == parseInt(id)) {
                     element = private.presentazione.proper.texts[i];
                     found = true;
                 }

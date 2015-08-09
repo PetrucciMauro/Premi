@@ -683,6 +683,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				height: h,
 				width: l
 			};
+			console.log(spec);
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
@@ -696,6 +697,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();
+			console.log(background);
+			var prop = 1;
 
 			//vedere come gestire il ridimensionamento degli elementi
 			//in base a l e h della view
@@ -706,6 +709,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					style.backgroundImage = "url(" + background.url + ")";
 				else
 					style.backgroundImage = "";
+
+				if(background.width != l){
+					prop = (l / background.width);
+				}
 			}
 			else 
 				impostaPrimoSfondo();
@@ -718,16 +725,23 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var frame = frames[i];
 				var spec = {
 					id: frame.id,
-					xIndex: frame.xIndex,
-					yIndex: frame.yIndex,
-					height: frame.height,
-					width: frame.width,
+					xIndex: frame.xIndex * prop,
+					yIndex: frame.yIndex * prop,
+					height: frame.height * prop,
+					width: frame.width * prop,
 					zIndex: frame.zIndex,
 					rotation: frame.rotation,
 					color: frame.color,
 					ref: frame.ref
 				};
+				console.log(spec);
 				inserisciFrame(spec);
+
+				if(prop !== 1){
+					ins.removeFrame(spec.id);
+					ins.insertFrame(spec);
+					loader.addInsert(spec.id);
+				}
 			}
 
 			//RICREO I TESTI
@@ -738,12 +752,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			    console.log("texts " + JSON.stringify(text));
 				var spec = {
 					id: text.id,
-					xIndex: text.xIndex,
-					yIndex: text.yIndex,
-					height: text.height,
-					width: text.width,
+					xIndex: text.xIndex * prop,
+					yIndex: text.yIndex * prop,
+					height: text.height * prop,
+					width: text.width * prop,
 					zIndex: text.zIndex,
-					waste: text.waste,
+					waste: text.waste * prop,
 					rotation: text.rotation,
 					content: text.content,
 					font: text.font,
@@ -751,6 +765,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				};
 				console.log("spec " + spec);
 				inserisciTesto(spec);
+
+				if(prop !== 1){
+					ins.removeText(spec.id);
+					ins.insertText(spec);
+					loader.addInsert(spec.id);
+				}
 			}
 
 			//RICREO FILE MEDIA
@@ -761,16 +781,22 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var img = imgs[i];
 				var spec = {
 					id: img.id,
-					xIndex: img.xIndex,
-					yIndex: img.yIndex,
-					height: img.height,
-					width: img.width,
+					xIndex: img.xIndex * prop,
+					yIndex: img.yIndex * prop,
+					height: img.height * prop,
+					width: img.width * prop,
 					zIndex: img.zIndex,
-					waste: img.waste,
+					waste: img.waste * prop,
 					rotation: img.rotation,
 					ref: img.url
 				};
 				inserisciImmagine(undefined, spec);
+
+				if(prop !== 1){
+					ins.removeImage(spec.id);
+					ins.insertImage(spec);
+					loader.addInsert(spec.id);
+				}
 			}
 			//Audio
 			var audios = ins.getAudios();
@@ -779,15 +805,21 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var audio = audios[i];
 				var spec = {
 					id: audio.id,
-					left: audio.xIndex,
-					yIndex: audio.yIndex,
-					height: audio.height,
-					width: audio.width,
+					left: audio.xIndex * prop,
+					yIndex: audio.yIndex * prop,
+					height: audio.height * prop,
+					width: audio.width * prop,
 					zIndex: audio.zIndex,
 					rotation: audio.rotation,
 					ref: audio.url
 				};
 				inserisciAudio(undefined, spec);
+
+				if(prop !== 1){
+					ins.removeAudio(spec.id);
+					ins.insertAudio(spec);
+					loader.addInsert(spec.id);
+				}
 			}
 			//Video
 			var videos = ins.getVideos();
@@ -796,16 +828,22 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var video = videos[i];
 				var spec = {
 					id: video.id,
-					left: video.xIndex,
-					yIndex: video.yIndex,
-					height: video.height,
-					width: video.width,
-					waste: video.waste,
+					left: video.xIndex * prop,
+					yIndex: video.yIndex * prop,
+					height: video.height * prop,
+					width: video.width * prop,
+					waste: video.waste * prop,
 					zIndex: video.zIndex,
 					rotation: video.rotation,
 					ref: video.url
 				};
 				inserisciVideo(undefined, spec);
+
+				if(prop !== 1){
+					ins.removeVideo(spec.id);
+					ins.insertVideo(spec);
+					loader.addInsert(spec.id);
+				}
 			}
 
 			//Main path
@@ -813,6 +851,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			for(var i=0; i< mainpath.length; ++i)
 				mainPath().addToMainPath(mainpath[i], i);
 
+			if(prop !== 1)
+				loader.update();
 		};
 		
 		if(Utils.isObject(SharedData.getPresentazione())){

@@ -435,11 +435,11 @@ var inserisciElemento=function(classe, spec){
 		div.style.rotation = spec.rotation;
 		div.style.height = spec.height + "px";
 		div.style.width = spec.width + "px";
-		div.style.top = spec.top + "px";
-		div.style.left = spec.left + "px";
+		div.style.top = spec.yIndex + "px";
+		div.style.left = spec.xIndex + "px";
 		if(classe === "frame"){
-			div.style.backgroundColor = spec.backgroundColor;
-			div.style.backgroundImage = spec.backgroundImage;
+			div.style.backgroundColor = spec.color;
+			div.style.backgroundImage = spec.image;
 		}
 	}
 	//TRADUTTORE EDIT

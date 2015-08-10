@@ -55,7 +55,7 @@ var insertEditRemove = function () {
             }
             for (var i = 0; i < private.presentazione.proper.frames.length && !found; i++) {
                 if (parseInt(private.presentazione.proper.frames[i].id) == parseInt(id)) {
-                    console.log("trovato");
+                    //console.log("trovato");
                     element = private.presentazione.proper.frames[i];
                     found = true;
                 }
@@ -89,10 +89,10 @@ var insertEditRemove = function () {
             }
 
             if (!found && parseInt(private.presentazione.proper.background.id) == parseInt(id)) {
-                console.log("background");
+                //console.log("background");
                 element = private.presentazione.proper.background;
             }
-            console.log(element);
+            //console.log(element);
             //return JSON.stringify(element);
 			  return element;
         };
@@ -317,9 +317,9 @@ var insertEditRemove = function () {
             var found = false;
             var oldContent;
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
-                console.log(private.presentazione.proper.texts[i].id + " " + spec.id);
+               // console.log(private.presentazione.proper.texts[i].id + " " + spec.id);
                 if (private.presentazione.proper.texts[i].id == parseInt(spec.id)) {
-                    console.log("entro");
+                   // console.log("entro");
                     oldContent = private.presentazione.proper.texts[i].content;
                     private.presentazione.proper.texts[i].content = spec.content;
                     found = true;

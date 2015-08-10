@@ -15,9 +15,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//Metodi per il reindirizzamento
 		$scope.goExecute = function(){
 			var presentazione = insertEditRemove().getPresentazione();
-			console.log(presentazione);
 			SharedData.forEditManuel(presentazione);
-			console.log(presentazione);
 			$location.path('private/execution');
 
 			/*
@@ -137,7 +135,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
 				var style = $("#" + text.id);
-				console.log(style);
 				var thistext = $("#txt" + text.id);
 
 				var spec = {
@@ -154,7 +151,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				};
 				var command = concreteTextInsertCommand(spec);  //model
 				inv.execute(command);
-				console.log(insertEditRemove().getPresentazione());
 
 				loader.addInsert(text.id);
 			}
@@ -166,7 +162,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		$scope.inserisciImmagine = function (files, spec) {
-		    console.log("inserisci immagine");
 		    if (Utils.isObject(spec)) {
 		        inserisciImmagine(spec.ref, spec);
 		    }
@@ -211,7 +206,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					var fileurl = Upload.getFileUrl(file);
 					fileurl.replace(/\s/g, "%");
 					//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
-					console.log(fileurl);
+					
 					var audio = inserisciAudio(fileurl); //view
 					var style = $("#" + audio.id);
 
@@ -268,7 +263,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//rimozione
 		$scope.rimuoviElemento = function(spec){
-			console.log(spec);
 			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
 				elimina(spec.id); //della view
 			else{
@@ -318,7 +312,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				width: l,
 				height: h
 			};
-			console.log(spec);
+			
 			var command = concreteBackgroundInsertCommand(spec);
 			inv.execute(command);
 
@@ -369,10 +363,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//Gestione sfondo frame
 		$scope.updateSfondoFrame = function(spec){
-			console.log(spec);
 			var style = document.getElementById(spec.id).style;
 			style.backgroundColor = spec.color;
-			console.log(style.backgroundColor);
 			if(Utils.isObject(spec.ref))
 				style.backgroundImage = "url(" + spec.ref + ")";
 			else
@@ -382,7 +374,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var activeFrame = active().getId();
 			
 			var style = document.getElementById(activeFrame).style;
-			console.log(style.backgroundColor);
 			style.backgroundColor = color;
 
 			var spec = {
@@ -390,7 +381,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				ref: style.backgroundImage
 			};
-			console.log(spec);
+			
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
 
@@ -416,7 +407,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			var command = concreteEditBackgroundCommand(spec);
 			inv.execute(command);
-			console.log(insertEditRemove().getPresentazione());
 
 			loader.addUpdate(activeFrame);
 		});
@@ -465,7 +455,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.annullaModifica = function(){
 			if(inv.getUndoStack()){
 				var annulla = inv.undo(); //insert edit delete editpath
-				console.log(insertEditRemove().getPresentazione());
 
 				switch(annulla.action){
 					case "insert": 
@@ -486,7 +475,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.ripristinaModifica = function(){
 			if(inv.getRedoStack()){
 				var annulla = inv.redo(); //insert edit delete editpath
-				console.log(insertEditRemove().getPresentazione());
 
 				switch(annulla.action){
 					case "insert": 
@@ -529,14 +517,23 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		$scope.muoviElemento = function(spec){
-			if(Utils.isObject(spec)){
+			if(Utils.isObject(spec) && !spec.toUpdate){
 				var style = document.getElementById(spec.id).style;
 				style.top = spec.yIndex + "px";
 				style.left = spec.xIndex + "px";
 			}
 			else{
-				var tipoElement = active().getTipo();
-				var idElement = active().getId();
+				var tipoElement;
+				var idElement;
+				if(Utils.isObject(spec)){
+					tipoElement = getTipo(spec.id);
+					idElement = spec.id;
+				}
+				else{
+					tipoElement = active().getTipo();
+					idElement = active().getId();
+				}
+
 				var style = $("#" + idElement);
 
 				var spec = {
@@ -551,6 +548,25 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				loader.addUpdate(idElement);
 			}
+		}
+
+		var getTipo = function(id){
+			var type;
+			var element = $("#" + id);
+			if(element.hasClass("frame"))
+				type="frame";
+			else if(element.hasClass("image"))
+				type="image";
+			else if(element.hasClass("SVG"))
+				type="SVG";
+			else if(element.hasClass("text"))
+				type="text";
+			else if(element.hasClass("audio"))
+				type="audio";
+			else if(element.hasClass("video"))
+				type="video";
+			
+			return type;
 		}
 		$scope.ridimensionaElemento = function(spec){
 			if(Utils.isObject(spec)){
@@ -594,7 +610,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					spec.width = thisvideo.outerWidth();
 					spec.waste = (thisvideo.width() - thisvideo.outerWidth())/2;
 				}
-				console.log(spec);
 
 				var command = concreteEditSizeCommand(spec);
 				inv.execute(command);
@@ -683,7 +698,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				height: h,
 				width: l
 			};
-			console.log(spec);
+			
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
@@ -697,7 +712,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();
-			console.log(background);
 			var prop = 1;
 
 			//vedere come gestire il ridimensionamento degli elementi
@@ -720,8 +734,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			//RICREO I FRAME
 			var frames = ins.getFrames();
 			for (var i = 0; i < frames.length; ++i) {
-                
-			    console.log("frames " + i);
 				var frame = frames[i];
 				var spec = {
 					id: frame.id,
@@ -734,12 +746,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					color: frame.color,
 					ref: frame.ref
 				};
-				console.log(spec);
 				inserisciFrame(spec);
 
 				if(prop !== 1){
 					ins.removeFrame(spec.id);
 					ins.insertFrame(spec);
+					loader.addDelete(spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -749,7 +761,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			for (var i = 0; i < texts.length; ++i) {
 			    
 			    var text = texts[i];
-			    console.log("texts " + JSON.stringify(text));
 				var spec = {
 					id: text.id,
 					xIndex: text.xIndex * prop,
@@ -763,12 +774,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					font: text.font,
 					color: text.color
 				};
-				console.log("spec " + spec);
 				inserisciTesto(spec);
 
 				if(prop !== 1){
 					ins.removeText(spec.id);
 					ins.insertText(spec);
+					loader.addDelete(spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -777,7 +788,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			//Immagini
 			var imgs = ins.getImages();
 			for (var i = 0; i < imgs.length; ++i) {
-			    console.log("imgs " + i);
 				var img = imgs[i];
 				var spec = {
 					id: img.id,
@@ -795,13 +805,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeImage(spec.id);
 					ins.insertImage(spec);
+					loader.addDelete(spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
 			//Audio
 			var audios = ins.getAudios();
 			for (var i = 0; i < audios.length; ++i) {
-			    console.log("audios " + i);
 				var audio = audios[i];
 				var spec = {
 					id: audio.id,
@@ -818,13 +828,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeAudio(spec.id);
 					ins.insertAudio(spec);
+					loader.addDelete(spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
 			//Video
 			var videos = ins.getVideos();
 			for (var i = 0; i < videos.length; ++i) {
-			    console.log("videos " + i);
 				var video = videos[i];
 				var spec = {
 					id: video.id,
@@ -842,6 +852,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeVideo(spec.id);
 					ins.insertVideo(spec);
+					loader.addDelete(spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -856,7 +867,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		};
 		
 		if(Utils.isObject(SharedData.getPresentazione())){
-			console.log(SharedData.getPresentazione());
 			translateEdit(SharedData.getPresentazione());
 		}
 		else

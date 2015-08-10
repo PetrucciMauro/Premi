@@ -39,6 +39,7 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 
 		//Metodi propri della home
 		$scope.getSS = function() {
+			console.log(allSS);
 			return allSS;
 		};
 		$scope.deleteSlideShow = function(slideId) {

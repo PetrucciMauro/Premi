@@ -606,34 +606,35 @@ describe("Loader", function(done){
 	 req.send(JSON.stringify(obj));
  
 	 mongoRel.newElement("prova_presentazione", obj, function(){
- 
+								//console.log("ora iniziano le add()");
 								loader.addInsert(4);
 								loader.addInsert(5);
 							
 								loader.addDelete("image", 5);
-								
+								//console.log("ora la update()");
 								loader.update(function(){
-												  
+												 // console.log("ritornati dalla prima update()");
 												  var pres = mongoRel.getPresentation("prova_presentazione");
 												  
 												  assert.equal(2, pres.proper.images.length);
 												  assert.equal(4, pres.proper.images[1].id);
-												
+												  
 												  loader.addDelete("image", 4);
 												  loader.addInsert(4);
-												  
+												  //console.log("prima seconda update")
 												  loader.update(function(){
-																	 
+																	 //console.log("ritorno seconda update");
 																	 var pres = mongoRel.getPresentation("prova_presentazione");
 																	 
 																	 assert.equal(2, pres.proper.images.length);
 																	 assert.equal(4, pres.proper.images[1].id);
-																	 assert.equal(2, pres.proper.images[0].rotation);
+																	 assert.equal(3, pres.proper.images[0].id);
+																	 //assert.equal(2, pres.proper.images[0].rotation);
 																	 
 																	 loader.addUpdate(3);
-																	 
+																	 //console.log("prima terza update");
 																	 loader.update(function(){
-																						
+																						//console.log("ritorno terza update");
 																						var pres = mongoRel.getPresentation("prova_presentazione");
 																						
 																						assert.equal(2, pres.proper.images.length);

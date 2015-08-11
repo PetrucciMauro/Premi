@@ -291,6 +291,15 @@ describe("Presentation's elements", function(){
 				assert.equal(true, jsonResponse.success);
 				
 				var req = new XMLHttpRequest();
+				req.open('GET', host+'/private/api/presentations/'+'presentazione_prova', false);
+				req.setRequestHeader("Authorization", token);
+				req.send();
+				var jsonResponse = JSON.parse(req.responseText);
+				
+				assert.equal(1, jsonResponse.message.proper.images.length);
+
+				
+				var req = new XMLHttpRequest();
 				req.open('DELETE', host+'/private/api/presentations/'+'presentazione_prova'+'/delete/image/3', false);
 				req.setRequestHeader("Authorization", token);
 				req.send()

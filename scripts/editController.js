@@ -14,17 +14,17 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
         }
 		//Metodi per il reindirizzamento
 		$scope.goExecute = function(){
-			var presentazione = insertEditRemove().getPresentazione();
+	/*		var presentazione = insertEditRemove().getPresentazione();
 			SharedData.forEditManuel(presentazione);
 			$location.path('private/execution');
-
-			/*
-			var reindirizza = function(){
-				toPages.executionpage(insertEditRemove().getTitoloPresentazione());
-			}
-			loader.update(reindirizza);
+*/
 			
-			*/	
+			var reindirizza = function(){
+				toPages.executionpage();
+			}
+			//loader.update(reindirizza);
+			reindirizza();
+		
 		}
 
 		$scope.toggleList = function() {
@@ -434,14 +434,54 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			mediaControl();
 		}
 
+		$scope.cambiaColoreTesto = function(color){
+			var activeText = active().getId();
+			
+			var style = document.getElementById("txt"+activeText).style;
+			style.color = color;
+
+			var spec = {
+				id: activeText,
+				tipo: "text",
+				color: style.color
+			};
+			
+			var command = concreteEditColorCommand(spec);
+			inv.execute(command);
+
+			loader.addUpdate(activeText);
+		}
+		$scope.cambiaSizeTesto = function(value){
+			var activeText = active().getId();
+			
+			$("#txt"+activeText).css("font-size", value);
+
+			var spec = {
+				id: activeText,
+				tipo: "text",
+				size: value
+			};
+			
+			console.log(spec);
+			/*var command = concreteEditColorCommand(spec);
+			inv.execute(command);
+
+			loader.addUpdate(activeText);*/
+		}
+
         $scope.aggiornaTesto = function(textId, textContent){
+        	console.log("aggiornaTesto");
+        	console.log(textContent);
+        	console.log(textContent.style.fontSize);
 			var spec = {
 				id: textId,
-				content: textContent
+				tipo: "text",
+				content: textContent.value,
+				size: textContent.style.fontSize
 			};
 
 
-			var command = concreteEditContentCommand (spec);
+			var command = concreteEditContentCommand(spec);
 			inv.execute(command);
 
 			loader.addUpdate(textId);
@@ -709,6 +749,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			//MANCANO I PERCORSI!!!!! DA FARE CON GIOVANNI
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
+			console.log(json);
 
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();
@@ -730,6 +771,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 			else 
 				impostaPrimoSfondo();
+
+			console.log(l);
+				console.log(background.width);
+			console.log(prop);
 
 			//RICREO I FRAME
 			var frames = ins.getFrames();

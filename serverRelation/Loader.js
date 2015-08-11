@@ -100,7 +100,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 			mongoRelation.deleteElement(showElements.getPresentationName(), toDelete[i].type, toDelete[i].id, toCall.done);
 		};
 		if(toPaths == true){ mongoRelation.updatePaths(showElements.getPresentationName(), showElements.getPaths()); };
-		toPath = false;
+		toPaths = false;
 		toDelete = [];
 		toInsert = [];
 		toUpdate = [];

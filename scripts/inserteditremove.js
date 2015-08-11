@@ -351,7 +351,8 @@ var insertEditRemove = function () {
             var oldFrame = {};
             var found = false;
             for (var i = 0; i < private.presentazione.proper.paths.main.length && !found; i++) {
-                if (private.presentazione.proper.paths.main[i] === id) {
+                console.log(private.presentazione.proper.paths.main[i]);
+                if (private.presentazione.proper.paths.main[i] == id) {
                     oldFrame.pos = i;
                     oldFrame.id = id;
                     private.presentazione.proper.paths.main.splice(i, 1);

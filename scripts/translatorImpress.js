@@ -18,6 +18,7 @@ function videoPosition(left,top,waste,width,height,screenWidth,screenHeight){
 	return position;
 }
 function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight){
+	console.log(left + " " + top + " " +width+" "+height+" "+screenWidth+" "+screenHeight+" "+waste+" "+size);
 	var scale=(33.5/(1290/1899))*(size/screenWidth);
 	scale=scale*0.95;
 	var position=[(((left+waste+(width/2))/screenWidth)*(7440*2)-7440),(((top+waste+(height/2))/screenHeight)*(3600*2)-3600)+(120/33.5)*scale,scale];
@@ -25,10 +26,12 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 }
 //$.getJSON("slideshow.json", function(json) {
 	var translateImpress = function(json){
+		console.log("translator impress");
 		var contStep=1;
 		var choiceSteps=[];
 		var presentation="";//<div id=\"impress\">";
 		json = JSON.parse(json);
+		console.log(json);
 		if(json.proper.background.image!="0" && json.proper.background.image!= undefined)
 			presentation+="<div class=\"step sfondo\" data-scale=\"10\"style=\"background: url('"+json.proper.background.url+"');background-size:100% 100%\"></div>";
 		else if(json.proper.background.color!="0"&& json.proper.background.color!= undefined)
@@ -47,15 +50,20 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 						var coordinates=framePosition(json.proper.frames[s].xIndex,json.proper.frames[s].yIndex,json.proper.frames[s].width,json.proper.background.width,json.proper.background.height);
 						var style="style=\"z-index:"+json.proper.frames[s].zIndex+";";
 						var bi=bc="";
-						if(json.proper.frames[s].backgroundimage!=0)
-							bi="background: url('"+json.proper.frames[k].backgroundimage+"'); background-size:100% 100%;";
-						if(json.proper.frames[s].backgroundcolor!=0)
-							bc="background-color:"+json.proper.frames[s].backgroundcolor+";";
+						if(json.proper.frames[s].image!="")
+							bi="background: url('"+json.proper.frames[k].image+"'); background-size:100% 100%;";
+						console.log(json.proper.frames[s].color);
+						if(json.proper.frames[s].color!="")
+							bc="background-color:"+json.proper.frames[s].color+";";
 						style+=bi+bc+"\"";
 						contStep++;
 						if(k==0)
 							choiceSteps=choiceSteps.concat(contStep);
-						presentation+="<div class=\"step frame scelta\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
+						presentation+="<div class=\"step frame scelta\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+						if(json.proper.frames[s].rotation != 0){
+							presentation+="data-rotate=\"" + json.proper.frames[s].rotation + "\"";
+						}
+						presentation+=style+"></div>";
 					}
 					var other=false;
 					for(k=j+1; k<json.proper.paths.choices.length; k++){
@@ -67,10 +75,10 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 					var coordinates=framePosition(json.proper.frames[k].xIndex,json.proper.frames[k].yIndex,json.proper.frames[k].width,json.proper.background.width,json.proper.background.height);
 					var style="style=\"z-index:"+json.proper.frames[k].zIndex+";";
 					var bi=bc="";
-					if(json.proper.frames[k].backgroundimage!=0)
-						bi="background: url('"+json.proper.frames[k].backgroundimage+"'); background-size:100% 100%;";
-					if(json.proper.frames[k].backgroundcolor!=0)
-						bc="background-color:"+json.proper.frames[s].backgroundcolor+";";
+					if(json.proper.frames[k].image!="")
+						bi="background: url('"+json.proper.frames[k].image+"'); background-size:100% 100%;";
+					if(json.proper.frames[k].color!="")
+						bc="background-color:"+json.proper.frames[s].color+";";
 					style+=bi+bc+"\"";
 					var bookmark="";
 					if(json.proper.frames[k].bookmark)
@@ -78,10 +86,18 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 					ins=true;
 					if(other){
 						contStep++;
-						presentation+="<div class=\"step frame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
+						presentation+="<div class=\"step frame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+						if(json.proper.frames[k].rotation != 0){
+							presentation+="data-rotate=\"" + json.proper.frames[k].rotation + "\"";
+						}
+						presentation+=style+"></div>";
 					}
 					else{
-						presentation+="<div class=\"step frame copia"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+">";
+						presentation+="<div class=\"step frame copia"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+						if(json.proper.frames[k].rotation != 0){
+							presentation+="data-rotate=\"" + json.proper.frames[k].rotation + "\"";
+						}
+						presentation+=style+"></div>";
 						var choices=[];
 						for(k=0; k<json.proper.paths.choices.length; k++){
 							if(json.proper.paths.choices[j].pathId==json.proper,paths.main[i]){
@@ -97,19 +113,24 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 				}
 			}
 			if(!ins){
+				console.log(i);
 				var coordinates=framePosition(json.proper.frames[i].xIndex,json.proper.frames[i].yIndex,json.proper.frames[i].width,json.proper.background.width,json.proper.background.height);
 				var style="style=\"z-index:"+json.proper.frames[i].zIndex+";";//c'era [k]
 				var bi=bc="";
-				if(json.proper.frames[i].backgroundimage!=0)
-					bi="background: url('"+json.proper.frames[i].backgroundimage+"'); background-size:100% 100%;";
-				if(json.proper.frames[i].backgroundcolor!=0)
-					bc="background-color:"+json.proper.frames[i].backgroundcolor+";";
+				if(json.proper.frames[i].image!="")
+					bi="background: url('"+json.proper.frames[i].image+"'); background-size:100% 100%;";
+				if(json.proper.frames[i].color!="")
+					bc="background-color:"+json.proper.frames[i].color+";";
 				style+=bi+bc+"\"";
 				contStep++;
 				var bookmark="";
 				if(json.proper.frames[i].bookmark)
 					bookmark=" bookmark ";
-				presentation+="<div class=\"step frame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
+				presentation+="<div class=\"step frame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+				if(json.proper.frames[i].rotation != 0){
+					presentation+="data-rotate=\"" + json.proper.frames[i].rotation + "\"";
+				}
+				presentation+=style+"></div>";
 			}
 		}
 		for(i=0; i<json.proper.frames.length; i++){
@@ -121,16 +142,20 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 					var coordinates=framePosition(json.proper.frames[i].xIndex,json.proper.frames[i].yIndex,json.proper.frames[i].width,json.proper.background.width,json.proper.background.height);
 					var style="style=\"z-index:"+json.proper.frames[i].zIndex+";";
 					var bi=bc="";
-					if(json.proper.frames[i].backgroundimage!=0)
-						bi="background: url('"+json.proper.frames[i].backgroundimage+"'); background-size:100% 100%;";
-					if(json.proper.frames[i].backgroundcolor!=0)
-						bc="background-color:"+json.proper.frames[i].backgroundcolor+";";
+					if(json.proper.frames[i].image!="")
+						bi="background: url('"+json.proper.frames[i].image+"'); background-size:100% 100%;";
+					if(json.proper.frames[i].color!="")
+						bc="background-color:"+json.proper.frames[i].color+";";
 					style+=bi+bc+"\"";
 					contStep++;
 					var bookmark="";
 					if(json.proper.frames[i].bookmark)
 						bookmark=" bookmark ";
-					presentation+="<div class=\"step extraFrame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"></div>";
+					presentation+="<div class=\"step extraFrame"+bookmark+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+					if(json.proper.frames[i].rotation != 0){
+						presentation+="data-rotate=\"" + json.proper.frames[i].rotation + "\"";
+					}
+					presentation+=style+"></div>";
 				}
 			}
 			for(i=0; i<json.proper.images.length; i++){

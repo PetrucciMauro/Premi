@@ -670,7 +670,7 @@ var concreteRemoveFromMainPathCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            angular.element($("#content")).scope().rimuoviMainPath(spec);
+            angular.element($("#content")).scope().rimuoviMainPath(undefined, spec);
         }
         var obj = public.getObj();
         obj.action = "editPath";

@@ -19,7 +19,7 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    $("#premiFooter").hide();
 
 	    //TRANSLATION
-	    console.log(SharedData.getPresentazione());
+	    console.log(SharedData.forEditManuel());
 	    translateImpress(SharedData.getPresentazione());
 
 	    var goHome = angular.element($("#homeButton"));

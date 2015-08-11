@@ -14,11 +14,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
         }
 		//Metodi per il reindirizzamento
 		$scope.goExecute = function(){
-	/*		var presentazione = insertEditRemove().getPresentazione();
-			SharedData.forEditManuel(presentazione);
-			$location.path('private/execution');
-*/
+			/*var json = {"_id":"55c38501d815bccd1f27a461","meta":{"titolo":"Prova"},"proper":{"paths":{"main":[],"choices":[]},"texts":[{"id":"2","xIndex":413,"yIndex":78,"rotation":0,"zIndex":1,"waste": 413,"size": 10, "height":218,"width":153,"content":"balfdjsalkfjsakfjsdkafjl.\nCome stai?? io vorrei andarmene.... perché sono stanco.... voglio moriiiiire","font":"Roboto, sans-serif","color":"rgb(31, 121, 131)","type":"text"}],"frames":[{"id":"1","yIndex":56.6218109130859,"xIndex":73.6218109130859,"rotation":332,"zIndex":0,"height":348,"width":348,"rotation": 50,"bookmark":0,"image":"","color":"rgb(133, 59, 59)","type":"frame"}],"images":[],"SVGs":[],"audios":[],"videos":[],"background":{"width": l, "height": h, "image": "", "color": ""}}};
 			
+			SharedData.forEditManuel(json);
+			$location.path('private/execution');*/
 			var reindirizza = function(){
 				toPages.executionpage();
 			}
@@ -112,16 +111,20 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var frame = inserisciFrame(spec); //view
 
 			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
-				var style = $("#" + frame.id);
+				var style = document.getElementById(frame.id).style;
+				var top = style.top.split("px")[0];
+				var left = style.left.split("px")[0];
+				var outerHeight = style.outerHeight.split("px")[0];
+				var outerWidth = style.outerWidth.split("px")[0];
 
 				var spec = {
 					id: frame.id,
-					xIndex: style.position().left,
-					yIndex: style.position().top,
-					height: style.outerHeight(),
-					width: style.outerWidth(),
+					xIndex: left,
+					yIndex: top,
+					height: outerHeight,
+					width: outerWidth,
 					rotation: 0,
-					zIndex: style.zIndex()
+					zIndex: style.zIndex
 				};
 
 				var command = concreteFrameInsertCommand(spec); //model
@@ -134,20 +137,25 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var text = inserisciTesto(spec); //view
 
 			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
-				var style = $("#" + text.id);
 				var thistext = $("#txt" + text.id);
+
+				var style = document.getElementById(text.id).style;
+				var top = style.top.split("px")[0];
+				var left = style.left.split("px")[0];
+				var height = style.height.split("px")[0];
+				var width = style.width.split("px")[0];
 
 				var spec = {
 					id: text.id,
-					xIndex: style.position().left,
-					yIndex: style.position().top,
-					height: thistext.height(),
-					width: thistext.width(),
-					waste: thistext.position().left,
+					xIndex: left,
+					yIndex: top,
+					height: height,
+					width: width,
+					waste: left,
 					size: thistext.css("font-size"),
 					rotation: 0,
-					font: style.css("font-family"),
-					zIndex: style.zIndex()
+					font: thistext.css("font-family"),
+					zIndex: style.zIndex
 				};
 				var command = concreteTextInsertCommand(spec);  //model
 				inv.execute(command);
@@ -172,19 +180,26 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		        uploadmedia(files, function (file) {
 	                var fileurl = Upload.getFileUrl(file);
 	                var img = inserisciImmagine(fileurl); //view
-	                var style = $("#" + img.id);
-	                var immagine = $("#img" + img.id);
+
+	                var style = document.getElementById(img.id).style;
+					var top = style.top.split("px")[0];
+					var left = style.left.split("px")[0];
+
+	                var immagine = document.getElementById("img" + img.id).style;
+	                var imgheight = immagine.height.split("px")[0];
+	                var imgwidth = immagine.width.split("px")[0];
+	                var imgouterwidth = immagine.outerWidth.split("px")[0];
 
 	                var spec = {
 	                    id: img.id,
-	                    xIndex: style.position().left,
-	                    yIndex: style.position().top,
-	                    height: immagine.height(),
-	                    width: immagine.width(),
-	                    waste: (immagine.width() - immagine.outerWidth()) / 2,
+	                    xIndex: left,
+	                    yIndex: top,
+	                    height: imgheight,
+	                    width: imgwidth,
+	                    waste: (imgwidth - imgouterwidth) / 2,
 	                    rotation: 0,
 	                    ref: fileurl,
-	                    zIndex: style.zIndex()
+	                    zIndex: style.zIndex
 	                };
 
 	                var command = concreteImageInsertCommand(spec); //model
@@ -208,17 +223,22 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
 					
 					var audio = inserisciAudio(fileurl); //view
-					var style = $("#" + audio.id);
+
+					var style = document.getElementById(audio.id).style;
+					var top = style.top.split("px")[0];
+					var left = style.left.split("px")[0];
+					var height = style.height.split("px")[0];
+					var width = style.width.split("px")[0];
 
 					var spec = {
 						id: audio.id,
-						xIndex: style.position().left,
-						yIndex: style.position().top,
-						height: style.height(),
-						width: style.width(),
+						xIndex: left,
+						yIndex: top,
+						height: height,
+						width: width,
 						rotation: 0,
 						ref: fileurl,
-						zIndex: style.zIndex()
+						zIndex: style.zIndex
 					};
 
 					var command = concreteAudioInsertCommand(spec); //model
@@ -239,19 +259,26 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				uploadmedia(files, function(file){
 					var fileurl = Upload.getFileUrl(file);
 					var video = inserisciVideo(fileurl); //view
-					var style = $("#" + video.id);
-					var thisvideo = $("#video" + video.id);
+
+					var style = document.getElementById(video.id).style;
+					var top = style.top.split("px")[0];
+					var left = style.left.split("px")[0];
+
+					var thisvideo = document.getElementById("video" + video.id).style;
+					var videoouterheight = thisvideo.outerHeight.split("px")[0];
+					var videoouterwidth = thisvideo.outerWidth.split("px")[0];
+					var videowidth = thisvideo.width.split("px")[0];
 
 					var spec = {
 						id: video.id,
-						xIndex: style.position().left,
-						yIndex: style.position().top,
-						height: thisvideo.outerHeight(),
-						width: thisvideo.outerWidth(),
-						waste: (thisvideo.width() - thisvideo.outerWidth())/2,
+						xIndex: left,
+						yIndex: top,
+						height: videoouterheight,
+						width: videoouterwidth,
+						waste: (videowidth - videoouterwidth)/2,
 						rotation: 0,
 						ref: fileurl,
-						zIndex: style.zIndex()
+						zIndex: style.zIndex
 					};
 
 					var command = concreteVideoInsertCommand(spec); //model
@@ -304,8 +331,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var style = document.getElementById('content').style;
 			style.removeProperty('background');
 
-			//QUALI VALORI DARE??
-
 			var spec = {
 				color: style.backgroundColor,
 				image: style.backgroundImage,
@@ -333,7 +358,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
-
+			console.log(insertEditRemove().getPresentazione());
 			loader.addUpdate(0);
 		}
 		$scope.cambiaImmagineSfondo = function(files){
@@ -470,14 +495,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
         $scope.aggiornaTesto = function(textId, textContent){
-        	console.log("aggiornaTesto");
         	console.log(textContent);
-        	console.log(textContent.style.fontSize);
 			var spec = {
 				id: textId,
 				tipo: "text",
-				content: textContent.value,
-				size: textContent.style.fontSize
+				content: textContent
+				//size: textContent.style.fontSize
 			};
 
 
@@ -574,13 +597,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					idElement = active().getId();
 				}
 
-				var style = $("#" + idElement);
-
+				var style = document.getElementById(idElement).style;
+				var top = style.top.split("px")[0];
+				var left = style.left.split("px")[0];
+				
 				var spec = {
 					id: idElement,
 					tipo: tipoElement,
-					yIndex: style.position().top,
-					xIndex: style.position().left
+					yIndex: top,
+					xIndex: left
 				};
 
 				var command = concreteEditPositionCommand(spec);
@@ -589,6 +614,23 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				loader.addUpdate(idElement);
 			}
 		}
+
+	/*	var getRotation = function(obj) {
+			var matrix = obj.css("-webkit-transform") ||
+			obj.css("-moz-transform")    ||
+			obj.css("-ms-transform")     ||
+			obj.css("-o-transform")      ||
+			obj.css("transform");
+			if(matrix !== 'none') {
+				var values = matrix.split('(')[1].split(')')[0].split(',');
+				var a = values[0];
+				var b = values[1];
+				var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
+			} else {
+				var angle = 0;
+			}
+			return (angle < 0) ? angle +=360 : angle;
+		}*/
 
 		var getTipo = function(id){
 			var type;
@@ -685,22 +727,20 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 		}
 
-		$scope.rimuoviMainPath = function (spec) {
+		$scope.rimuoviMainPath = function (id, spec) {
 			if(Utils.isObject(spec)){
-				mainPath().removeFromMainPath(spec.id);
+				mainPath().removeFromMainPath(spec);
 			}
 			else{
-				var activeElement = active().getId();
-			    mainPath().removeFromMainPath(active().getId());
+			    mainPath().removeFromMainPath(id);
 
-				var spec = {
-			    	id: activeElement
-			    };
-
-			    var command = concreteRemoveFromMainPathCommand(spec);
+			    console.log("qui");
+			    var command = concreteRemoveFromMainPathCommand(id);
 				inv.execute(command);
-
+				console.log("li");
 				loader.addPaths();
+
+				console.log(insertEditRemove().getPresentazione());
 			}
 		}
 
@@ -733,11 +773,16 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.config = {};
 		$scope.model = {};
 
-		var impostaPrimoSfondo = function(){
+		var impostaPrimoSfondo = function(param){
 			var spec = {
 				height: h,
 				width: l
 			};
+
+			if(param){
+				spec.color = param.color;
+				spec.image = param.image;
+			}
 			
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
@@ -758,13 +803,20 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			//vedere come gestire il ridimensionamento degli elementi
 			//in base a l e h della view
 			if(Utils.isObject(background)){
+				console.log("ma...");
 				var style = document.getElementById('content').style;
 				style.backgroundColor = background.color;
-				if(Utils.isObject(background.url))
-					style.backgroundImage = "url(" + background.url + ")";
+				if(Utils.isObject(background.image))
+					style.backgroundImage = "url(" + background.image + ")";
 				else
 					style.backgroundImage = "";
-
+				if(background.width < 0 && background.height <0){
+					var param = {
+						color: spec.color,
+						image: spec.image
+					}
+					impostaPrimoSfondo(param);
+				}
 				if(background.width != l){
 					prop = (l / background.width);
 				}
@@ -936,7 +988,7 @@ premiApp.directive('printPath', function ($compile) {
                 element.empty();
 
                 for (var i = 0; i < mainPath().getPercorso().length; i++) {
-                    element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" onClick="mainPath().removeFromMainPath(' + mainPath().getPercorso()[i] + ')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
+                    element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath" ng-click="rimuoviMainPath(' + mainPath().getPercorso()[i] + ')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
                     var obj = {};
                     obj.id = "sort" + mainPath().getPercorso()[i];
                     obj.association = mainPath().getPercorso()[i];

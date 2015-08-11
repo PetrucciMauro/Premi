@@ -15,13 +15,13 @@ $(document).ready(function () {
 			change: function (event, ui) {
 				$(ui.item[0].previousElementSibling).trigger("click");
 				$(ui.item[0].nextElementSibling).trigger("click");
-				console.log("New position: " + ui.item.index());
+				//console.log("New position: " + ui.item.index());
 			},
 			stop: function (event, ui) {
 				mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
 				console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
 				mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
-				console.log("New position: " + ui.item.index());
+				//console.log("New position: " + ui.item.index());
 		}
 		});
 		$("#sortable").disableSelection();
@@ -56,7 +56,7 @@ var active=function(){
 			}
 			
 			//document.getElementById("rotation").innerHTML="<input id=\"rangeRotation\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" value=\""+getRotationDegrees($("#"+id))+"\" oninput=\"rotate('"+id+"',this.value)\">";
-			console.log("gradi " + getRotationDegrees($("#" + id)));
+			//console.log("gradi " + getRotationDegrees($("#" + id)));
 			private.id = id;
 			deselezionaPercorso(id);
 			selezionaPercorso(id);
@@ -68,7 +68,7 @@ var active=function(){
 		};
 		that.deselect=function(){
 			clearMenu();
-			console.log(private.id);
+			//console.log(private.id);
 			if(document.getElementById(private.id)){
 				document.getElementById(private.id).style.boxShadow= "none";
 				document.getElementById("x"+private.id).style.opacity = '0';
@@ -432,15 +432,24 @@ var inserisciElemento=function(classe, spec){
 		if(contatore < spec.id)//in contatore si salva l'id maggiore
 			contatore = spec.id;
 		id = spec.id;
-		div.style.rotation = spec.rotation;
 		div.style.height = spec.height + "px";
 		div.style.width = spec.width + "px";
 		div.style.top = spec.yIndex + "px";
 		div.style.left = spec.xIndex + "px";
+		div.style.outerHeight = spec.height + "px";
+		div.style.outerWidth = spec.width + "px";
 		if(classe === "frame"){
 			div.style.backgroundColor = spec.color;
 			div.style.backgroundImage = spec.image;
 		}
+	}
+	else{
+		div.style.top = 0 + "px";
+		div.style.left = 0 + "px";
+		div.style.height = 230 + "px";
+		div.style.width = 230 + "px";
+		div.style.outerHeight = 230 + "px";
+		div.style.outerWidth = 230 + "px";
 	}
 	//TRADUTTORE EDIT
 
@@ -522,10 +531,11 @@ var inserisciTesto=function(spec){
 		div.style.height="50px";
 		//TRADUTTORE
 		txt.fontFamily="Arial, Helvetica, sans-serif";
+		txt.value = "";
 		
 	}
 	txt.id="txt"+div.id;
-	txt.setAttribute("style","font-size: 31px; width:1");
+	//txt.setAttribute("style","font-size: 31px; width:1");
 	//txt.setAttribute("type","text");
 	txt.setAttribute("class", "autogrow");
 	txt.setAttribute("onblur", "aggiornaTesto(" + div.id + ", this)");
@@ -1116,9 +1126,14 @@ function updateDraggable(element){
 			//muovi gli elementi dentro il frame
 			for(var i=0; i<others.length; ++i){
 				var x = $("#" + others[i].id);
-				x.css("left", event.clientX - click.x + others[i].originalLeft);
-				x.css("top", event.clientY - click.y + others[i].originalTop);
+				x.css("left", (event.clientX - click.x + others[i].originalLeft)/(scale/100));
+				x.css("top", (event.clientY - click.y + others[i].originalTop)/(scale/100));
 			}
+			console.log("drag");
+			console.log(scale);
+			console.log(event.clientX);
+			console.log(click.x);
+			console.log(original.left);
 			ui.position = {
 				left: (event.clientX - click.x + original.left)/(scale/100),
 				top:  (event.clientY - click.y + original.top) /(scale/100)

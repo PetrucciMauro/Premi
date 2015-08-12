@@ -41,19 +41,7 @@ var active=function(){
 			that.deselect();
 			private.element=document.getElementById(id);
 			private.element.style.boxShadow= "0 0 0 0.25em black inset";
-			document.getElementById("x"+id).style.opacity = '1';
-			document.getElementById("x"+id).style.WebkitTransition = 'opacity 0.5s';
-			document.getElementById("x"+id).style.MozTransition = 'opacity 0.5s';
-			if($("#"+id).zIndex()!=zindex-1){
-				document.getElementById("for"+id).style.opacity = '1';
-				document.getElementById("for"+id).style.WebkitTransition = 'opacity 0.5s';
-				document.getElementById("for"+id).style.MozTransition = 'opacity 0.5s';
-			}
-			if($("#"+id).zIndex()>0){
-				document.getElementById("back"+id).style.opacity = '1';
-				document.getElementById("back"+id).style.WebkitTransition = 'opacity 0.5s';
-				document.getElementById("back"+id).style.MozTransition = 'opacity 0.5s';
-			}
+			
 			
 			//document.getElementById("rotation").innerHTML="<input id=\"rangeRotation\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" value=\""+getRotationDegrees($("#"+id))+"\" oninput=\"rotate('"+id+"',this.value)\">";
 			//console.log("gradi " + getRotationDegrees($("#" + id)));
@@ -71,12 +59,6 @@ var active=function(){
 			//console.log(private.id);
 			if(document.getElementById(private.id)){
 				document.getElementById(private.id).style.boxShadow= "none";
-				document.getElementById("x"+private.id).style.opacity = '0';
-				document.getElementById("for"+private.id).style.opacity = '0';
-				if($(private.element).zIndex()>0){
-
-					document.getElementById("back"+private.id).style.opacity = '0';
-				}
 				deselezionaPercorso("undefined");
 				delete private.id;
 			}
@@ -454,9 +436,7 @@ var inserisciElemento=function(classe, spec){
 	//TRADUTTORE EDIT
 
 	div.id=id;
-	var idx="x"+id;
-	var idForward="for"+id;
-	var idBack="back"+id;
+
 
 	if(classe=="frame"){
 		document.getElementById("frames").appendChild(div);
@@ -470,11 +450,6 @@ var inserisciElemento=function(classe, spec){
 		rotate(id, spec.rotation);
 	//TRADUTTORE EDIT
 
-	$(div).append("<img title=\"elimina\"class=\"deleteButton\" id=\""+idx+"\" syle=\"text-align:center\" src=\"assets/x.png\" onclick=\"angular.element(this).scope().rimuoviElemento()\" width=\"20em\">");//inserisce immagine x
-
-	$(div).append("<img title=\"porta avanti\"class=\"bringForwardButton\" id=\""+idForward+"\" syle=\"opacity: 0; text-align:center\" src=\"assets/bringfront.png\" onclick=\"angular.element(this).scope().portaAvanti("+div.id+");\" width=\"15em\" >");//inserisce immagine bring to front
-
-	$(div).append("<img title=\"manda dietro\"class=\"moveBackwardButton\" id=\""+idBack+"\" syle=\"text-align:center\" src=\"assets/movebackward.png\" onclick=\"angular.element(this).scope().portaDietro("+div.id+");\" width=\"15em\">");//inserisce immagine move backward
 	
 	contatore++;
 
@@ -721,30 +696,19 @@ function portaAvanti(id) {
 	if (superior) {
 		superior.style.zIndex = original;
 		$("#" + id).css({ "z-index": original + 1 });
-		if (original == 0) {
-			document.getElementById("back" + id).style.opacity = '1';
-			document.getElementById("back" + id).style.WebkitTransition = 'opacity 0.5s';
-			document.getElementById("back" + id).style.MozTransition = 'opacity 0.5s';
-		}
+
 	}
-	if ($("#" + id).zIndex() == zindex-1) {
-		document.getElementById("for" + id).style.opacity = '0';
-	}
+
 
 }
 
 function mandaDietro(id){
-	if ($("#" + id).zIndex() > 0) {
+	if ($("#" + id).zIndex() > 1) {
   
 		getElementByZIndex($("#" + id).zIndex() - 1).style.zIndex = $("#" + id).zIndex();
-		$("#"+id).css({"z-index": $("#"+id).zIndex()-1});
-		document.getElementById("for" + id).style.opacity = '1';
-		document.getElementById("for" + id).style.WebkitTransition = 'opacity 0.5s';
-		document.getElementById("for" + id).style.MozTransition = 'opacity 0.5s';
+
 	}
-	if($("#"+id).zIndex()==0){
-		document.getElementById("back"+id).style.opacity = '0';
-	}
+
 
 }
 

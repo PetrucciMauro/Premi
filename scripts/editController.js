@@ -317,7 +317,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		//rimozione
-		$scope.rimuoviElemento = function(spec){
+		$scope.rimuoviElemento = function (spec) {
+            console.log(JSON.stringify(spec))
 			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
 				elimina(spec.id); //della view
 			else{

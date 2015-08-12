@@ -21,7 +21,7 @@ var put = function(req, res){
 							  
 							  var new_element = req.body.element;
 							   // ***
-
+							  console.log(new_element);
 							  
 							  if(new_element == null){ res.json({
 																			success: false,
@@ -98,6 +98,7 @@ var post = function(req, res){
 							  var name_pres = req.originalUrl.split("/")[4];
 
 							  var new_element = req.body.element;
+							  console.log(new_element);
 							  if(new_element == null){ res.json({
 																			success: false,
 																			});

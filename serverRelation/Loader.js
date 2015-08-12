@@ -13,6 +13,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	
 	//public_methods
 	that.addInsert = function( id_element){
+		//console.log("addInsert");
 		/*var found = false;
 		for(var i=0; i < toDelete.length; i++){
 			if(toDelete[i].id == id_element){found = true; pos=i;}
@@ -28,6 +29,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	};
 	
 	that.addUpdate = function( id_element){
+		//console.log("assUpdate()");
 		var found = false;
 		for(var i=0; i < toUpdate.length; i++){
 			if(toUpdate[i]== id_element){found = true;}
@@ -44,6 +46,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	};
 	
 	that.addDelete = function(typeObj, id_element){
+		console.log("addDelete:: type: "+typeObj+", id: "+id_element);
 		var found = false;
 		var pos = -1;
 		for(var i=0; i < toInsert.length; i++){
@@ -61,9 +64,16 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		if (found == true){
 			toUpdate.splice(pos, 1);
 			toDelete.push({"id" : id_element, "type" : typeObj});
+			//console.log("addUpdate objDelete: "+toDelete);
+			//console.log("addUpdate objInsert: "+toInsert);
+			//console.log("addUpdate objUpdate: "+toUpdate);
+
 			return true
 		}
 		toDelete.push({"id" : id_element, "type" : typeObj});
+		//console.log("addUpdate objDelete: "+toDelete);
+		//console.log("addUpdate objInsert: "+toInsert);
+		//console.log("addUpdate objUpdate: "+toUpdate);
 		return true;
 	};
 	
@@ -78,6 +88,16 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		var count_update = toUpdate.length;
 		var count_paths = 0;
 		if(toPaths){count_paths = 1;}
+		
+		console.log("TO_INSERT_LENGTH: "+count_insert);
+		for(var i=0; i<count_insert; i++){
+			console.log(toInsert[i]);
+		}
+		console.log("TO_DELETE_LENGTH: "+count_delete);
+		for(var i=0; i<count_delete; i++){
+			console.log(toDelete[i]);
+		}
+		console.log("TO_UPDATE_LENGTH: "+count_update);
 		
 		var test_obj = function(callback){
 			var that = {};
@@ -110,11 +130,13 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 													  
 													  for(var i=0; i < count_insert; i++){
 													  mongoRelation.newElement(showElements.getPresentationName(), showElements.getElement(toInsert[0]), toCall.done);
+													  //console.log("CALLED INSERT()");
 													  toInsert.shift();
 													  };
 													  for(var i=0; i < count_update; i++){
 													  mongoRelation.updateElement(showElements.getPresentationName(), showElements.getElement(toUpdate[0]), toCall.done);
-													  toUpdate.shift;
+													  //console.log("CALLED UPDATE()");
+													  toUpdate.shift();
 													  };
 													  
 													  if(count_paths == 1){ mongoRelation.updatePaths(showElements.getPresentationName(), showElements.getPaths(), toCall.done); };
@@ -124,17 +146,25 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		if(count_delete>0){
 			for(var i=0; i < count_delete; i++){
 				mongoRelation.deleteElement(showElements.getPresentationName(), toDelete[0].type, toDelete[0].id, toCallDelete.done);
+				//console.log("CALLED DELETE()");
+				////console.log(toDelete.length);
 				toDelete.shift();
+				////console.log(toDelete.length);
 			};
 		} else{
 			
 			for(var i=0; i < count_insert; i++){
 				mongoRelation.newElement(showElements.getPresentationName(), showElements.getElement(toInsert[0]), toCall.done);
+				//console.log("CALLED INSERT()");
+
 				toInsert.shift();
 			};
 			for(var i=0; i < count_update; i++){
 				mongoRelation.updateElement(showElements.getPresentationName(), showElements.getElement(toUpdate[0]), toCall.done);
-				toUpdate.shift;
+				//console.log("CALLED UPDATE()");
+				////console.log("UPADELENGTH: "+toUpdate.length);
+				toUpdate.shift();
+				////console.log("UPADELENGTH: "+toUpdate.length);
 			};
 			
 			if(count_paths == 1){ mongoRelation.updatePaths(showElements.getPresentationName(), showElements.getPaths(), toCall.done); };

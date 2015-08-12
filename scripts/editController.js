@@ -112,10 +112,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
 				var style = document.getElementById(frame.id).style;
-				var top = style.top.split("px")[0];
-				var left = style.left.split("px")[0];
-				var outerHeight = style.outerHeight.split("px")[0];
-				var outerWidth = style.outerWidth.split("px")[0];
+				var top = Number(style.top.split("px")[0]);
+				var left = Number(style.left.split("px")[0]);
+				var outerHeight = Number(style.outerHeight.split("px")[0]);
+				var outerWidth = Number(style.outerWidth.split("px")[0]);
 
 				var spec = {
 					id: frame.id,
@@ -140,10 +140,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var thistext = $("#txt" + text.id);
 
 				var style = document.getElementById(text.id).style;
-				var top = style.top.split("px")[0];
-				var left = style.left.split("px")[0];
-				var height = style.height.split("px")[0];
-				var width = style.width.split("px")[0];
+				var top = Number(style.top.split("px")[0]);
+				var left = Number(style.left.split("px")[0]);
+				var height = Number(style.height.split("px")[0]);
+				var width = Number(style.width.split("px")[0]);
 
 				var spec = {
 					id: text.id,
@@ -182,13 +182,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                var img = inserisciImmagine(fileurl); //view
 
 	                var style = document.getElementById(img.id).style;
-					var top = style.top.split("px")[0];
-					var left = style.left.split("px")[0];
+					var top = Number(style.top.split("px")[0]);
+					var left = Number(style.left.split("px")[0]);
 
 	                var immagine = document.getElementById("img" + img.id).style;
-	                var imgheight = immagine.height.split("px")[0];
-	                var imgwidth = immagine.width.split("px")[0];
-	                var imgouterwidth = immagine.outerWidth.split("px")[0];
+	                var imgheight = Number(immagine.height.split("px")[0]);
+	                var imgwidth = Number(immagine.width.split("px")[0]);
+	                var imgouterwidth = Number(immagine.outerWidth.split("px")[0]);
 
 	                var spec = {
 	                    id: img.id,
@@ -225,10 +225,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					var audio = inserisciAudio(fileurl); //view
 
 					var style = document.getElementById(audio.id).style;
-					var top = style.top.split("px")[0];
-					var left = style.left.split("px")[0];
-					var height = style.height.split("px")[0];
-					var width = style.width.split("px")[0];
+					var top = Number(style.top.split("px")[0]);
+					var left = Number(style.left.split("px")[0]);
+					var height = Number(style.height.split("px")[0]);
+					var width = Number(style.width.split("px")[0]);
 
 					var spec = {
 						id: audio.id,
@@ -261,13 +261,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					var video = inserisciVideo(fileurl); //view
 
 					var style = document.getElementById(video.id).style;
-					var top = style.top.split("px")[0];
-					var left = style.left.split("px")[0];
+					var top = Number(style.top.split("px")[0]);
+					var left = Number(style.left.split("px")[0]);
 
 					var thisvideo = document.getElementById("video" + video.id).style;
-					var videoouterheight = thisvideo.outerHeight.split("px")[0];
-					var videoouterwidth = thisvideo.outerWidth.split("px")[0];
-					var videowidth = thisvideo.width.split("px")[0];
+					var videoouterheight = Number(thisvideo.outerHeight.split("px")[0]);
+					var videoouterwidth = Number(thisvideo.outerWidth.split("px")[0]);
+					var videowidth = Number(thisvideo.width.split("px")[0]);
 
 					var spec = {
 						id: video.id,
@@ -598,8 +598,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				}
 
 				var style = document.getElementById(idElement).style;
-				var top = style.top.split("px")[0];
-				var left = style.left.split("px")[0];
+				var top = Number(style.top.split("px")[0]);
+				var left = Number(style.left.split("px")[0]);
 				
 				var spec = {
 					id: idElement,
@@ -659,38 +659,46 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			else{
 				var tipoElement = active().getTipo();
 				var idElement = active().getId();
-				var style = $("#" + idElement);
+				var style = document.getElementById(idElement).style;
 
 				var spec = {
 					id: idElement,
 					tipo: tipoElement
 				};
 
+					var top = Number(style.top.split("px")[0]);
+					var left = Number(style.left.split("px")[0]);
+
+					var thisvideo = document.getElementById("video" + video.id).style;
+					var videoouterheight = Number(thisvideo.outerHeight.split("px")[0]);
+					var videoouterwidth = Number(thisvideo.outerWidth.split("px")[0]);
+					var videowidth = Number(thisvideo.width.split("px")[0]);
+
 				if(tipoElement === "frame"){
-					spec.height = style.outerHeight();
-					spec.width = style.outerWidth();
+					spec.height = Number(style.outerHeight.split("px")[0]);
+					spec.width = Number(style.outerWidth.split("px")[0]);;
 				}
 				else if(tipoElement === "text"){
-					var thistext = $("#txt" + idElement);
-					spec.height = thistext.height();
-					spec.width = thistext.width();
-					spec.waste = thistext.position().left;
+					var thistext = document.getElementById("txt" + idElement).style;
+					spec.height = Number(thistext.height.split("px")[0]);
+					spec.width = Number(thistext.width.split("px")[0]);
+					spec.waste = Number(thistext.left.split("px")[0]);
 				}
 				else if(tipoElement === "image"){
-					var immagine = $("#image" + idElement);
-					spec.height = immagine.height();
-					spec.width = immagine.width();
-					spec.waste = (immagine.width() - immagine.outerWidth())/2;
+					var immagine = document.getElementById("image" + idElement).style;
+					spec.height = Number(immagine.height.split("px")[0]);
+					spec.width = Number(immagine.width.split("px")[0]);
+					spec.waste = (Number(immagine.width.split("px")[0]) - Number(immagine.outerWidth.split("px")[0]))/2;
 				}
 				else if(tipoElement === "audio"){
-					spec.height = style.height();
-					spec.width = style.width();
+					spec.height = Number(style.height.split("px")[0]);
+					spec.width = Number(style.width.split("px")[0]);
 				}
 				else if(tipoElement === "video"){
-					var thisvideo = $("#video" + idElement);
-					spec.height = thisvideo.outerHeight();
-					spec.width = thisvideo.outerWidth();
-					spec.waste = (thisvideo.width() - thisvideo.outerWidth())/2;
+					var thisvideo = document.getElementById("video" + idElement).style;
+					spec.height = Number(thisvideo.outerHeight.split("px")[0]);
+					spec.width = Number(thisvideo.outerWidth.split("px")[0]);
+					spec.waste = (Number(thisvideo.width.split("px")[0]) - Number(thisvideo.outerWidth.split("px")[0]))/2;
 				}
 
 				var command = concreteEditSizeCommand(spec);
@@ -790,11 +798,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			//loader.addUpdate(0);
 		}
 		
-	var translateEdit = function(json){
+		var translateEdit = function(json){
 			//MANCANO I PERCORSI!!!!! DA FARE CON GIOVANNI
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
-			console.log(json);
+			console.log(insertEditRemove().getPresentazione());
 
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();

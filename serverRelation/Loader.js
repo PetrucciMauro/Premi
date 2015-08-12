@@ -97,6 +97,9 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		for(var i=0; i<count_delete; i++){
 			console.log(toDelete[i]);
 		}
+		for(var i=0; i<count_update; i++){
+			console.log(toUpdate[i]);
+		}
 		//console.log("TO_UPDATE_LENGTH: "+count_update);
 		
 		var test_obj = function(callback){
@@ -133,6 +136,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 													  //console.log("CALLED INSERT()");
 													  toInsert.shift();
 													  };
+													  
 													  for(var i=0; i < count_update; i++){
 													  mongoRelation.updateElement(showElements.getPresentationName(), showElements.getElement(toUpdate[0]), toCall.done);
 													  //console.log("CALLED UPDATE()");

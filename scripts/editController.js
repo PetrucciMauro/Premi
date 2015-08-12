@@ -42,6 +42,34 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		    selectedAlignment: 'md-left'
 		};
 
+		$scope.allFonts = (
+			//serif
+			'Times New Roman, Times, serif' + ';' +
+			'Georgia, serif' + ';' +
+			'Palatino Linotype, Book Antiqua, Palatino, serif' + ';' +
+			//sans-serif
+			'Verdana, Geneva, sans-serif' + ';' +
+			'Arial, Helvetica, sans-serif' + ';' +
+			'Arial Black, Gadget, sans-serif' + ';' +
+			'Lucida Sans Unicode, Lucida Grande, sans-serif' + ';' +
+			'Tahoma, Geneva, sans-serif' + ';' +
+			'Comic Sans MS, cursive, sans-serif' + ';' +
+			'Impact, Charcoal, sans-serif' + ';' +
+			'Trebuchet MS, Helvetica, sans-serif' + ';' +
+			//monospace
+			'Courier New, Courier, monospace' + ';' +
+			'Lucida Console, Monaco, monospace'
+
+			)
+			.split(';').map(function(font){return {value: font, descr: font.split(',')[0]};});
+		
+		$scope.setSelectedFont = function(font){
+			var selectedFont = $("#txt" + active().getId()).css("font-family");
+			if(font == selectedFont)
+				return true;
+
+			return false;
+		}
 		//Menu a comparsa
 		var backgroundManage = function(bool){
 			$scope.backgroundManage = bool;
@@ -95,7 +123,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			console.log("partito il save");
 		}
 
-		$interval(save, 10000);
+		//$interval(save, 30000);
 		var intervalSave = $interval(save, 10000);
  		$scope.$on("$locationChangeStart", function(){
  		    save();
@@ -124,7 +152,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					height: outerHeight,
 					width: outerWidth,
 					rotation: 0,
-					zIndex: style.zIndex
+					zIndex: Number(style.zIndex)
 				};
 
 				var command = concreteFrameInsertCommand(spec); //model
@@ -155,7 +183,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					size: thistext.css("font-size"),
 					rotation: 0,
 					font: thistext.css("font-family"),
-					zIndex: style.zIndex
+					zIndex: Number(style.zIndex)
 				};
 				var command = concreteTextInsertCommand(spec);  //model
 				inv.execute(command);
@@ -199,7 +227,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                    waste: (imgwidth - imgouterwidth) / 2,
 	                    rotation: 0,
 	                    ref: fileurl,
-	                    zIndex: style.zIndex
+	                    zIndex: Number(style.zIndex)
 	                };
 
 	                var command = concreteImageInsertCommand(spec); //model
@@ -238,7 +266,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 						width: width,
 						rotation: 0,
 						ref: fileurl,
-						zIndex: style.zIndex
+						zIndex: Number(style.zIndex)
 					};
 
 					var command = concreteAudioInsertCommand(spec); //model
@@ -278,7 +306,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 						waste: (videowidth - videoouterwidth)/2,
 						rotation: 0,
 						ref: fileurl,
-						zIndex: style.zIndex
+						zIndex: Number(style.zIndex)
 					};
 
 					var command = concreteVideoInsertCommand(spec); //model
@@ -332,6 +360,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			style.removeProperty('background');
 
 			var spec = {
+				id: 0,
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
@@ -350,6 +379,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			style.backgroundColor = color;
 
 			var spec = {
+				id: 0,
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
@@ -373,6 +403,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			style.backgroundImage = "url(" + fileurl + ")";
 
 			var spec = {
+				id: 0,
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
@@ -477,30 +508,56 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			loader.addUpdate(activeText);
 		}
 		$scope.cambiaSizeTesto = function(value){
+			console.log("CAMBIASIZE");
+			console.log(value);
 			var activeText = active().getId();
 			
-			$("#txt"+activeText).css("font-size", value);
+			var text = document.getElementById("txt" + activeText).style;
+			text.fontSize = value + "em";
 
 			var spec = {
 				id: activeText,
 				tipo: "text",
-				size: value
+				fontSize: value,
+				font: text.fontFamily
 			};
 			
 			console.log(spec);
-			/*var command = concreteEditColorCommand(spec);
+			var command = concreteEditFontCommand(spec);
 			inv.execute(command);
 
-			loader.addUpdate(activeText);*/
+			loader.addUpdate(activeText);
+		}
+		$scope.cambiaFontTesto = function(font){
+			var activeText = active().getId();
+
+			if(Utils.isUndefined(activeText))
+				return;
+			
+			var style = $("#txt" + activeText);
+			style.css("font-family", font);
+
+			var spec = {
+				id: activeText,
+				tipo: "text",
+				font: font,
+				fontSize: style.css("font-size")
+			};
+			
+			var command = concreteEditFontCommand(spec);
+			inv.execute(command);
+
+			loader.addUpdate(activeText);
 		}
 
         $scope.aggiornaTesto = function(textId, textContent){
         	console.log(textContent);
+        	console.log(textId);
+        	
 			var spec = {
 				id: textId,
 				tipo: "text",
 				content: textContent
-				//size: textContent.style.fontSize
 			};
 
 
@@ -596,7 +653,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					tipoElement = active().getTipo();
 					idElement = active().getId();
 				}
-
+				console.log(idElement);
 				var style = document.getElementById(idElement).style;
 				var top = Number(style.top.split("px")[0]);
 				var left = Number(style.left.split("px")[0]);
@@ -867,6 +924,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					rotation: text.rotation,
 					content: text.content,
 					font: text.font,
+					fontSize: text.fontSize,
 					color: text.color
 				};
 				inserisciTesto(spec);

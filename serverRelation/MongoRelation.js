@@ -78,6 +78,7 @@ var MongoRelation = function(hostname, auth_obj){
 		req.setRequestHeader("Authorization", auth.getToken());
 		req.setRequestHeader("Content-Type", "application/json");
 		var objSend = {}; objSend["element"] = element_updated;
+		console.log(element_updated);
 		req.onload = function (e) {
 			var res = JSON.parse(req.responseText);
 			messageState = res.success;

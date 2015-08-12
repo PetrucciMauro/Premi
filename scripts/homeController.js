@@ -13,6 +13,7 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		var allSS = mongo.getPresentationsMeta();
 		
 		$scope.allSS =  allSS;
+		console.log(allSS);
 		}
 		$scope.display_limit = 50;
 

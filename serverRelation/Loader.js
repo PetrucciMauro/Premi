@@ -89,15 +89,15 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		var count_paths = 0;
 		if(toPaths){count_paths = 1;}
 		
-		console.log("TO_INSERT_LENGTH: "+count_insert);
+		//console.log("TO_INSERT_LENGTH: "+count_insert);
 		for(var i=0; i<count_insert; i++){
 			console.log(toInsert[i]);
 		}
-		console.log("TO_DELETE_LENGTH: "+count_delete);
+		//console.log("TO_DELETE_LENGTH: "+count_delete);
 		for(var i=0; i<count_delete; i++){
 			console.log(toDelete[i]);
 		}
-		console.log("TO_UPDATE_LENGTH: "+count_update);
+		//console.log("TO_UPDATE_LENGTH: "+count_update);
 		
 		var test_obj = function(callback){
 			var that = {};

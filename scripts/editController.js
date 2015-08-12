@@ -787,7 +787,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
-			loader.addUpdate(0);
+			//loader.addUpdate(0);
 		}
 		
 	var translateEdit = function(json){
@@ -802,30 +802,20 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			//vedere come gestire il ridimensionamento degli elementi
 			//in base a l e h della view
-			if(Utils.isObject(background)){
-				console.log("ma...");
+			if(Utils.isObject(background.width) && Utils.isObject(background.height)){
 				var style = document.getElementById('content').style;
-				style.backgroundColor = background.color;
+				
+				if(Utils.isObject(background.color))
+					style.backgroundColor = background.color;
 				if(Utils.isObject(background.image))
 					style.backgroundImage = "url(" + background.image + ")";
-				else
-					style.backgroundImage = "";
-				if(background.width < 0 && background.height <0){
-					var param = {
-						color: spec.color,
-						image: spec.image
-					}
-					impostaPrimoSfondo(param);
-				}
-				if(background.width != l){
-					prop = (l / background.width);
-				}
+		
+				if(background.width != l)
+					prop = (background.width / l);
 			}
 			else 
 				impostaPrimoSfondo();
 
-			console.log(l);
-				console.log(background.width);
 			console.log(prop);
 
 			//RICREO I FRAME
@@ -848,7 +838,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeFrame(spec.id);
 					ins.insertFrame(spec);
-					loader.addDelete(spec.id);
+					loader.addDelete("frame",spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -876,7 +866,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeText(spec.id);
 					ins.insertText(spec);
-					loader.addDelete(spec.id);
+					loader.addDelete("text", spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -902,7 +892,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeImage(spec.id);
 					ins.insertImage(spec);
-					loader.addDelete(spec.id);
+					loader.addDelete("image", spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -925,7 +915,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeAudio(spec.id);
 					ins.insertAudio(spec);
-					loader.addDelete(spec.id);
+					loader.addDelete("audio",spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -949,7 +939,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prop !== 1){
 					ins.removeVideo(spec.id);
 					ins.insertVideo(spec);
-					loader.addDelete(spec.id);
+					loader.addDelete("video", spec.id);
 					loader.addInsert(spec.id);
 				}
 			}
@@ -960,7 +950,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				mainPath().addToMainPath(mainpath[i], i);
 
 			if(prop !== 1)
-				loader.update();
+				loader.update(function(){});
 		};
 		
 		if(Utils.isObject(SharedData.getPresentazione())){

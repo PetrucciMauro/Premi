@@ -25,6 +25,7 @@ var text = function (spec) {
     var that = slideShowElement(spec);
     that.content = spec.content || "";
     that.font = spec.font || "Arial";
+    that.fontSize = spec.fontSize || 1;
     that.color = spec.color || "black";
     that.type = "text";
     //ritorna that

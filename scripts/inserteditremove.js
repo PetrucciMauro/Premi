@@ -330,11 +330,13 @@ var insertEditRemove = function () {
 
         public.editFont = function (spec) {
             var found = false;
-            var oldFont;
+            var oldFont = {};
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
                 if (private.presentazione.proper.texts[i].id === spec.id) {
-                    oldContent = private.presentazione.proper.texts[i].font;
+                    oldFont.font = private.presentazione.proper.texts[i].font;
+                    ondFont.fontSize = private.presentazione.proper.texts[i].fontSize;
                     private.presentazione.proper.texts[i].font = spec.font;
+                    private.presentazione.proper.texts[i].fontSize = spec.fontSize;
                     found = true;
                 }
             }

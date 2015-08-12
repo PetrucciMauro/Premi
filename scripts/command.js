@@ -626,7 +626,7 @@ var concreteEditFontCommand = function (spec) {
         return obj;
     };
     public.undoAction = function () {
-        public.getEnabler().editColor(private.oldFont);
+        public.getEnabler().editFont(private.oldFont);
         var obj = public.getObj();
         obj.action = "edit";
         return obj;

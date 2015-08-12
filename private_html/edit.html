@@ -109,15 +109,15 @@
 		<!--Menu generico delle presentazioni-->
 		<!--Menu generico degli elementi-->
 		<div id="standardMenu" class="elementMenu lock-size" layout-align="center center">
-            <md-button aria-label="Elimina elemento" class="md-button md-default-theme"  onclick="elimina(active().getId())" id="deleteElement">
+            <md-button aria-label="Elimina elemento" class="md-button md-default-theme"  ng-click="rimuoviElemento()" id="deleteElement">
                 <md-tooltip>Elimina elemento</md-tooltip>
-                <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                <md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-            <md-button aria-label="Porta avanti" class="md-button md-default-theme" onclick="portaAvanti(active().getId())" id="deleteElement">
+            <md-button aria-label="Porta avanti" class="md-button md-default-theme" ng-click="portaAvanti()" id="deleteElement">
                 <md-tooltip>Porta avanti</md-tooltip>
                 <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-            <md-button aria-label="Porta dietro" class="md-button md-default-theme" onclick="portaDietro(active().getId())" id="deleteElement">
+            <md-button aria-label="Porta dietro" class="md-button md-default-theme" ng-click="portaDietro()" id="deleteElement">
                 <md-tooltip>Porta dietro</md-tooltip>
                 <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
@@ -151,9 +151,13 @@
 			<!--TESTO -->
 			<!--TESTO -->
 			<md-input-container class="md-button md-default-theme inputContainer" style="width:3em height:1em">
-				<md-tooltip>Cambia dimensione testo</md-tooltip>
-				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon><input id="textSize" type="number" min="1" max="400" value="31" aria-label="Cambia le dimensioni del tuo testo" ng-model="size" ng-change="cambiaSizeTesto(size)"> <!--NO MODIFICARE-->
+				<md-tooltip>Cambia dimensione testo</md-tooltip><input id="textSize" type="number" min="1" max="70" value="1" aria-label="Cambia le dimensioni del tuo testo" ng-model="size" ng-change="cambiaSizeTesto(size)">
 			</md-input-container>
+			<md-input-container class="md-button md-default-theme inputContainer" style="width:3em height:1em">
+				<md-tooltip>Cambia font testo</md-tooltip>
+				<md-select ng-model="fontSelected" ng-change="cambiaFontTesto(fontSelected)" aria-label="Scegli il tuo font">
+          			<md-option ng-repeat="font in allFonts track by $index" value="{{font.value}}" style="font-family: {{font.value}}" ng-selected="setSelectedFont(font.value)">{{font.descr}}</md-option>
+        		</md-select>
 			<!--TESTO -->
 		</div>
 		<div id="frameMenu" class="elementMenu">

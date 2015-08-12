@@ -493,6 +493,9 @@ var inserisciTesto=function(spec){
 		txt.fontFamily = spec.font;
 		txt.style.color = spec.color;
 		//txt.setAttribute("style","font-size: " + spec.size + "; width:1");
+		txt.style.fontFamily = spec.font;
+		console.log("fontsize: " + spec.fontSize);
+		txt.style.fontSize = spec.fontSize + "em";
 		txt.value = spec.content;
 		txt.style.height = spec.height + "px";
 		txt.style.width = spec.width + "px";
@@ -504,8 +507,11 @@ var inserisciTesto=function(spec){
 		//TRADUTTORE
 		div.style.width="50px";
 		div.style.height="50px";
+		txt.style.width = "50px";
+		txt.style.height = "50px";
 		//TRADUTTORE
 		txt.fontFamily="Arial, Helvetica, sans-serif";
+		txt.style.fontSize = "1em";
 		txt.value = "";
 		
 	}
@@ -1033,7 +1039,6 @@ var click = {
 
 //FUNZ. CHE DICE SE testDiv È DENTRO A div
 function isInside(div, testDiv){
-	console.log(div, testDiv);
 	var top1 = div.position().top;
 	var top2 = testDiv.position().top;
 
@@ -1093,11 +1098,7 @@ function updateDraggable(element){
 				x.css("left", (event.clientX - click.x + others[i].originalLeft)/(scale/100));
 				x.css("top", (event.clientY - click.y + others[i].originalTop)/(scale/100));
 			}
-			console.log("drag");
-			console.log(scale);
-			console.log(event.clientX);
-			console.log(click.x);
-			console.log(original.left);
+
 			ui.position = {
 				left: (event.clientX - click.x + original.left)/(scale/100),
 				top:  (event.clientY - click.y + original.top) /(scale/100)

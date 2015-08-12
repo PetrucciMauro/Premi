@@ -334,7 +334,7 @@ var insertEditRemove = function () {
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
                 if (private.presentazione.proper.texts[i].id === spec.id) {
                     oldFont.font = private.presentazione.proper.texts[i].font;
-                    oldFont.fontSize = private.presentazione.proper.texts[i].fontSize;
+                    ondFont.fontSize = private.presentazione.proper.texts[i].fontSize;
                     private.presentazione.proper.texts[i].font = spec.font;
                     private.presentazione.proper.texts[i].fontSize = spec.fontSize;
                     found = true;

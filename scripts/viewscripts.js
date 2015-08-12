@@ -493,9 +493,6 @@ var inserisciTesto=function(spec){
 		txt.fontFamily = spec.font;
 		txt.style.color = spec.color;
 		//txt.setAttribute("style","font-size: " + spec.size + "; width:1");
-		txt.style.fontFamily = spec.font;
-		console.log("fontsize: " + spec.fontSize);
-		txt.style.fontSize = spec.fontSize + "em";
 		txt.value = spec.content;
 		txt.style.height = spec.height + "px";
 		txt.style.width = spec.width + "px";
@@ -507,12 +504,9 @@ var inserisciTesto=function(spec){
 		//TRADUTTORE
 		div.style.width="50px";
 		div.style.height="50px";
-		txt.style.width = "50px";
-		txt.style.height = "50px";
 		//TRADUTTORE
 		txt.fontFamily="Arial, Helvetica, sans-serif";
 		txt.value = "";
-		txt.style.fontSize = "1em";
 		
 	}
 	txt.id="txt"+div.id;

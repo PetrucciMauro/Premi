@@ -299,3 +299,10 @@ body {
     font-size:0.8em; 
     border-radius: 50%;
 }
+
+.md-select{
+    padding-top:0;
+}
+#changeFont{
+    padding: 0;
+}

@@ -30,6 +30,7 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 		var contStep=1;
 		var choiceSteps=[];
 		var presentation="";//<div id=\"impress\">";
+		console.log(json);
 		json = JSON.parse(json);
 		console.log(json);
 		if(json.proper.background.image!="0" && json.proper.background.image!= undefined)

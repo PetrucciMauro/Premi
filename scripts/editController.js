@@ -225,7 +225,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                var immagine = document.getElementById("img" + img.id).style;
 	                var imgheight = Number(immagine.height.split("px")[0]);
 	                var imgwidth = Number(immagine.width.split("px")[0]);
-	                var imgouterwidth = Number(immagine.outerWidth.split("px")[0]);
+	                //var imgouterwidth = Number(immagine.outerWidth.split("px")[0]);
 
 	                var spec = {
 	                    id: img.id,
@@ -233,7 +233,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                    yIndex: top,
 	                    height: imgheight,
 	                    width: imgwidth,
-	                    waste: (imgwidth - imgouterwidth) / 2,
+	                   // waste: (imgwidth - imgouterwidth) / 2,
 	                    rotation: 0,
 	                    ref: fileurl,
 	                    zIndex: Number(style.zIndex)
@@ -542,7 +542,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.cambiaFontTesto = function(font){
 			var activeText = active().getId();
 
-			if(Utils.isUndefined(activeText))
+			if(active().getTipo() != "text")
 				return;
 
 			var style = document.getElementById("txt"+activeText).style;
@@ -663,7 +663,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					tipoElement = active().getTipo();
 					idElement = active().getId();
 				}
-
+				console.log(idElement);
 				var style = document.getElementById(idElement).style;
 				var top = Number(style.top.split("px")[0]);
 				var left = Number(style.left.split("px")[0]);
@@ -681,23 +681,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				loader.addUpdate(idElement);
 			}
 		}
-
-	/*	var getRotation = function(obj) {
-			var matrix = obj.css("-webkit-transform") ||
-			obj.css("-moz-transform")    ||
-			obj.css("-ms-transform")     ||
-			obj.css("-o-transform")      ||
-			obj.css("transform");
-			if(matrix !== 'none') {
-				var values = matrix.split('(')[1].split(')')[0].split(',');
-				var a = values[0];
-				var b = values[1];
-				var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-			} else {
-				var angle = 0;
-			}
-			return (angle < 0) ? angle +=360 : angle;
-		}*/
 
 		var getTipo = function(id){
 			var type;
@@ -733,9 +716,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					tipo: tipoElement
 				};
 
-				if(tipoElement === "frame"){
-					spec.height = Number(style.outerHeight.split("px")[0]);
-					spec.width = Number(style.outerWidth.split("px")[0]);;
+				if(tipoElement === "frame"){//c'erano outerheight e outerwidth ma non li prende
+					spec.height = Number(style.height.split("px")[0]);
+					spec.width = Number(style.width.split("px")[0]);;
 				}
 				else if(tipoElement === "text"){
 					var thistext = document.getElementById("txt" + idElement).style;
@@ -759,6 +742,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					spec.width = Number(thisvideo.outerWidth.split("px")[0]);
 					spec.waste = (Number(thisvideo.width.split("px")[0]) - Number(thisvideo.outerWidth.split("px")[0]))/2;
 				}
+
+				console.log(spec);
 
 				var command = concreteEditSizeCommand(spec);
 				inv.execute(command);
@@ -856,7 +841,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
 
-			//loader.addUpdate(0);
+			loader.addUpdate(0);
 		}
 		
 		var translateEdit = function(json){
@@ -1021,6 +1006,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			if(prop !== 1)
 				loader.update(function(){});
+			active().deselect();
 		};
 		
 		if(Utils.isObject(SharedData.getPresentazione())){

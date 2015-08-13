@@ -115,11 +115,11 @@
             </md-button>
             <md-button aria-label="Porta avanti" class="md-button md-default-theme" ng-click="portaAvanti()" id="deleteElement">
                 <md-tooltip>Porta avanti</md-tooltip>
-                <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                <md-icon md-svg-src="assets/svg/bringfront.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
             <md-button aria-label="Porta dietro" class="md-button md-default-theme" ng-click="portaDietro()" id="deleteElement">
                 <md-tooltip>Porta dietro</md-tooltip>
-                <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                <md-icon md-svg-src="assets/svg/bringback.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
 			<!--Menu delle rotazioni-->
 			<md-menu md-offset="0 -7">
@@ -158,6 +158,7 @@
 				<md-select ng-model="fontSelected" ng-change="cambiaFontTesto(fontSelected)" aria-label="Scegli il tuo font">
           			<md-option ng-repeat="font in allFonts track by $index" value="{{font.value}}" style="font-family: {{font.value}}" ng-selected="setSelectedFont(font.value)">{{font.descr}}</md-option>
         		</md-select>
+        	</md-input-container>
 			<!--TESTO -->
 		</div>
 		<div id="frameMenu" class="elementMenu">
@@ -186,9 +187,9 @@
 			</div>
 
 			<md-menu md-offset="0 -7">
-				<md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()">
+				<md-button aria-label="Aggiungi al percorso principale" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()">
 					<md-tooltip>Aggiungi a un percorso</md-tooltip>
-					<md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+					<md-icon md-svg-src="assets/svg/addmainpath.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
 				</md-button>
 				<md-menu-content width="2">
 					<md-menu-item>

@@ -7,14 +7,14 @@ document.getElementById("content").setAttribute("style","border: 1px solid black
 var zindex = 0;
 var contatore=1;
 $(document).ready(function () {
-		var origin;
-		$("#sortable").sortable({
-			start: function(event,ui){
-				origin=ui.item.index();
-			},
-			change: function (event, ui) {
-				$(ui.item[0].previousElementSibling).trigger("click");
-				$(ui.item[0].nextElementSibling).trigger("click");
+	var origin;
+	$("#sortable").sortable({
+		start: function(event,ui){
+			origin=ui.item.index();
+		},
+		change: function (event, ui) {
+			$(ui.item[0].previousElementSibling).trigger("click");
+			$(ui.item[0].nextElementSibling).trigger("click");
 				//console.log("New position: " + ui.item.index());
 			},
 			stop: function (event, ui) {
@@ -22,11 +22,11 @@ $(document).ready(function () {
 				console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
 				mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
 				//console.log("New position: " + ui.item.index());
-		}
+			}
 		});
-		$("#sortable").disableSelection();
-		
-	});
+	$("#sortable").disableSelection();
+
+});
 
 //oggetto che tiene traccia dell'elemento selezionato//
 var activeInstance={};
@@ -40,6 +40,8 @@ var active=function(){
 			clearMenu();
 			that.deselect();
 			private.element=document.getElementById(id);
+			console.log(private.element);
+			console.log(id);
 			private.element.style.boxShadow= "0 0 0 0.25em black inset";
 			
 			
@@ -95,7 +97,7 @@ var active=function(){
 //--end oggetto che tiene traccia dell'elemento selezionato--//
 
 function highlight(id) {
-   
+
 	if (!$("#"+id).hasClass("highlighted") ){
 		$("#"+id).addClass("highlighted");
 		console.log("over");
@@ -111,12 +113,12 @@ function highlightPath(index) {
 	if ($(choicePaths().getPercorsi[index].path[0].hasClass("highlighted"))){
 		high=true;
 	}
-		for (var i = 0; i < choicePaths().getPercorsi[index].path.length; i++) {
-			if(high)
-				$(choicePaths().getPercorsi[index].path[i]).removeClass("highlighted");
-			else
-				$(choicePaths().getPercorsi[index].path[i]).addClass("highlighted");
-		}
+	for (var i = 0; i < choicePaths().getPercorsi[index].path.length; i++) {
+		if(high)
+			$(choicePaths().getPercorsi[index].path[i]).removeClass("highlighted");
+		else
+			$(choicePaths().getPercorsi[index].path[i]).addClass("highlighted");
+	}
 }
 
 
@@ -146,9 +148,9 @@ var mainPath=function(){
 				}
 				var element = document.getElementById(id);
 			   // element.innerHTML = "<div class='chipcontainer'><div class='chip' id='chip"+id+"'>"+(pos+1)+"</div></div>"+element.innerHTML ;
-				if (document.getElementById("addToMain"))
-				document.getElementById("addToMain").removeAttribute("onclick");
-				selezionaPercorso(id);
+			   if (document.getElementById("addToMain"))
+			   	document.getElementById("addToMain").removeAttribute("onclick");
+			   selezionaPercorso(id);
 			}
 		};
 		
@@ -174,13 +176,13 @@ var mainPath=function(){
 			
 			popped = private.percorso.splice(position, 1);
 			var s = "";
-				for (var i = 0; i < private.percorso.length; i++) {
-					s = s + " " + private.percorso[i];
-				}
-				deselezionaPercorso(popped.id);
-				if (document.getElementById("addToMain"))
+			for (var i = 0; i < private.percorso.length; i++) {
+				s = s + " " + private.percorso[i];
+			}
+			deselezionaPercorso(popped.id);
+			if (document.getElementById("addToMain"))
 				document.getElementById("addToMain").setAttribute("onclick", "mainPath().addToMainPath(" + popped.id + ")");;
-				document.getElementById(id).style.removeProperty('border');
+			document.getElementById(id).style.removeProperty('border');
 			return popped;
 		};
 
@@ -220,7 +222,7 @@ var mainPath=function(){
 		}
 		
 		that.pushAssociation = function (obj) {
-		   private.associations.push(obj);
+			private.associations.push(obj);
 		}
 
 		that.getAssociation = function (id) {
@@ -333,7 +335,6 @@ var choicePaths=function(){
 
 
 function getRotationDegrees(obj) {
-
 	var matrix = obj.css("-webkit-transform") ||
 	obj.css("-moz-transform")    ||
 	obj.css("-ms-transform")     ||
@@ -437,7 +438,6 @@ var inserisciElemento=function(classe, spec){
 
 	div.id=id;
 
-
 	if(classe=="frame"){
 		document.getElementById("frames").appendChild(div);
 	}
@@ -450,7 +450,6 @@ var inserisciElemento=function(classe, spec){
 		rotate(id, spec.rotation);
 	//TRADUTTORE EDIT
 
-	
 	contatore++;
 
 	var xInit;
@@ -473,6 +472,12 @@ var inserisciFrame=function(spec){
 	$(function() {
 		$( div ).resizable({
 			aspectRatio: 1 / 1,
+			start: function(){
+				if(active().getId() != div.id){
+					active().deselect();
+					active().select(div.id);
+				}
+			},
 			stop: function(event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
 			}
@@ -490,11 +495,8 @@ var inserisciTesto=function(spec){
 
 	//TRADUTTORE EDIT
 	if(spec){
-		txt.fontFamily = spec.font;
 		txt.style.color = spec.color;
-		//txt.setAttribute("style","font-size: " + spec.size + "; width:1");
 		txt.style.fontFamily = spec.font;
-		console.log("fontsize: " + spec.fontSize);
 		txt.style.fontSize = spec.fontSize + "em";
 		txt.value = spec.content;
 		txt.style.height = spec.height + "px";
@@ -510,17 +512,13 @@ var inserisciTesto=function(spec){
 		txt.style.width = "50px";
 		txt.style.height = "50px";
 		//TRADUTTORE
-		txt.fontFamily="Arial, Helvetica, sans-serif";
+		txt.style.fontFamily="Arial, Helvetica, sans-serif";
 		txt.style.fontSize = "1em";
-		txt.value = "";
-		
+
 	}
 	txt.id="txt"+div.id;
-	//txt.setAttribute("style","font-size: 31px; width:1");
-	//txt.setAttribute("type","text");
 	txt.setAttribute("class", "autogrow");
 	txt.setAttribute("onblur", "aggiornaTesto(" + div.id + ", this)");
-	//txt.setAttribute("style","font-size: 100%; width:1");
 	txt.size=1;
 	txt.setAttribute("placeholder","Testo...");
 	txt.style.outline="none";
@@ -535,6 +533,12 @@ var inserisciTesto=function(spec){
 	$( "#txt"+div.id ).focus();
 	$(function() {
 		$(div).resizable({
+			start: function(){
+				if(active().getId() != div.id){
+					active().deselect();
+					active().select(div.id);
+				}
+			},
 			stop: function (event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
 			}
@@ -565,8 +569,8 @@ var inserisciMedia=function(x,classe, spec){
 	var type;
 	var z=scale;
 	$(div).css({
-		"-ms-transform": "scale("+1/z+")", /* IE 9 */
-		"-webkit-transform":"scale("+1/z+")", /* Chrome, Safari, Opera */
+		"-ms-transform": "scale("+1/z+")", // IE 9 
+		"-webkit-transform":"scale("+1/z+")", // Chrome, Safari, Opera 
 		"transform": "scale("+1/z+")",
 	});
 	if(classe==="image")
@@ -577,9 +581,11 @@ var inserisciMedia=function(x,classe, spec){
 		type="video";
 	var element=document.createElement(type);
 	//TRADUTTORE
-	var imgSize=l*0.10;
-	if(type==="img")
-		element.style.width=imgSize+"px";
+	if(!spec){
+		var imgSize=l*0.10;
+		if(type==="img")
+			element.style.width=imgSize+"px";
+	}
 	//console.log(element.style.width);
 	//TRADUTTORE
 	element.setAttribute("class", "resizable");
@@ -588,26 +594,30 @@ var inserisciMedia=function(x,classe, spec){
 	div.appendChild(element);
 	
 	return div;
-
 }
 
 var inserisciImmagine=function(x, spec){
-	console.log(spec);
-	
 	var div = inserisciMedia(x,"image", spec);
 	if(spec){
-		div.style.height = spec.height + spec.waste + "px";
-		div.style.width = spec.width + spec.waste + "px"; 
+		div.style.height = spec.height /*+ spec.waste*/ + "px";
+		div.style.width = spec.width /*+ spec.waste*/ + "px"; 
 	}
 	var img = document.getElementById('img'+div.id);
 	var width = img.clientWidth;
 	var height = img.clientHeight;
+
 	$(function() {
 		$(img).resizable({
 			aspectRatio: width / height,
+			start: function(){
+				if(active().getId() != div.id){
+					active().deselect();
+					active().select("image"+div.id);
+				}
+			},
 			stop: function(event, ui) {
-			angular.element(this).scope().ridimensionaElemento()
-		}
+				angular.element(this).scope().ridimensionaElemento()
+			}
 		});
 	});
 	return div;
@@ -630,6 +640,12 @@ var inserisciVideo=function(x, spec){
 	$(function() {
 		$(div).resizable({
 			aspectRatio: width / height,
+			start: function(){
+				if(active().getId() != div.id){
+					active().deselect();
+					active().select("video"+div.id);
+				}
+			},
 			stop: function (event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
 			}
@@ -645,20 +661,23 @@ var inserisciAudio=function(x, spec){
 	$(function() {
 		$(div).resizable({
 			aspectRatio: 1 / 1,
+			start: function(){
+				if(active().getId() != div.id){
+					active().deselect();
+					active().select("audio"+div.id);
+				}
+			},
 			stop: function (event, ui) {
-				angular.element(this).scope().ridimensionaElemento()
+				angular.element(this).scope().ridimensionaElemento(undefined, spec.id)
 			}
 		});
 	});
 	$("#"+div.id).css({"background":"url('assets/nota.png') no-repeat", "background-size": "100% 100%"});;
-	/*div.style.height="2em";
-	div.style.width="2em";*/
 
 	//TRADUTTORE
 	var adSize=l*0.10;
 	div.style.width=adSize+"px";
 	div.style.height=adSize+"px";
-	//console.log(div.style.width);
 	//TRADUTTORE
 	return div;
 }
@@ -667,7 +686,9 @@ function aggiornaTesto(id, element) {
 	angular.element(document.getElementById("content")).scope().aggiornaTesto(id, element.value);
 }
 
-function resize(elem, percent) { elem.style.fontSize = percent; }
+function resize(elem, percent){
+	elem.style.fontSize = percent;
+}
 
 function getElementByZIndex(zvalue) {
 	var el;
@@ -693,23 +714,17 @@ function getElementByZIndex(zvalue) {
 function portaAvanti(id) {
 	var original = $("#" + id).zIndex();
 	var superior = getElementByZIndex(original + 1);
+
 	if (superior) {
 		superior.style.zIndex = original;
 		$("#" + id).css({ "z-index": original + 1 });
-
 	}
-
-
 }
 
 function mandaDietro(id){
 	if ($("#" + id).zIndex() > 1) {
-  
 		getElementByZIndex($("#" + id).zIndex() - 1).style.zIndex = $("#" + id).zIndex();
-
 	}
-
-
 }
 
 function toggleElement(id) { 
@@ -733,19 +748,13 @@ $(document).mousedown(function(e) {
 	var frames = document.getElementById("frames").children;
 	var selected="undefined";
 
-	for(var i = 0; i < frames.length; i++)
-	{
-		if( $(event.target).is("#"+frames[i].id))
-		{
+	for(var i = 0; i < frames.length; i++){
+		if( $(event.target).is("#"+frames[i].id)){
 			active().select(frames[i].id);
 
 			selected="frame";
 			//SFONDO FRAME
 			var att=frames[i].id;
-			//var backgroundFrame=document.getElementById("backgroundFrame");
-			//backgroundFrame.setAttribute("onchange","angular.element(this).scope().cambiaColoreSfondoFrame('"+att+"', this)");//"
-			//var backgroundFrameEraser=document.getElementById("backgroundFrameEraser");
-			//backgroundFrameEraser.setAttribute("onclick","document.getElementById('"+att+"').style.removeProperty ('background')");
 			var addToMain=document.getElementById("addToMain");
 			if(!mainPath().contains(frames[i].id)){
 				//addToMain.removeAttribute("disabled");
@@ -765,28 +774,27 @@ $(document).mousedown(function(e) {
 	}
 	
 	var elements = document.getElementById("elements").children;
-	for(var i = 0; i < elements.length; i++) 
-	{
+	for(var i = 0; i < elements.length; i++) {
 		
-		if( $(event.target).is("#"+elements[i].id) || $(event.target).parents().is("#"+elements[i].id))
-		{
-				active().deselect();
+		if($(event.target).is("#"+elements[i].id) || $(event.target).parents().is("#"+elements[i].id)){
+			console.log("deselect");
+			active().deselect();
 			if($(event.target).hasClass("image")||$(event.target).parents().hasClass("image"))
 				selected="image";
-			if($(event.target).hasClass("video")||$(event.target).parents().hasClass("video")||$(event.target).hasClass("audio")||$(event.target).parents().hasClass("audio"))
+			else if($(event.target).hasClass("video")||$(event.target).parents().hasClass("video")||$(event.target).hasClass("audio")||$(event.target).parents().hasClass("audio"))
 				selected="media";
 			else if($(event.target).hasClass("SVG")||$(event.target).parents().hasClass("SVG"))
 				selected="SVG";
 			else if($(event.target).hasClass("text")||$(event.target).parents().hasClass("text"))
 				selected="text";
+
 			active().select(elements[i].id);
 
 			//SFONDO FRAME
 			document.getElementById("backgroundFrame").removeAttribute("onchange");
 			//SFONDO FRAME
-		}
-
-		else if( $(event.target).is('#content') || $(event.target).parents().is("#elements")){
+		} else if( $(event.target).is('#content') /*|| $(event.target).parents().is("#elements")*/){
+			console.log("deselect");
 			active().deselect();
 		}
 	}
@@ -803,7 +811,7 @@ $(document).mousedown(function(e) {
 	//SFONDO FRAME
 
 	//NEWTEXT
-	if(selected==="text"){
+	/*if(selected==="text"){
 		var colorText=document.getElementById("colorText");
 		colorText.setAttribute("onchange","document.getElementById('txt"+active().getId()+"').style.color = '#'+this.color");
 		//TESTO
@@ -815,7 +823,7 @@ $(document).mousedown(function(e) {
 			});
 		});
 		//TESTO
-	}
+	}*/
 	//NEWTEXT
 });
 
@@ -832,23 +840,21 @@ function selezionaPercorso(id){
 
 		for (var i = 0; i < mainPath().getPercorso().length; i++) {
 			if (document.getElementById(mainPath().getPercorso()[i]))
-			document.getElementById(mainPath().getPercorso()[i]).style.border= "0.25em solid red"
+				document.getElementById(mainPath().getPercorso()[i]).style.border= "0.25em solid red"
 		}
 	}
 	for (var i=0; i<choicePaths().getPercorsi().length; i++){
 		if (choicePaths().getPercorsi()[i].path.indexOf(id)>-1){
 			for (var j = 0; j < choicePaths().getPercorsi()[i].path.length; j++) {
 				if (document.getElementById(mainPath().getPercorso()[i]).path[j])
-				document.getElementById(choicePaths().getPercorsi()[i].path[j]).style.border= "0.25em solid #"+choicePaths().getPercorsi()[i].selectionColor;
+					document.getElementById(choicePaths().getPercorsi()[i].path[j]).style.border= "0.25em solid #"+choicePaths().getPercorsi()[i].selectionColor;
 			}
 		}
 	}
 
 };
 
-
 function deselezionaPercorso(id){
-
 	var main=mainPath();
 	
 	if (main.getPercorso().indexOf(id)==-1){
@@ -866,17 +872,13 @@ function deselezionaPercorso(id){
 	}
 };
 
-
-
-
 $(document).ready(function(){
 	var main=mainPath();
 	var paths=choicePaths();
 	paths.createChoicePath();
 });
+
 document.onload= function(){
-	
-	alert("ok");
 	var imageLoader = document.getElementById('imageLoader');
 	imageLoader.addEventListener('change', handleImage, false);
 	var canvas = document.getElementById('imageCanvas');
@@ -899,9 +901,7 @@ document.onload= function(){
 
 //NEWTEXT
 (function($){
-
 	$.fn.autoGrowInput = function(o) {
-
 		o = $.extend({
 			maxWidth: 1000,
 			minWidth: 0,
@@ -909,7 +909,6 @@ document.onload= function(){
 		}, o);
 
 		this.filter('input:text').each(function(){
-
 			var minWidth = o.minWidth || $(this).width(),
 			val = '',
 			input = $(this),
@@ -950,11 +949,8 @@ document.onload= function(){
 				$(this).bind('keyup keydown blur update', check);
 
 			});
-
-return this;
-
-};
-
+		return this;
+	};
 })(jQuery);
 
 function mediaControl(){
@@ -968,7 +964,9 @@ function mediaControl(){
 	else
 		element.pause();
 };
+
 var scale=100;
+
 function zoomIn() {
 	$("#content").css({ "overflow": "scroll", "height": "auto" });
 	var degrees = 0 - getRotationDegrees($("#" + active().getId()));
@@ -1022,8 +1020,6 @@ function zoomOut() {
 			"-ms-transform": "rotate(" + degrees + "deg) ", /* IE 9 */
 			"-webkit-transform": "rotate(" + degrees + "deg)", /* Chrome, Safari, Opera */
 			"transform": "rotate(" + degrees + "deg) ",
-
-
 		});
 		$("#content").css({ "zoom": z + "%" });
 	}
@@ -1057,8 +1053,8 @@ function isInside(div, testDiv){
 			if((left2 + width2) <= (left1 + width1))
 				ris = true;
 
-	return ris;
-}
+			return ris;
+	}
 
 function updateDraggable(element){
 	var div=$("#"+active().getId());
@@ -1068,104 +1064,116 @@ function updateDraggable(element){
 	var originalWidth = $(div).width();
 	var originalLeft=$(div).css("left");
 	var originalTop=$(div).css("top");
-	console.log("original left: " + originalLeft);
+
+	console.log("ACTIVE" + active().getId());
 
 	var elements = $("#elements").children();
-    for(var i=0; i<elements.length; ++i){
-    	var x = $("#" + elements[i].id);
-    	if(isInside(div, x))
-    		var spec = {
-    			id: elements[i].id,
-    			originalLeft: x.position().left,
-    			originalTop: x.position().top
-    		}
-    		others.push(spec);
-    }
-	$(div).draggable({
-		start: function(event, ui) {
-			click.x = event.clientX;
-			click.y = event.clientY;
-		},
-		containment: "content",
-		drag: function(event, ui){
-			var original = ui.originalPosition;
-			// jQuery will simply use the same object we alter here
-			if(!others[0])
-				others.length = 0;
-			//muovi gli elementi dentro il frame
-			for(var i=0; i<others.length; ++i){
-				var x = $("#" + others[i].id);
-				x.css("left", (event.clientX - click.x + others[i].originalLeft)/(scale/100));
-				x.css("top", (event.clientY - click.y + others[i].originalTop)/(scale/100));
+	for(var i=0; i<elements.length && elements[i].id != div.id; ++i){
+		var x = $("#" + elements[i].id);
+		if(isInside(div, x))
+			var spec = {
+				id: elements[i].id,
+				originalLeft: x.position().left,
+				originalTop: x.position().top
 			}
-
-			ui.position = {
-				left: (event.clientX - click.x + original.left)/(scale/100),
-				top:  (event.clientY - click.y + original.top) /(scale/100)
-			};
-		},
-		stop: function (event, ui){
-			angular.element(this).scope().muoviElemento();
-			if(!others[0])
-				others.length = 0;
-
-			for(var i=0; i<others.length; ++i){
-				var spec = {
-					id: others[i].id,
-					toUpdate: true
-				}
-				angular.element(this).scope().muoviElemento(spec);
-			}
-			others = [];
+			others.push(spec);
 		}
-	});
 
-	$(".droppable").droppable({
-		drop: function(event, ui) {
-			
-			if($(ui.draggable).hasClass("frame") && $(ui.droppable).id!="content"){
-				$(ui.draggable).css({top: originalTop, left: originalLeft, position:'absolute', width: originalWidth, height:originalWidth});
-			}
-		},
-		over: function(event, ui) {
-			if($(ui.draggable).hasClass("frame") && $(ui.droppable).id!="content"){
-				if($(ui.draggable).hasClass("frame")){
-					$(ui.draggable).animate({
-						width: '3em',
-						height: '3em'
-					}, 300);
+		$(div).draggable({
+			start: function(event, ui) {
+				click.x = event.clientX;
+				click.y = event.clientY;
+			},
+			containment: "#content",
+			drag: function(event, ui){
+				var original = ui.originalPosition;
+
+				var left = event.clientX - click.x + original.left;
+				var top = event.clientY - click.y + original.top;
+
+				if(left>0 && top>0 && (left+originalWidth)<l && (top+originalHeight)<h){
+					ui.position = {
+						left: left/(scale/100),
+						top:  top/(scale/100)
+					};
 				}
-			}
-		},
 
+				if(!others[0])
+					others.length = 0;
+				//muovi gli elementi dentro il frame
+				for(var i=0; i<others.length; ++i){
+					var leftEle = event.clientX - click.x + others[i].originalLeft;
+					var topEle = event.clientY - click.y + others[i].originalTop;
+					
+					var topOk = leftOk = true;
+
+					if(left < 0 || (left + originalWidth)>l)
+						leftOk = false;
+					if(top < 0 || (top+originalHeight)>h)
+						topOk = false;
+					
+					var x = $("#" + others[i].id);
+					if(leftOk)	
+						x.css("left", (leftEle)/(scale/100));
+					if(topOk)
+						x.css("top", (topEle)/(scale/100));
+				}
+			},
+			stop: function (event, ui){
+				angular.element(this).scope().muoviElemento();
+				if(!others[0])
+					others.length = 0;
+
+				for(var i=0; i<others.length; ++i){
+					var spec = {
+						id: others[i].id,
+						toUpdate: true
+					}
+					angular.element(this).scope().muoviElemento(spec);
+				}
+				others = [];
+			}
+});
+
+$(".droppable").droppable({
+	drop: function(event, ui) {
+		if($(ui.draggable).hasClass("frame") && $(ui.droppable).id!="content"){
+			$(ui.draggable).css({top: originalTop, left: originalLeft, position:'absolute', width: originalWidth, height:originalWidth});
+		}
+	},
+	over: function(event, ui) {
+		if($(ui.draggable).hasClass("frame") && $(ui.droppable).id!="content"){
+			if($(ui.draggable).hasClass("frame")){
+				$(ui.draggable).animate({
+					width: '3em',
+					height: '3em'
+				}, 300);
+			}
+		}
+	},
 			/*$(this).mousemove(function(e) {
 				console.log("ciao");
 		$(div).show(2000);
 		 $(div).css({position:"absolute", left:e.pageX,top:e.pageY});
 
-	 });*/
-		out: function(event, ui) {
-			if($(ui.draggable).hasClass("frame")){
-				$(ui.draggable).animate({
-					width: originalWidth,
-					height: originalHeight
-				}, 300);
-			}
-		}
-	});
+		});*/
+out: function(event, ui) {
+	if($(ui.draggable).hasClass("frame")){
+		$(ui.draggable).animate({
+			width: originalWidth,
+			height: originalHeight
+		}, 300);
+	}
 }
-
-
-
+});
+}
 
 function flash(id) {
 	$("#" + id).animate({
 		"-ms-transform": "scale(1.1)",
-	"-webkit-transform": "scale(1.1)"
+		"-webkit-transform": "scale(1.1)"
 	}, 400);
-	
 }
-
 
 $(function () {
 	var origin;
@@ -1174,7 +1182,6 @@ $(function () {
 			origin = ui.item.index();
 			console.log("origine " + origin);
 		},
-		
 		stop: function (event, ui) {
 			var temp = new Array();
 			var ids = new Array();
@@ -1182,14 +1189,10 @@ $(function () {
 				id = mainPath().getAssociation($(item).attr("id"));
 				ids.push(id);
 			   /* var chip = document.getElementById("chip" + id);
-				chip.innerHTML = index + 1;*/
+			   chip.innerHTML = index + 1;*/
 			});
 			mainPath().setPath(ids);
-			
-			
 		}
 	});
 	$("#sortable").disableSelection();
-		
-
 });

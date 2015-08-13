@@ -69,6 +69,20 @@ var put = function(req, res){
 							  var query = {"meta.titolo": name_pres};
 							  query[path_to_id_element] = id_element ;
 							  
+							  if(field_path == "proper.background"){
+							  
+							  db.collection("presentations"+req.user).update(query, {"$set" : { "proper.background" : new_element } }, function(err,doc){
+																							 if(err) throw err;
+																							 res.json({
+																										 success: true,
+																										 message: 'element replaced'
+																										 });
+																							 db.close();
+																							 });
+							  
+							  }
+							  else{
+							  
 							  db.collection("presentations"+req.user).update(query, {"$set" : to_set }, function(err,doc){
 																							 if(err) throw err;
 																							 
@@ -80,6 +94,7 @@ var put = function(req, res){
 																																						 db.close();
 																																						 });
 																							 });
+							  }
 							  });
 };
 
@@ -125,9 +140,6 @@ var post = function(req, res){
 							  break;
 							  case 'video':
 							  field_path = 'proper.videos';
-							  break;
-							  case 'background':
-							  field_path = 'proper.background';
 							  break;
 							  default:
 							  res.json({

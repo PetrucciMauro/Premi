@@ -1070,13 +1070,14 @@ function updateDraggable(element){
 	var elements = $("#elements").children();
 	for(var i=0; i<elements.length && elements[i].id != div.id; ++i){
 		var x = $("#" + elements[i].id);
-		if(isInside(div, x))
-			var spec = {
-				id: elements[i].id,
-				originalLeft: x.position().left,
-				originalTop: x.position().top
-			}
-			others.push(spec);
+		if (isInside(div, x)) {
+		    var spec = {
+		        id: elements[i].id,
+		        originalLeft: x.position().left,
+		        originalTop: x.position().top
+		    }
+		    others.push(spec);
+		}
 		}
 
 		$(div).draggable({

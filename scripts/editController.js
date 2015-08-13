@@ -215,7 +215,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		            throw new Error("Estensione non corretta");
 
 		        uploadmedia(files, function (file) {
-	                var fileurl = Upload.getFileUrl(file);
+		            var fileurl = Upload.getFileUrl(files[0]);
 	                var img = inserisciImmagine(fileurl); //view
 
 	                var style = document.getElementById(img.id).style;
@@ -407,7 +407,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			uploadmedia(files, function(){
 
-			var fileurl = baseurl + 'image/' + files[0].name;
+			    var fileurl = Upload.getFileUrl(file);
 
 			var style = document.getElementById('content').style;
 			style.backgroundImage = "url(" + fileurl + ")";
@@ -459,7 +459,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			uploadmedia(files, function(){
 
-			var fileurl = baseurl + 'image/' + files[0].name;
+			    var fileurl = Upload.getFileUrl(files[0]);
 			var activeFrame = active().getId();
 
 			var style = document.getElementById(activeFrame).style;

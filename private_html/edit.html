@@ -163,29 +163,35 @@
 			<!--TESTO -->
 		</div>
 		<div id="frameMenu" class="elementMenu">
-			<md-button class="menu md-button md-default-theme" id="background" ng-click="show('backgroundManage')">
-				<md-tooltip>Gestisci sfondo</md-tooltip>
-				<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-			</md-button>
-			<div id="backgroundManage" class="md-whiteframe-z2" ng-show="backgroundManage">
-				<md-button class="menu md-button md-default-theme" id="backgroundFrameEraser" ng-click="rimuoviSfondoFrame()"><md-tooltip>Elimina sfondo</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>
-				<!--<md-button id="loadBackground" md-ink-ripple class="md-button md-default-theme backgroundButton" onclick="loadElementBackground(id)">
-						<md-tooltip>Seleziona sfondo</md-tooltip>
-						<md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-					</md-button>-->
-				<md-input id="colorBackground" md-ink-ripple class="md-button md-default-theme backgroundButton">
-					<!--SFONDO FRAME -->
-					<md-tooltip>Seleziona colore di sfondo</md-tooltip>
-					<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-					<input type="color" id="backgroundFrame" ng-model="sfondoframe" ng-change="cambiaColoreSfondoFrame(sfondoframe)"/>
-				</md-input>
 
-				<md-input id="imageFrameBackground" md-ink-ripple class="md-button md-default-theme backgroundButton">
-					<md-tooltip>Seleziona immagine di sfondo</md-tooltip>
-					<md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-					<input type="file" id="frameBackgroundLoader" name="Inserisci Immagine" onchange="angular.element(this).scope().cambiaImmagineSfondoFrame(this.files)"/>
-				</md-input>
-			</div>
+
+            <md-menu md-offset="0 -7">
+                <md-button aria-label="Apri menu gestione sfondo" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="background">
+                    <md-tooltip>Gestisci sfondo frame</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                </md-button>
+                <md-menu-content width="2">
+                    <md-menu-item>
+                        <md-button aria-label="Cambia colore sfondo" class="colorContainer" id="slideshowColor">
+                            <p>Cambia colore sfondo</p><input type="color" id="backgroundFrame" ng-model="sfondoframe" ng-change="cambiaColoreSfondoFrame(sfondoframe)" />
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button id="backgroundEraser" ng-click="rimuoviSfondoFrame()"><p>Elimina Sfondo Frame</p></md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button aria-label="Cambia immagine di sfondo" id="slideshowImage" class="fileContainer">
+                            <p>Scegli Immagine di Sfondo</p><input type="file" id="frameBackgroundLoader" name="Inserisci Immagine" onchange="angular.element(this).scope().cambiaImmagineSfondoFrame(this.files)"/>
+                        </md-button>
+                        <!-- onchange="backgroundReadURL(this, 'fantoccio');"-->
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+
+
+
+
+
+
 
 			<md-menu md-offset="0 -7">
 				<md-button aria-label="Aggiungi al percorso principale" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()">

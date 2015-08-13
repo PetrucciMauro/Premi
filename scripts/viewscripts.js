@@ -791,7 +791,7 @@ $(document).mousedown(function(e) {
 			active().select(elements[i].id);
 
 			//SFONDO FRAME
-			document.getElementById("backgroundFrame").removeAttribute("onchange");
+			//document.getElementById("backgroundFrame").removeAttribute("onchange");
 			//SFONDO FRAME
 		} else if( $(event.target).is('#content') /*|| $(event.target).parents().is("#elements")*/){
 			console.log("deselect");
@@ -801,13 +801,12 @@ $(document).mousedown(function(e) {
 	if(selected!="undefined"){
 		document.getElementById("standardMenu").style.display="block";	
 		document.getElementById(selected+"Menu").style.display="block";	
-
 	}
 	//SFONDO FRAME
-	else{
+	/*else{
 		if(($(event.target).is('#content')))
 			document.getElementById("backgroundFrame").removeAttribute("onchange");
-	}
+	}*/
 	//SFONDO FRAME
 
 	//NEWTEXT

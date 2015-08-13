@@ -542,7 +542,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.cambiaFontTesto = function(font){
 			var activeText = active().getId();
 
-			if(active().getTipo() != "text")
+			if(Utils.isUndefined(activeText) || active().getTipo() != "text")
 				return;
 
 			var style = document.getElementById("txt"+activeText).style;

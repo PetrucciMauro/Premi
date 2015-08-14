@@ -827,6 +827,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.config = {};
 		$scope.model = {};
 
+		$scope.bookmarks = function () {
+		    var button;
+		    if (insertEditRemove().getElementById(active().getId()) && insertEditRemove().getElementById(active().getId()).bookmark==0) {
+		        button = $compile(' <md-button class="menu md-button md-default-theme" id="addBookmark" >  <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>  </md-button>')($scope);            
+		    }
+		    return button;
+		};
+
 		var impostaPrimoSfondo = function(param){
 			var spec = {
 				height: h,
@@ -1064,5 +1072,12 @@ premiApp.directive('printChoichePaths', function ($compile) {
         }
     };
 });
-          
-   
+/*
+premiApp.directive('bookmarkButton', function () {
+    var button;
+    
+    if (active().getId() && insertEditRemove().getElement(active().getId()).bookmark == 0) {
+        button = ' <md-button class="menu md-button md-default-theme" id="addBookmark" >  <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>  </md-button>';
+    }
+    return button;
+});*/

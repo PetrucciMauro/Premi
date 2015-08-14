@@ -4,45 +4,45 @@ var premiEditController = angular.module('premiEditController', ['premiService']
 
 premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet', '$location', '$interval',
 	function($scope, Main, toPages, Utils, SharedData, Upload, $q, $mdSidenav, $mdBottomSheet, $location, $interval) {
-		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
-			toPages.loginpage();
-		else
-		{
-		var inv = invoker();
-		var mongo = MongoRelation(Utils.hostname(), Main.login());
-		var loader = Loader(mongo, insertEditRemove());
-        }
-		//Metodi per il reindirizzamento
-		$scope.goExecute = function(){
-			/*var json = {"_id":"55c38501d815bccd1f27a461","meta":{"titolo":"Prova"},"proper":{"paths":{"main":[],"choices":[]},"texts":[{"id":"2","xIndex":413,"yIndex":78,"rotation":0,"zIndex":1,"waste": 413,"size": 10, "height":218,"width":153,"content":"balfdjsalkfjsakfjsdkafjl.\nCome stai?? io vorrei andarmene.... perché sono stanco.... voglio moriiiiire","font":"Roboto, sans-serif","color":"rgb(31, 121, 131)","type":"text"}],"frames":[{"id":"1","yIndex":56.6218109130859,"xIndex":73.6218109130859,"rotation":332,"zIndex":0,"height":348,"width":348,"rotation": 50,"bookmark":0,"image":"","color":"rgb(133, 59, 59)","type":"frame"}],"images":[],"SVGs":[],"audios":[],"videos":[],"background":{"width": l, "height": h, "image": "", "color": ""}}};
+	    if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
+	        toPages.loginpage();
+	    else
+	    {
+	        var inv = invoker();
+	        var mongo = MongoRelation(Utils.hostname(), Main.login());
+	        var loader = Loader(mongo, insertEditRemove());
+	    }
+	    //Metodi per il reindirizzamento
+	    $scope.goExecute = function(){
+	        /*var json = {"_id":"55c38501d815bccd1f27a461","meta":{"titolo":"Prova"},"proper":{"paths":{"main":[],"choices":[]},"texts":[{"id":"2","xIndex":413,"yIndex":78,"rotation":0,"zIndex":1,"waste": 413,"size": 10, "height":218,"width":153,"content":"balfdjsalkfjsakfjsdkafjl.\nCome stai?? io vorrei andarmene.... perché sono stanco.... voglio moriiiiire","font":"Roboto, sans-serif","color":"rgb(31, 121, 131)","type":"text"}],"frames":[{"id":"1","yIndex":56.6218109130859,"xIndex":73.6218109130859,"rotation":332,"zIndex":0,"height":348,"width":348,"rotation": 50,"bookmark":0,"image":"","color":"rgb(133, 59, 59)","type":"frame"}],"images":[],"SVGs":[],"audios":[],"videos":[],"background":{"width": l, "height": h, "image": "", "color": ""}}};
 			
 			SharedData.forEditManuel(json);
 			$location.path('private/execution');*/
-			var reindirizza = function(){
-				toPages.executionpage();
-			}
-			//loader.update(reindirizza);
-			reindirizza();
+	        var reindirizza = function(){
+	            toPages.executionpage();
+	        }
+	        //loader.update(reindirizza);
+	        reindirizza();
 		
-		}
+	    }
 
-		$scope.toggleList = function() {
-			var pending = $mdBottomSheet.hide() || $q.when(true);
+	    $scope.toggleList = function() {
+	        var pending = $mdBottomSheet.hide() || $q.when(true);
 
-			pending.then(function(){
-			    $mdSidenav('left').toggle();
-			    $("#sortable").slideUp();
-			});
-		}
+	        pending.then(function(){
+	            $mdSidenav('left').toggle();
+	            $("#sortable").slideUp();
+	        });
+	    }
 
-		$scope.isOpen = false;
-		$scope.demo = {
-		    isOpen: false,
-		    count: 0,
-		    selectedAlignment: 'md-left'
-		};
+	    $scope.isOpen = false;
+	    $scope.demo = {
+	        isOpen: false,
+	        count: 0,
+	        selectedAlignment: 'md-left'
+	    };
 
-		$scope.allFonts = (
+	    $scope.allFonts = (
 			//serif
 			'\'Times New Roman\', Times, serif' + ';' +
 			'Georgia, serif' + ';' +
@@ -62,165 +62,174 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 			)
 			.split(';').map(function(font){
-				var descr = font.split(',')[0];
-				if(descr.indexOf("'") != -1)
-					descr = descr.split("'")[1];
-				return {value: font, descr: descr};});
+			    var descr = font.split(',')[0];
+			    if(descr.indexOf("'") != -1)
+			        descr = descr.split("'")[1];
+			    return {value: font, descr: descr};});
 		
-		$scope.setSelectedFont = function(font){
-			if(Utils.isUndefined(active().getId()))
-				return false;
+	    $scope.setSelectedFont = function(font){
+	        if(Utils.isUndefined(active().getId()))
+	            return false;
 
-			var selectedFont = $("#txt" + active().getId()).css("font-family");
+	        var selectedFont = $("#txt" + active().getId()).css("font-family");
 
-			if(font == selectedFont)
-				return true;
+	        if(font == selectedFont)
+	            return true;
 
-			return false;
-		}
+	        return false;
+	    }
 
-		//Menu a comparsa
-		var backgroundManage = function(bool){
-			$scope.backgroundManage = bool;
-		}
-		var slideShowBackgroundManage = function(bool){
-			$scope.slideShowBackgroundManage = bool;
-		}
-		var pathsManage = function(bool){
-			$scope.pathsManage = bool;
-		}
-		var rotation = function(bool){
-			$scope.rotation = bool;
-		}
-		//per far apparire il div corretto e far sparire quelli eventualmenti aperti
-		//id-> id del div su cui applicare il toggleElement
-		$scope.show = function(id){
-			backgroundManage(false);
-			slideShowBackgroundManage(false);
-			pathsManage(false);
-			rotation(false);
+	    //Menu a comparsa
+	    var backgroundManage = function(bool){
+	        $scope.backgroundManage = bool;
+	    }
+	    var slideShowBackgroundManage = function(bool){
+	        $scope.slideShowBackgroundManage = bool;
+	    }
+	    var pathsManage = function(bool){
+	        $scope.pathsManage = bool;
+	    }
+	    var rotation = function(bool){
+	        $scope.rotation = bool;
+	    }
+	    
+	    var removeBookmark = function (bool) {
+	        $scope.removeBookmark = bool;
+	    }
+	    //per far apparire il div corretto e far sparire quelli eventualmenti aperti
+	    //id-> id del div su cui applicare il toggleElement
+	    $scope.show = function(id){
+	        backgroundManage(false);
+	        slideShowBackgroundManage(false);
+	        pathsManage(false);
+	        rotation(false);
+	        addBookmark(false);
 
-			if(id === 'slideShowBackgroundManage')
-				slideShowBackgroundManage(true);
-			else if(id === 'backgroundManage')
-				backgroundManage(true);
-			else if(id == 'rotation')
-				rotation(true);
-			else if(id == 'pathsManage')
-				pathsManage(true);
-			else
-				throw new Error("Elemento non riconosciuto");
+	        if(id === 'slideShowBackgroundManage')
+	            slideShowBackgroundManage(true);
+	        else if(id === 'backgroundManage')
+	            backgroundManage(true);
+	        else if(id == 'rotation')
+	            rotation(true);
+	        else if(id == 'pathsManage')
+	            pathsManage(true);
+	        else if(id== 'addBookmark')
+	            addBookmark(true);
+	        else if (id == 'removeBookmark')
+	            removeBookmark(true);
+	        else
+	            throw new Error("Elemento non riconosciuto");
 			
-			toggleElement(id);
-		}
-		//Bottom Sheet
-		$scope.showPathBottomSheet = function($event) {
-			$mdBottomSheet.show({
-				templateUrl: 'bottomsheet-percorsi',
-				controller: 'BottomSheetController'
-			}).then(function() {
-				console.log("fatto")
-			});
-		}; 
+	        toggleElement(id);
+	    }
+	    //Bottom Sheet
+	    $scope.showPathBottomSheet = function($event) {
+	        $mdBottomSheet.show({
+	            templateUrl: 'bottomsheet-percorsi',
+	            controller: 'BottomSheetController'
+	        }).then(function() {
+	            console.log("fatto")
+	        });
+	    }; 
 
-		//METODI PROPRI DELL'EDIT
-		var salvato = function(){
-			console.log("Salvato con successo");
-		}
-		var save = function(){
-			loader.update(salvato);
-			console.log("partito il save");
-		}
+	    //METODI PROPRI DELL'EDIT
+	    var salvato = function(){
+	        console.log("Salvato con successo");
+	    }
+	    var save = function(){
+	        loader.update(salvato);
+	        console.log("partito il save");
+	    }
 
-		//$interval(save, 30000);
-		var intervalSave = $interval(save, 30000);
- 		$scope.$on("$locationChangeStart", function(){
- 		    save();
-		    $interval.cancel(intervalSave);
-		    intervalSave = undefined;
- 		});
+	    //$interval(save, 30000);
+	    var intervalSave = $interval(save, 30000);
+	    $scope.$on("$locationChangeStart", function(){
+	        save();
+	        $interval.cancel(intervalSave);
+	        intervalSave = undefined;
+	    });
 
-		$scope.salvaPresentazione = function(){
-			save();
-		}
-		//Inserimento elementi
-		$scope.inserisciFrame = function(spec){
-			var frame = inserisciFrame(spec); //view
+	    $scope.salvaPresentazione = function(){
+	        save();
+	    }
+	    //Inserimento elementi
+	    $scope.inserisciFrame = function(spec){
+	        var frame = inserisciFrame(spec); //view
 
-			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
-				var style = document.getElementById(frame.id).style;
-				var top = Number(style.top.split("px")[0]);
-				var left = Number(style.left.split("px")[0]);
-				var outerHeight = Number(style.outerHeight.split("px")[0]);
-				var outerWidth = Number(style.outerWidth.split("px")[0]);
+	        if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
+	            var style = document.getElementById(frame.id).style;
+	            var top = Number(style.top.split("px")[0]);
+	            var left = Number(style.left.split("px")[0]);
+	            var outerHeight = Number(style.outerHeight.split("px")[0]);
+	            var outerWidth = Number(style.outerWidth.split("px")[0]);
 
-				var spec = {
-					id: frame.id,
-					xIndex: left,
-					yIndex: top,
-					height: outerHeight,
-					width: outerWidth,
-					rotation: 0,
-					zIndex: Number(style.zIndex)
-				};
+	            var spec = {
+	                id: frame.id,
+	                xIndex: left,
+	                yIndex: top,
+	                height: outerHeight,
+	                width: outerWidth,
+	                rotation: 0,
+	                zIndex: Number(style.zIndex)
+	            };
 
-				var command = concreteFrameInsertCommand(spec); //model
-				inv.execute(command);
+	            var command = concreteFrameInsertCommand(spec); //model
+	            inv.execute(command);
 
-				loader.addInsert(frame.id);
-			}
-		}
-		$scope.inserisciTesto = function(spec){
-			var text = inserisciTesto(spec); //view
+	            loader.addInsert(frame.id);
+	        }
+	    }
+	    $scope.inserisciTesto = function(spec){
+	        var text = inserisciTesto(spec); //view
 
-			if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
-				var thistext = $("#txt" + text.id);
+	        if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
+	            var thistext = $("#txt" + text.id);
 
-				var style = document.getElementById(text.id).style;
-				var top = Number(style.top.split("px")[0]);
-				var left = Number(style.left.split("px")[0]);
-				var height = Number(style.height.split("px")[0]);
-				var width = Number(style.width.split("px")[0]);
+	            var style = document.getElementById(text.id).style;
+	            var top = Number(style.top.split("px")[0]);
+	            var left = Number(style.left.split("px")[0]);
+	            var height = Number(style.height.split("px")[0]);
+	            var width = Number(style.width.split("px")[0]);
 
-				var spec = {
-					id: text.id,
-					xIndex: left,
-					yIndex: top,
-					height: height,
-					width: width,
-					waste: left,
-					size: thistext.css("font-size"),
-					rotation: 0,
-					font: thistext.css("font-family"),
-					zIndex: Number(style.zIndex)
-				};
-				var command = concreteTextInsertCommand(spec);  //model
-				inv.execute(command);
+	            var spec = {
+	                id: text.id,
+	                xIndex: left,
+	                yIndex: top,
+	                height: height,
+	                width: width,
+	                waste: left,
+	                size: thistext.css("font-size"),
+	                rotation: 0,
+	                font: thistext.css("font-family"),
+	                zIndex: Number(style.zIndex)
+	            };
+	            var command = concreteTextInsertCommand(spec);  //model
+	            inv.execute(command);
 
-				loader.addInsert(text.id);
-			}
-		}
+	            loader.addInsert(text.id);
+	        }
+	    }
 
 
-		var uploadmedia = function(files, callback){
-			Upload.uploadmedia(files, callback);
-		}
+	    var uploadmedia = function(files, callback){
+	        Upload.uploadmedia(files, callback);
+	    }
 
-		$scope.inserisciImmagine = function (files, spec) {
-		    if (Utils.isObject(spec)) {
-		        inserisciImmagine(spec.ref, spec);
-		    }
-		    else {
-		        if (!Upload.isImage(files))
-		            throw new Error("Estensione non corretta");
+	    $scope.inserisciImmagine = function (files, spec) {
+	        if (Utils.isObject(spec)) {
+	            inserisciImmagine(spec.ref, spec);
+	        }
+	        else {
+	            if (!Upload.isImage(files))
+	                throw new Error("Estensione non corretta");
 
-		        uploadmedia(files, function (file) {
-		            var fileurl = Upload.getFileUrl(files[0]);
+	            uploadmedia(files, function (file) {
+	                var fileurl = Upload.getFileUrl(files[0]);
 	                var img = inserisciImmagine(fileurl); //view
 
 	                var style = document.getElementById(img.id).style;
-					var top = Number(style.top.split("px")[0]);
-					var left = Number(style.left.split("px")[0]);
+	                var top = Number(style.top.split("px")[0]);
+	                var left = Number(style.left.split("px")[0]);
 
 	                var immagine = document.getElementById("img" + img.id).style;
 	                var imgheight = Number(immagine.height.split("px")[0]);
@@ -233,7 +242,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                    yIndex: top,
 	                    height: imgheight,
 	                    width: imgwidth,
-	                   // waste: (imgwidth - imgouterwidth) / 2,
+	                    // waste: (imgwidth - imgouterwidth) / 2,
 	                    rotation: 0,
 	                    ref: fileurl,
 	                    zIndex: Number(style.zIndex)
@@ -243,593 +252,608 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                inv.execute(command);
 
 	                loader.addInsert(img.id);
-		        });
-		    }
-		}
-		$scope.inserisciAudio = function(files, spec){
-			if(Utils.isObject(spec)){
-				inserisciAudio(spec.ref, spec);
-			}
-			else {
-				if(!Upload.isAudio(files))
-					throw new Error("Estensione non corretta");
+	            });
+	        }
+	    }
+	    $scope.inserisciAudio = function(files, spec){
+	        if(Utils.isObject(spec)){
+	            inserisciAudio(spec.ref, spec);
+	        }
+	        else {
+	            if(!Upload.isAudio(files))
+	                throw new Error("Estensione non corretta");
 
-				uploadmedia(files, function(file){
-					var fileurl = Upload.getFileUrl(file);
-					fileurl.replace(/\s/g, "%");
-					//BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
+	            uploadmedia(files, function(file){
+	                var fileurl = Upload.getFileUrl(file);
+	                fileurl.replace(/\s/g, "%");
+	                //BISOGNA FARLO PERCHE IL SERVER SOSTITUISCE TUTTI GLI SPAZI CON % MA COSÌ NON VA :o
 					
-					var audio = inserisciAudio(fileurl); //view
+	                var audio = inserisciAudio(fileurl); //view
 
-					var style = document.getElementById(audio.id).style;
-					var top = Number(style.top.split("px")[0]);
-					var left = Number(style.left.split("px")[0]);
-					var height = Number(style.height.split("px")[0]);
-					var width = Number(style.width.split("px")[0]);
+	                var style = document.getElementById(audio.id).style;
+	                var top = Number(style.top.split("px")[0]);
+	                var left = Number(style.left.split("px")[0]);
+	                var height = Number(style.height.split("px")[0]);
+	                var width = Number(style.width.split("px")[0]);
 
-					var spec = {
-						id: audio.id,
-						xIndex: left,
-						yIndex: top,
-						height: height,
-						width: width,
-						rotation: 0,
-						ref: fileurl,
-						zIndex: Number(style.zIndex)
-					};
+	                var spec = {
+	                    id: audio.id,
+	                    xIndex: left,
+	                    yIndex: top,
+	                    height: height,
+	                    width: width,
+	                    rotation: 0,
+	                    ref: fileurl,
+	                    zIndex: Number(style.zIndex)
+	                };
 
-					var command = concreteAudioInsertCommand(spec); //model
-					inv.execute(command);
+	                var command = concreteAudioInsertCommand(spec); //model
+	                inv.execute(command);
 
-					loader.addInsert(audio.id);
-				});
-			}
-		}
-		$scope.inserisciVideo = function(files, spec){
-			if(Utils.isObject(spec)){
-				inserisciVideo(spec.ref, spec);
-			}
-			else{
-				if(!Upload.isVideo(files))
-					throw new Error("Estensione non corretta");
+	                loader.addInsert(audio.id);
+	            });
+	        }
+	    }
+	    $scope.inserisciVideo = function(files, spec){
+	        if(Utils.isObject(spec)){
+	            inserisciVideo(spec.ref, spec);
+	        }
+	        else{
+	            if(!Upload.isVideo(files))
+	                throw new Error("Estensione non corretta");
 
-				uploadmedia(files, function(file){
-					var fileurl = Upload.getFileUrl(file);
-					var video = inserisciVideo(fileurl); //view
+	            uploadmedia(files, function(file){
+	                var fileurl = Upload.getFileUrl(file);
+	                var video = inserisciVideo(fileurl); //view
 
-					var style = document.getElementById(video.id).style;
-					var top = Number(style.top.split("px")[0]);
-					var left = Number(style.left.split("px")[0]);
+	                var style = document.getElementById(video.id).style;
+	                var top = Number(style.top.split("px")[0]);
+	                var left = Number(style.left.split("px")[0]);
 
-					var thisvideo = document.getElementById("video" + video.id).style;
-					var videoouterheight = Number(thisvideo.outerHeight.split("px")[0]);
-					var videoouterwidth = Number(thisvideo.outerWidth.split("px")[0]);
-					var videowidth = Number(thisvideo.width.split("px")[0]);
+	                var thisvideo = document.getElementById("video" + video.id).style;
+	                var videoouterheight = Number(thisvideo.outerHeight.split("px")[0]);
+	                var videoouterwidth = Number(thisvideo.outerWidth.split("px")[0]);
+	                var videowidth = Number(thisvideo.width.split("px")[0]);
 
-					var spec = {
-						id: video.id,
-						xIndex: left,
-						yIndex: top,
-						height: videoouterheight,
-						width: videoouterwidth,
-						waste: (videowidth - videoouterwidth)/2,
-						rotation: 0,
-						ref: fileurl,
-						zIndex: Number(style.zIndex)
-					};
+	                var spec = {
+	                    id: video.id,
+	                    xIndex: left,
+	                    yIndex: top,
+	                    height: videoouterheight,
+	                    width: videoouterwidth,
+	                    waste: (videowidth - videoouterwidth)/2,
+	                    rotation: 0,
+	                    ref: fileurl,
+	                    zIndex: Number(style.zIndex)
+	                };
 
-					var command = concreteVideoInsertCommand(spec); //model
-					inv.execute(command);
-					loader.addInsert(video.id);
-				});
-			}
-		}
+	                var command = concreteVideoInsertCommand(spec); //model
+	                inv.execute(command);
+	                loader.addInsert(video.id);
+	            });
+	        }
+	    }
 
-		//rimozione
-		$scope.rimuoviElemento = function (spec) {
-            console.log(JSON.stringify(spec))
-			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
-				elimina(spec.id); //della view
-			else{
-				var id = active().getId();
-				var tipoElement = active().getTipo();
+	    //rimozione
+	    $scope.rimuoviElemento = function (spec) {
+	        console.log(JSON.stringify(spec))
+	        if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
+	            elimina(spec.id); //della view
+	        else{
+	            var id = active().getId();
+	            var tipoElement = active().getTipo();
 
-				var command = {};
-				if(tipoElement === 'frame')
-					command = concreteFrameRemoveCommand(id);
-				else if(tipoElement === 'image')
-					command = concreteImageRemoveCommand(id);
-				else if(tipoElement === 'audio')
-					command = concreteAudioRemoveCommand(id);
-				else if(tipoElement === 'video')
-					command = concreteVideoRemoveCommand(id);
-				else if(tipoElement === 'text')
-					command = concreteTextRemoveCommand(id);
-				else
-					throw new Error("Elemento da eliminare non riconosciuto");
+	            var command = {};
+	            if(tipoElement === 'frame')
+	                command = concreteFrameRemoveCommand(id);
+	            else if(tipoElement === 'image')
+	                command = concreteImageRemoveCommand(id);
+	            else if(tipoElement === 'audio')
+	                command = concreteAudioRemoveCommand(id);
+	            else if(tipoElement === 'video')
+	                command = concreteVideoRemoveCommand(id);
+	            else if(tipoElement === 'text')
+	                command = concreteTextRemoveCommand(id);
+	            else
+	                throw new Error("Elemento da eliminare non riconosciuto");
 
-				elimina(id); //della view
+	            elimina(id); //della view
 
-				inv.execute(command);  //del model
+	            inv.execute(command);  //del model
 
-				loader.addDelete(tipoElement, id);
-			}
-		}
+	            loader.addDelete(tipoElement, id);
+	        }
+	    }
 
-		//Gestione sfondo Presentazione
-		$scope.updateSfondo = function(spec){
-			var style = document.getElementById('content').style;
-			style.backgroundColor = spec.color;
-			if(Utils.isObject(spec.ref))
-				style.backgroundImage = "url(" + spec.ref + ")";
-			else
-				style.backgroundImage = "";
-		}
-		$scope.rimuoviSfondo = function(){
-			var style = document.getElementById('content').style;
-			style.removeProperty('background');
+	    //Gestione sfondo Presentazione
+	    $scope.updateSfondo = function(spec){
+	        var style = document.getElementById('content').style;
+	        style.backgroundColor = spec.color;
+	        if(Utils.isObject(spec.ref))
+	            style.backgroundImage = "url(" + spec.ref + ")";
+	        else
+	            style.backgroundImage = "";
+	    }
+	    $scope.rimuoviSfondo = function(){
+	        var style = document.getElementById('content').style;
+	        style.removeProperty('background');
 
-			var spec = {
-				id: 0,
-				color: style.backgroundColor,
-				image: style.backgroundImage,
-				width: l,
-				height: h
-			};
+	        var spec = {
+	            id: 0,
+	            color: style.backgroundColor,
+	            image: style.backgroundImage,
+	            width: l,
+	            height: h
+	        };
 			
-			var command = concreteBackgroundInsertCommand(spec);
-			inv.execute(command);
+	        var command = concreteBackgroundInsertCommand(spec);
+	        inv.execute(command);
 
-			loader.addUpdate(0);
-		}
+	        loader.addUpdate(0);
+	    }
 
-		$scope.backcolor = "#ffffff";
-		$scope.cambiaColoreSfondo = function(color){
-			var style = document.getElementById('content').style;
-			style.backgroundColor = color;
+	    $scope.backcolor = "#ffffff";
+	    $scope.cambiaColoreSfondo = function(color){
+	        var style = document.getElementById('content').style;
+	        style.backgroundColor = color;
 
-			var spec = {
-				id: 0,
-				color: style.backgroundColor,
-				image: style.backgroundImage,
-				width: l,
-				height: h
-			};
+	        var spec = {
+	            id: 0,
+	            color: style.backgroundColor,
+	            image: style.backgroundImage,
+	            width: l,
+	            height: h
+	        };
 			
-			var sfondo = concreteBackgroundInsertCommand(spec);
-			inv.execute(sfondo);
-			console.log(insertEditRemove().getPresentazione());
-			loader.addUpdate(0);
-		}
-		$scope.cambiaImmagineSfondo = function(files){
-			if(!Upload.isImage(files))
-				throw new Error("Estensione non corretta");
+	        var sfondo = concreteBackgroundInsertCommand(spec);
+	        inv.execute(sfondo);
+	        console.log(insertEditRemove().getPresentazione());
+	        loader.addUpdate(0);
+	    }
+	    $scope.cambiaImmagineSfondo = function(files){
+	        if(!Upload.isImage(files))
+	            throw new Error("Estensione non corretta");
 
-			uploadmedia(files, function(){
+	        uploadmedia(files, function(){
 
-			    var fileurl = Upload.getFileUrl(file);
+	            var fileurl = Upload.getFileUrl(file);
 
-			var style = document.getElementById('content').style;
-			style.backgroundImage = "url(" + fileurl + ")";
+	            var style = document.getElementById('content').style;
+	            style.backgroundImage = "url(" + fileurl + ")";
 
-			var spec = {
-				id: 0,
-				color: style.backgroundColor,
-				image: style.backgroundImage,
-				width: l,
-				height: h
-			};
+	            var spec = {
+	                id: 0,
+	                color: style.backgroundColor,
+	                image: style.backgroundImage,
+	                width: l,
+	                height: h
+	            };
 
-			var command = concreteBackgroundInsertCommand(spec); //model
-			inv.execute(command);
+	            var command = concreteBackgroundInsertCommand(spec); //model
+	            inv.execute(command);
 
-			loader.addUpdate(0);
-			});
-		}
+	            loader.addUpdate(0);
+	        });
+	    }
 
-		//Gestione sfondo frame
-		$scope.updateSfondoFrame = function(spec){
-			var style = document.getElementById(spec.id).style;
-			style.backgroundColor = spec.color;
-			if(Utils.isObject(spec.ref))
-				style.backgroundImage = "url(" + spec.ref + ")";
-			else
-				style.backgroundImage = "";
-		}
-		$scope.cambiaColoreSfondoFrame = function(color){
-			var activeFrame = active().getId();
+	    //Gestione sfondo frame
+	    $scope.updateSfondoFrame = function(spec){
+	        var style = document.getElementById(spec.id).style;
+	        style.backgroundColor = spec.color;
+	        if(Utils.isObject(spec.ref))
+	            style.backgroundImage = "url(" + spec.ref + ")";
+	        else
+	            style.backgroundImage = "";
+	    }
+	    $scope.cambiaColoreSfondoFrame = function(color){
+	        var activeFrame = active().getId();
 			
-			var style = document.getElementById(activeFrame).style;
-			style.backgroundColor = color;
+	        var style = document.getElementById(activeFrame).style;
+	        style.backgroundColor = color;
 
-			var spec = {
-				id: activeFrame,
-				color: style.backgroundColor,
-				ref: style.backgroundImage
-			};
+	        var spec = {
+	            id: activeFrame,
+	            color: style.backgroundColor,
+	            ref: style.backgroundImage
+	        };
 			
-			var command = concreteEditBackgroundCommand(spec);
-			inv.execute(command);
+	        var command = concreteEditBackgroundCommand(spec);
+	        inv.execute(command);
 
-			loader.addUpdate(activeFrame);
-		}
-		$scope.cambiaImmagineSfondoFrame = function(files){
-			if(!Upload.isImage(files))
-				throw new Error("Estensione non corretta");
+	        loader.addUpdate(activeFrame);
+	    }
+	    $scope.cambiaImmagineSfondoFrame = function(files){
+	        if(!Upload.isImage(files))
+	            throw new Error("Estensione non corretta");
 
-			uploadmedia(files, function(){
+	        uploadmedia(files, function(){
 
-			    var fileurl = Upload.getFileUrl(files[0]);
-			var activeFrame = active().getId();
+	            var fileurl = Upload.getFileUrl(files[0]);
+	            var activeFrame = active().getId();
 
-			var style = document.getElementById(activeFrame).style;
-			style.backgroundImage = "url(" + fileurl + ")";
+	            var style = document.getElementById(activeFrame).style;
+	            style.backgroundImage = "url(" + fileurl + ")";
 
-			var spec = {
-				id: activeFrame,
-				color: style.backgroundColor,
-				ref: style.backgroundImage
-			};
+	            var spec = {
+	                id: activeFrame,
+	                color: style.backgroundColor,
+	                ref: style.backgroundImage
+	            };
 
-			var command = concreteEditBackgroundCommand(spec);
-			inv.execute(command);
+	            var command = concreteEditBackgroundCommand(spec);
+	            inv.execute(command);
 
-			loader.addUpdate(activeFrame);
-		});
-		}
-		$scope.rimuoviSfondoFrame = function(){
-			var activeFrame = active().getId();
+	            loader.addUpdate(activeFrame);
+	        });
+	    }
+	    $scope.rimuoviSfondoFrame = function(){
+	        var activeFrame = active().getId();
 			
-			var style = document.getElementById(activeFrame).style;
-			style.removeProperty('background');
+	        var style = document.getElementById(activeFrame).style;
+	        style.removeProperty('background');
 
-			var spec = {
-				id: activeFrame,
-				color: style.backgroundColor,
-				ref: style.backgroundImage
-			};
+	        var spec = {
+	            id: activeFrame,
+	            color: style.backgroundColor,
+	            ref: style.backgroundImage
+	        };
 
-			var command = concreteEditBackgroundCommand(spec);
-			inv.execute(command);
+	        var command = concreteEditBackgroundCommand(spec);
+	        inv.execute(command);
 
-			loader.addUpdate(activeFrame);
-		}
+	        loader.addUpdate(activeFrame);
+	    }
+	    $scope.addBookmark = function () {
+	        var obj = {};
+	        obj.id = active().getId();
+	        var command = concreteEditBookmarkCommand(obj);
+	        inv.execute(command);
+	    }
 
-		//Gestione media
-		$scope.mediaControl = function(){
-			mediaControl();
-		}
+	    //Gestione media
+	    $scope.mediaControl = function(){
+	        mediaControl();
+	    }
 
-		$scope.cambiaColoreTesto = function(color){
-			var activeText = active().getId();
+	    $scope.cambiaColoreTesto = function(color){
+	        var activeText = active().getId();
 			
-			var style = document.getElementById("txt"+activeText).style;
-			style.color = color;
+	        var style = document.getElementById("txt"+activeText).style;
+	        style.color = color;
 
-			var spec = {
-				id: activeText,
-				tipo: "text",
-				color: style.color
-			};
+	        var spec = {
+	            id: activeText,
+	            tipo: "text",
+	            color: style.color
+	        };
 			
-			var command = concreteEditColorCommand(spec);
-			inv.execute(command);
+	        var command = concreteEditColorCommand(spec);
+	        inv.execute(command);
 
-			loader.addUpdate(activeText);
-		}
-		$scope.cambiaSizeTesto = function(value){
-			var activeText = active().getId();
+	        loader.addUpdate(activeText);
+	    }
+	    $scope.cambiaSizeTesto = function(value){
+	        var activeText = active().getId();
 			
-			var text = document.getElementById("txt" + activeText).style;
-			text.fontSize = value + "em";
+	        var text = document.getElementById("txt" + activeText).style;
+	        text.fontSize = value + "em";
 
-			console.log($("#txt"+activeText).css("font-family"));
+	        console.log($("#txt"+activeText).css("font-family"));
 
-			var spec = {
-				id: activeText,
-				tipo: "text",
-				fontSize: value,
-				font: text.fontFamily
-			};
+	        var spec = {
+	            id: activeText,
+	            tipo: "text",
+	            fontSize: value,
+	            font: text.fontFamily
+	        };
 			
-			console.log(spec);
-			var command = concreteEditFontCommand(spec);
-			inv.execute(command);
+	        console.log(spec);
+	        var command = concreteEditFontCommand(spec);
+	        inv.execute(command);
 
-			loader.addUpdate(activeText);
-		}
+	        loader.addUpdate(activeText);
+	    }
 
-		$scope.cambiaFontTesto = function(font){
-			var activeText = active().getId();
+	    $scope.cambiaFontTesto = function(font){
+	        var activeText = active().getId();
 
-			if(Utils.isUndefined(activeText) || active().getTipo() != "text")
-				return;
+	        if(Utils.isUndefined(activeText) || active().getTipo() != "text")
+	            return;
 
-			var style = document.getElementById("txt"+activeText).style;
+	        var style = document.getElementById("txt"+activeText).style;
 			
-			style.fontFamily = font;
+	        style.fontFamily = font;
 
-			var spec = {
-				id: activeText,
-				tipo: "text",
-				font: font,
-				fontSize: style.fontSize.split("em")[0]
-			};
+	        var spec = {
+	            id: activeText,
+	            tipo: "text",
+	            font: font,
+	            fontSize: style.fontSize.split("em")[0]
+	        };
 			
-			var command = concreteEditFontCommand(spec);
- 			inv.execute(command);
+	        var command = concreteEditFontCommand(spec);
+	        inv.execute(command);
  
-			loader.addUpdate(activeText);
- 		}
+	        loader.addUpdate(activeText);
+	    }
 
-        $scope.aggiornaTesto = function(textId, textContent){
-        	console.log(textContent);
-			var spec = {
-				id: textId,
-				tipo: "text",
-				content: textContent
-			};
+	    $scope.aggiornaTesto = function(textId, textContent){
+	        console.log(textContent);
+	        var spec = {
+	            id: textId,
+	            tipo: "text",
+	            content: textContent
+	        };
 
 
-			var command = concreteEditContentCommand(spec);
-			inv.execute(command);
+	        var command = concreteEditContentCommand(spec);
+	        inv.execute(command);
 
-			loader.addUpdate(textId);
-		}
+	        loader.addUpdate(textId);
+	    }
 
-		//Gestione media
-		$scope.mediaControl = function(){
-			mediaControl();
-		}
+	    //Gestione media
+	    $scope.mediaControl = function(){
+	        mediaControl();
+	    }
 
-		$scope.annullaModifica = function(){
-			if(inv.getUndoStack()){
-				var annulla = inv.undo(); //insert edit delete editpath
+	    $scope.annullaModifica = function(){
+	        if(inv.getUndoStack()){
+	            var annulla = inv.undo(); //insert edit delete editpath
 
-				switch(annulla.action){
-					case "insert": 
-						loader.addInsert(annulla.id);
-						break;
-					case "edit": 
-						loader.addUpdate(annulla.id);
-						break;
-					case "delete": 
-						loader.addDelete(annulla.type, annulla.id);
-						break;
-					case "editpath": 
-						loader.addPaths();
-						break;
-				}
-			}
-		}
-		$scope.ripristinaModifica = function(){
-			if(inv.getRedoStack()){
-				var annulla = inv.redo(); //insert edit delete editpath
+	            switch(annulla.action){
+	                case "insert": 
+	                    loader.addInsert(annulla.id);
+	                    break;
+	                case "edit": 
+	                    loader.addUpdate(annulla.id);
+	                    break;
+	                case "delete": 
+	                    loader.addDelete(annulla.type, annulla.id);
+	                    break;
+	                case "editpath": 
+	                    loader.addPaths();
+	                    break;
+	            }
+	        }
+	    }
+	    $scope.ripristinaModifica = function(){
+	        if(inv.getRedoStack()){
+	            var annulla = inv.redo(); //insert edit delete editpath
 
-				switch(annulla.action){
-					case "insert": 
-						loader.addInsert(annulla.id);
-						break;
-					case "edit": 
-						loader.addUpdate(annulla.id);
-						break;
-					case "delete": 
-						loader.addDelete(annulla.type, annulla.id);
-						break;
-					case "editpath": 
-						loader.addPaths();
-						break;
-				}
-			}
-		}
+	            switch(annulla.action){
+	                case "insert": 
+	                    loader.addInsert(annulla.id);
+	                    break;
+	                case "edit": 
+	                    loader.addUpdate(annulla.id);
+	                    break;
+	                case "delete": 
+	                    loader.addDelete(annulla.type, annulla.id);
+	                    break;
+	                case "editpath": 
+	                    loader.addPaths();
+	                    break;
+	            }
+	        }
+	    }
 		
-		$scope.ruotaElemento = function(value, spec){
-			if(Utils.isObject(spec)){
-				rotate(spec.id, value);
-			}
-			else{
-				var activeElement = active().getId();
-				var tipoElement = active().getTipo();
+	    $scope.ruotaElemento = function(value, spec){
+	        if(Utils.isObject(spec)){
+	            rotate(spec.id, value);
+	        }
+	        else{
+	            var activeElement = active().getId();
+	            var tipoElement = active().getTipo();
 
-				rotate(activeElement, value);
+	            rotate(activeElement, value);
 
-				var spec = {
-					id: activeElement,
-					tipo: tipoElement,
-					rotation: value
-				}
+	            var spec = {
+	                id: activeElement,
+	                tipo: tipoElement,
+	                rotation: value
+	            }
 
-				var command = concreteEditRotationCommand(spec);
-				inv.execute(command);
+	            var command = concreteEditRotationCommand(spec);
+	            inv.execute(command);
 
-				loader.addUpdate(activeElement);
-			}
-		}
+	            loader.addUpdate(activeElement);
+	        }
+	    }
 
-		$scope.muoviElemento = function(spec){
-			if(Utils.isObject(spec) && !spec.toUpdate){
-				var style = document.getElementById(spec.id).style;
-				style.top = spec.yIndex + "px";
-				style.left = spec.xIndex + "px";
-			}
-			else{
-				var tipoElement;
-				var idElement;
-				if(Utils.isObject(spec)){
-					tipoElement = getTipo(spec.id);
-					idElement = spec.id;
-				}
-				else{
-					tipoElement = active().getTipo();
-					idElement = active().getId();
-				}
-				console.log(idElement);
-				var style = document.getElementById(idElement).style;
-				var top = Number(style.top.split("px")[0]);
-				var left = Number(style.left.split("px")[0]);
+	    $scope.muoviElemento = function(spec){
+	        if(Utils.isObject(spec) && !spec.toUpdate){
+	            var style = document.getElementById(spec.id).style;
+	            style.top = spec.yIndex + "px";
+	            style.left = spec.xIndex + "px";
+	        }
+	        else{
+	            var tipoElement;
+	            var idElement;
+	            if(Utils.isObject(spec)){
+	                tipoElement = getTipo(spec.id);
+	                idElement = spec.id;
+	            }
+	            else{
+	                tipoElement = active().getTipo();
+	                idElement = active().getId();
+	            }
+	            console.log(idElement);
+	            var style = document.getElementById(idElement).style;
+	            var top = Number(style.top.split("px")[0]);
+	            var left = Number(style.left.split("px")[0]);
 				
-				var spec = {
-					id: idElement,
-					tipo: tipoElement,
-					yIndex: top,
-					xIndex: left
-				};
+	            var spec = {
+	                id: idElement,
+	                tipo: tipoElement,
+	                yIndex: top,
+	                xIndex: left
+	            };
 
-				var command = concreteEditPositionCommand(spec);
-				inv.execute(command);
+	            var command = concreteEditPositionCommand(spec);
+	            inv.execute(command);
 
-				loader.addUpdate(idElement);
-			}
-		}
+	            loader.addUpdate(idElement);
+	        }
+	    }
 
-		var getTipo = function(id){
-			var type;
-			var element = $("#" + id);
-			if(element.hasClass("frame"))
-				type="frame";
-			else if(element.hasClass("image"))
-				type="image";
-			else if(element.hasClass("SVG"))
-				type="SVG";
-			else if(element.hasClass("text"))
-				type="text";
-			else if(element.hasClass("audio"))
-				type="audio";
-			else if(element.hasClass("video"))
-				type="video";
+	    var getTipo = function(id){
+	        var type;
+	        var element = $("#" + id);
+	        if(element.hasClass("frame"))
+	            type="frame";
+	        else if(element.hasClass("image"))
+	            type="image";
+	        else if(element.hasClass("SVG"))
+	            type="SVG";
+	        else if(element.hasClass("text"))
+	            type="text";
+	        else if(element.hasClass("audio"))
+	            type="audio";
+	        else if(element.hasClass("video"))
+	            type="video";
 			
-			return type;
-		}
-		$scope.ridimensionaElemento = function(spec){
-			if(Utils.isObject(spec)){
-				var style = document.getElementById(spec.id).style;
-				style.height = spec.height + "px";
-				style.width = spec.width + "px";
-			}
-			else{
-				var tipoElement = active().getTipo();
-				var idElement = active().getId();
-				var style = document.getElementById(idElement).style;
+	        return type;
+	    }
+	    $scope.ridimensionaElemento = function(spec){
+	        if(Utils.isObject(spec)){
+	            var style = document.getElementById(spec.id).style;
+	            style.height = spec.height + "px";
+	            style.width = spec.width + "px";
+	        }
+	        else{
+	            var tipoElement = active().getTipo();
+	            var idElement = active().getId();
+	            var style = document.getElementById(idElement).style;
 
-				var spec = {
-					id: idElement,
-					tipo: tipoElement
-				};
+	            var spec = {
+	                id: idElement,
+	                tipo: tipoElement
+	            };
 
-				if(tipoElement === "frame"){//c'erano outerheight e outerwidth ma non li prende
-					spec.height = Number(style.height.split("px")[0]);
-					spec.width = Number(style.width.split("px")[0]);;
-				}
-				else if(tipoElement === "text"){
-					var thistext = document.getElementById("txt" + idElement).style;
-					spec.height = Number(thistext.height.split("px")[0]);
-					spec.width = Number(thistext.width.split("px")[0]);
-					spec.waste = Number(thistext.left.split("px")[0]);
-				}
-				else if(tipoElement === "image"){
-					var immagine = document.getElementById("image" + idElement).style;
-					spec.height = Number(immagine.height.split("px")[0]);
-					spec.width = Number(immagine.width.split("px")[0]);
-					spec.waste = (Number(immagine.width.split("px")[0]) - Number(immagine.outerWidth.split("px")[0]))/2;
-				}
-				else if(tipoElement === "audio"){
-					spec.height = Number(style.height.split("px")[0]);
-					spec.width = Number(style.width.split("px")[0]);
-				}
-				else if(tipoElement === "video"){
-					var thisvideo = document.getElementById("video" + idElement).style;
-					spec.height = Number(thisvideo.outerHeight.split("px")[0]);
-					spec.width = Number(thisvideo.outerWidth.split("px")[0]);
-					spec.waste = (Number(thisvideo.width.split("px")[0]) - Number(thisvideo.outerWidth.split("px")[0]))/2;
-				}
+	            if(tipoElement === "frame"){//c'erano outerheight e outerwidth ma non li prende
+	                spec.height = Number(style.height.split("px")[0]);
+	                spec.width = Number(style.width.split("px")[0]);;
+	            }
+	            else if(tipoElement === "text"){
+	                var thistext = document.getElementById("txt" + idElement).style;
+	                spec.height = Number(thistext.height.split("px")[0]);
+	                spec.width = Number(thistext.width.split("px")[0]);
+	                spec.waste = Number(thistext.left.split("px")[0]);
+	            }
+	            else if(tipoElement === "image"){
+	                var immagine = document.getElementById("image" + idElement).style;
+	                spec.height = Number(immagine.height.split("px")[0]);
+	                spec.width = Number(immagine.width.split("px")[0]);
+	                spec.waste = (Number(immagine.width.split("px")[0]) - Number(immagine.outerWidth.split("px")[0]))/2;
+	            }
+	            else if(tipoElement === "audio"){
+	                spec.height = Number(style.height.split("px")[0]);
+	                spec.width = Number(style.width.split("px")[0]);
+	            }
+	            else if(tipoElement === "video"){
+	                var thisvideo = document.getElementById("video" + idElement).style;
+	                spec.height = Number(thisvideo.outerHeight.split("px")[0]);
+	                spec.width = Number(thisvideo.outerWidth.split("px")[0]);
+	                spec.waste = (Number(thisvideo.width.split("px")[0]) - Number(thisvideo.outerWidth.split("px")[0]))/2;
+	            }
 
-				console.log(spec);
+	            console.log(spec);
 
-				var command = concreteEditSizeCommand(spec);
-				inv.execute(command);
+	            var command = concreteEditSizeCommand(spec);
+	            inv.execute(command);
 
-				loader.addUpdate(idElement);
-			}
-		}
+	            loader.addUpdate(idElement);
+	        }
+	    }
 
 	    //aggiungi al percorso principale
-		$scope.aggiungiMainPath = function (spec) {
-			if(Utils.isObject(spec)){
-				mainPath().addToMainPath(spec.id,spec.pos);
-			}
-			else {
-				var activeElement = active().getId();
-			    mainPath().addToMainPath(activeElement,0);
+	    $scope.aggiungiMainPath = function (spec) {
+	        if(Utils.isObject(spec)){
+	            mainPath().addToMainPath(spec.id,spec.pos);
+	        }
+	        else {
+	            var activeElement = active().getId();
+	            mainPath().addToMainPath(activeElement,0);
 
-				var spec = {
-			    	id: activeElement
-			    };
-			    var trovato = false;
-			    var percorso = mainPath().getPercorso();
-			    for(var i=0; i < percorso.length && !trovato; ++i)
-			    	if(percorso[i] == activeElement){
-			    		spec.pos = i;
-			    		trovato = true;
-			    	}
+	            var spec = {
+	                id: activeElement
+	            };
+	            var trovato = false;
+	            var percorso = mainPath().getPercorso();
+	            for(var i=0; i < percorso.length && !trovato; ++i)
+	                if(percorso[i] == activeElement){
+	                    spec.pos = i;
+	                    trovato = true;
+	                }
 
-			    var command = concreteAddToMainPathCommand(spec);
-				inv.execute(command);
+	            var command = concreteAddToMainPathCommand(spec);
+	            inv.execute(command);
 
-				loader.addPaths();
-			}
-		}
+	            loader.addPaths();
+	        }
+	    }
 
-		$scope.rimuoviMainPath = function (id, spec) {
-			if(Utils.isObject(spec)){
-				mainPath().removeFromMainPath(spec);
-			}
-			else{
-			    mainPath().removeFromMainPath(id);
+	    $scope.rimuoviMainPath = function (id, spec) {
+	        if(Utils.isObject(spec)){
+	            mainPath().removeFromMainPath(spec);
+	        }
+	        else{
+	            mainPath().removeFromMainPath(id);
 
-			    console.log("qui");
-			    var command = concreteRemoveFromMainPathCommand(id);
-				inv.execute(command);
-				console.log("li");
-				loader.addPaths();
+	            console.log("qui");
+	            var command = concreteRemoveFromMainPathCommand(id);
+	            inv.execute(command);
+	            console.log("li");
+	            loader.addPaths();
 
-				console.log(insertEditRemove().getPresentazione());
-			}
-		}
+	            console.log(insertEditRemove().getPresentazione());
+	        }
+	    }
 
-		$scope.portaAvanti = function(){
-			var idElement = active().getId();
-			portaAvanti(idElement);
+	    $scope.portaAvanti = function(){
+	        var idElement = active().getId();
+	        portaAvanti(idElement);
 
-			var style = $("#" + idElement);
+	        var style = $("#" + idElement);
 
-			var spec = {
-				zIndex: style.zIndex()
-			};
+	        var spec = {
+	            zIndex: style.zIndex()
+	        };
 
-			loader.addUpdate(idElement);
+	        loader.addUpdate(idElement);
 
-			//MODEL: CHI RICHIAMO?
-		}
-		$scope.portaDietro = function(){
-			var idElement = active().getId();
-			mandaDietro(idElement);
+	        //MODEL: CHI RICHIAMO?
+	    }
+	    $scope.portaDietro = function(){
+	        var idElement = active().getId();
+	        mandaDietro(idElement);
 
-			var style = $("#" + idElement);
+	        var style = $("#" + idElement);
 
-			var spec = {
-				zIndex: style.zIndex()
-			};
+	        var spec = {
+	            zIndex: style.zIndex()
+	        };
 			
-			loader.addUpdate(idElement);
-			//MODEL: CHI RICHIAMO?
-		}
+	        loader.addUpdate(idElement);
+	        //MODEL: CHI RICHIAMO?
+	    }
 
-		$scope.config = {};
-		$scope.model = {};
-
-		$scope.bookmarks = function () {
-		  
-		};
+	    $scope.config = {};
+	    $scope.model = {};
+	    $scope.bookmarks = {buttons : 0};
+	    $scope.$watch(function () { return active().getId() }, function (newValue, oldValue) {
+	        console.log("cambio");
+	        console.log(newValue);
+	        if (newValue) {
+	            $scope.bookmarks.button = insertEditRemove().getElement(newValue).bookmark;
+	            if (newValue == 0) {
+	                document.getElementById("bookmarkButton").innerHTML = ' <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>'
+	            }
+	            else if (newValue == 1)
+	                document.getElementById("bookmarkButton").innerHTML = '<md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
+	        }
+	    });
 
 		var impostaPrimoSfondo = function(param){
 			var spec = {
@@ -1068,12 +1092,11 @@ premiApp.directive('printChoichePaths', function ($compile) {
         }
     };
 });
-/*
-premiApp.directive('bookmarkButton', function () {
-    var button;
-    
-    if (active().getId() && insertEditRemove().getElement(active().getId()).bookmark == 0) {
-        button = ' <md-button class="menu md-button md-default-theme" id="addBookmark" >  <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>  </md-button>';
-    }
-    return button;
-});*/
+
+premiApp.directive('bookmarkButton', function ($compile) {
+    var directive = {
+        restrict: 'E',
+        template: ""
+    };
+    return directive;
+});

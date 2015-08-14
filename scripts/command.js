@@ -607,6 +607,24 @@ var concreteEditColorCommand = function (spec) {
     return public;
 };
 
+var concreteEditBookmarkCommand = function (spec) {
+    public = abstractCommand(spec);
+    public.doAction = function () {
+        public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
+        console.log(JSON.stringify(public.getEnabler().getElement(spec.id)));
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
+    };
+    public.undoAction = function () {
+        public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
+    };
+    return public;
+}
+
 var concreteEditFontCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};

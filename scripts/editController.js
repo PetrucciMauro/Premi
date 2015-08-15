@@ -141,8 +141,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        console.log("partito il save");
 	    }
 
-	    //$interval(save, 30000);
-	    var intervalSave = $interval(save, 30000);
+	    $interval(save, 3);
+	    var intervalSave = $interval(save, 3);
 	    $scope.$on("$locationChangeStart", function(){
 	        save();
 	        $interval.cancel(intervalSave);
@@ -842,7 +842,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	    $scope.config = {};
 	    $scope.model = {};
-	    $scope.bookmarks = { buttons: 0 };
+	    $scope.bookmarks = {buttons : 0};
 	    $scope.value = active().getId();
 	    $scope.changeActive=function(){
 	        console.log("cambio " + active().getId());
@@ -851,11 +851,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            console.log(insertEditRemove().getElement(parseInt(active().getId())));
 	            if ($scope.bookmarks.button != insertEditRemove().getElement(active().getId()).bookmark)
 	                $scope.bookmarks.button = insertEditRemove().getElement(active().getId()).bookmark;
-	            if ($scope.bookmarks.button == 0) {
-	                document.getElementById("bookmarkButton").innerHTML = ' <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
+	            console.log("bookmark " + $scope.bookmarks.button);
+	           /*if ($scope.bookmarks.button == 0) {
+	                //document.getElementById("bookmarkButton").innerHTML = ' <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
 	            }
-	            else if ($scope.bookmarks.button == 1)
-	                document.getElementById("bookmarkButton").innerHTML = '<md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
+	            else if ($scope.bookmarks.button == 1) { }
+	             //   document.getElementById("bookmarkButton").innerHTML = '<md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';*/
 	        }
 	    };
 
@@ -1097,9 +1098,36 @@ premiApp.directive('printChoichePaths', function ($compile) {
     };
 });
 
-premiApp.directive('bookmarkButton', function ($compile) {
+/*premiApp.directive('bookmarkButton', function ($compile) {
     var directive = {
         restrict: 'E',
-        template: '<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()">  </md-button>'    };
+            scope : {
+                val : active().getId()
+            },
+        link: function(scope, element){
+            scope.$watch('val', function (newValue, oldValue) {
+                if (newValue)
+                    console.log("I see a data change!");
+            }, true);
+
+            //element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
+        //    element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
+        }
+    }
     return directive;
+});*/
+
+
+premiApp.directive('bookmarkButton', function () {
+    return {      
+        restrict: 'E',
+        controller: 'EditController',
+        replace: true,
+        link: function (scope, element, attrs) {
+            scope.$watch(scope.bookmarks.buttons, function () {
+                element.text("I see a data change! " + scope.bookmarks.buttons);
+                console.log("ciao");
+            }, true);
+        }
+    }
 });

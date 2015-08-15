@@ -141,8 +141,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        console.log("partito il save");
 	    }
 
-	    $interval(save, 3);
-	    var intervalSave = $interval(save, 3);
+	    $interval(save, 30000);
+	    var intervalSave = $interval(save, 30000);
 	    $scope.$on("$locationChangeStart", function(){
 	        save();
 	        $interval.cancel(intervalSave);
@@ -849,8 +849,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        if (active().getId() && insertEditRemove().getElement(active().getId())) {
 	            console.log("attivo " + active().getId());
 	            console.log(insertEditRemove().getElement(parseInt(active().getId())));
-	            if ($scope.bookmarks.button != insertEditRemove().getElement(active().getId()).bookmark)
-	                $scope.bookmarks.button = insertEditRemove().getElement(active().getId()).bookmark;
+	            if ($scope.bookmarks.buttons != insertEditRemove().getElement(active().getId()).bookmark)
+	                $scope.bookmarks.buttons = insertEditRemove().getElement(active().getId()).bookmark;
 	            console.log("bookmark " + $scope.bookmarks.button);
 	           /*if ($scope.bookmarks.button == 0) {
 	                //document.getElementById("bookmarkButton").innerHTML = ' <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
@@ -1119,14 +1119,18 @@ premiApp.directive('printChoichePaths', function ($compile) {
 
 
 premiApp.directive('bookmarkButton', function () {
+    var cont = 0;
     return {      
         restrict: 'E',
-        controller: 'EditController',
+        
         replace: true,
         link: function (scope, element, attrs) {
-            scope.$watch(scope.bookmarks.buttons, function () {
-                element.text("I see a data change! " + scope.bookmarks.buttons);
-                console.log("ciao");
+            attrs.$observe('attr', function (val) {
+                if (val == 0)
+                    element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
+                    
+                else if (val==1)
+                    element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
             }, true);
         }
     }

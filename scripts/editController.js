@@ -508,6 +508,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        obj.id = active().getId();
 	        var command = concreteEditBookmarkCommand(obj);
 	        inv.execute(command);
+	        $scope.changeActive();
 	    }
 
 	    //Gestione media
@@ -841,19 +842,22 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	    $scope.config = {};
 	    $scope.model = {};
-	    $scope.bookmarks = {buttons : 0};
-	    $scope.$watch(function () { return active().getId() }, function (newValue, oldValue) {
-	        console.log("cambio");
-	        console.log(newValue);
-	        if (newValue) {
-	            $scope.bookmarks.button = insertEditRemove().getElement(newValue).bookmark;
-	            if (newValue == 0) {
-	                document.getElementById("bookmarkButton").innerHTML = ' <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>'
+	    $scope.bookmarks = { buttons: 0 };
+	    $scope.value = active().getId();
+	    $scope.changeActive=function(){
+	        console.log("cambio " + active().getId());
+	        if (active().getId() && insertEditRemove().getElement(active().getId())) {
+	            console.log("attivo " + active().getId());
+	            console.log(insertEditRemove().getElement(parseInt(active().getId())));
+	            if ($scope.bookmarks.button != insertEditRemove().getElement(active().getId()).bookmark)
+	                $scope.bookmarks.button = insertEditRemove().getElement(active().getId()).bookmark;
+	            if ($scope.bookmarks.button == 0) {
+	                document.getElementById("bookmarkButton").innerHTML = ' <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
 	            }
-	            else if (newValue == 1)
+	            else if ($scope.bookmarks.button == 1)
 	                document.getElementById("bookmarkButton").innerHTML = '<md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
 	        }
-	    });
+	    };
 
 		var impostaPrimoSfondo = function(param){
 			var spec = {
@@ -1096,7 +1100,6 @@ premiApp.directive('printChoichePaths', function ($compile) {
 premiApp.directive('bookmarkButton', function ($compile) {
     var directive = {
         restrict: 'E',
-        template: ""
-    };
+        template: '<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()">  </md-button>'    };
     return directive;
 });

@@ -39,6 +39,7 @@ var active=function(){
 		that.select=function(id){
 			clearMenu();
 			that.deselect();
+			
 			private.element=document.getElementById(id);
 			console.log(private.element);
 			console.log(id);
@@ -50,7 +51,9 @@ var active=function(){
 			private.id = id;
 			deselezionaPercorso(id);
 			selezionaPercorso(id);
+			angular.element(content).scope().changeActive();
 			updateDraggable();
+			
 			
 		};
 		that.getId=function(){

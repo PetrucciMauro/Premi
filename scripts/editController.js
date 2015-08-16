@@ -764,7 +764,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    //aggiungi al percorso principale
 	    $scope.aggiungiMainPath = function (spec) {
 	        if(Utils.isObject(spec)){
-	            mainPath().addToMainPath(spec.id,spec.pos);
+	            mainPath().addToMainPath(spec.id, spec.pos);
+                
 	        }
 	        else {
 	            var activeElement = active().getId();
@@ -786,7 +787,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            loader.addPaths();
 	        }
-
+	        $scope.canHaveBookmark = true;
 	        $scope.canAddBookmark = true;
 	        $scope.canRemoveBookmark = false;
 	        safeApply();
@@ -806,6 +807,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            console.log(insertEditRemove().getPresentazione());
 	        }
+	        $scope.canHaveBookmark = false;
 	        $scope.updateBookmark(id);
 	    }
 
@@ -874,13 +876,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    	if(!$scope.$$phase)
 	    		$scope.$apply();
 	    }
-
+	    $scope.canHaveBookmark = false;
 	    $scope.canAddBookmark = false;
 	    $scope.canRemoveBookmark = false;
 	    $scope.AddBookmark = function(spec){
 	    	if(Utils.isObject(spec)){
 	    		$scope.canAddBookmark = false;
 	    		$scope.canRemoveBookmark = true;
+	    		$scope.canHaveBookmark = true;
 	    		safeApply();
 	    	}
 	    	else{
@@ -888,11 +891,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		    	var ris = false
 
 		    	if(Utils.isObject(idElement)){
-			    	if(inPath(idElement)){
-				    	var bookmark = insertEditRemove().getElement(idElement).bookmark;
-				    	if(bookmark == 0)
-				    		ris = true;
-			    	}
+		    	    if (inPath(idElement)) {
+		    	        var bookmark = insertEditRemove().getElement(idElement).bookmark;
+		    	        $scope.canHaveBookmark = true;
+		    	        if (bookmark == 0)
+		    	            ris = true;
+		    	    }
+		    	    else
+		    	        $scope.canHaveBookmark = false;
 			    }
 
 			    $scope.canAddBookmark = ris;
@@ -940,15 +946,19 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
             loader.addUpdate(idElement);
 
-            if($scope.canAddBookmark == true){
+            if ($scope.canAddBookmark == true) {
+                $scope.canHaveBookmark = true;
             	$scope.canAddBookmark = false;
             	$scope.canRemoveBookmark = true;
             }
-            else{
+            else {
+                $scope.canHaveBookmark = true;
             	$scope.canAddBookmark = true;
             	$scope.canRemoveBookmark = false;
             }
-            
+            if (!$scope.canAddBookmark && !$scope.canRemoveBookmark) {
+                $scope.canHaveBookmark = false;
+            }
             safeApply();
 	    }
 

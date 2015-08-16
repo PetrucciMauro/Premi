@@ -1112,8 +1112,8 @@ premiApp.directive('bookmarkButton', function ($compile) {
                     if (child) {
                         child.parentNode.removeChild(child);
                     }
-                
-                if (val == 0) {
+                   
+                    if (val == 0) {       
                     element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip id="bookMarkToolTip">Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
                 }
                 else if (val == 1) {

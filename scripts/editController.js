@@ -141,8 +141,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        console.log("partito il save");
 	    }
 
-	    $interval(save, 30000);
-	    var intervalSave = $interval(save, 30000);
+	    $interval(save, 3);
+	    var intervalSave = $interval(save, 3);
 	    $scope.$on("$locationChangeStart", function(){
 	        save();
 	        $interval.cancel(intervalSave);
@@ -1118,7 +1118,7 @@ premiApp.directive('printChoichePaths', function ($compile) {
 });*/
 
 
-premiApp.directive('bookmarkButton', function () {
+premiApp.directive('bookmarkButton', function ($compile) {
     var cont = 0;
     return {      
         restrict: 'E',
@@ -1127,10 +1127,10 @@ premiApp.directive('bookmarkButton', function () {
         link: function (scope, element, attrs) {
             attrs.$observe('attr', function (val) {
                 if (val == 0)
-                    element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
+                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
                     
                 else if (val==1)
-                    element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
+                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
             }, true);
         }
     }

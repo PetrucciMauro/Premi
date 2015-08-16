@@ -793,6 +793,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            loader.addPaths();
 	        }
+	       // $scope.changeActive();
 	    }
 
 	    $scope.rimuoviMainPath = function (id, spec) {
@@ -810,6 +811,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            console.log(insertEditRemove().getPresentazione());
 	        }
+	        $scope.changeActive();
 	    }
 
 	    $scope.portaAvanti = function(){
@@ -849,15 +851,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        if (active().getId() && insertEditRemove().getElement(active().getId())) {
 	            console.log("attivo " + active().getId());
 	            console.log(insertEditRemove().getElement(parseInt(active().getId())));
-	            if ($scope.bookmarks.buttons != insertEditRemove().getElement(active().getId()).bookmark)
+	            if (insertEditRemove().getPaths().main.indexOf(active().getId()) == -1)
+	                $scope.bookmarks.buttons = "undefined";
+	            else if ($scope.bookmarks.buttons != insertEditRemove().getElement(active().getId()).bookmark)
 	                $scope.bookmarks.buttons = insertEditRemove().getElement(active().getId()).bookmark;
-	            console.log("bookmark " + $scope.bookmarks.button);
-	           /*if ($scope.bookmarks.button == 0) {
-	                //document.getElementById("bookmarkButton").innerHTML = ' <md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';
-	            }
-	            else if ($scope.bookmarks.button == 1) { }
-	             //   document.getElementById("bookmarkButton").innerHTML = '<md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>';*/
+	            console.log("bookmark " + $scope.bookmarks.buttons);
 	        }
+	        //$scope.$apply();
 	    };
 
 		var impostaPrimoSfondo = function(param){
@@ -1112,13 +1112,16 @@ premiApp.directive('bookmarkButton', function ($compile) {
                     if (child) {
                         child.parentNode.removeChild(child);
                     }
-                   
-                    if (val == 0) {       
-                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip id="bookMarkToolTip">Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
-                }
-                else if (val == 1) {
-                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip id="bookMarkToolTip">Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
-                }
+                    if (val =="undefined" ) {
+                        element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-disabled="isDisabled"><md-icon md-svg-src="assets/svg/bookmark_not_active.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
+                    }
+
+                    else if (val == 0) {                        
+                        element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip id="bookMarkToolTip">Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
+                    }
+                    else if (val == 1) {
+                        element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip id="bookMarkToolTip">Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
+                    }
             }, true);
         }
     }

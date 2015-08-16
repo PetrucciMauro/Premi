@@ -610,8 +610,15 @@ var concreteEditColorCommand = function (spec) {
 var concreteEditBookmarkCommand = function (spec) {
     public = abstractCommand(spec);
     public.doAction = function () {
+
         public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
         console.log(JSON.stringify(public.getEnabler().getElement(spec.id)));
+        if (public.getExecuted() === 0) {
+            console.log("setto executed");
+            public.setExecuted(1);        }
+        else {
+            angular.element($("#content")).scope().changeActive();
+        }
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
@@ -620,6 +627,7 @@ var concreteEditBookmarkCommand = function (spec) {
         public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
         var obj = public.getObj();
         obj.action = "edit";
+        angular.element($("#content")).scope().changeActive();
         return obj;
     };
     return public;

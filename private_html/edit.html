@@ -227,9 +227,14 @@
                     <md-icon md-svg-src="assets/svg/addmainpath.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
                 </md-button>
                 <md-menu-content width="2">
-                    <md-menu-item>
+                    <md-menu-item ng-show="!inPath()">
                         <md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton" ng-click="aggiungiMainPath()">
                             <p md-menu-align-target>Aggiungi frame al percorso principare</p>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-show="inPath()">
+                        <md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton" ng-click="aggiungiMainPath()">
+                            <p md-menu-align-target>Crea un percorso scelta</p>
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>

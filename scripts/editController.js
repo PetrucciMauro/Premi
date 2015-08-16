@@ -142,7 +142,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    }
 
 	    //$interval(save, 3);
-	    var intervalSave = $interval(save(), 30000);
+	    var intervalSave = $interval(save(), 3);
 	    $scope.$on("$locationChangeStart", function(){
 	        save();
 	        $interval.cancel(intervalSave);

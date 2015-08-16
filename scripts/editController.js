@@ -1098,25 +1098,6 @@ premiApp.directive('printChoichePaths', function ($compile) {
     };
 });
 
-/*premiApp.directive('bookmarkButton', function ($compile) {
-    var directive = {
-        restrict: 'E',
-            scope : {
-                val : active().getId()
-            },
-        link: function(scope, element){
-            scope.$watch('val', function (newValue, oldValue) {
-                if (newValue)
-                    console.log("I see a data change!");
-            }, true);
-
-            //element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
-        //    element.html('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>');
-        }
-    }
-    return directive;
-});*/
-
 
 premiApp.directive('bookmarkButton', function ($compile) {
     var cont = 0;
@@ -1126,11 +1107,18 @@ premiApp.directive('bookmarkButton', function ($compile) {
         replace: true,
         link: function (scope, element, attrs) {
             attrs.$observe('attr', function (val) {
-                if (val == 0)
-                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
-                    
-                else if (val==1)
-                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip>Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
+                
+                    var child = document.getElementById("bookMarkToolTip");
+                    if (child) {
+                        child.parentNode.removeChild(child);
+                    }
+                
+                if (val == 0) {
+                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip id="bookMarkToolTip">Assegna bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
+                }
+                else if (val == 1) {
+                    element.html($compile('<md-button class="menu md-button md-default-theme" id="bookmarkButton" ng-click="addBookmark()"><md-tooltip id="bookMarkToolTip">Rimuovi bookmark</md-tooltip>  <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button>')(scope));
+                }
             }, true);
         }
     }

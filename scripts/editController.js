@@ -141,8 +141,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        console.log("partito il save");
 	    }
 
-	    $interval(save, 3);
-	    var intervalSave = $interval(save, 3);
+	    //$interval(save, 3);
+	    var intervalSave = $interval(save, 30000);
 	    $scope.$on("$locationChangeStart", function(){
 	        save();
 	        $interval.cancel(intervalSave);
@@ -503,13 +503,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	        loader.addUpdate(activeFrame);
 	    }
-	    $scope.addBookmark = function () {
-	        var obj = {};
-	        obj.id = active().getId();
-	        var command = concreteEditBookmarkCommand(obj);
-	        inv.execute(command);
-	        $scope.changeActive();
-	    }
 
 	    //Gestione media
 	    $scope.mediaControl = function(){
@@ -793,7 +786,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            loader.addPaths();
 	        }
-	       // $scope.changeActive();
 	    }
 
 	    $scope.rimuoviMainPath = function (id, spec) {
@@ -803,15 +795,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        else{
 	            mainPath().removeFromMainPath(id);
 
-	            console.log("qui");
 	            var command = concreteRemoveFromMainPathCommand(id);
 	            inv.execute(command);
-	            console.log("li");
+	            
 	            loader.addPaths();
 
 	            console.log(insertEditRemove().getPresentazione());
 	        }
-	        $scope.changeActive();
+	        $scope.updateBookmark(id);
 	    }
 
 	    $scope.portaAvanti = function(){
@@ -844,7 +835,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	    $scope.config = {};
 	    $scope.model = {};
-	    $scope.bookmarks = {buttons : 0};
+	   /* $scope.bookmarks = {buttons : 0};
 	    $scope.value = active().getId();
 	    $scope.changeActive=function(){
 	        console.log("cambio " + active().getId());
@@ -859,6 +850,60 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        }
 	        //$scope.$apply();
 	    };
+
+	    $scope.addBookmark = function () {
+	        var obj = {};
+	        obj.id = active().getId();
+	        var command = concreteEditBookmarkCommand(obj);
+	        inv.execute(command);
+	        $scope.changeActive();
+	    }*/
+	    $scope.inPath = function(){
+	    	var idElement = active().getId();
+	    	var ris = false;
+
+	    	if(Utils.isObject(idElement)){
+		    	var position = insertEditRemove().getPaths().main.indexOf(idElement);
+		    	
+		    	if(position != -1)
+		    		ris = true;
+		    }
+		    
+		    return ris;
+	    }
+	    $scope.hasBookmark = function(){
+	    	var ris = false;
+	    	var idElement = active().getId();
+
+	    	if(Utils.isObject(idElement)){
+	    		var element = insertEditRemove().getElement(idElement);
+
+	    		if(element.bookmark != 0)
+		    		ris = true;
+		    }
+		    
+	    	return ris;
+	    }
+
+	    $scope.updateBookmark = function(id){
+	    	var idElement;
+	    	if(Utils.isObject(id))
+	    		idElement = id;
+	    	else
+	    		idElement = active().getId();
+
+	    	var spec = {
+	    		id: idElement,
+	    		type: "frame"
+	    	}
+
+	    	var command = concreteEditBookmarkCommand(spec);
+            inv.execute(command);
+
+            loader.addUpdate(idElement);
+
+            console.log(insertEditRemove().getPresentazione());
+	    }
 
 		var impostaPrimoSfondo = function(param){
 			var spec = {
@@ -1098,7 +1143,7 @@ premiApp.directive('printChoichePaths', function ($compile) {
     };
 });
 
-
+/*
 premiApp.directive('bookmarkButton', function ($compile) {
     var cont = 0;
     return {      
@@ -1106,6 +1151,7 @@ premiApp.directive('bookmarkButton', function ($compile) {
         
         replace: true,
         link: function (scope, element, attrs) {
+
             attrs.$observe('attr', function (val) {
                 
                     var child = document.getElementById("bookMarkToolTip");
@@ -1125,4 +1171,4 @@ premiApp.directive('bookmarkButton', function ($compile) {
             }, true);
         }
     }
-});
+});*/

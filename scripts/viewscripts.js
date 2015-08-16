@@ -51,7 +51,7 @@ var active=function(){
 			private.id = id;
 			deselezionaPercorso(id);
 			selezionaPercorso(id);
-			angular.element(content).scope().changeActive();
+			//angular.element(content).scope().changeActive();
 			updateDraggable();
 			
 			

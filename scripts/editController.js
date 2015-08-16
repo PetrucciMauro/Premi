@@ -142,7 +142,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    }
 
 	    //$interval(save, 3);
-	    var intervalSave = $interval(save(), 3);
+	    var intervalSave = $interval(save, 30000);
 	    $scope.$on("$locationChangeStart", function(){
 	        save();
 	        $interval.cancel(intervalSave);
@@ -786,6 +786,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            loader.addPaths();
 	        }
+
+	        $scope.canAddBookmark = true;
+	        $scope.canRemoveBookmark = false;
+	        safeApply();
 	    }
 
 	    $scope.rimuoviMainPath = function (id, spec) {
@@ -858,31 +862,65 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        inv.execute(command);
 	        $scope.changeActive();
 	    }*/
-	    $scope.inPath = function(){
-	    	var idElement = active().getId();
-	    	var ris = false;
+	    var inPath = function(id){
+	    	var position = insertEditRemove().getPaths().main.indexOf(id);
+	    	
+	    	if(position != -1)
+	    		return true;
 
-	    	if(Utils.isObject(idElement)){
-		    	var position = insertEditRemove().getPaths().main.indexOf(idElement);
-		    	
-		    	if(position != -1)
-		    		ris = true;
-		    }
-		    
-		    return ris;
+		    return false;
 	    }
-	    $scope.hasBookmark = function(){
-	    	var ris = false;
-	    	var idElement = active().getId();
+	    var safeApply = function(){
+	    	if(!$scope.$$phase)
+	    		$scope.$apply();
+	    }
 
-	    	if(Utils.isObject(idElement)){
-	    		var element = insertEditRemove().getElement(idElement);
+	    $scope.canAddBookmark = false;
+	    $scope.canRemoveBookmark = false;
+	    $scope.AddBookmark = function(spec){
+	    	if(Utils.isObject(spec)){
+	    		$scope.canAddBookmark = false;
+	    		$scope.canRemoveBookmark = true;
+	    		safeApply();
+	    	}
+	    	else{
+		    	var idElement = active().getId();
+		    	var ris = false
 
-	    		if(element.bookmark != 0)
-		    		ris = true;
-		    }
-		    
-	    	return ris;
+		    	if(Utils.isObject(idElement)){
+			    	if(inPath(idElement)){
+				    	var bookmark = insertEditRemove().getElement(idElement).bookmark;
+				    	if(bookmark == 0)
+				    		ris = true;
+			    	}
+			    }
+
+			    $scope.canAddBookmark = ris;
+			    safeApply();
+			}
+	    }
+
+	    $scope.RemoveBookmark = function(spec){
+	    	if(Utils.isObject(spec)){
+	    		$scope.canAddBookmark = true;
+	    		$scope.canRemoveBookmark = false;
+	    		safeApply();
+	    	}
+	    	else{
+		    	var idElement = active().getId();
+		    	var ris = false;
+
+		    	if(Utils.isObject(idElement)){
+		    		if(inPath(idElement)){
+				    	var bookmark = insertEditRemove().getElement(idElement).bookmark;
+				    	if(bookmark != 0)
+				    		ris = true;
+				    }
+			    }
+			    
+		    	$scope.canRemoveBookmark = ris;
+		    	safeApply();
+	    	}
 	    }
 
 	    $scope.updateBookmark = function(id){
@@ -902,7 +940,16 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
             loader.addUpdate(idElement);
 
-            console.log(insertEditRemove().getPresentazione());
+            if($scope.canAddBookmark == true){
+            	$scope.canAddBookmark = false;
+            	$scope.canRemoveBookmark = true;
+            }
+            else{
+            	$scope.canAddBookmark = true;
+            	$scope.canRemoveBookmark = false;
+            }
+            
+            safeApply();
 	    }
 
 		var impostaPrimoSfondo = function(param){

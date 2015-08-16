@@ -52,6 +52,10 @@ var active=function(){
 			deselezionaPercorso(id);
 			selezionaPercorso(id);
 			//angular.element(content).scope().changeActive();
+			if($(private.element).hasClass("frame")){
+				angular.element(content).scope().AddBookmark();
+				angular.element(content).scope().RemoveBookmark();
+			}
 			updateDraggable();
 			
 			
@@ -463,8 +467,8 @@ var inserisciElemento=function(classe, spec){
 		xInit=$(this).position().left;
 		yInit=$(this).position().top;
 	});
-
-	active().select(div.id);
+	if(!spec)
+		active().select(div.id);
 
 	return div;
 }

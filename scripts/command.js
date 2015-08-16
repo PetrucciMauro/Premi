@@ -610,24 +610,29 @@ var concreteEditColorCommand = function (spec) {
 var concreteEditBookmarkCommand = function (spec) {
     public = abstractCommand(spec);
     public.doAction = function () {
-
-        public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
+        var bookmark = public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
         console.log(JSON.stringify(public.getEnabler().getElement(spec.id)));
         if (public.getExecuted() === 0) {
             console.log("setto executed");
             public.setExecuted(1);        }
         else {
-            angular.element($("#content")).scope().changeActive();
+            if(bookmark == 0)
+                angular.element($("#content")).scope().RemoveBookmark(spec);
+            else
+                angular.element($("#content")).scope().AddBookmark(spec);
         }
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
     };
     public.undoAction = function () {
-        public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
+        var bookmark = public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
         var obj = public.getObj();
         obj.action = "edit";
-        angular.element($("#content")).scope().changeActive();
+        if(bookmark == 0)
+            angular.element($("#content")).scope().RemoveBookmark(spec);
+        else
+            angular.element($("#content")).scope().AddBookmark(spec);
         return obj;
     };
     return public;

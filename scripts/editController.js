@@ -156,7 +156,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    $scope.inserisciFrame = function(spec){
 	        var frame = inserisciFrame(spec); //view
 
-	        if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
+	        if(!spec.id){//Se spec.id è definito significa che deve essere solamente aggiornata la view
 	            var style = document.getElementById(frame.id).style;
 	            var top = Number(style.top.split("px")[0]);
 	            var left = Number(style.left.split("px")[0]);
@@ -182,7 +182,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    $scope.inserisciTesto = function(spec){
 	        var text = inserisciTesto(spec); //view
 
-	        if(Utils.isUndefined(spec)){//Se spec è definito significa che deve essere solamente aggiornata la view
+	        if(!spec.id){//Se spec è definito significa che deve essere solamente aggiornata la view
 	            var thistext = $("#txt" + text.id);
 
 	            var style = document.getElementById(text.id).style;

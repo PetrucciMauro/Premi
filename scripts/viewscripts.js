@@ -1223,7 +1223,7 @@ $(function () {
 	        }
 
 	        if (((spec.top + $("#content").offset().top) > $("#content").offset().top) && (spec.top < ($("#content").offset().top + $("#content").height())) && ((spec.left + $("#content").offset().left) > $("#content").offset().left) && (spec.left < ($("#content").offset().left + $("#content").width())))
-	            inserisciFrame(spec);
+	            angular.element(content).scope().inserisciFrame(spec);
 	    }
 	});
 
@@ -1238,7 +1238,7 @@ $(function () {
 	            left: e.clientX - $("#content").offset().left
 	        }
 	        if (((spec.top + $("#content").offset().top) > $("#content").offset().top) && (spec.top < ($("#content").offset().top + $("#content").height())) && ((spec.left + $("#content").offset().left) > $("#content").offset().left) && (spec.left < ($("#content").offset().left + $("#content").width())))
-	        inserisciTesto(spec);
+	            angular.element(content).scope().inserisciTesto(spec);
 	    }
 	});
 });

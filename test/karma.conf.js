@@ -13,6 +13,8 @@ module.exports = function(config){
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-resource/angular-resource.js',
+      'bower_components/jquery/dist/jquery.js',
+
 
       'lib/ngStorage.js',
 
@@ -40,22 +42,22 @@ module.exports = function(config){
 
     autoWatch : true,
 
-    frameworks: ['jasmine'],
+    frameworks: ['mocha','jasmine'],
 
-    
+    browsers : ['PhantomJS'],
 
     plugins : [
+      'karma-mocha',
       'karma-jasmine',
       'karma-coverage',
       'karma-junit-reporter',
       'karma-phantomjs-launcher',
       'karma-coveralls',
-      'karma-requirejs'
  
     ],
-    
+
      preprocessors : {
-      '**/scripts/**/*.js': 'coverage'
+      '**/scripts/**/*.js': ['coverage']
    },
 
         // optionally, configure the reporter

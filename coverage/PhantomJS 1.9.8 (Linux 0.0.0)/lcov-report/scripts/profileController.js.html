@@ -15,10 +15,10 @@
 <div class="header low">
     <h1>Code coverage report for <span class="entity">scripts/profileController.js</span></h1>
     <h2>
-        Statements: <span class="metric">28% <small>(7 / 25)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Branches: <span class="metric">8.33% <small>(1 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Functions: <span class="metric">12.5% <small>(1 / 8)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
-        Lines: <span class="metric">28% <small>(7 / 25)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Statements: <span class="metric">8% <small>(2 / 25)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 12)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">0% <small>(0 / 8)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">8% <small>(2 / 25)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
         Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
     </h2>
     <div class="path"><a href="../index.html">All files</a> &#187; <a href="index.html">scripts/</a> &#187; profileController.js</div>
@@ -107,31 +107,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-yes">1</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -142,6 +138,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -153,7 +153,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -182,12 +182,12 @@
 var premiProfileController = angular.module('premiProfileController', ['premiService'])
 &nbsp;
 premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPages', 'Utils', 'Upload',
-	function($scope, Main, toPages, Utils, Upload) {
-		<span class="missing-if-branch" title="else path not taken" >E</span>if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
-			toPages.loginpage();
+<span class="fstat-no" title="function not covered" >	function($scope, Main, toPages, Utils, Upload) {</span>
+<span class="cstat-no" title="statement not covered" >		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato</span>
+<span class="cstat-no" title="statement not covered" >			toPages.loginpage();</span>
 &nbsp;
 &nbsp;
-		var getData = <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >		var getData = <span class="fstat-no" title="function not covered" >function(){</span></span>
 <span class="cstat-no" title="statement not covered" >			return {</span>
 				username: Main.getUser().user,
 				password: Utils.encrypt($scope.user.password),
@@ -203,7 +203,7 @@ premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPag
 			}
 		};*/
 &nbsp;
-		$scope.changepassword = <span class="fstat-no" title="function not covered" >function() {</span>
+<span class="cstat-no" title="statement not covered" >		$scope.changepassword = <span class="fstat-no" title="function not covered" >function() {</span></span>
 			//check che i campi pwd non siano vuoti
 <span class="cstat-no" title="statement not covered" >			if(Utils.isUndefined($scope.user) || Utils.isUndefined($scope.user.password) || Utils.isUndefined($scope.user.newpassword) || Utils.isUndefined($scope.user.confnewpassword))</span>
 <span class="cstat-no" title="statement not covered" >				throw new Error("I campi password non possono essere vuoti");</span>
@@ -229,7 +229,7 @@ premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPag
 			})
 		};
 &nbsp;
-		$scope.uploadmedia = <span class="fstat-no" title="function not covered" >function(files){</span>
+<span class="cstat-no" title="statement not covered" >		$scope.uploadmedia = <span class="fstat-no" title="function not covered" >function(files){</span></span>
 			//var file = (($('input[type=file]').val()).split('\\'))[2];
 			
 <span class="cstat-no" title="statement not covered" >            Upload.uploadmedia(files, <span class="fstat-no" title="function not covered" >function() {</span></span>
@@ -258,7 +258,7 @@ premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPag
 
 </div>
 <div class="footer">
-    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Aug 12 2015 14:57:06 GMT+0200 (CEST)</div>
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Aug 18 2015 15:35:00 GMT+0200 (CEST)</div>
 </div>
 <script src="../prettify.js"></script>
 <script>

@@ -1204,4 +1204,23 @@ $(function () {
 		}
 	});
 	$("#sortable").disableSelection();
+
+
+	$("#dragFrame").draggable({
+	    cursor: "move",
+	    cursorAt: { top: -12, left: -20 },
+	    helper: function (event) {
+	        return $("<div class='ui-widget-header'>I'm a custom helper</div>");
+	    }
+	});
 });
+
+function drag(div) {
+    $(div).draggable({
+        cursor: "move",
+        cursorAt: { top: -12, left: -20 },
+        helper: function (event) {
+            return $("<div class='ui-widget-header'>I'm a custom helper</div>");
+        }
+    });
+}

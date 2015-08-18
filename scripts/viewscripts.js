@@ -607,7 +607,7 @@ var inserisciMedia=function(x,classe, spec){
 }
 
 var inserisciImmagine=function(x, spec){
-	var div = inserisciMedia(x,"image", spec);
+    var div = inserisciMedia(x, "image", spec);
 	if(spec){
 		div.style.height = spec.height /*+ spec.waste*/ + "px";
 		div.style.width = spec.width /*+ spec.waste*/ + "px"; 

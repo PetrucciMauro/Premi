@@ -420,7 +420,7 @@ var inserisciElemento=function(classe, spec){
 	var id = contatore;
 
 	//TRADUTTORE EDIT
-	if(spec){
+	if(spec.id){
 		if(contatore < spec.id)//in contatore si salva l'id maggiore
 			contatore = spec.id;
 		id = spec.id;
@@ -436,8 +436,8 @@ var inserisciElemento=function(classe, spec){
 		}
 	}
 	else{
-		div.style.top = 0 + "px";
-		div.style.left = 0 + "px";
+		div.style.top = spec.top + "px" || 0;
+		div.style.left = spec.left + "px" || 0;
 		div.style.height = 230 + "px";
 		div.style.width = 230 + "px";
 		div.style.outerHeight = 230 + "px";
@@ -475,7 +475,8 @@ var inserisciElemento=function(classe, spec){
 	return div;
 }
 
-var inserisciFrame=function(spec){
+var inserisciFrame = function (spec) {
+    console.log("chiamato");
 	var div=inserisciElemento("frame", spec);
 	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
@@ -1208,10 +1209,21 @@ $(function () {
 
 	$("#dragFrame").draggable({
 	    cursor: "move",
-	    cursorAt: { top: -12, left: -20 },
-	    helper: function (event) {
-	        return $("<div class='ui-widget-header'>I'm a custom helper</div>");
-	    }
+	    cursorAt: { top: -12, left: 0 },
+	    helper: function (event, ui) {
+	        return $("<div id='positioning' class='frame'></div>");
+	    },
+	    drag: function(event, ui){
+	       
+	    },
+	    stop: function (event, ui) {
+	        var e = window.event;
+	        var spec = {
+	            top: e.clientY - $("#content").offset().top,
+	            left: e.clientX - $("#content").offset().left
+	        }
+	        inserisciFrame(spec);
+	}
 	});
 });
 

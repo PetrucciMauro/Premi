@@ -400,15 +400,13 @@ premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 		//ricorda l'id della presentazione su cui lavorare
 		var myPresentation = undefined;
 
-		var idEditManuel = undefined;
-
 		var shared = {
 			getPresentazione: function(idSlideShow) {
 				var idss = {};
 
 				if(Utils.isUndefined(idSlideShow)){
 					if(Utils.isObject(myPresentation))
-						return myPresentation;
+						idss = JSON.parse(myPresentation).meta.titolo;
 
 					if(Utils.isObject($localStorage.idMyPresentation))
 						idss = $localStorage.idMyPresentation;
@@ -421,11 +419,6 @@ premiService.factory('SharedData', ['Utils', '$localStorage', 'Main',
 					$localStorage.idMyPresentation = idss;
 				}
 				return myPresentation;
-			},
-			forEditManuel: function(json){
-				if(json)
-				idEditManuel = json;
-				return idEditManuel;
 			}
 		};
 

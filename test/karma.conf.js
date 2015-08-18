@@ -42,12 +42,12 @@ module.exports = function(config){
 
     autoWatch : true,
 
-    frameworks: ['mocha','jasmine'],
+    frameworks: ['jasmine'],
 
     browsers : ['PhantomJS'],
 
     plugins : [
-      'karma-mocha',
+
       'karma-jasmine',
       'karma-coverage',
       'karma-junit-reporter',

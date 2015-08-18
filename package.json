@@ -55,7 +55,8 @@
     "jsonwebtoken": "5.0.2",
     "mongoose":"4.0.7",
     "multer":"0.1.8",
-    "mongodb":"latest"
+    "mongodb":"latest",
+    "xmlhttprequest":"latest"
   },
   
   "scripts": {
@@ -64,7 +65,7 @@
     "prestart": "npm install",
     "start": "http-server -a 0.0.0.0 -p 8000",
     "pretest": "npm install",
-    "test": "./node_modules/mocha/bin/mocha",
+    "test": "./node_modules/mocha/bin/mocha ",
     "posttest": "./node_modules/.bin/karma start test/karma.conf.js --single-run ",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",

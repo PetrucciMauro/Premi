@@ -504,7 +504,7 @@ var inserisciTesto=function(spec){
 	var txt = document.createElement('textarea');
 
 	//TRADUTTORE EDIT
-	if(spec){
+	if(spec.id){
 		txt.style.color = spec.color;
 		txt.style.fontFamily = spec.font;
 		txt.style.fontSize = spec.fontSize + "em";
@@ -1206,15 +1206,14 @@ $(function () {
 	});
 	$("#sortable").disableSelection();
 
-
-	$("#dragFrame").draggable({
+	$(".dragElement").draggable({
 	    cursor: "move",
 	    cursorAt: { top: -12, left: 0 },
+	});
+
+	$("#dragFrame").draggable({
 	    helper: function (event, ui) {
 	        return $("<div id='positioning' class='frame'></div>");
-	    },
-	    drag: function(event, ui){
-	       
 	    },
 	    stop: function (event, ui) {
 	        var e = window.event;
@@ -1224,6 +1223,20 @@ $(function () {
 	        }
 	        inserisciFrame(spec);
 	}
+	});
+
+	$("#dragText").draggable({
+	    helper: function (event, ui) {
+	        return $("<div id='positioning' class='text' style='border: thin solid black' ></div>");
+	    },
+	    stop: function (event, ui) {
+	        var e = window.event;
+	        var spec = {
+	            top: e.clientY - $("#content").offset().top,
+	            left: e.clientX - $("#content").offset().left
+	        }
+	        inserisciTesto(spec);
+	    }
 	});
 });
 

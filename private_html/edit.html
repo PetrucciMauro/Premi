@@ -67,10 +67,10 @@
                 </md-button>
                 <md-menu-content width="2" >
                     <md-menu-item>
-                        <p md-menu-align-target  id="dragFrame">Inserisci Frame</p>
+                        <p md-menu-align-target  id="dragFrame" class="dragElement">Inserisci Frame</p>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="inserisciTesto()"> <p md-menu-align-target>Inserisci Testo</p></md-button>
+                        <p md-menu-align-target id="dragText" class="dragElement">Inserisci Testo</p>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button id="insertImage" class="fileContainer"><p id="insertImageActivator">Inserisci Immagine</p><input multiple type="file" id="imgLoader" name="Inserisci Immagine" onchange="angular.element(this).scope().inserisciImmagine(this.files)" /></md-button>

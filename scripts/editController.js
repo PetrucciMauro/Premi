@@ -1077,7 +1077,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					rotation: img.rotation,
 					ref: img.url
 				};
-				inserisciImmagine(undefined, spec);
+				
+				inserisciImmagine(spec.ref, spec);
 
 				if(prop !== 1){
 					ins.removeImage(spec.id);

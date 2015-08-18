@@ -225,7 +225,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            uploadmedia(files, function (file) {
 	                var fileurl = Upload.getFileUrl(files[0]);
-	                var img = inserisciImmagine(fileurl); //view
+	                var obj={ top: 0, 
+	                    left: 0};
+	                var img = inserisciImmagine(fileurl, obj); //view
 
 	                var style = document.getElementById(img.id).style;
 	                var top = Number(style.top.split("px")[0]);

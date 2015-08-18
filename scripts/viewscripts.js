@@ -404,7 +404,8 @@ function elimina(id) {
 	clearMenu();
 }
 
-var inserisciElemento=function(classe, spec){
+var inserisciElemento = function (classe, spec) {
+    console.log("inserisciElemento");
 	var div=document.createElement('div');
 	//TRADUTTORE NON MODIFICARE
 	var vdSize=l*0.10;
@@ -450,7 +451,7 @@ var inserisciElemento=function(classe, spec){
 	if(classe=="frame"){
 		document.getElementById("frames").appendChild(div);
 	}
-	else{
+	else {
 		document.getElementById("elements").appendChild(div);
 	}
 
@@ -567,22 +568,24 @@ var resizeDiv = function(that){
 	div.css("width",that.style.width);
 }
 
-var inserisciMedia=function(x,classe, spec){
+var inserisciMedia = function (x, classe, spec) {
+    console.log("inserisciMedia");
 	console.log(x);
-	
-	var div=inserisciElemento(classe, spec);
+
+	var div = inserisciElemento(classe, spec);
+	console.log("inseritoElemento");
 	var url;
-	if(spec)
+	if(spec.id)
 		url = spec.ref;
 	else
 		url = x;
 	var type;
 	var z=scale;
-	$(div).css({
+	/*$(div).css({
 		"-ms-transform": "scale("+1/z+")", // IE 9 
 		"-webkit-transform":"scale("+1/z+")", // Chrome, Safari, Opera 
 		"transform": "scale("+1/z+")",
-	});
+	});*/
 	if(classe==="image")
 		type="img";
 	else if(classe==="audio")
@@ -591,7 +594,7 @@ var inserisciMedia=function(x,classe, spec){
 		type="video";
 	var element=document.createElement(type);
 	//TRADUTTORE
-	if(!spec){
+	if(!spec.id){
 		var imgSize=l*0.10;
 		if(type==="img")
 			element.style.width=imgSize+"px";
@@ -608,14 +611,17 @@ var inserisciMedia=function(x,classe, spec){
 
 var inserisciImmagine=function(x, spec){
     var div = inserisciMedia(x, "image", spec);
-	if(spec){
+	if(spec.id){
 		div.style.height = spec.height /*+ spec.waste*/ + "px";
 		div.style.width = spec.width /*+ spec.waste*/ + "px"; 
 	}
 	var img = document.getElementById('img'+div.id);
-	var width = img.clientWidth;
-	var height = img.clientHeight;
-
+	var width = img.width;
+	console.log("width = " + width);
+	var height = img.height;
+	console.log("height = " + height);
+	div.style.height = height;
+	div.style.width = width;
 	$(function() {
 		$(img).resizable({
 			aspectRatio: width / height,

@@ -570,7 +570,7 @@ var resizeDiv = function(that){
 var inserisciMedia=function(x,classe, spec){
 	console.log(x);
 	
-	var div=inserisciElemento(classe);
+	var div=inserisciElemento(classe, spec);
 	var url;
 	if(spec)
 		url = spec.ref;

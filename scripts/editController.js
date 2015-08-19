@@ -233,9 +233,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                var top = Number(style.top.split("px")[0]);
 	                var left = Number(style.left.split("px")[0]);
 
-	                var immagine = document.getElementById("img" + img.id).style;
-	                var imgheight = Number(immagine.height.split("px")[0]);
-	                var imgwidth = Number(immagine.width.split("px")[0]);
+	                var immagine = document.getElementById("img" + img.id);
+	                var imgheight = Number(immagine.style.height.split("px")[0]);
+	                var imgwidth = Number(immagine.style.width.split("px")[0]);
 	                var imgouterwidth = (Number(immagine.style.width.split("px")[0]) - immagine.offsetWidth)/2;
 
 	                var spec = {
@@ -249,7 +249,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                    ref: fileurl,
 	                    zIndex: Number(style.zIndex)
 	                };
-
+	                console.log(spec);
 	                var command = concreteImageInsertCommand(spec); //model
 	                inv.execute(command);
 

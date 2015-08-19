@@ -221,6 +221,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 			},
 			getFileUrl: function(file){
 				return 'files/' + Main.getUser().user + '/' + getUrlFormat(file) + file.name;
+				//return 'private/api/files/image/' + file.name;
 			}
 		}
 

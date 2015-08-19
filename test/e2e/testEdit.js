@@ -17,7 +17,7 @@ describe('Premi edit page controller',function(){
         
         element(by.css('[ng-click="$mdOpenMenu()"]')).click();
         element(by.css('[ng-click="inserisciFrame()"]')).click();
-        expect(element(by.id('frames')).isPresent()).toBe(true);
+        expect(element(by.id('frame elemento ui-resizable')).isPresent()).toBe(true);
         expect(element(by.id('1')).isPresent()).toBe(true);
   
 	});

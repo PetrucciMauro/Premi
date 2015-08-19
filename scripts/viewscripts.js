@@ -605,7 +605,8 @@ var inserisciMedia = function (x, classe, spec) {
 	//TRADUTTORE
 	element.setAttribute("class", "resizable");
 	element.id=type+div.id;
-	element.src=url;
+	element.src = url;
+	div.style.padding = 0;
 	div.appendChild(element);
 	
 	return div;
@@ -621,12 +622,13 @@ var inserisciImmagine=function(x, spec){
         img.style.height = spec.height + "px";
         img.style.width = spec.width + "px";
     }
-    var width = img.outerWidth;
+    var width = $(img).width();
 	console.log("width = " + width);
-	var height = img.outerHeight;
+	var height = $(img).height();
     console.log("height = " + height);
     img.style.height = height + "px";
     img.style.width = width + "px";
+    img.style.padding=0;
 	div.style.height = height + "px";
 	div.style.width = width + "px";
 	$(function() {

@@ -613,17 +613,22 @@ var inserisciMedia = function (x, classe, spec) {
 
 var inserisciImmagine=function(x, spec){
     var div = inserisciMedia(x, "image", spec);
-	if(spec.id){
-		div.style.height = spec.height /*+ spec.waste*/ + "px";
-		div.style.width = spec.width /*+ spec.waste*/ + "px"; 
-	}
-	var img = document.getElementById('img'+div.id);
-	var width = img.width;
+
+    var img = document.getElementById('img' + div.id);
+    if (spec.id) {
+        div.style.height = spec.height /*+ spec.waste*/ + "px";
+        div.style.width = spec.width /*+ spec.waste*/ + "px";
+        img.style.height = spec.height + "px";
+        img.style.width = spec.width + "px";
+    }
+    var width = img.outerWidth;
 	console.log("width = " + width);
-	var height = img.height;
-	console.log("height = " + height);
-	div.style.height = height;
-	div.style.width = width;
+	var height = img.outerHeight;
+    console.log("height = " + height);
+    img.style.height = height + "px";
+    img.style.width = width + "px";
+	div.style.height = height + "px";
+	div.style.width = width + "px";
 	$(function() {
 		$(img).resizable({
 			aspectRatio: width / height,

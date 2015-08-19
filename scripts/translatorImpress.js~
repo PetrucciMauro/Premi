@@ -147,8 +147,8 @@ var translateImpress = function(json){
 			var coordinates=framePosition(json.proper.frames[i].xIndex,json.proper.frames[i].yIndex,json.proper.frames[i].width);
 			var style="style=\"z-index:"+json.proper.frames[i].zIndex+";";//c'era [k]
 			var bi=bc="";
-			if(json.proper.frames[i].ref!="")
-				bi="background: url('"+json.proper.frames[i].ref+"'); background-size:100% 100%;";
+			if(json.proper.frames[i].image!="")
+				bi="background: url('"+json.proper.frames[i].image+"'); background-size:100% 100%;";
 			if(json.proper.frames[i].color!="")
 				bc="background-color:"+json.proper.frames[i].color+";";
 			style+=bi+bc+"\"";
@@ -172,8 +172,8 @@ var translateImpress = function(json){
 				var coordinates=framePosition(json.proper.frames[i].xIndex,json.proper.frames[i].yIndex,json.proper.frames[i].width);
 				var style="style=\"z-index:"+json.proper.frames[i].zIndex+";";
 				var bi=bc="";
-				if(json.proper.frames[i].ref!="")
-					bi="background: url('"+json.proper.frames[i].ref+"'); background-size:100% 100%;";
+				if(json.proper.frames[i].image!="")
+					bi="background: url('"+json.proper.frames[i].image+"'); background-size:100% 100%;";
 				if(json.proper.frames[i].color!="")
 					bc="background-color:"+json.proper.frames[i].color+";";
 				style+=bi+bc+"\"";

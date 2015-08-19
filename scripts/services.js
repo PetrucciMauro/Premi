@@ -200,7 +200,9 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					req.setRequestHeader("Authorization", token());
 					getFile(files[i]);
 					var after = function(){
-						callback(getFile());
+					    console.log("chiamata della callback nome " + files[0]);
+					    
+					    callback(getFile());
 					}
 					var error = function(){
 						throw new Error("Impossibile caricare i file");

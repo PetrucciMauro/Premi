@@ -594,13 +594,22 @@ var inserisciMedia = function (x, classe, spec) {
 		type="audio";
 	else if(classe==="video")
 		type="video";
-	var element=document.createElement(type);
+	var element = document.createElement(type);
+    element.onload = function () {
+	    var H = this.height,
+                
+            W = this.width;
+	    console.log("altezza realissima " + H);
+	    console.log("larghezza realissima " + W);
+	}
+
+    
 	//TRADUTTORE
 	if(!spec.id){
 		var imgSize=l*0.10;
 		if (type === "img") {
 		    element.style.width = imgSize + "px";
-		    element.style.height = "auto";
+		    
 		}
 	}
 	//console.log(element.style.width);

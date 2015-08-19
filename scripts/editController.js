@@ -235,7 +235,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	                var immagine = document.getElementById("img" + img.id);
 	                var imgheight = Number(immagine.style.height.split("px")[0]);
+	                console.log("altezza in upload " + imgheight);
 	                var imgwidth = Number(immagine.style.width.split("px")[0]);
+	                console.log("larghezza in upload " + imgwidth);
 	                var imgouterwidth = (Number(immagine.style.width.split("px")[0]) - immagine.offsetWidth)/2;
 
 	                var spec = {

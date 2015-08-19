@@ -343,6 +343,38 @@ var insertEditRemove = function () {
             return oldFont;
         };
 
+        public.portaAvanti = function (spec) {
+            var found = false;
+            var element=getElement(spec.id);
+            if (element) {
+            
+                element.zIndex = spec.zIndex;
+            }
+
+            for (var i = 1; i < contatore; i++) {
+                if (getElement(i) != spec.id && !found && getElement(i).zIndex == spec.zIndex) {
+                    getElement(i).zIndex = getElement(i).zIndex - 1;
+                    found = true;}
+                }
+            }
+        };
+
+        public.portaDietro = function (spec) {
+            var found = false;
+            
+            var element = getElement(spec.id);
+            if (element) {
+                element.zIndex = spec.zIndex;
+            }
+
+            for (var i = 1; i < contatore; i++) {
+                if (getElement(i) != spec.id && !found && getElement(i).zIndex == spec.zIndex){
+                    getElement(i).zIndex = getElement(i).zIndex + 1;
+                found = true;}
+            }
+
+        };
+
         public.addFrameToMainPath = function (spec) {
             var pos = spec.pos || private.presentazione.proper.paths.main.length;
             var id = spec.id;

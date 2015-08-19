@@ -216,7 +216,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    }
 
 	    $scope.inserisciImmagine = function (files, spec) {
-	        if (Utils.isObject(spec)) {
+	        if (Utils.isObject(spec) && spec.id) {
 	            inserisciImmagine(spec.ref, spec);
 	        }
 	        else {
@@ -234,6 +234,21 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                var left = Number(style.left.split("px")[0]);
 
 	                var immagine = document.getElementById("img" + img.id);
+                    
+
+
+
+	                var req = new XMLHttpRequest();
+	                req.open('GET', host + 'private/api/files/sizeImage/'+files[0].name, false);
+	                req.setRequestHeader("Authorization", user + ":" + password);
+	                req.send();
+	                var res = JSON.parse(req.responseText);
+	                var height = res.height;
+	                var width = res.width;;
+
+	                console.log("altezza giustissima " + height);
+	                console.log("larghezza giustissima " + width);
+
 	                var imgheight = Number(immagine.style.height.split("px")[0]);
 	                console.log("altezza in upload " + imgheight);
 	                var imgwidth = Number(immagine.style.width.split("px")[0]);

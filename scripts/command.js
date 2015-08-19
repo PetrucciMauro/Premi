@@ -667,6 +667,66 @@ var concreteEditFontCommand = function (spec) {
     return public;
 };
 
+
+
+
+
+var concretePortaAvantiCommand = function (spec) {
+    var public = abstractCommand(spec);
+    var private = {};
+    private.oldZIndex = {};
+    public.doAction = function () {
+        private.oldZIndex.id = spec.id;
+        private.oldZIndex.tipo = spec.tipo;
+        if (public.getExecuted() === 0) {
+            public.setExecuted(1);
+        }
+        else {
+            angular.element($("#content")).scope().portaAvanti(spec);
+        }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
+    };
+    public.undoAction = function () {
+        public.getEnabler().portaDietro(private.oldZIndex);
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
+        angular.element($("#content")).scope().portaDietro(private.oldZIndex);
+    };
+    return public;
+};
+
+var concretePortaDietroCommand = function (spec) {
+    var public = abstractCommand(spec);
+    var private = {};
+    private.oldZIndex = {};
+    public.doAction = function () {
+        private.oldZIndex.id = spec.id;
+        private.oldZIndex.tipo = spec.tipo;
+        if (public.getExecuted() === 0) {
+            public.setExecuted(1);
+        }
+        else {
+            angular.element($("#content")).scope().portaDietro(spec);
+        }
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
+    };
+    public.undoAction = function () {
+        public.getEnabler().portaAvanti(private.oldZIndex);
+        var obj = public.getObj();
+        obj.action = "edit";
+        return obj;
+        angular.element($("#content")).scope().portaAvanti(private.oldZIndex);
+    };
+    return public;
+};
+
+
+
 //PERCORSI
 var concreteAddToMainPathCommand = function (spec) {
     var public = abstractCommand(spec);

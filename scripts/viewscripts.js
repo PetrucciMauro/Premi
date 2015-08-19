@@ -598,8 +598,10 @@ var inserisciMedia = function (x, classe, spec) {
 	//TRADUTTORE
 	if(!spec.id){
 		var imgSize=l*0.10;
-		if(type==="img")
-			element.style.width=imgSize+"px";
+		if (type === "img") {
+		    element.style.width = imgSize + "px";
+		    element.style.height = "auto";
+		}
 	}
 	//console.log(element.style.width);
 	//TRADUTTORE
@@ -622,9 +624,9 @@ var inserisciImmagine=function(x, spec){
         img.style.height = spec.height + "px";
         img.style.width = spec.width + "px";
     }
-    var width = $(img).width();
+    var width = $(img).outerWidth();
 	console.log("width = " + width);
-	var height = $(img).height();
+	var height = $(img).outerHeight();
     console.log("height = " + height);
     img.style.height = height + "px";
     img.style.width = width + "px";

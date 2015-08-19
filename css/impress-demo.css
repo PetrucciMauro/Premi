@@ -306,9 +306,8 @@ video{
 /* AGGIUNTA MANUEL */
 .testo{
 	font-family: Arial, Helvetica, sans-serif;
-	text-align: center;
-	font-size: 100px;
-	width: auto;
+	text-align: left;
+	
 
 }
 

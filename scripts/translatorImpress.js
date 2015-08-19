@@ -19,9 +19,13 @@ function videoPosition(left,top,waste,width,height,screenWidth,screenHeight){
 }
 function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight){
 	console.log(left + " " + top + " " +width+" "+height+" "+screenWidth+" "+screenHeight+" "+waste+" "+size);
-	var scale=(33.5/(1290/1899))*(size/screenWidth);
-	scale=scale*0.95;
-	var position=[(((left+waste+(width/2))/screenWidth)*(7440*2)-7440),(((top+waste+(height/2))/screenHeight)*(3600*2)-3600)+(120/33.5)*scale,scale];
+	//var scale=(33.5/(1290/1899))*(size*14/screenWidth)*6.5;
+	//scale=scale*0.95;
+	//scale=3;
+	var scale = (19.19/screenWidth)*width;
+	if(!waste)
+		waste=0;
+	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600)+(180/19.19)*scale,scale];
 	return position;
 }
 //$.getJSON("slideshow.json", function(json) {
@@ -175,9 +179,13 @@ function textPosition(left,top,waste,size,width,height,screenWidth,screenHeight)
 				presentation+="<div class=\"step video\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><video src=\""+json.proper.videos[i].ref+"\" controls/></div>";
 			}
 			for(i=0; i<json.proper.texts.length; i++){
-				var coordinates=textPosition(json.proper.texts[i].xIndex,json.proper.texts[i].yIndex,json.proper.texts[i].waste,json.proper.texts[i].size,json.proper.texts[i].width,json.proper.texts[i].height,json.proper.background.width,json.proper.background.height);
+				var coordinates=textPosition(json.proper.texts[i].xIndex,json.proper.texts[i].yIndex,json.proper.texts[i].waste,json.proper.texts[i].fontSize,json.proper.texts[i].width,json.proper.texts[i].height,json.proper.background.width,json.proper.background.height);
 				var style="style=\"z-index:"+json.proper.texts[i].zIndex+";color:"+json.proper.texts[i].color+";\"";
-				presentation+="<div class=\"step testo\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+">"+json.proper.texts[i].content+"</div>";
+				presentation+="<div class=\"step testo\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+">";
+				var width = json.proper.texts[i].width ;
+				var height = json.proper.texts[i].height;
+				var styleQ="style=\"text-align:left;width:"+width+"px;height:"+height+"px;top:0em;left:0em;display:block;font-size:"+(json.proper.texts[i].fontSize*14)+"px;\"";
+				presentation+="<p "+styleQ+">"+json.proper.texts[i].content+"</p></div>";
 			}
 			console.log(presentation);
 			//presentation+="</div>";

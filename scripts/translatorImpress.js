@@ -35,9 +35,10 @@ function textPosition(left,top,waste,size,width,height){
 	if(!waste)
 		waste=0;
 	//var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600)+(180/19.19)*scale,scale];
-	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440+textPadding),(((top+(height/2))/screenHeight)*(3600*2)-3600+textPadding),scale];
-	return position;
-}
+	//var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440+textPadding),(((top+(height/2))/screenHeight)*(3600*2)-3600+textPadding),scale];
+	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
+		return position;
+	}
 
 var translateImpress = function(json){
 	console.log("translator impress");

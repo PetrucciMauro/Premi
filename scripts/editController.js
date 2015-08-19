@@ -573,19 +573,25 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        loader.addUpdate(activeText);
 	    }
 
-	    $scope.aggiornaTesto = function(textId, textContent){
-	        console.log(textContent);
-	        var spec = {
-	            id: textId,
-	            tipo: "text",
-	            content: textContent
-	        };
+	    $scope.aggiornaTesto = function(textId, textContent, spec){
+	    	if(Utils.isObject(spec)){
+	    		document.getElementById("txt"+spec.id).value = spec.content;
+	    	}
+	    	else{
+	    		console.log("CONTENT TESTO");
+		        console.log(textContent);
+		        var spec = {
+		            id: textId,
+		            tipo: "text",
+		            content: textContent
+		        };
 
 
-	        var command = concreteEditContentCommand(spec);
-	        inv.execute(command);
+		        var command = concreteEditContentCommand(spec);
+		        inv.execute(command);
 
-	        loader.addUpdate(textId);
+		        loader.addUpdate(textId);
+	    	}
 	    }
 
 	    //Gestione media
@@ -714,6 +720,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    $scope.ridimensionaElemento = function(spec){
 	        if(Utils.isObject(spec)){
 	            var style = document.getElementById(spec.id).style;
+
+	            if(spec.tipo == "text"){
+	            	var txtStyle = document.getElementById("txt" + spec.id).style;
+	            	txtStyle.height = spec.height + "px";
+	            	txtStyle.width = spec.width + "px";
+	            }
 	            style.height = spec.height + "px";
 	            style.width = spec.width + "px";
 	        }

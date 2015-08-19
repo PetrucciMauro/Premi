@@ -533,7 +533,7 @@ var concreteEditContentCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            //controller.update(public.getId());
+            angular.element($("#content")).scope().aggiornaTesto(undefined, undefined, spec);
         }
         var obj = public.getObj();
         obj.action = "edit";
@@ -543,7 +543,8 @@ var concreteEditContentCommand = function (spec) {
     public.undoAction = function () {
         public.getEnabler().editContent(private.oldContent);
         var obj = public.getObj();
-        obj.action = "edit";
+        obj.action = "edit";console.log("annulla contenuto: "+private.oldContent);
+        angular.element($("#content")).scope().aggiornaTesto(undefined, undefined, private.oldContent);
         return obj;
         //controller.update(public.getId());
     };

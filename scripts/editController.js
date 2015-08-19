@@ -226,7 +226,24 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            uploadmedia(files, function (file) {
 	                var fileurl = Upload.getFileUrl(files[0]);
 	                var obj={ top: 0, 
-	                    left: 0};
+	                    left: 0
+	                };
+
+	                var host = "http://localhost:8081/";
+
+	                var req = new XMLHttpRequest();
+	                req.open('GET', host + 'private/api/files/sizeImage/' + files[0].name, false);
+	                req.setRequestHeader("Authorization", Main.getToken());
+	                req.send();
+	                console.log("send eseguita");
+	                var res = JSON.parse(req.responseText);
+	                var height = res.height;
+	                var width = res.width;;
+
+	                console.log("altezza giustissima " + height);
+	                console.log("larghezza giustissima " + width);
+
+
 	                var img = inserisciImmagine(fileurl, obj); //view
 
 	                var style = document.getElementById(img.id).style;
@@ -238,17 +255,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 
 
-	                var req = new XMLHttpRequest();
-	                req.open('GET', host + 'private/api/files/sizeImage/'+files[0].name, false);
-	                req.setRequestHeader("Authorization", user + ":" + password);
-	                req.send();
-	                var res = JSON.parse(req.responseText);
-	                var height = res.height;
-	                var width = res.width;;
-
-	                console.log("altezza giustissima " + height);
-	                console.log("larghezza giustissima " + width);
-
+	                
 	                var imgheight = Number(immagine.style.height.split("px")[0]);
 	                console.log("altezza in upload " + imgheight);
 	                var imgwidth = Number(immagine.style.width.split("px")[0]);

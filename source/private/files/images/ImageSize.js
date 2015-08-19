@@ -21,7 +21,7 @@ var get = function(req, res){ // scorri tutti i file nella cartella e ritorna un
                                  'width' : size.height
                                  });
                         }
-                }
+                })
 };
 
 exports.get = get;

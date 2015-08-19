@@ -356,7 +356,7 @@ var insertEditRemove = function () {
                     getElement(i).zIndex = getElement(i).zIndex - 1;
                     found = true;}
                 }
-            }
+            
         };
 
         public.portaDietro = function (spec) {

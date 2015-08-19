@@ -1,0 +1,78 @@
+<html>
+	<head>
+		<script src="jquery.js"></script>
+		<script src="serverRelation/Authentication.js"></script>
+		<script src="serverRelation/Registration.js"></script>
+		<script src="jquery.js"></script>
+		<style>
+			.hover {background-color:lightgray}
+			/*.justInserted {padding-left: 100 px, padding-top: 200 px} */
+		</style>
+	</head>
+<body>
+	<!--<progress id="progress" min="0" max="100" value="0">0</progress> -->
+</body>
+
+<script>
+	
+	/*var auth = Authentication("http://localhost:8081");
+	var registr = Registration("http://localhost:8081");
+	
+	//registr.register("pietrolo","pietrolo");
+	auth.authenticate("pietrolo","pietrolo");
+	
+	var token = auth.getToken();
+	*/
+var doc = document.documentElement;
+
+var posX = 0;
+var posY = 0;
+
+// This is better
+$(document).mousemove(function(e){
+							// $('#status').html(e.pageX +', '+ e.pageY);
+							 posX = e.pageX;
+							 posY = e.pageY;
+							 });
+
+doc.ondragover = function () { this.className = 'hover'; return false; };
+doc.ondragend = function () { this.className = ''; return false; };
+doc.ondrop = function (event) {
+event.preventDefault && event.preventDefault();
+this.className = '';
+//class progress and position
+
+// now do something with:
+var file = event.dataTransfer.files[0];
+var filename = file.name;
+window.URL.createObjectURL(file);
+var formData = new FormData();
+formData.append('file', file);
+
+// now post a new XHR request
+var xhr = new XMLHttpRequest();
+xhr.open('POST', 'http://localhost:8081/private/api/files/'+filename);
+xhr.setRequestHeader("Authorization", token);
+xhr.onload = function () {
+    var spec = {
+        'filename' : filename,
+        'type' : file.type,
+        'posX': posX,
+        'posY': posY
+    };
+    angular.element($("#content")).scope().inserisciDrag(spec);
+};
+/*xhr.upload.onprogress = function (event) {
+	if (event.lengthComputable) {
+		var complete = (event.loaded / event.total * 100 | 0);
+		progress.value = progress.innerHTML =  complete;
+	}
+};*/
+xhr.send(formData);
+
+return false;
+};
+
+</script>
+
+</html>

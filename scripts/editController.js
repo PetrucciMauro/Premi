@@ -216,7 +216,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    }
 
 	    $scope.inserisciImmagine = function (files, spec) {
-	        if (Utils.isObject(spec) && spec.id) {
+	        if (Utils.isObject(spec)) {
 	            inserisciImmagine(spec.ref, spec);
 	        }
 	        else {

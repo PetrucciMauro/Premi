@@ -108,6 +108,12 @@ filesRoutes.get('/image/[^/]+', Image.get );
 
 filesRoutes.post('/image/[^/]+', Image.post );
 
+//=======
+// ImageSize
+var ImageSize = require('./source/private/files/images/ImageSize');
+
+filesRoutes.get('/sizeImage/[^/]+', ImageSize.get );
+
 //======
 // Video
 

@@ -4,7 +4,8 @@ l=l*0.989;
 var h=l/2.06666667;
 var styleContent = document.getElementById("content").style;
 styleContent.width = l+"px";
-styleContent.height = h+"px";
+styleContent.height = h + "px";
+
 //TRADUTTORE
 var zindex = 0;
 var contatore=1;
@@ -27,7 +28,8 @@ $(document).ready(function () {
 			}
 		});
 	$("#sortable").disableSelection();
-
+	document.getElementById("premiFooter").style.marginTop = styleContent.height;
+	document.getElementById("premiFooter").style.position = "relative";
 });
 
 //oggetto che tiene traccia dell'elemento selezionato//

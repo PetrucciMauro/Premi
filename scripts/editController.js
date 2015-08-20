@@ -917,9 +917,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.config = {};
 		$scope.model = {};
 	  
-		var inPath = function(id){
+		$scope.inPath = function (id) {
+            if(id!="undef")
 			var position = insertEditRemove().getPaths().main.indexOf(id);
-			
+            else
+                var position = insertEditRemove().getPaths().main.indexOf(active().getId());
 			if(position != -1)
 				return true;
 
@@ -944,7 +946,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var ris = false
 
 				if(Utils.isObject(idElement)){
-					if (inPath(idElement)) {
+					if ($scope.inPath(idElement)) {
 						var bookmark = insertEditRemove().getElement(idElement).bookmark;
 						$scope.canHaveBookmark = true;
 						if (bookmark == 0)
@@ -970,7 +972,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var ris = false;
 
 				if(Utils.isObject(idElement)){
-					if(inPath(idElement)){
+					if($scope.inPath(idElement)){
 						var bookmark = insertEditRemove().getElement(idElement).bookmark;
 						if(bookmark != 0)
 							ris = true;

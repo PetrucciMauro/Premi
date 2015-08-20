@@ -97,6 +97,9 @@ filesRoutes.get('/video', VideosMeta.get);
 var AudiosMeta = require('./source/private/files/audios/AudiosMeta.js');
 filesRoutes.get('/audio', AudiosMeta.get );
 
+var fileGetRoutes = express.Router();
+app.use('/files', fileGetRoutes);
+
 //======
 // Image
 
@@ -104,7 +107,7 @@ var Image = require('./source/private/files/images/Image.js');
 
 filesRoutes.delete('/image/[^/]+', Image.delete);
 
-filesRoutes.get('/image/[^/]+', Image.get );
+fileGetRoutes.get('/[^/]+/image/[^/]+', Image.get );
 
 filesRoutes.post('/image/[^/]+', Image.post );
 
@@ -121,7 +124,7 @@ var Video = require('./source/private/files/videos/Video.js');
 
 filesRoutes.delete('/video/[^/]+', Video.delete );
 
-filesRoutes.get('/video/[^/]+', Video.get );
+fileGetRoutes.get('/[^/]+/video/[^/]+', Video.get );
 
 filesRoutes.post('/video/[^/]+', Video.post );
 
@@ -132,7 +135,7 @@ var Audio = require('./source/private/files/audios/Audio.js');
 
 filesRoutes.delete('/audio/[^/]+', Audio.delete );
 
-filesRoutes.get('/audio/[^/]+', Audio.get );
+fileGetRoutes.get('/[^/]+/audio/[^/]+', Audio.get );
 
 filesRoutes.post('/audio/[^/]+', Audio.post );
 

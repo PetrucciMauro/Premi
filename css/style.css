@@ -2,6 +2,7 @@
 margin:0;
 }
 
+.hover {background-color:lightgray}
 
 #drag-1, #drag-2 {
 	position: absolute;
@@ -75,6 +76,8 @@ margin:0;
 	padding:0.2em;
 	min-height: 2.5em;
     max-height: 3em;
+    position:fixed;
+    z-index: 1000000;
 }
 
 #contextual-menu md-icon{
@@ -217,6 +220,7 @@ input.autogrow{
 
   #content{
       padding:0;
+      margin-top: 3.5em;
       margin-bottom:0;
       position: absolute;
       height: 100%;

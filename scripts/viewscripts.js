@@ -45,10 +45,7 @@ var active=function(){
 			that.deselect();
 			
 			private.element=document.getElementById(id);
-			console.log(private.element);
-			console.log(id);
 			private.element.style.boxShadow= "0 0 0 0.25em black inset";
-			
 			
 			//document.getElementById("rotation").innerHTML="<input id=\"rangeRotation\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" value=\""+getRotationDegrees($("#"+id))+"\" oninput=\"rotate('"+id+"',this.value)\">";
 			//console.log("gradi " + getRotationDegrees($("#" + id)));
@@ -111,7 +108,6 @@ function highlight(id) {
 
 	if (!$("#"+id).hasClass("highlighted") ){
 		$("#"+id).addClass("highlighted");
-		console.log("over");
 	}
 	else
 		$("#"+id).removeClass("highlighted");
@@ -149,7 +145,6 @@ var mainPath=function(){
 			return private.percorso;
 		}
 		that.addToMainPath = function (id, position) {
-			console.log("richiamato add to main")
 			if (!mainPath().contains(id)) {
 				var pos = position || private.percorso.length;
 				private.percorso.splice(pos, 0, id);
@@ -172,7 +167,6 @@ var mainPath=function(){
 			var position;
 			var found = false;
 			if ($("#sort" + id).length) {
-				console.log("sort " + id);
 				$("#sort" + id).remove();
 			}
 			$("#" + id).removeClass("highlighted");
@@ -204,7 +198,6 @@ var mainPath=function(){
 
 		that.deleteFrame=function(id){
 			if ($("#sort" + id).length) {
-				console.log("sort " + id);
 				$("#sort" + id).remove();
 			}
 			for(var i = 0; i<private.percorso.length; i++){
@@ -406,51 +399,59 @@ function elimina(id) {
 	clearMenu();
 }
 
+
+var resizeDiv = function(that, tipo){
+	var div = $("#" + tipo + that.id);
+	div.css("height",that.style.height);
+	div.css("width",that.style.width);
+}
+
 var inserisciElemento = function (classe, spec) {
-    console.log("inserisciElemento");
+    //console.log("inserisciElemento");
 	var div=document.createElement('div');
+
 	//TRADUTTORE NON MODIFICARE
 	var vdSize=l*0.10;
 	if(classe==="video")
 		div.style.width=vdSize+"px";
-	//console.log(div.style.width);
 	//TRADUTTORE
 
 	div.style.position = "absolute";
 	div.style.zIndex = zindex;
-	zindex++;
 	div.setAttribute("class", classe+" elemento");
 	var id = contatore;
 
 	//TRADUTTORE EDIT
-	if(spec.id){
+	if(spec && spec.id){
 		if(contatore < spec.id)//in contatore si salva l'id maggiore
 			contatore = spec.id;
 		id = spec.id;
+	}
+
+	if(spec && spec.height && spec.width){
 		div.style.height = spec.height + "px";
 		div.style.width = spec.width + "px";
-		div.style.top = spec.yIndex + "px";
-		div.style.left = spec.xIndex + "px";
-		div.style.outerHeight = spec.height + "px";
-		div.style.outerWidth = spec.width + "px";
-		if(classe === "frame"){
-			div.style.backgroundColor = spec.color;
-			div.style.backgroundImage = spec.image;
-		}
 	}
 	else{
-		div.style.top = spec.top + "px" || 0;
-		div.style.left = spec.left + "px" || 0;
 		div.style.height = 230 + "px";
 		div.style.width = 230 + "px";
-		div.style.outerHeight = 230 + "px";
-		div.style.outerWidth = 230 + "px";
 	}
-	//TRADUTTORE EDIT
+
+	if(spec && spec.yIndex && spec.xIndex){
+		div.style.top = spec.yIndex + "px";
+		div.style.left = spec.xIndex + "px";
+	}
+	else{
+		div.style.top = 0 + "px";
+		div.style.left = 0 + "px";
+	}
 
 	div.id=id;
+	//TRADUTTORE EDIT
 
 	if(classe=="frame"){
+		div.style.backgroundColor = spec.color || undefined;
+		div.style.backgroundImage = spec.image || undefined;
 		document.getElementById("frames").appendChild(div);
 	}
 	else {
@@ -458,11 +459,12 @@ var inserisciElemento = function (classe, spec) {
 	}
 
 	//TRADUTTORE EDIT
-	if(spec)
+	if(spec && spec.rotation != 0)
 		rotate(id, spec.rotation);
 	//TRADUTTORE EDIT
 
 	contatore++;
+	zindex++;
 
 	var xInit;
 	var yInit;
@@ -479,7 +481,6 @@ var inserisciElemento = function (classe, spec) {
 }
 
 var inserisciFrame = function (spec) {
-    console.log("chiamato");
 	var div=inserisciElemento("frame", spec);
 	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
@@ -539,13 +540,15 @@ var inserisciTesto=function(spec){
 	txt.style.resize="none";
 	txt.style.backgroundColor = "transparent";
 
-	div.setAttribute("onresize","resizeDiv(this)");
+	div.setAttribute("onresize","resizeDiv(this, \"txt\")");
 
 	div.appendChild(txt);
-	resizeDiv(div);
+	resizeDiv(div, "txt");
+
 	$( "#txt"+div.id ).focus();
 	$(function() {
 		$(div).resizable({
+			aspectRatio: 1 / 1,
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();
@@ -564,52 +567,48 @@ var inserisciTesto=function(spec){
 }
 //NEWTEXT
 
-var resizeDiv = function(that){
-	var div = $("#txt" + that.id);
-	div.css("height",that.style.height);
-	div.css("width",that.style.width);
-}
-
 var inserisciMedia = function (x, classe, spec) {
-    console.log("inserisciMedia");
-	console.log(x);
-
 	var div = inserisciElemento(classe, spec);
-	console.log("inseritoElemento");
-	var url;
-	if(spec.id)
+	//console.log("inseritoElemento");
+
+	var url = {};
+	if(spec && spec.ref)
 		url = spec.ref;
 	else
 		url = x;
-	var type;
+	
 	var z=scale;
 	/*$(div).css({
 		"-ms-transform": "scale("+1/z+")", // IE 9 
 		"-webkit-transform":"scale("+1/z+")", // Chrome, Safari, Opera 
 		"transform": "scale("+1/z+")",
 	});*/
+	
+	var type;
 	if(classe==="image")
 		type="img";
 	else if(classe==="audio")
 		type="audio";
 	else if(classe==="video")
 		type="video";
+
 	var element = document.createElement(type);
+
     element.onload = function () {
 	    var H = this.height,
                 
             W = this.width;
-	    console.log("altezza realissima " + H);
-	    console.log("larghezza realissima " + W);
+	   // console.log("altezza realissima " + H);
+	   // console.log("larghezza realissima " + W);
 	}
 
     
 	//TRADUTTORE
-	if(!spec.id){
+	if(!spec){
 		var imgSize=l*0.10;
 		if (type === "img") {
 		    element.style.width = imgSize + "px";
-		    
+		    element.style.height = "auto";
 		}
 	}
 	//console.log(element.style.width);
@@ -619,7 +618,6 @@ var inserisciMedia = function (x, classe, spec) {
 	element.src = url;
 	div.style.padding = 0;
 	div.appendChild(element);
-	
 	return div;
 }
 
@@ -627,23 +625,29 @@ var inserisciImmagine=function(x, spec){
     var div = inserisciMedia(x, "image", spec);
 
     var img = document.getElementById('img' + div.id);
-    if (spec.id) {
-        div.style.height = spec.height /*+ spec.waste*/ + "px";
-        div.style.width = spec.width /*+ spec.waste*/ + "px";
+    if (spec.id && spec.height && spec.width) {
+        div.style.height = spec.height + "px";
+        div.style.width = spec.width + "px";
         img.style.height = spec.height + "px";
         img.style.width = spec.width + "px";
     }
     var width = $(img).outerWidth();
-	console.log("width = " + width);
+//	console.log("width = " + width);
 	var height = $(img).outerHeight();
-    console.log("height = " + height);
+   // console.log("height = " + height);
+
     img.style.height = height + "px";
     img.style.width = width + "px";
     img.style.padding=0;
 	div.style.height = height + "px";
 	div.style.width = width + "px";
+	div.style.padding="0.2em";
+
+	div.setAttribute("onresize","resizeDiv(this, \"img\")");
+	resizeDiv(div, "img");
+
 	$(function() {
-		$(img).resizable({
+		$(div).resizable({
 			aspectRatio: width / height,
 			start: function(){
 				if(active().getId() != div.id){
@@ -661,9 +665,10 @@ var inserisciImmagine=function(x, spec){
 
 var inserisciVideo=function(x, spec){
 	var div = inserisciMedia(x,"video", spec);
+
 	if(spec){
-		div.style.height = spec.height + spec.waste + "px";
-		div.style.width = spec.width + spec.waste + "px"; 
+		div.style.height = spec.height + "px";
+		div.style.width = spec.width + "px"; 
 	}
 	var vid = document.getElementById('video'+div.id);
 	//TRADUTTORE
@@ -759,7 +764,9 @@ function portaAvanti(id) {
 
 function mandaDietro(id){
 	if ($("#" + id).zIndex() > 1) {
-		getElementByZIndex($("#" + id).zIndex() - 1).style.zIndex = $("#" + id).zIndex();
+		var element = getElementByZIndex($("#" + id).zIndex() - 1);
+		if(element)
+			element.style.zIndex = $("#" + id).zIndex();
 	}
 }
 
@@ -1093,6 +1100,7 @@ function isInside(div, testDiv){
 
 function updateDraggable(element){
 	var div=$("#"+active().getId());
+	var tipo = active().getTipo();
 	var others = [];
 
 	var originalHeight = $(div).height();
@@ -1103,7 +1111,7 @@ function updateDraggable(element){
 	console.log("ACTIVE" + active().getId());
 
 	var elements = $("#elements").children();
-	for(var i=0; i<elements.length && elements[i].id != div.id; ++i){
+	for(var i=0; i<elements.length && elements[i].id != div.id && tipo == "frame"; ++i){
 		var x = $("#" + elements[i].id);
 		if (isInside(div, x)) {
 		    var spec = {

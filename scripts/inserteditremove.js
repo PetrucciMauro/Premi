@@ -131,6 +131,8 @@ var insertEditRemove = function () {
         public.insertFrame = function (spec) {
             var newFrame = frame(spec);
             private.presentazione.proper.frames.push(newFrame);
+            console.log(JSON.stringify(newFrame));
+            console.log(JSON.stringify(private.presentazione));
         };
         public.insertImage = function (spec) {
             var newImage = image(spec);
@@ -346,13 +348,14 @@ var insertEditRemove = function () {
         public.portaAvanti = function (spec) {
             var found = false;
             var original;
-            var element=public.getElement(spec.id);
+            var element = public.getElement(spec.id);
+            
             if (element) {
-
+                original = element.zIndex;
                 element.zIndex = original + 1;
 
                 for (var i = 1; i < contatore; i++) {
-                    if (public.getElement(i) != spec.id && !found && public.getElement(i).zIndex == element.zIndex) {
+                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == element.zIndex) {
                         public.getElement(i).zIndex = original;
                         found = true;
                     }
@@ -365,13 +368,18 @@ var insertEditRemove = function () {
             
             var element = public.getElement(spec.id);
             if (element) {
-                element.zIndex = spec.zIndex;
-            }
-
-            for (var i = 1; i < contatore; i++) {
-                if (public.getElement(i) != spec.id && !found && public.getElement(i).zIndex == spec.zIndex) {
-                    public.getElement(i).zIndex = public.getElement(i).zIndex + 1;
-                found = true;}
+                for (var i = 1; i < contatore; i++) {
+                    if(public.getElement(i) && i != spec.id){
+                        console.log("z index trovato " + public.getElement(i).zIndex + " z index atteso " + (spec.zIndex -1));
+                    }
+                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == (spec.zIndex -1)) {
+                        console.log("trovato  elemento " + i + " con z index " + public.getElement(i).zIndex);
+                        var obj = { id: public.getElement(i).id };
+                        public.portaAvanti(obj);
+                        console.log("spostato  elemento " + i + " con nuovo z index " + public.getElement(i).zIndex);
+                        found = true;
+                    }
+                }
             }
 
         };

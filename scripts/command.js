@@ -695,7 +695,7 @@ var concretePortaAvantiCommand = function (spec) {
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
-        angular.element($("#content")).scope().portaDietro(private.oldZIndex);
+        angular.element($("#content")).scope().portaDietro(spec);
     };
     return public;
 };
@@ -723,7 +723,7 @@ var concretePortaDietroCommand = function (spec) {
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
-        angular.element($("#content")).scope().portaAvanti(private.oldZIndex);
+        angular.element($("#content")).scope().portaAvanti(spec);
     };
     return public;
 };

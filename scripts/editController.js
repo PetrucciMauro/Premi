@@ -895,6 +895,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			else{
 				var idElement = active().getId();
 				var tipoElement = active().getTipo();
+				var zIndexElement = insertEditRemove().getElement(idElement).zIndex;
+				console.log("il maledettissimo zindex è " + zIndexElement);
 				mandaDietro(idElement);
 
 				var style = $("#" + idElement);
@@ -902,7 +904,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var spec = {
 					id: idElement,
 					tipo: tipoElement,
-					zIndex: style.zIndex()
+					zIndex: zIndexElement
 				};
 				
 				var command = concretePortaDietroCommand(spec);

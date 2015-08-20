@@ -1258,8 +1258,10 @@ $(function () {
 	        var e = window.event;
 	        var spec = {
 	            yIndex: e.clientY - $("#content").offset().top,
-	            xIndex: e.clientX - $("#content").offset().left
+	            xIndex: e.clientX - $("#content").offset().left,
+	            zIndex: zindex
 	        }
+	        console.log(JSON.stringify(spec));
 	        var top = $("#content").offset().top;
 	        var left = $("#content").offset().left;
 

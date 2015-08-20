@@ -27,11 +27,12 @@
 
 .saluto {
   color: black;
+  font-family: "Roboto";
 }
 
 .message-class{
   color: #009933;
-  font-family: "Arial";
+  font-family: "Roboto";
   font-size: 20px;
   text-align: center;
 }

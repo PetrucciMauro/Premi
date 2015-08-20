@@ -305,3 +305,12 @@ body {
 #changeFont{
     padding: 0;
 }
+
+#home {
+       padding-top: 4em;
+    overflow-y: scroll;
+    padding-top: 0;
+    /* margin-top: 4.6em; */
+    /* position: absolute; */
+    z-index: 0;
+}

@@ -869,7 +869,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(Utils.isObject(spec)){
 				portaAvanti(spec.id);
 			}
-			else{
+			else {
 				var idElement = active().getId();
 				var tipoElement = active().getTipo();
 				portaAvanti(idElement);

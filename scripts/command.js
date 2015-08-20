@@ -678,12 +678,14 @@ var concretePortaAvantiCommand = function (spec) {
     public.doAction = function () {
         private.oldZIndex.id = spec.id;
         private.oldZIndex.tipo = spec.tipo;
+        public.getEnabler().portaAvanti(spec);
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }
         else {
             angular.element($("#content")).scope().portaAvanti(spec);
         }
+        console.log(JSON.stringify(insertEditRemove().getPresentazione()))
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
@@ -705,6 +707,7 @@ var concretePortaDietroCommand = function (spec) {
     public.doAction = function () {
         private.oldZIndex.id = spec.id;
         private.oldZIndex.tipo = spec.tipo;
+        public.getEnabler().portaDietro(spec);
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }

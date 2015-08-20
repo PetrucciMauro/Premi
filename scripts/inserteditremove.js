@@ -345,31 +345,32 @@ var insertEditRemove = function () {
 
         public.portaAvanti = function (spec) {
             var found = false;
-            var element=getElement(spec.id);
+            var original;
+            var element=public.getElement(spec.id);
             if (element) {
-            
-                element.zIndex = spec.zIndex;
-            }
 
-            for (var i = 1; i < contatore; i++) {
-                if (getElement(i) != spec.id && !found && getElement(i).zIndex == spec.zIndex) {
-                    getElement(i).zIndex = getElement(i).zIndex - 1;
-                    found = true;}
+                element.zIndex = original + 1;
+
+                for (var i = 1; i < contatore; i++) {
+                    if (public.getElement(i) != spec.id && !found && public.getElement(i).zIndex == element.zIndex) {
+                        public.getElement(i).zIndex = original;
+                        found = true;
+                    }
                 }
-            
+            }
         };
 
         public.portaDietro = function (spec) {
             var found = false;
             
-            var element = getElement(spec.id);
+            var element = public.getElement(spec.id);
             if (element) {
                 element.zIndex = spec.zIndex;
             }
 
             for (var i = 1; i < contatore; i++) {
-                if (getElement(i) != spec.id && !found && getElement(i).zIndex == spec.zIndex){
-                    getElement(i).zIndex = getElement(i).zIndex + 1;
+                if (public.getElement(i) != spec.id && !found && public.getElement(i).zIndex == spec.zIndex) {
+                    public.getElement(i).zIndex = public.getElement(i).zIndex + 1;
                 found = true;}
             }
 

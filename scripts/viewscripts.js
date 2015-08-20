@@ -437,7 +437,8 @@ var inserisciElemento = function (classe, spec) {
 		div.style.width = 230 + "px";
 	}
 
-	if(spec && spec.yIndex && spec.xIndex){
+	if (spec && spec.yIndex && spec.xIndex) {
+	    console.log("c'è spec.xIndex");
 		div.style.top = spec.yIndex + "px";
 		div.style.left = spec.xIndex + "px";
 	}
@@ -481,6 +482,7 @@ var inserisciElemento = function (classe, spec) {
 }
 
 var inserisciFrame = function (spec) {
+    console.log(JSON.stringify(spec));
 	var div=inserisciElemento("frame", spec);
 	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
@@ -736,7 +738,9 @@ function getElementByZIndex(zvalue) {
 	var found = false;
 	var frames = document.getElementById("frames").children;
 	for (var i = 0; i < frames.length && !found; i++) {
-		if (frames[i].style.getPropertyValue("z-index") == zvalue) {
+	    console.log("z-index " + frames[i].style.getPropertyValue("z-index"));
+	    if (frames[i].style.getPropertyValue("z-index") == zvalue) {
+	        console.log("trovato!");
 			el = frames[i];
 			found = true;
 		}
@@ -763,10 +767,11 @@ function portaAvanti(id) {
 }
 
 function mandaDietro(id){
-	if ($("#" + id).zIndex() > 1) {
-		var element = getElementByZIndex($("#" + id).zIndex() - 1);
-		if(element)
-			element.style.zIndex = $("#" + id).zIndex();
+    if ($("#" + id).zIndex() > 0) {
+        var original = $("#" + id).zIndex();
+		var element = getElementByZIndex(original - 1);
+		if (element)
+		    portaAvanti(element.id);
 	}
 }
 
@@ -1252,11 +1257,13 @@ $(function () {
 	    stop: function (event, ui) {
 	        var e = window.event;
 	        var spec = {
-	            top: e.clientY - $("#content").offset().top,
-	            left: e.clientX - $("#content").offset().left
+	            yIndex: e.clientY - $("#content").offset().top,
+	            xIndex: e.clientX - $("#content").offset().left
 	        }
+	        var top = $("#content").offset().top;
+	        var left = $("#content").offset().left;
 
-	        if (((spec.top + $("#content").offset().top) > $("#content").offset().top) && (spec.top < ($("#content").offset().top + $("#content").height())) && ((spec.left + $("#content").offset().left) > $("#content").offset().left) && (spec.left < ($("#content").offset().left + $("#content").width())))
+	        if (((spec.yIndex + top) > top) && (spec.yIndex < (top + $("#content").height())) && ((spec.xIndex + left) > left) && (spec.xIndex < (left + $("#content").width())))
 	            angular.element(content).scope().inserisciFrame(spec);
 	    }
 	});
@@ -1268,10 +1275,13 @@ $(function () {
 	    stop: function (event, ui) {
 	        var e = window.event;
 	        var spec = {
-	            top: e.clientY - $("#content").offset().top,
-	            left: e.clientX - $("#content").offset().left
+	            yIndex: e.clientY - $("#content").offset().top,
+	            xIndex: e.clientX - $("#content").offset().left
 	        }
-	        if (((spec.top + $("#content").offset().top) > $("#content").offset().top) && (spec.top < ($("#content").offset().top + $("#content").height())) && ((spec.left + $("#content").offset().left) > $("#content").offset().left) && (spec.left < ($("#content").offset().left + $("#content").width())))
+	        var top = $("#content").offset().top;
+	        var left = $("#content").offset().left;
+
+	        if (((spec.yIndex + top) > top) && (spec.yIndex < (top + $("#content").height())) && ((spec.xIndex + left) > left) && (spec.xIndex < (left + $("#content").width())))
 	            angular.element(content).scope().inserisciTesto(spec);
 	    }
 	});

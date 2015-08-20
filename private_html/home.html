@@ -2,7 +2,7 @@
 <div layout="column" class="col-4 left-menu" layout-align="space-around center">
 	<md-button class="md-raised md-cornered" ng-click="newSS = !newSS">Nuova Presentazione</md-button>
 	<div ng-show="newSS">
-		<md-whiteframe class="md-whiteframe-z1" layout-align="center center">
+		<md-whiteframe class="md-whiteframe-z2" layout-align="center center">
 			<label>Nome</label>
 			<input ng-model="slideshow.name"/>
 			<md-button class="md-raised md-cornered submit" ng-click="createSlideShow()">Submit</md-button>
@@ -18,7 +18,7 @@
 			<md-button class="md-raised md-cornered submit" ng-click="deleteSlideShow(slide.titolo)">Elimina</md-button>
 			<md-button class="md-raised md-cornered submit" ng-click="renameSlideShow(slide.titolo)">Rinomina</md-button>
 			<md-button class="md-raised md-cornered submit" ng-click="salvaManifest(slide.titolo)">Salva</md-button>
-			<span  ng-bind="slide.titolo"></span>
+			<span  class="md-body-2" id="slideTitolo" ng-bind="slide.titolo"></span>
 
 		</dd>
 	</dl>

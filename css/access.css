@@ -6,7 +6,8 @@
   margin-right: auto;
 }
 .access p{
-  height: 25px;
+  height: 30px;
+  font-family: "Roboto";
 }
 .access form{
   /*height: 50px;*/
@@ -42,4 +43,12 @@
 .error{
   color: red;
   font-size: 15px;
+}
+
+#accessDiv{
+  padding:1em;
+}
+
+.md-raised .md-cornered{
+  background-color: #2E9AFE;
 }

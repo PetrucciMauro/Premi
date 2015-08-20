@@ -105,9 +105,11 @@ app.use('/files', fileGetRoutes);
 
 var Image = require('./source/private/files/images/Image.js');
 
+var GetImage = require('./source/files/GetImage.js');
+
 filesRoutes.delete('/image/[^/]+', Image.delete);
 
-fileGetRoutes.get('/[^/]+/image/[^/]+', Image.get );
+fileGetRoutes.get('/[^/]+/image/[^/]+', GetImage.get );
 
 filesRoutes.post('/image/[^/]+', Image.post );
 
@@ -122,9 +124,12 @@ filesRoutes.get('/sizeImage/[^/]+', ImageSize.get );
 
 var Video = require('./source/private/files/videos/Video.js');
 
+var GetVideo = require('./source/files/GetVideo.js');
+
+
 filesRoutes.delete('/video/[^/]+', Video.delete );
 
-fileGetRoutes.get('/[^/]+/video/[^/]+', Video.get );
+fileGetRoutes.get('/[^/]+/video/[^/]+', GetVideo.get );
 
 filesRoutes.post('/video/[^/]+', Video.post );
 
@@ -133,9 +138,12 @@ filesRoutes.post('/video/[^/]+', Video.post );
 
 var Audio = require('./source/private/files/audios/Audio.js');
 
+var GetAudio = require('./source/files/GetAudio.js');
+
+
 filesRoutes.delete('/audio/[^/]+', Audio.delete );
 
-fileGetRoutes.get('/[^/]+/audio/[^/]+', Audio.get );
+fileGetRoutes.get('/[^/]+/audio/[^/]+', GetAudio.get );
 
 filesRoutes.post('/audio/[^/]+', Audio.post );
 

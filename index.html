@@ -55,7 +55,7 @@
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 
 </head>
-<body layout="column">
+<body layout="column" layout-fill>
 	<header data-ng-controller="HeaderController" class="header" id="premiHeader">
 		<md-toolbar layout="row" layout-align="space-between center" >
 		<!--The left side-->
@@ -78,7 +78,7 @@
 		</section>
 	</header>
 
-	<section ng-view layout="row" id="sectionBody"></section> <!--class="main-body"-->
+	<section ng-view id="sectionBody" layout="row" flex></section> <!--class="main-body"-->
 
 	<footer class="footer" id="premiFooter">
 		<md-toolbar layout="row" layout-align="space-between center" >

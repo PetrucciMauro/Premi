@@ -222,33 +222,37 @@
 
 
             <md-menu md-offset="0 -7">
-                <md-button aria-label="Aggiungi al percorso principale" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()">
+                <md-button aria-label="Aggiungi al percorso principale" ng-show="inPath(active().getId())" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()">
                     <md-tooltip>Aggiungi a un percorso</md-tooltip>
                     <md-icon md-svg-src="assets/svg/addmainpath.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
                 </md-button>
                 <md-menu-content width="2">
                     <md-menu-item>
                         <md-button id="addToMain" md-ink-ripple class="md-button md-default-theme backgroundButton" ng-click="aggiungiMainPath()">
-                            <p md-menu-align-target>Aggiungi frame al percorso principare</p>
+                            <p md-menu-align-target>Aggiungi frame al percorso principale</p>
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-            <md-button aria-label="Rimuovi bookmark" class="menu md-button md-default-theme" disabled="disabled" id="disabledBookmark" ng-show="!canHaveBookmark">
-               
-                <md-icon md-svg-src="assets/svg/bookmark_not_active.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+            <md-button aria-label="Aggiungi al percorso principale" class="menu md-button md-default-theme" disabled="disabled" id="addToMainPath" ng-show="!inPath(active().getId())">
+                <md-tooltip>Aggiungi a un percorso</md-tooltip>
+                <md-icon md-svg-src="assets/svg/addmainpath.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-            
-            <md-button aria-label="Aggiungi bookmark" class="menu md-button md-default-theme" ng-click="updateBookmark()" id="addBookmark" ng-show="canAddBookmark">
-                <md-tooltip>Aggiungi bookmark</md-tooltip>
-                <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-            </md-button>
-            <md-button aria-label="Rimuovi bookmark" class="menu md-button md-default-theme" ng-click="updateBookmark()" id="deleteBookmark" ng-show="canRemoveBookmark">
-                <md-tooltip>Rimuovi bookmark</md-tooltip>
-                <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-            </md-button>
+                <md-button aria-label="Rimuovi bookmark" class="menu md-button md-default-theme" disabled="disabled" id="disabledBookmark" ng-show="!canHaveBookmark">
 
-              <!--  <bookmark-button attr="{{bookmarks.buttons}}"></bookmark-button>-->
+                    <md-icon md-svg-src="assets/svg/bookmark_not_active.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                </md-button>
+
+                <md-button aria-label="Aggiungi bookmark" class="menu md-button md-default-theme" ng-click="updateBookmark()" id="addBookmark" ng-show="canAddBookmark">
+                    <md-tooltip>Aggiungi bookmark</md-tooltip>
+                    <md-icon md-svg-src="assets/svg/bookmark.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                </md-button>
+                <md-button aria-label="Rimuovi bookmark" class="menu md-button md-default-theme" ng-click="updateBookmark()" id="deleteBookmark" ng-show="canRemoveBookmark">
+                    <md-tooltip>Rimuovi bookmark</md-tooltip>
+                    <md-icon md-svg-src="assets/svg/bookmark_delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                </md-button>
+
+                <!--  <bookmark-button attr="{{bookmarks.buttons}}"></bookmark-button>-->
 
 </div>
 

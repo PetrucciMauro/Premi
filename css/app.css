@@ -16,19 +16,11 @@ html, body {
   position:fixed !important;
   min-height:3em;
   width:100%;
+
   }
 #sectionBody{
   padding-top:4em;
 }
-
-#sectionBodyHome {
-    padding-top: 4em;
-    overflow-y: scroll;
-    padding-top: 0;
-    margin-top: 4.6em;
-    position: static;
-}
-
 textarea{
   padding:0px;
   margin:0px;

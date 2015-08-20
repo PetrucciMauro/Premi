@@ -16,7 +16,6 @@ html, body {
   position:fixed !important;
   min-height:3em;
   width:100%;
-  z-index: 1000000;
   }
 #sectionBody{
   padding-top:4em;

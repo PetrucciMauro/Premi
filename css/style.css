@@ -77,7 +77,6 @@ margin:0;
 	min-height: 2.5em;
     max-height: 3em;
     position:fixed;
-    z-index: 1000000;
 }
 
 #contextual-menu md-icon{

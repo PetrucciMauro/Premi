@@ -692,10 +692,12 @@ var concretePortaAvantiCommand = function (spec) {
     };
     public.undoAction = function () {
         public.getEnabler().portaDietro(private.oldZIndex);
+        console.log("le specifiche dell'annulla sono " + JSON.stringify(spec))
+        angular.element($("#content")).scope().portaDietro(spec);
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
-        angular.element($("#content")).scope().portaDietro(spec);
+        
     };
     return public;
 };
@@ -720,10 +722,11 @@ var concretePortaDietroCommand = function (spec) {
     };
     public.undoAction = function () {
         public.getEnabler().portaAvanti(private.oldZIndex);
+        angular.element($("#content")).scope().portaAvanti(spec);
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
-        angular.element($("#content")).scope().portaAvanti(spec);
+        
     };
     return public;
 };

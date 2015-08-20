@@ -374,14 +374,15 @@ function clearMenu(){
 function elimina(id) {
 	var frames = document.getElementById("frames").children;
 	for (var i = 0; i < frames.length; i++) {
-		if (frames[i].id === id && frames[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
+	    if (frames[i].id != id && frames[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
 			frames[i].style.zIndex = frames[i].style.zIndex - 1;
 		}
 	}
 
 	var elements = document.getElementById("elements").children;
 	for (var i = 0; i < elements.length; i++) {
-		if (elements[i].id === id && elements[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
+	    if (elements[i].id != id && elements[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
+	        
 			elements[i].style.zIndex = elements[i].style.zIndex - 1;
 		}
 	}

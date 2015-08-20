@@ -55,7 +55,7 @@ var del = function(req, res){
 							  }
 							  var to_pull = {};
 							  var to_id = {};
-							  var id_element = parseInt(id_element, 10);
+							  //var id_element = parseInt(id_element, 10);
 							  console.log(id_element);
 							  to_id["id"] = id_element;
 							  to_pull[field_path] = to_id;

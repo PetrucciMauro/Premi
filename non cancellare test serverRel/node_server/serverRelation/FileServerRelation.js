@@ -100,7 +100,22 @@ var FileServerRelation = function(hostname, auth_obj){
 		messageState = res.success;
 		return res.success;
 	};
+  
+  //new
+  that.getImageDimension = function(filename){
+    var req = new XMLHttpRequest();
+    req.open('GET', host+'/private/api/files/sizeImage/'+filename, false);
+    req.setRequestHeader("Authorization", auth.getToken());
+    req.send();
+    var jsonResponse = JSON.parse(req.responseText);
+    var dimensions = {
+      'height' : jsonResponse.height,
+      'width' : jsonResponse.width
+    };
+    return dimensions;
+  }
 	
+  //
 	that.getMessage = function(){
 		return messageState;
 	};

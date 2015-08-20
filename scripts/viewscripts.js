@@ -47,12 +47,10 @@ var active=function(){
 			private.element=document.getElementById(id);
 			private.element.style.boxShadow= "0 0 0 0.25em black inset";
 			
-			//document.getElementById("rotation").innerHTML="<input id=\"rangeRotation\" type=\"range\" min=\"0\" max=\"360\" step=\"1\" value=\""+getRotationDegrees($("#"+id))+"\" oninput=\"rotate('"+id+"',this.value)\">";
-			//console.log("gradi " + getRotationDegrees($("#" + id)));
+
 			private.id = id;
 			deselezionaPercorso(id);
 			selezionaPercorso(id);
-			//angular.element(content).scope().changeActive();
 			if($(private.element).hasClass("frame")){
 				angular.element(content).scope().AddBookmark();
 				angular.element(content).scope().RemoveBookmark();
@@ -338,29 +336,6 @@ var choicePaths=function(){
 
 
 
-function getRotationDegrees(obj) {
-	var matrix = obj.css("-webkit-transform") ||
-	obj.css("-moz-transform")    ||
-	obj.css("-ms-transform")     ||
-	obj.css("-o-transform")      ||
-	obj.css("transform");
-	if(matrix !== 'none') {
-		var values = matrix.split('(')[1].split(')')[0].split(',');
-		var a = values[0];
-		var b = values[1];
-		var angle = Math.round(Math.atan2(b, a) * (180/Math.PI));
-	} else { var angle = 0; }
-	return (angle < 0) ? angle + 360 : angle;
-}
-
-function rotate(el,value) {
-	document.getElementById(el).style.webkitTransform="rotate(" + value + "deg)";
-	document.getElementById(el).style.msTransform="rotate(" + value + "deg)";
-	document.getElementById(el).style.MozTransform="rotate(" + value + "deg)";
-	document.getElementById(el).style.OTransform="rotate(" + value + "deg)";
-	document.getElementById(el).style.transform="rotate(" + value + "deg)";
-};
-
 
 
 function clearMenu(){
@@ -461,8 +436,7 @@ var inserisciElemento = function (classe, spec) {
 	}
 
 	//TRADUTTORE EDIT
-	if(spec && spec.rotation != 0)
-		rotate(id, spec.rotation);
+
 	//TRADUTTORE EDIT
 
 	contatore++;
@@ -485,7 +459,6 @@ var inserisciElemento = function (classe, spec) {
 var inserisciFrame = function (spec) {
     console.log(JSON.stringify(spec));
 	var div=inserisciElemento("frame", spec);
-	//div.setAttribute("ondblclick", "zoomIn()");
 	$(function() {
 		$( div ).resizable({
 			aspectRatio: 1 / 1,
@@ -579,14 +552,7 @@ var inserisciMedia = function (x, classe, spec) {
 		url = spec.ref;
 	else
 		url = x;
-	
-	var z=scale;
-	/*$(div).css({
-		"-ms-transform": "scale("+1/z+")", // IE 9 
-		"-webkit-transform":"scale("+1/z+")", // Chrome, Safari, Opera 
-		"transform": "scale("+1/z+")",
-	});*/
-	
+
 	var type;
 	if(classe==="image")
 		type="img";
@@ -1013,66 +979,7 @@ function mediaControl(){
 		element.pause();
 };
 
-var scale=100;
 
-function zoomIn() {
-	$("#content").css({ "overflow": "scroll", "height": "auto" });
-	var degrees = 0 - getRotationDegrees($("#" + active().getId()));
-	var rotRad = degrees * Math.PI / 180;
-	scale = ($("#content").height() / $("#" + active().getId()).height()) * 75;
-	var z = scale;
-	console.log(degrees);
-	var nleft = (document.getElementById(active().getId()).style.left);
-	console.log("new left " + nleft);
-	var ntop = (document.getElementById(active().getId()).style.top);
-	var elements = document.getElementById("frames").children;
-	console.log("radianti " + rotRad);
-	var yCenter = document.getElementById("content").offsetHeight / 2;
-	var xCenter = document.getElementById("content").offsetWidth / 2;
-	var width = document.getElementById(active().getId()).offsetWidth;
-	var height = document.getElementById(active().getId()).offsetHeight;
-	var devX = ((0 - width / 2 - 6) * Math.cos(-rotRad) + (height / 2 + 6) * Math.sin(-rotRad) + width / 2 + 6);
-	var devY = ((width / 2 + 6) * Math.sin(-rotRad) + (height / 2 + 6) * Math.cos(-rotRad) - height / 2 - 6);
-	var val = (0 - parseFloat(nleft) + (1 / 2) * document.getElementById(active().getId()).offsetWidth) + " " + (0 - parseFloat(ntop) + (1 / 2) * document.getElementById(active().getId()).offsetHeight);
-	$("#content").append('<div height="2em" width="2em" style="top: ' + (parseFloat(ntop) - devY) + 'px; left: ' + (parseFloat(nleft) + devX) + 'px; background-color: red"/>');
-	$("#content").css({
-		//"position": "absolute",
-		/*"left": (0 - ((parseFloat(nleft) + devX - xCenter) * Math.cos(0 - rotRad) + (parseFloat(ntop) - devY - yCenter) * Math.sin(0 - rotRad) + xCenter)) + "px",
-		"top": (0 - (0 - (parseFloat(nleft) + devX - xCenter) * Math.sin(0 - rotRad) + (parseFloat(ntop) - devY - yCenter) * Math.cos(0 - rotRad) + yCenter)) + "px",*/
-		"-ms-transform": "rotate(" + degrees + "deg)", /* IE 9 */
-		"-webkit-transform": "rotate(" + degrees + "deg)", /* Chrome, Safari, Opera */
-		"transform": "rotate(" + degrees + "deg)",
-		"-webkit-transition": "all 0.5s ease-in-out",
-		"-moz-transition": "all 0.5s ease-in-out",
-		"-o-transition": "all 0.5s ease-in-out",
-		"transition": "all 0.5s ease-in-out"
-	});
-	$("#content").css({ "zoom": z + "%" });
-	document.getElementById(active().getId()).scrollIntoView();
-};
-
-function zoomOut() {
-	if (!active().getId()) {
-		scale = 100;
-		var z = scale;
-		var degrees = 0;
-		var frames = $("#frames").children();
-		$("#content").css({ "overflow": "hidden" });
-		var elements = document.getElementById("frames").children;
-
-		$("#content").css({
-			"zoom": z + "%",
-			"position": "relative",
-			"left": 0,
-			"top": 0,
-			"-ms-transform": "rotate(" + degrees + "deg) ", /* IE 9 */
-			"-webkit-transform": "rotate(" + degrees + "deg)", /* Chrome, Safari, Opera */
-			"transform": "rotate(" + degrees + "deg) ",
-		});
-		$("#content").css({ "zoom": z + "%" });
-	}
-
-};
 
 
 var click = {
@@ -1143,8 +1050,8 @@ function updateDraggable(element){
 
 				if(left>0 && top>0 && (left+originalWidth)<l && (top+originalHeight)<h){
 					ui.position = {
-						left: left/(scale/100),
-						top:  top/(scale/100)
+						left: left,
+						top:  top
 					};
 				}
 
@@ -1164,9 +1071,9 @@ function updateDraggable(element){
 					
 					var x = $("#" + others[i].id);
 					if(leftOk)	
-						x.css("left", (leftEle)/(scale/100));
+						x.css("left", (leftEle));
 					if(topOk)
-						x.css("top", (topEle)/(scale/100));
+						x.css("top", (topEle));
 				}
 			},
 			stop: function (event, ui){

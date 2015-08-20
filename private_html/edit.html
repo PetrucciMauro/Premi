@@ -127,24 +127,7 @@
                 <md-tooltip>Porta dietro</md-tooltip>
                 <md-icon md-svg-src="assets/svg/bringback.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-            <!--Menu delle rotazioni-->
-            <md-menu md-offset="0 -7">
-
-                <md-button aria-label="Ruota elemento" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="rotate">
-                    <!--QUESTO NON PUÒ ANDARE QUI PERCHÈ RIGUARDA SOLO IL BUTTON PER APRIRE IL MENU: setRotation(getRotationDegrees($('#'+active().getId())))-->
-                    <md-tooltip>Ruota</md-tooltip>
-                    <md-icon md-svg-src="assets/svg/rotation.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
-                </md-button>
-                <md-menu-content width="2">
-                    <md-menu-item>
-                        <md-input-content>
-                            <md-button>
-                                <input id="rangeRotation" type="range" min="0" max="360" step="1" ng-model="elementRotation" ng-change="ruotaElemento(elementRotation)" aria-label="Ruota l'elemento" />
-                            </md-button>
-                        </md-input-content>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+           
 
         </div>
 

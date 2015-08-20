@@ -3,8 +3,6 @@
 //==============
 
 var fs = require('fs');
-var gm = require('gm');
-var im = require('imagemagick');
 var sizeOf = require('image-size');
 
 //=========

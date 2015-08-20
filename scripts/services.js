@@ -169,10 +169,10 @@ premiService.factory('Upload', ['$http','Main','Utils',
 				return checkExtension(files, image) || checkExtension(files, audio) || checkExtension(files, video);
 			
 			var ris = true;
-			for(var i=0; i<files.length && ris; ++i)
+			for(var i=0; i<files.length && ris; ++i){
 				if(array.indexOf(files[i].type) == -1)
 					ris = false;
-
+			}
 			return ris;
 		};
 		
@@ -222,8 +222,8 @@ premiService.factory('Upload', ['$http','Main','Utils',
 				return checkExtension(files, video);
 			},
 			getFileUrl: function(file){
-				return 'files/' + Main.getUser().user + '/' + getUrlFormat(file) + file.name;
-				//return 'private/api/files/image/' + file.name;
+				return '/files/' + Main.getUser().user + '/' + getUrlFormat(file) + file.name;
+				//return '/files'+ getUrlFormat(file) + Main.getUser().user + file.name;
 			}
 		}
 

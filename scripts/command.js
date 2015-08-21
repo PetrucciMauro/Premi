@@ -1,9 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 var invokerInstace = {};
 var invokerInstanced = false;
 var invoker = function () {
@@ -16,7 +10,7 @@ var invoker = function () {
             com.doAction();
             private.undoStack.push(com);
             private.redoStack = [];
-            console.log("eseguo");
+
             
         };
         public.undo = function () {
@@ -119,7 +113,6 @@ var concreteTextInsertCommand = function (spec) {
     public.undoAction = function () {
         public.getEnabler().removeText(public.getId());
         var obj = public.getObj();
-        console.log(obj);
         obj.action = "delete";
         angular.element($("#content")).scope().rimuoviElemento(spec.id);
         return obj;
@@ -259,7 +252,6 @@ var concreteBackgroundInsertCommand = function (spec) {
     private.oldBackground = {};
     public.doAction = function () {
         private.oldBackground = public.getEnabler().insertBackground(spec);
-        console.log(spec.image + " - " +spec.ref);
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }
@@ -611,9 +603,7 @@ var concreteEditBookmarkCommand = function (spec) {
     public = abstractCommand(spec);
     public.doAction = function () {
         var bookmark = public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
-        console.log(JSON.stringify(public.getEnabler().getElement(spec.id)));
         if (public.getExecuted() === 0) {
-            console.log("setto executed");
             public.setExecuted(1);        }
         else {
             if(bookmark == 0)

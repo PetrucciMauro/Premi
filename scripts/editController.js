@@ -651,7 +651,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					};
 					
 					var command = concreteEditFontCommand(spec);
-					inv.execute(command);inserisci
+					inv.execute(command);
 		 
 					loader.addUpdate(activeText);
 				}

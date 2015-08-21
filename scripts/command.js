@@ -1,16 +1,8 @@
 /*
- Name : command.js
+ Name : Giovanni venturelli
  Package : Command
  Location : /scripts/
-
- History :
- -Version 
-	1.0.0
- -Date 
-	21/08/2015
- -Programmer 
-	Giovanni Venturelli
- - Description
+ Description
 	Definizione delle classi di command finalizzati allo sviluppo delle funzionalità di annulla/ripristina
 
 */

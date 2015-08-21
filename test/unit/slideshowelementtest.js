@@ -1,19 +1,11 @@
 /*
-2 * Name : slideshowelementtest.js
-3 * Module : UnitTest
-4 * Location : test/unit/
-5 *
-6 * History :
-7 * -Version 
-	1.0.0
-8 * -Date 
-	21/08/2015
-9 * -Programmer 
-	Pietro Tollot
-10 * - Description
+ Name : Giovanni venturelli
+ Package : SlideShowActions
+ Location : /test/unit/
+ Description
+ Description
 	Si tratta dei test inerenti alle classi del package SlideShow
-11 *
-12 */
+*/
 describe('slideshowtest', function() {
   var $jsText=text({id: 1, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13,  waste: 0, content: "babba", font:"arial", color:"black"});
   var $jsFrame=frame({id: 2, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, waste: 0, bookmark: 1, ref:"prova", color:"rgb(2,23,244,1)"});

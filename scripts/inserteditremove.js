@@ -1,16 +1,8 @@
 /*
- Name : inserteditremove.js
+ Name : Giovanni venturelli
  Package : SlideShowActions
  Location : /scripts/
-
- History :
- -Version 
-	1.0.0
- -Date 
-	21/08/2015
- -Programmer 
-	Giovanni Venturelli
- - Description
+ Description
 	Definizione delle funzioni di modifica del json che rappresenta la presentazione
 
 */

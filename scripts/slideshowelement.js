@@ -1,16 +1,8 @@
 /*
- Name : slideshowelement.js
+ Name : Giovanni venturelli
  Package : SlideShowElements
  Location : /scripts/
-
- History :
- -Version 
-	1.0.0
- -Date 
-	21/08/2015
- -Programmer 
-	Giovanni Venturelli
- - Description
+ Description:
 	Definizione delle classi di oggetti che rappresentano gli elementi della presentazione
 
 */

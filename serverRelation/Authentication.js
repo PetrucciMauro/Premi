@@ -26,6 +26,15 @@ var Authentication = function(hostname){
 		token = 'null';
 		return true;
 	};
+  that.changepassword = function(user, password, newpassword){
+    var req = new XMLHttpRequest();
+    req.open('POST', host+'/account/changepassword', false);
+    req.setRequestHeader("Authorization", user + ":" + password + ":" + newpassword);
+    req.send();
+    var res = JSON.parse(req.responseText);
+    messageState = res.message;
+    return res.success;
+  };
 	
 	return that;
 };

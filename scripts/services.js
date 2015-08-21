@@ -96,14 +96,13 @@ premiService.factory('Main', ['Utils', '$localStorage',
 			//Metodo che richiama il metodo del server per fare il cambio della password
 			changepassword: function(formData, success, error){
 				//richiamato il metodo node per il cambio della pwd
-				var changepwd = ChangePassword(baseUrl);
 
-				if(changepwd.changepassword(formData.username, formData.password, formData.newpassword)){
+				if(login.changepassword(formData.username, formData.password, formData.newpassword)){
 					$localStorage.formData.password = formData.password;
 					success();
 				}
 				else
-					error({message: changepwd.getMessage()});
+					error({message: login.getMessage()});
 			},
 			getToken: function(){
 				return login.getToken();
@@ -222,7 +221,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 				return checkExtension(files, video);
 			},
 			getFileUrl: function(file){
-				return '/files/' + Main.getUser().user + '/' + getUrlFormat(file) + file.name;
+				return 'files/' + Main.getUser().user + '/' + getUrlFormat(file) + file.name;
 				//return '/files'+ getUrlFormat(file) + Main.getUser().user + file.name;
 			}
 		}

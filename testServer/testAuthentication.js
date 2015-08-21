@@ -137,7 +137,7 @@ describe("authentication", function(){
 							
 							});
 						
-						it("autentica utente non presente",function(){
+						it("non autentica utente non presente",function(){
 							var req = new XMLHttpRequest();
 							req.open('GET', host+'/account/authenticate', false);
 							req.setRequestHeader("Authorization", "provaname"+":"+"provapass");

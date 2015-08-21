@@ -1,5 +1,21 @@
 'use strict';
 
+/*
+* Name :  app.js
+* Module : Controller::premiApp
+* Location : scripts/app.js
+*
+* History :
+* Version       Date        Programmer                  Description
+* =================================================================================================
+* 0.0.1        01/06/2015   Busetto Matteo            Inizio premiApp
+* 0.2.0        15/06/2015   Busetto Matteo            Configurato opportunamente le varie parti (routing e interceptor)
+* 0.5.0        20/06/2015   Busetto Matteo            Configurato exception handler
+* 1.0.0        25/06/2015   Busetto Matteo            Versione finale
+* =================================================================================================
+*
+*/
+
 var premiApp = angular.module('premiApp', [
 	'ngRoute',
 	'ngMaterial',

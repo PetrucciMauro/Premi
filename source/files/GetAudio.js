@@ -1,3 +1,11 @@
+/*
+ * Name : Pietro Tollot
+ * Module : serverNode
+ * Location : source/files/GetAudio.js
+ *
+ */
+
+
 //==============
 // configuration
 //==============
@@ -36,11 +44,7 @@ var get = function (req, res) {
 	else{
 		res.sendFile(file_name, options, function (err) {
 															if (err) {
-															console.log(err);
 															res.status(err.status).end();
-															}
-															else {
-															console.log('Sent:', file_name);
 															}
 															});
 	}

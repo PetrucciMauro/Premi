@@ -1,3 +1,9 @@
+/*
+ * Name : Pietro Tollot
+ * Module : serverNode
+ * Location : source/private/presentations/presentation/PresentationPath.js
+ *
+ */
 //==============
 // configuration
 //==============
@@ -21,8 +27,6 @@ var put = function(req, res){
 							  to_set["proper.paths"] = new_element;
 							  
 							  var query = {"meta.titolo": name_pres};
-							  console.log(to_set);
-							  console.log(name_pres);
 							  
 							  db.collection('presentations'+req.user).update( {"meta.titolo" : name_pres}, {"$set" : {"proper.paths" : new_element} }, function(err, doc){
 																							  if(err) throw err;

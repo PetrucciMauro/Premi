@@ -1,3 +1,10 @@
+/*
+ * Name : Pietro Tollot
+ * Module : serverNode
+ * Location : source/account/Register.js
+ *
+ */
+
 //==============
 // configuration
 //==============

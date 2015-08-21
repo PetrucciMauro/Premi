@@ -1,3 +1,9 @@
+/*
+ * Name : Pietro Tollot
+ * Module : serverNode
+ * Location : source/private/files/audios/AudiosMeta.js
+ *
+ */
 //==============
 // configuration
 //==============

@@ -1,3 +1,10 @@
+/*
+ * Name : Pietro Tollot
+ * Module : serverNode
+ * Location : source/private/presentations/new/NewPresentation.js
+ *
+ */
+
 //==============
 // configuration
 //==============

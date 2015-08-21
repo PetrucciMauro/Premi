@@ -1,7 +1,7 @@
 /*
 2 * Name : slideshowelementtest.js
 3 * Module : UnitTest
-4 * Location : test/unit
+4 * Location : test/unit/
 5 *
 6 * History :
 7 * -Version 

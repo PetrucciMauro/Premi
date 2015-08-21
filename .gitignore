@@ -3,6 +3,6 @@ logs/*
 tmp
 .idea
 .DS_Store
-bower_components/
-node_modules/
-coverage
+bower_components/*
+node_modules/*
+coverage/*

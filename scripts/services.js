@@ -2,6 +2,23 @@
 
 var premiService = angular.module('premiService',[])
 
+/*
+* Name :  services.js
+* Module : Controller::Services
+* Location : scripts/services.js
+*
+* History :
+* Version       Date        Programmer                  Description
+* =================================================================================================
+* 0.0.1        20/07/2015   Busetto Matteo            Inizio services
+* 0.2.0        25/07/2015   Busetto Matteo            Creato Main e toPath service
+* 0.5.0        20/07/2015   Busetto Matteo            Creato Utils, Update e SharedData service
+* 0.8.0        20/07/2015   Busetto Matteo            Ottimizzato il codice
+* 1.0.0        01/08/2015   Busetto Matteo            Versione finale
+* =================================================================================================
+*
+*/
+
 premiService.factory('Main', ['Utils', '$localStorage',
 	function(Utils, $localStorage){
 		var baseUrl = Utils.hostname();
@@ -199,8 +216,6 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					req.setRequestHeader("Authorization", token());
 					getFile(files[i]);
 					var after = function(){
-					    console.log("chiamata della callback nome " + files[0]);
-					    
 					    callback(getFile());
 					}
 					var error = function(){

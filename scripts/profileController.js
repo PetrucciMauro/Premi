@@ -32,14 +32,6 @@ premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPag
 			}
 		};
 
-/*
-		var getMedia = function(){
-			return {
-				username: Main.getUser().user,
-				media: JSON.stringify($scope.myFile)
-			}
-		};*/
-
 		$scope.changepassword = function() {
 			//check che i campi pwd non siano vuoti
 			if(Utils.isUndefined($scope.user) || Utils.isUndefined($scope.user.password) || Utils.isUndefined($scope.user.newpassword) || Utils.isUndefined($scope.user.confnewpassword))
@@ -65,29 +57,6 @@ premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPag
 				throw new Error(res.message);
 			})
 		};
-
-		$scope.uploadmedia = function(files){
-			//var file = (($('input[type=file]').val()).split('\\'))[2];
-			
-            Upload.uploadmedia(files, function() {
-            	$scope.file={};
-            	console.log("vai così");
-
-            } , function(res) {
-            	throw new Error(res.message);
-
-            })
-        };
-	
-
-	/*
-		Main.me(function(res) {
-			$scope.user = res;
-		}, function() {
-			$rootScope.error = 'Failed to fetch details';
-		});
-
-	*/
 
 
 }])

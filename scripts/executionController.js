@@ -36,7 +36,6 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 
 	    //TRANSLATION
 	    var json = SharedData.getPresentazione();
-	    console.log(json);
 	    translateImpress(json);
 
 	    var goHome = angular.element($("#homeButton"));
@@ -44,24 +43,17 @@ premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'to
 	    	$("#premiHeader").show();
 	    	$("#premiFooter").show();
 	    	$("#impressMenu").remove();
-	    	/*var hash = window.location.hash;
-	    	var array = hash.split("%23");
 
-	    	window.location.hash = array[0];*/
 	    	$route.current = lastRoute;
 	    	toPages.homepage();
 	    });
 
 	    var goEdit = angular.element($("#editButton"));
 	    goEdit.on("click", function(){
-	    	console.log("edit");
 	    	$("#premiHeader").show();
 	    	$("#premiFooter").show();
 	    	$("#impressMenu").remove();
-	    	/*var hash = window.location.hash;
-	    	var array = hash.split("%23");
-
-	    	window.location.hash = array[0];*/
+	    	
 	    	$route.current = lastRoute;
 	    	toPages.editpage();
 	    });

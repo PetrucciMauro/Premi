@@ -4,7 +4,6 @@ var premiApp = angular.module('premiApp', [
 	'ngRoute',
 	'ngMaterial',
 	'ngStorage',
-	//'routeScripts',
 	'premiService',
 	'premiAccessController',
 	'premiHomeController',
@@ -58,26 +57,21 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 			templateUrl: 'private_html/edit.html',
 			controller: 'EditController',
 			isLogin: true
-			//js: ['scripts/viewscripts.js']
 		}).
 		when('/private/execution', {
 			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
 			isLogin: true,
 			reloadOnSearch: false
-			//js: ['lib/impress.js']
 		}).
 		when('/private/execution:rest*', {
 			templateUrl: 'private_html/execution.html',
 			controller: 'ExecutionController',
 			isLogin: true,
 			reloadOnSearch: false
-			//js: ['lib/impress.js']
 		}).
 		otherwise({
 			redirectTo: function(){
-				console.log("redirect from"+window.location.href);
-
 				return '/login';}
 		});
 
@@ -96,7 +90,6 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 					return config;
 				},
 				'responseError': function(response) {
-					console.log("response error");
 					if(response.status === 401 || response.status === 403) {
 						throw new Error(response.message);
 						toPages.loginpage();

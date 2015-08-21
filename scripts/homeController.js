@@ -29,7 +29,6 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		var allSS = mongo.getPresentationsMeta();
 		
 		$scope.allSS =  allSS;
-		console.log(allSS);
 		}
 		$scope.display_limit = 50;
 
@@ -43,10 +42,7 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		$scope.goEdit = function(slideId){
 			toPages.editpage(slideId);
 		};
-		$scope.goExecute = function(slideId){
-			/*SharedData.forEditManuel(myJson);
-			$location.path('private/execution');*/
-			
+		$scope.goExecute = function(slideId){			
 			toPages.executionpage(slideId);
 			
 		};
@@ -93,9 +89,5 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 			$scope.newSS = !$scope.newSS;
 			update();
 		};
-
-		$scope.salvaManifest = function(slideId){
-			//CHI RICHIAMO?
-		}
 		
 }])

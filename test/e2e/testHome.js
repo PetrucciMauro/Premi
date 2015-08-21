@@ -39,11 +39,14 @@ describe('Premi Home page test', function(){
 	it('should delete a presentation',function(){
 		browser.get('http://localhost:8081/index.html#/private/home');
 		element( by.css('[ng-click="deleteSlideShow(slide.titolo)"]')).click();
-		browser.switchTo().alert().then(function(alert) {
-			return alert.accept();
-		});
-        expect(element(by.id('slide')).isPresent()).toBe(false);
+		   browser.driver.switchTo().alert().then( // <- this fixes the problem
+		   	function (alert) {
+		   		alert.accept();
+		   	},
+		   	function (error) {
+		   	});
+		   expect(element(by.id('slide')).isPresent()).toBe(false);
 
-	});
+		});
 
 });

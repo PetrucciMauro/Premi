@@ -8,11 +8,11 @@ describe('Premi registration page ', function() {
   //prima di ogni funzione accedo alla pagina della registrazione
   beforeEach(function(){
 
-    browser.get('http://localhost:8081/#/registrazione');
+    browser.driver.get('http://localhost:8081/#/registrazione');
 
   })
   
- /* it('should register a new user and redirect to home', function() {
+  it('should register a new user and redirect to home', function() {
     //genero dei valori casuali e li concateno a 'user-' per poter registrare sempre degli utenti casuali nel server
     var randVal = Date.now();
     username.sendKeys('user-' + randVal);
@@ -21,20 +21,7 @@ describe('Premi registration page ', function() {
     //finita la registrazione mi aspetto di essere reindirizzato alla 'home'
     expect(element(by.id('home')).isPresent()).toBe(true);
     
-  });*/
-
-it('should exists unique username', function() {
-
- username.sendKeys('LateButSafe');
- pass.sendKeys('password');
- registrationButton.click();
- browser.switchTo().alert().then(function(alert) {
-  expect(alert.getText()).toEqual('Username already registered');
-  return alert.dismiss();
-});
- expect(element(by.id('registration')).isPresent()).toBe(true);
-
-});
+  });
 
 
 it('should insert a valid password', function() {
@@ -49,9 +36,21 @@ it('should insert a valid password', function() {
 });
 
 
+it('should exists unique username', function() {
 
+ username.sendKeys('LateButSafe');
+ pass.sendKeys('password');
+ registrationButton.click();
+   browser.driver.switchTo().alert().then( // <- this fixes the problem
+    function (alert) {
+      expect(alert.getText()).toEqual('Username already registered');
+      alert.accept();
+    },
+    function (error) {
+    });
+ expect(element(by.id('registration')).isPresent()).toBe(true);
 
+});
 
-//db.users.remove( { username:  99  } )
 
 });

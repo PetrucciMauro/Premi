@@ -28,8 +28,8 @@ $(document).ready(function () {
 			}
 		});
 	$("#sortable").disableSelection();
-	document.getElementById("premiFooter").style.marginTop = styleContent.height;
-	document.getElementById("premiFooter").style.position = "relative";
+	document.getElementById("premiFooter").style.marginTop = document.getElementById("premiHeader").style.height + document.getElementById("contextual-menu").style.height;
+	document.getElementById("premiFooter").style.position = "absolute";
 });
 
 //oggetto che tiene traccia dell'elemento selezionato//

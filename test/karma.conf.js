@@ -13,7 +13,7 @@ module.exports = function(config){
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-animate/angular-animate.js',
       'bower_components/angular-resource/angular-resource.js',
-      'bower_components/jquery/dist/jquery.js',
+
 
 
       'lib/ngStorage.js',
@@ -44,7 +44,7 @@ module.exports = function(config){
 
     frameworks: ['jasmine'],
 
-    browsers : ['PhantomJS'],
+
 
     plugins : [
 

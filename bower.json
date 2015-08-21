@@ -11,7 +11,7 @@
     "angular-route": "1.3.x",
     "angular-animate": "1.3.x",
     "angular-aria": "1.3.x",
-    "angular-material": "1.3.x",
+    "angular-material": "0.10.x",
     "angular-resource" : "1.3.x",
     "jscolor": "latest"
   }

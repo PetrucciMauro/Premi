@@ -1,5 +1,26 @@
 'use strict';
 
+/*
+* Name :  editController.js
+* Module : Controller::editController
+* Location : scripts/editController.js
+*
+* History :
+* Version       Date        Programmer                  Description
+* =================================================================================================
+* 0.0.1        01/07/2015   Busetto Matteo            Inizio editController
+* 0.2.0        15/07/2015   Busetto Matteo            Aggiunto inserimenti elementi
+* 0.5.0        20/07/2015   Busetto Matteo            Aggiunti rimozione e edit di posizione, rotazione e ridimensionamento
+* 0.6.0        25/07/2015   Busetto Matteo            Corretti gli inserimenti
+* 0.6.0        25/07/2015   Venturelli Giovanni       Aggiunta gestione elementi grafici della view
+* 0.6.5        01/08/2015   Busetto Matteo		      Aggiunte funzionalità per i testi
+* 0.7.0        14/08/2015   Busetto Matteo		      Corretto inserimento media con upload
+* 0.9.0        20/07/2015   Venturelli Giovanni       Rivisto codice e corretto inserimento immagini
+* 1.0.0        22/08/2015   Busetto Matteo		      Versione finale
+* =================================================================================================
+*
+*/
+
 var premiEditController = angular.module('premiEditController', ['premiService'])
 
 premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', 'Utils', 'SharedData', 'Upload', '$q', '$mdSidenav', '$mdBottomSheet', '$location', '$interval',
@@ -14,15 +35,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		//Metodi per il reindirizzamento
 		$scope.goExecute = function(){
-			/*var json = {"_id":"55c38501d815bccd1f27a461","meta":{"titolo":"Prova"},"proper":{"paths":{"main":[],"choices":[]},"texts":[{"id":"2","xIndex":413,"yIndex":78,"rotation":0,"zIndex":1,"waste": 413,"size": 10, "height":218,"width":153,"content":"balfdjsalkfjsakfjsdkafjl.\nCome stai?? io vorrei andarmene.... perché sono stanco.... voglio moriiiiire","font":"Roboto, sans-serif","color":"rgb(31, 121, 131)","type":"text"}],"frames":[{"id":"1","yIndex":56.6218109130859,"xIndex":73.6218109130859,"rotation":332,"zIndex":0,"height":348,"width":348,"rotation": 50,"bookmark":0,"image":"","color":"rgb(133, 59, 59)","type":"frame"}],"images":[],"SVGs":[],"audios":[],"videos":[],"background":{"width": l, "height": h, "image": "", "color": ""}}};
-			
-			SharedData.forEditManuel(json);
-			$location.path('private/execution');*/
 			var reindirizza = function(){
 				toPages.executionpage();
 			}
-			//loader.update(reindirizza);
-			reindirizza();
+			loader.update(reindirizza());
 		
 		}
 
@@ -128,7 +144,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				templateUrl: 'bottomsheet-percorsi',
 				controller: 'BottomSheetController'
 			}).then(function() {
-				console.log("fatto")
+				//console.log("fatto")
 			});
 		}; 
 
@@ -138,7 +154,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		var save = function(){
 			loader.update(salvato);
-			console.log("partito il save");
 		}
 
 		//$interval(save, 3);
@@ -231,21 +246,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 						left: 0
 					};
 
-				 /*   var host = "http://localhost:8081/";
-
-					var req = new XMLHttpRequest();
-					req.open('GET', host + 'private/api/files/sizeImage/' + files[0].name, false);
-					req.setRequestHeader("Authorization", Main.getToken());
-					req.send();
-					console.log("send eseguita");
-					var res = JSON.parse(req.responseText);
-					var height = res.height;
-					var width = res.width;;
-
-					console.log("altezza giustissima " + height);
-					console.log("larghezza giustissima " + width);
-
-*/
 					var img = inserisciImmagine(fileurl, obj); //view
 
 					var spec = getMediaSpec(img, "image", fileurl);
@@ -393,7 +393,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		//rimozione
 		$scope.rimuoviElemento = function (spec) {
-			//console.log(JSON.stringify(spec))
 			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
 				elimina(spec); //della view
 			else{
@@ -504,7 +503,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//Gestione sfondo frame
 		$scope.updateSfondoFrame = function(spec){
-			console.log(spec.id + " - " + spec.color + " - " + spec.ref);
 			var style = document.getElementById(spec.id).style;
 			style.backgroundColor = spec.color;
 			if(Utils.isObject(spec.ref))
@@ -588,7 +586,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		$scope.cambiaColoreTesto = function(color, spec){
 			if(Utils.isObject(spec)){
-				console.log(spec.color);
 				document.getElementById("txt"+spec.id).style.color = spec.color;
 			}
 			else{
@@ -610,7 +607,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 		}
 		$scope.updateFont = function(spec){
-			console.log("updateFont" + spec.font);
 			var text = document.getElementById("txt"+spec.id);
 			text.style.fontSize = spec.fontSize + "em";
 			text.style.fontFamily = spec.font;
@@ -692,7 +688,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(inv.getUndoStack()){
 				var annulla = inv.undo(); //insert edit delete editpath
 
-				console.log(annulla);
 				switch(annulla.action){
 					case "insert": 
 						loader.addInsert(annulla.id);
@@ -1105,17 +1100,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		
 		var translateEdit = function(json){
-			//MANCANO I PERCORSI!!!!! DA FARE CON GIOVANNI
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
-			console.log(insertEditRemove().getPresentazione());
 
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();
 			var prop = 1;
 
-			//vedere come gestire il ridimensionamento degli elementi
-			//in base a l e h della view
 			if(Utils.isObject(background.width) && Utils.isObject(background.height)){
 				var style = document.getElementById('content').style;
 				

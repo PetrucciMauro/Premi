@@ -1,5 +1,21 @@
 'use strict';
 
+/*
+* Name :  accessController.js
+* Module : Controller::HeaderController e Controller::AuthenticationController
+* Location : scripts/accessController.js
+*
+* History :
+* Version       Date        Programmer                  Description
+* =================================================================================================
+* 0.0.1        01/07/2015   Busetto Matteo            Inizio accessController
+* 0.2.0        15/07/2015   Busetto Matteo            Diviso tra Header e Authentication -Controller
+* 0.5.0        20/07/2015   Busetto Matteo            Pulito il codice
+* 1.0.0        25/07/2015   Busetto Matteo            Versione finale
+* =================================================================================================
+*
+*/
+
 var premiAccessController = angular.module('premiAccessController', ['premiService']);
 
 premiAccessController.controller('HeaderController', ['$rootScope', '$scope', 'Main', 'toPages', 'Utils',

@@ -1,5 +1,21 @@
 'use strict';
 
+/*
+* Name :  executionController.js
+* Module : Controller::executionController
+* Location : scripts/executionController.js
+*
+* History :
+* Version       Date        Programmer                  Description
+* =================================================================================================
+* 0.0.1        20/07/2015   Busetto Matteo            Inizio executionController
+* 0.2.0        25/07/2015   Busetto Matteo            Aggiunti reindirizzamenti con hide/show dell'header
+* 0.5.0        20/07/2015   Busetto Matteo            Integrato angular con impress
+* 1.0.0        01/08/2015   Busetto Matteo            Versione finale
+* =================================================================================================
+*
+*/
+
 var premiExecutionController = angular.module('premiExecutionController', ['premiService'])
 
 premiExecutionController.controller('ExecutionController',['$scope', 'Main', 'toPages', 'Utils', '$route', 'SharedData',

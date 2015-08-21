@@ -1,5 +1,21 @@
 'use strict';
 
+/*
+* Name :  homeController.js
+* Module : Controller::homeController
+* Location : scripts/homeController.js
+*
+* History :
+* Version       Date        Programmer                  Description
+* =================================================================================================
+* 0.0.1        01/07/2015   Busetto Matteo            Inizio homeController
+* 0.2.0        15/07/2015   Busetto Matteo            Aggiunto lista delle presentazioni
+* 0.5.0        20/07/2015   Busetto Matteo            Pulito il codice
+* 1.0.0        25/07/2015   Busetto Matteo            Versione finale
+* =================================================================================================
+*
+*/
+
 var premiHomeController = angular.module('premiHomeController', ['premiService'])
 
 premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window','SharedData', '$location',

@@ -1,5 +1,21 @@
 'use strict';
 
+/*
+* Name :  profileController.js
+* Module : Controller::profileController
+* Location : scripts/profileController.js
+*
+* History :
+* Version       Date        Programmer                  Description
+* =================================================================================================
+* 0.0.1        01/07/2015   Petrucci Mauro            Inizio profileController
+* 0.2.0        15/07/2015   Busetto Matteo            Aggiunto cambio password
+* 0.5.0        20/07/2015   Busetto Matteo            Tolto upload
+* 1.0.0        25/07/2015   Busetto Matteo            Versione finale
+* =================================================================================================
+*
+*/
+
 var premiProfileController = angular.module('premiProfileController', ['premiService'])
 
 premiProfileController.controller('ProfileController', ['$scope', 'Main', 'toPages', 'Utils', 'Upload',

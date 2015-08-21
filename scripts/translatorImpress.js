@@ -191,11 +191,11 @@ var translateImpress = function(json){
 		}
 		for(i=0; i<json.proper.images.length; ++i){
 			var image = json.proper.images[i];
-			
+			console.log(image);
 			var coordinates=imagePosition(image.xIndex,image.yIndex,image.waste,image.width,image.height);
 			var style="style=\"z-index:"+image.zIndex+";\"";
 			
-			presentation+="<div class=\"step immagine\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><img src=\""+image.ref+"\"/></div>";
+			presentation+="<div class=\"step immagine\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><img src=\""+image.url+"\"/></div>";
 		}
 		for(i=0; i<json.proper.audios.length; ++i){
 			var audio = json.proper.audios[i];
@@ -203,7 +203,7 @@ var translateImpress = function(json){
 			var coordinates=audioPosition(audio.xIndex,audio.yIndex,audio.width,audio.height);
 			var style="style=\"z-index:"+audio.zIndex+";\"";
 			
-			presentation+="<div class=\"step audio\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><audio src=\""+audio.ref+"\" controls/></div>";
+			presentation+="<div class=\"step audio\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><audio src=\""+audio.url+"\" controls/></div>";
 		}
 		for(i=0; i<json.proper.videos.length; ++i){
 			var video = json.proper.videos[i];
@@ -211,7 +211,7 @@ var translateImpress = function(json){
 			var coordinates=videoPosition(video.xIndex,video.yIndex,video.waste,video.width,video.height);
 			var style="style=\"z-index:"+video.zIndex+";\"";
 			
-			presentation+="<div class=\"step video\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><video src=\""+video.ref+"\" controls/></div>";
+			presentation+="<div class=\"step video\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><video src=\""+video.url+"\" controls/></div>";
 		}
 		for(i=0; i<json.proper.texts.length; ++i){
 			var text = json.proper.texts[i];

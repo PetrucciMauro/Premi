@@ -71,13 +71,12 @@
                     <md-menu-item>
                         <md-button id="insertAudio" class="fileContainer"><p id="insertAudioActivator">Inserisci Audio</p><input multiple type="file" id="audioLoader" name="Inserisci Audio" onchange="angular.element(this).scope().inserisciAudio(this.files)" /></md-button>
                     </md-menu-item>
-                    <md-menu-item>
-                        <md-button id="esegui" ng-click="goExecute()"><p id="eseguiPresentazione">Esegui Presentazione</p></md-button>
-                    </md-menu-item>
+                    
                 </md-menu-content>
             </md-menu>
 
             <!--Menu di inserimento-->
+
             <!--Menu di gestione sfondo-->
             <md-menu md-offset="0 -7">
                 <md-button aria-label="Apri menu gestione sfondo" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="sfondoSlideshow">
@@ -100,7 +99,13 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-            <!--Menu di inserimento-->
+            <!--Menu di gestione sfondo-->
+            
+            <md-button aria-label="Esegui presentazione" class="menu md-button md-default-theme" id="esegui" ng-click="goExecute()">
+                <md-tooltip>Esegui Presentazione</md-tooltip>
+                <md-icon md-svg-src="assets/svg/play.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+            </md-button>
+            
         </div>
         <!--Menu generico delle presentazioni-->
         <!--Menu generico degli elementi-->

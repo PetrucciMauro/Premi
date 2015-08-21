@@ -44,7 +44,7 @@ var Authenticate = require('./source/account/Authenticate.js');
 var Register = require('./source/account/Register.js');
 var Changepassword = require('./source/account/ChangePassword.js');
 
-app.use('/', express.static('./'));
+app.use('/', express.static('./public_html/'));
 
 app.get('/', function(req, res) {
 		  res.send('Wellcome! to get a public file: /publicpages, account staff: /account, private services: /private'

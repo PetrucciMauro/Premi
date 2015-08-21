@@ -55,7 +55,6 @@ var insertEditRemove = function () {
             }
             for (var i = 0; i < private.presentazione.proper.frames.length && !found; i++) {
                 if (parseInt(private.presentazione.proper.frames[i].id) == parseInt(id)) {
-                    //console.log("trovato");
                     element = private.presentazione.proper.frames[i];
                     found = true;
                 }
@@ -89,14 +88,10 @@ var insertEditRemove = function () {
             }
 
             if (!found && parseInt(private.presentazione.proper.background.id) == parseInt(id)) {
-                //console.log("background");
                 element = private.presentazione.proper.background;
             }
-            //console.log(element);
-            //return JSON.stringify(element);
 			  return element;
         };
-/*AGGIUNTI DA BUSETTO*/
         public.getFrames = function(){
             return private.presentazione.proper.frames;
         };
@@ -123,7 +118,7 @@ var insertEditRemove = function () {
             return private.presentazione.proper.paths;
         };
 
-/*AGGIUNTI DA BUSETTO*/
+
         public.insertText = function (spec) {
             var newText = text(spec);
             private.presentazione.proper.texts.push(newText);
@@ -131,8 +126,6 @@ var insertEditRemove = function () {
         public.insertFrame = function (spec) {
             var newFrame = frame(spec);
             private.presentazione.proper.frames.push(newFrame);
-            console.log(JSON.stringify(newFrame));
-            console.log(JSON.stringify(private.presentazione));
         };
         public.insertImage = function (spec) {
             var newImage = image(spec);
@@ -278,7 +271,6 @@ var insertEditRemove = function () {
             for (var i = 0; i < private.presentazione.proper.frames.length && !found; i++) {
                 if (private.presentazione.proper.frames[i].id === spec.id) {
                     oldBackground.ref = private.presentazione.proper.frames[i].ref;
-                    console.log("oldback: "+oldBackground.ref);
                     oldBackground.color = private.presentazione.proper.frames[i].color;
                     private.presentazione.proper.frames[i].ref = spec.ref;
                     private.presentazione.proper.frames[i].color = spec.color;
@@ -320,9 +312,7 @@ var insertEditRemove = function () {
             var found = false;
             var oldContent;
             for (var i = 0; i < private.presentazione.proper.texts.length && !found; i++) {
-               // console.log(private.presentazione.proper.texts[i].id + " " + spec.id);
                 if (private.presentazione.proper.texts[i].id == parseInt(spec.id)) {
-                   // console.log("entro");
                     oldContent = private.presentazione.proper.texts[i].content;
                     private.presentazione.proper.texts[i].content = spec.content;
                     found = true;
@@ -372,14 +362,10 @@ var insertEditRemove = function () {
                 original = element.zIndex;
                 element.zIndex = original - 1;
                 for (var i = 1; i < contatore; i++) {
-                    if(public.getElement(i) && i != spec.id){
-                        console.log("z index trovato " + public.getElement(i).zIndex + " z index atteso " + (spec.zIndex -1));
-                    }
+                    if(public.getElement(i) && i != spec.id){                 }
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == (spec.zIndex -1)) {
-                        console.log("trovato  elemento " + i + " con z index " + public.getElement(i).zIndex);
                         var obj = { id: public.getElement(i).id };
                         public.portaAvanti(obj);
-                        console.log("spostato  elemento " + i + " con nuovo z index " + public.getElement(i).zIndex);
                         found = true;
                     }
                 }
@@ -397,7 +383,6 @@ var insertEditRemove = function () {
             var oldFrame = {};
             var found = false;
             for (var i = 0; i < private.presentazione.proper.paths.main.length && !found; i++) {
-                console.log(private.presentazione.proper.paths.main[i]);
                 if (private.presentazione.proper.paths.main[i] == id) {
                     oldFrame.pos = i;
                     oldFrame.id = id;

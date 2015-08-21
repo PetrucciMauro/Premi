@@ -29,7 +29,7 @@ var insertEditRemove = function () {
         private.presentazione.proper.audios = new Array();
         private.presentazione.proper.videos = new Array();
         private.presentazione.proper.background = {};
-        private.presentazione.proper.background.color = "rgba(255,255,255,1)";
+        private.presentazione.proper.background.color = "rgb(255,255,255)";
         private.presentazione.proper.background.image = "";
 
         public.constructPresentazione = function (newPresentazione) {

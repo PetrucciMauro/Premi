@@ -37,7 +37,7 @@ describe('Premi Home page test', function(){
 	});
 
 	it('should delete a presentation',function(){
-		browser.get('http://localhost:8081/index.html#/private/home');
+		browser.driver.get('http://localhost:8081/index.html#/private/home');
 		element( by.css('[ng-click="deleteSlideShow(slide.titolo)"]')).click();
 		   browser.driver.switchTo().alert().then( // <- this fixes the problem
 		   	function (alert) {

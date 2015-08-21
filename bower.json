@@ -15,7 +15,4 @@
     "angular-resource" : "1.3.x",
     "jscolor": "latest"
   },
-  "devDependencies": {
-    "angular-material": "latest"
-  }
 }

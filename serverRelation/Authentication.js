@@ -1,3 +1,10 @@
+/*
+ * Name : Pietro Gabelli
+ * Module : serverNode
+ * Location : serverRelation/Authentication.js
+ *
+ */
+
 var Authentication = function(hostname){
 	
 	// private_fields

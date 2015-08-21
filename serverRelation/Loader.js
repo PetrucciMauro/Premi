@@ -1,3 +1,9 @@
+/*
+ * Name : Pietro Gabelli
+ * Module : serverNode
+ * Location : serverRelation/Loader.js
+ *
+ */
 var Loader = function(mongoRelation_obj, showElements_obj){
 	
 	// private_fields

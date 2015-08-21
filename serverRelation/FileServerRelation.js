@@ -1,3 +1,9 @@
+/*
+ * Name : Pietro Gabelli
+ * Module : serverNode
+ * Location : serverRelation/FileServerRelation.js
+ *
+ */
 //var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 var FileServerRelation = function(hostname, auth_obj){

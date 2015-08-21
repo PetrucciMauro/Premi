@@ -1,3 +1,10 @@
+/*
+ * Name : Pietro Gabelli
+ * Module : serverNode
+ * Location : serverRelation/Registration.js
+ *
+ */
+
 var Registration = function(hostname){
 	
 	// private_fields

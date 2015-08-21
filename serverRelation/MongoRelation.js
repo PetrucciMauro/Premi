@@ -1,3 +1,9 @@
+/*
+ * Name : Pietro Gabelli
+ * Module : serverNode
+ * Location : serverRelation/MongoRelation.js
+ *
+ */
 //var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 var MongoRelation = function(hostname, auth_obj){

@@ -18,13 +18,11 @@ $(document).ready(function () {
 		change: function (event, ui) {
 			$(ui.item[0].previousElementSibling).trigger("click");
 			$(ui.item[0].nextElementSibling).trigger("click");
-				//console.log("New position: " + ui.item.index());
+
 			},
 			stop: function (event, ui) {
 				mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
-				console.log(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
 				mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
-				//console.log("New position: " + ui.item.index());
 			}
 		});
 	$("#sortable").disableSelection();
@@ -64,7 +62,6 @@ var active=function(){
 		};
 		that.deselect=function(){
 			clearMenu();
-			//console.log(private.id);
 			if(document.getElementById(private.id)){
 				document.getElementById(private.id).style.boxShadow= "none";
 				deselezionaPercorso("undefined");
@@ -383,7 +380,6 @@ var resizeDiv = function(that, tipo){
 }
 
 var inserisciElemento = function (classe, spec) {
-    //console.log("inserisciElemento");
 	var div=document.createElement('div');
 
 	//TRADUTTORE NON MODIFICARE
@@ -414,7 +410,6 @@ var inserisciElemento = function (classe, spec) {
 	}
 
 	if (spec && spec.yIndex && spec.xIndex) {
-	    console.log("c'è spec.xIndex");
 		div.style.top = spec.yIndex + "px";
 		div.style.left = spec.xIndex + "px";
 	}
@@ -457,7 +452,6 @@ var inserisciElemento = function (classe, spec) {
 }
 
 var inserisciFrame = function (spec) {
-    console.log(JSON.stringify(spec));
 	var div=inserisciElemento("frame", spec);
 	$(function() {
 		$( div ).resizable({
@@ -545,7 +539,6 @@ var inserisciTesto=function(spec){
 
 var inserisciMedia = function (x, classe, spec) {
 	var div = inserisciElemento(classe, spec);
-	//console.log("inseritoElemento");
 
 	var url = {};
 	if(spec && spec.ref)
@@ -567,8 +560,6 @@ var inserisciMedia = function (x, classe, spec) {
 	    var H = this.height,
                 
             W = this.width;
-	   // console.log("altezza realissima " + H);
-	   // console.log("larghezza realissima " + W);
 	}
 
     
@@ -580,7 +571,6 @@ var inserisciMedia = function (x, classe, spec) {
 		    element.style.height = "auto";
 		}
 	}
-	//console.log(element.style.width);
 	//TRADUTTORE
 	element.setAttribute("class", "resizable");
 	element.id=type+div.id;
@@ -601,9 +591,7 @@ var inserisciImmagine=function(x, spec){
         img.style.width = spec.width + "px";
     }
     var width = $(img).outerWidth();
-//	console.log("width = " + width);
 	var height = $(img).outerHeight();
-   // console.log("height = " + height);
 
     img.style.height = height + "px";
     img.style.width = width + "px";
@@ -705,9 +693,7 @@ function getElementByZIndex(zvalue) {
 	var found = false;
 	var frames = document.getElementById("frames").children;
 	for (var i = 0; i < frames.length && !found; i++) {
-	    console.log("z-index " + frames[i].style.getPropertyValue("z-index"));
 	    if (frames[i].style.getPropertyValue("z-index") == zvalue) {
-	        console.log("trovato!");
 			el = frames[i];
 			found = true;
 		}
@@ -771,19 +757,9 @@ $(document).mousedown(function(e) {
 			//SFONDO FRAME
 			var att=frames[i].id;
 			var addToMain=document.getElementById("addToMain");
-			if(!mainPath().contains(frames[i].id)){
-				//addToMain.removeAttribute("disabled");
-				//addToMain.setAttribute("onclick","mainPath().addToMainPath("+frames[i].id+")");
-
-			}
-			else{
-				//addToMain.setAttribute("disabled","disabled");
-				
-			}
 			//SFONDO FRAME
 		}
 		else if( $(event.target).is('#content')|| $(event.target).parents().is('#elements')){
-			console.log("deselect");
 			active().deselect();
 		}
 	}
@@ -792,7 +768,6 @@ $(document).mousedown(function(e) {
 	for(var i = 0; i < elements.length; i++) {
 		
 		if($(event.target).is("#"+elements[i].id) || $(event.target).parents().is("#"+elements[i].id)){
-			console.log("deselect");
 			active().deselect();
 			if($(event.target).hasClass("image")||$(event.target).parents().hasClass("image"))
 				selected="image";
@@ -806,10 +781,9 @@ $(document).mousedown(function(e) {
 			active().select(elements[i].id);
 
 			//SFONDO FRAME
-			//document.getElementById("backgroundFrame").removeAttribute("onchange");
+
 			//SFONDO FRAME
 		} else if( $(event.target).is('#content') /*|| $(event.target).parents().is("#elements")*/){
-			console.log("deselect");
 			active().deselect();
 		}
 	}
@@ -817,28 +791,8 @@ $(document).mousedown(function(e) {
 		document.getElementById("standardMenu").style.display="block";	
 		document.getElementById(selected+"Menu").style.display="block";	
 	}
-	//SFONDO FRAME
-	/*else{
-		if(($(event.target).is('#content')))
-			document.getElementById("backgroundFrame").removeAttribute("onchange");
-	}*/
-	//SFONDO FRAME
 
-	//NEWTEXT
-	/*if(selected==="text"){
-		var colorText=document.getElementById("colorText");
-		colorText.setAttribute("onchange","document.getElementById('txt"+active().getId()+"').style.color = '#'+this.color");
-		//TESTO
-		$('#textSize').on('change', function () {
-			var v = $(this).val();
-			$('#txt'+active().getId()).css('font-size', v + 'em');
-			$(function(){
-				$("input.autogrow").autoGrowInput({minWidth:10,comfortZone:1});
-			});
-		});
-		//TESTO
-	}*/
-	//NEWTEXT
+
 });
 
 
@@ -1021,7 +975,6 @@ function updateDraggable(element){
 	var originalLeft=$(div).css("left");
 	var originalTop=$(div).css("top");
 
-	console.log("ACTIVE" + active().getId());
 
 	var elements = $("#elements").children();
 	for(var i=0; i<elements.length && elements[i].id != div.id && tipo == "frame"; ++i){
@@ -1108,12 +1061,7 @@ $(".droppable").droppable({
 			}
 		}
 	},
-			/*$(this).mousemove(function(e) {
-				console.log("ciao");
-		$(div).show(2000);
-		 $(div).css({position:"absolute", left:e.pageX,top:e.pageY});
-
-		});*/
+			
 out: function(event, ui) {
 	if($(ui.draggable).hasClass("frame")){
 		$(ui.draggable).animate({
@@ -1137,7 +1085,6 @@ $(function () {
 	$("#sortable").sortable({
 		start: function (event, ui) {
 			origin = ui.item.index();
-			console.log("origine " + origin);
 		},
 		stop: function (event, ui) {
 			var temp = new Array();
@@ -1145,8 +1092,7 @@ $(function () {
 			$("#sortable md-list-item").each(function (index, item) {
 				id = mainPath().getAssociation($(item).attr("id"));
 				ids.push(id);
-			   /* var chip = document.getElementById("chip" + id);
-			   chip.innerHTML = index + 1;*/
+
 			});
 			mainPath().setPath(ids);
 		}
@@ -1169,7 +1115,6 @@ $(function () {
 	            xIndex: e.clientX - $("#content").offset().left,
 	            zIndex: zindex
 	        }
-	        console.log(JSON.stringify(spec));
 	        var top = $("#content").offset().top;
 	        var left = $("#content").offset().left;
 

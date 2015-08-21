@@ -24,7 +24,7 @@ function slideShowElement(spec) {
 var text = function (spec) {
     var that = slideShowElement(spec);
     that.content = spec.content || "";
-    that.font = spec.font || "Arial";
+    that.font = spec.font || "Arial, Helvetica, sans-serif";
     that.fontSize = spec.fontSize || 1;
     that.color = spec.color || "black";
     that.type = "text";
@@ -65,7 +65,7 @@ var frame = function (spec) {
     var that = slideShowElement(spec);
     that.bookmark=spec.bookmark||0;
     that.ref=spec.ref||"";
-    that.color=spec.color||"rgb(255,255,255,0)";
+    that.color=spec.color||"rgb(255,255,255)";
     that.zIndex = spec.zIndex;
     that.type = "frame";
         
@@ -88,7 +88,7 @@ var background = function (spec) {
     var that = slideShowElement(spec);
     that.id = 0;
     that.image = spec.image || "";
-    that.color = spec.color || "rgb(255,255,255,0)";
+    that.color = spec.color || "rgb(255,255,255)";
     that.type = "background";
     //ritorna that
     return that;

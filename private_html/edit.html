@@ -138,13 +138,13 @@
             <!--TESTO -->
             <md-menu md-offset="0 -7">
                 <md-button aria-label="Apri menu per cambiare dimensione del testo" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="sizeText">
-                    <md-tooltip>Menu dimensione del testo</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                    <md-tooltip>Menu dimensione del testo</md-tooltip><md-icon md-svg-src="assets/svg/fontsize.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
                 </md-button>
                 <md-menu-content width="2">
                     <md-menu-item id="textSizeMenu">
                         <md-button aria-label="Cambia colore sfondo" class="colorContainer" id="slideshowColor">
                             <md-input-container class="md-button md-default-theme inputContainer" style="width:3em">
-                                <md-tooltip>Cambia dimensione testo</md-tooltip><input id="textSize" type="number" min="1" max="70" value="1" aria-label="Cambia le dimensioni del tuo testo" ng-model="size" ng-change="cambiaSizeTesto(size)">
+                                <md-tooltip>Cambia dimensione testo</md-tooltip><input id="textSize" type="number" min="1" max="20" value="1" aria-label="Cambia le dimensioni del tuo testo" ng-model="size" ng-change="cambiaSizeTesto(size)">
                             </md-input-container>
                         </md-button>
                     </md-menu-item>
@@ -153,11 +153,11 @@
             </md-menu>
 
             <md-menu md-offset="0 -7">
-                <md-button aria-label="Apri menu per cambiare dimensione del testo" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="sizeText">
-                    <md-tooltip>Menu font testo</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+                <md-button aria-label="Apri menu per cambiare dimensione del testo" class="menu md-button md-default-theme" ng-click="$mdOpenMenu()" id="fontText">
+                    <md-tooltip>Menu font testo</md-tooltip><md-icon md-svg-src="assets/svg/font.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
                 </md-button>
                 <md-menu-content width="2">
-                    <md-menu-item id="textSizeMenu">
+                    <md-menu-item id="textFontMenu">
                         <md-input-container class="md-button md-default-theme inputContainer" style="width:3em height:1em">
                             <md-tooltip>Cambia font testo</md-tooltip>
                             <md-select ng-model="fontSelected" id="changeFont" ng-change="cambiaFontTesto(fontSelected)" aria-label="Scegli il tuo font">

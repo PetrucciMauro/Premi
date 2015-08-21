@@ -170,7 +170,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					height: outerHeight,
 					width: outerWidth,
 					rotation: 0,
-					zIndex: Number(ele.style.zIndex)
+					zIndex: Number(ele.style.zIndex),
+					type: "frame"
 				};
 
 				var command = concreteFrameInsertCommand(spec); //model
@@ -201,7 +202,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					size: thistext.css("font-size"),
 					rotation: 0,
 					font: thistext.css("font-family"),
-					zIndex: Number(style.zIndex)
+					zIndex: Number(style.zIndex),
+					type: "text"
 				};
 				var command = concreteTextInsertCommand(spec);  //model
 				inv.execute(command);
@@ -349,22 +351,26 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var eleheight = {};
 			var elewidth = {};
 			var elemento = {};
+			var type = "";
 
 			switch(tipo){
 				case "image":
 					elemento = document.getElementById("img" + ele.id);
 					eleheight = Number(elemento.style.height.split("px")[0]);
 					elewidth = Number(elemento.style.width.split("px")[0]);
+					type = "image";
 					break;
 				case "video":
 					elemento = document.getElementById("video" + ele.id);
 					eleheight = Number(elemento.offsetHeight.split("px")[0]);
 					elewidth = Number(elemento.offsetWidth.split("px")[0]);
+					type = "video";
 					break;
 				case "audio":
 					elemento = document.getElementById("audio" + ele.id);
 					eleheight = Number(style.height.split("px")[0]);
 					elewidth = Number(style.width.split("px")[0]);
+					type = "audio";
 					break;
 			}
 
@@ -379,7 +385,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				waste: (elewidth - eleouterwidth) / 2,
 				rotation: 0,
 				ref: url,
-				zIndex: Number(style.zIndex)
+				zIndex: Number(style.zIndex),
+				type: type
 			};
 			
 			return attr;
@@ -388,21 +395,21 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.rimuoviElemento = function (spec) {
 			//console.log(JSON.stringify(spec))
 			if(Utils.isObject(spec))//Se spec è definito significa che deve essere solamente aggiornata la view
-				elimina(spec.id); //della view
+				elimina(spec); //della view
 			else{
 				var id = active().getId();
 				var tipoElement = active().getTipo();
 
 				var command = {};
-				if(tipoElement === 'frame')
+				if(tipoElement == 'frame')
 					command = concreteFrameRemoveCommand(id);
-				else if(tipoElement === 'image')
+				else if(tipoElement == 'image')
 					command = concreteImageRemoveCommand(id);
-				else if(tipoElement === 'audio')
+				else if(tipoElement == 'audio')
 					command = concreteAudioRemoveCommand(id);
-				else if(tipoElement === 'video')
+				else if(tipoElement == 'video')
 					command = concreteVideoRemoveCommand(id);
-				else if(tipoElement === 'text')
+				else if(tipoElement == 'text')
 					command = concreteTextRemoveCommand(id);
 				else
 					throw new Error("Elemento da eliminare non riconosciuto");
@@ -419,8 +426,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.updateSfondo = function(spec){
 			var style = document.getElementById('content').style;
 			style.backgroundColor = spec.color;
-			if(Utils.isObject(spec.ref))
-				style.backgroundImage = "url(" + spec.ref + ")";
+			if(Utils.isObject(spec.image))
+				if(spec.image.indexOf("url") == -1)
+					style.backgroundImage = "url(" + spec.image + ")";
+				else
+					style.backgroundImage = spec.image;
 			else
 				style.backgroundImage = "";
 		}
@@ -433,7 +443,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				color: style.backgroundColor,
 				image: style.backgroundImage,
 				width: l,
-				height: h
+				height: h,
+				type: "background"
 			};
 			
 			var command = concreteBackgroundInsertCommand(spec);
@@ -446,13 +457,18 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.cambiaColoreSfondo = function(color){
 			var style = document.getElementById('content').style;
 			style.backgroundColor = color;
+			
+			var url = "";
+			if(style.backgroundImage)
+				url = style.backgroundImage.split("url(")[1].split(")")[0];
 
 			var spec = {
 				id: 0,
 				color: style.backgroundColor,
-				image: style.backgroundImage,
+				image: url,
 				width: l,
-				height: h
+				height: h,
+				type: "background"
 			};
 			
 			var sfondo = concreteBackgroundInsertCommand(spec);
@@ -464,8 +480,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(!Upload.isImage(files))
 				throw new Error("Estensione non corretta");
 
-			uploadmedia(files, function(){
-
+			uploadmedia(files, function(file){
 				var fileurl = Upload.getFileUrl(file);
 
 				var style = document.getElementById('content').style;
@@ -474,9 +489,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var spec = {
 					id: 0,
 					color: style.backgroundColor,
-					image: style.backgroundImage,
+					image: fileurl,
 					width: l,
-					height: h
+					height: h,
+					type: "background"
 				};
 
 				var command = concreteBackgroundInsertCommand(spec); //model
@@ -488,10 +504,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 		//Gestione sfondo frame
 		$scope.updateSfondoFrame = function(spec){
+			console.log(spec.id + " - " + spec.color + " - " + spec.ref);
 			var style = document.getElementById(spec.id).style;
 			style.backgroundColor = spec.color;
 			if(Utils.isObject(spec.ref))
-				style.backgroundImage = "url(" + spec.ref + ")";
+				if(spec.ref.indexOf("url") == -1)
+					style.backgroundImage = "url(" + spec.ref + ")";
+				else
+					style.backgroundImage = spec.ref;
 			else
 				style.backgroundImage = "";
 		}
@@ -501,10 +521,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var style = document.getElementById(activeFrame).style;
 			style.backgroundColor = color;
 
+			var url = "";
+			if(style.backgroundImage)
+				url = style.backgroundImage.split("url(")[1].split(")")[0];
+
 			var spec = {
 				id: activeFrame,
 				color: style.backgroundColor,
-				ref: style.backgroundImage
+				ref: url,
+				type: "frame"
 			};
 			
 			var command = concreteEditBackgroundCommand(spec);
@@ -527,7 +552,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var spec = {
 					id: activeFrame,
 					color: style.backgroundColor,
-					ref: style.backgroundImage
+					ref: fileurl,
+					type: "frame"
 				};
 
 				var command = concreteEditBackgroundCommand(spec);
@@ -545,7 +571,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var spec = {
 				id: activeFrame,
 				color: style.backgroundColor,
-				ref: style.backgroundImage
+				ref: style.backgroundImage,
+				type: "frame"
 			};
 
 			var command = concreteEditBackgroundCommand(spec);
@@ -559,63 +586,80 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			mediaControl();
 		}
 
-		$scope.cambiaColoreTesto = function(color){
-			var activeText = active().getId();
-			
-			var style = document.getElementById("txt"+activeText).style;
-			style.color = color;
+		$scope.cambiaColoreTesto = function(color, spec){
+			if(Utils.isObject(spec)){
+				console.log(spec.color);
+				document.getElementById("txt"+spec.id).style.color = spec.color;
+			}
+			else{
+				var activeText = active().getId();
+				
+				var style = document.getElementById("txt"+activeText).style;
+				style.color = color;
 
-			var spec = {
-				id: activeText,
-				tipo: "text",
-				color: style.color
-			};
-			
-			var command = concreteEditColorCommand(spec);
-			inv.execute(command);
+				var spec = {
+					id: activeText,
+					tipo: "text",
+					color: style.color
+				};
+				
+				var command = concreteEditColorCommand(spec);
+				inv.execute(command);
 
-			loader.addUpdate(activeText);
+				loader.addUpdate(activeText);
+			}
 		}
+		$scope.updateFont = function(spec){
+			console.log("updateFont" + spec.font);
+			var text = document.getElementById("txt"+spec.id);
+			text.style.fontSize = spec.fontSize + "em";
+			text.style.fontFamily = spec.font;
+		}
+
 		$scope.cambiaSizeTesto = function(value){
 			var activeText = active().getId();
 			
-			var text = document.getElementById("txt" + activeText).style;
-			text.fontSize = value + "em";
+			if(Utils.isObject(activeText) && active().getTipo() == "text"){
+				var text = document.getElementById("txt" + activeText).style;
+				if(value != style.fontSize){
+					text.fontSize = value + "em";
 
-			var spec = {
-				id: activeText,
-				tipo: "text",
-				fontSize: value,
-				font: text.fontFamily
-			};
-			
-			var command = concreteEditFontCommand(spec);
-			inv.execute(command);
+					var spec = {
+						id: activeText,
+						tipo: "text",
+						fontSize: value,
+						font: text.fontFamily
+					};
+					
+					var command = concreteEditFontCommand(spec);
+					inv.execute(command);
 
-			loader.addUpdate(activeText);
+					loader.addUpdate(activeText);
+				}
+			}
 		}
 
 		$scope.cambiaFontTesto = function(font){
 			var activeText = active().getId();
 
-			if(Utils.isUndefined(activeText) || active().getTipo() != "text")
-				return;
+			if(Utils.isObject(activeText) && active().getTipo() == "text"){
+				var style = document.getElementById("txt"+activeText).style;
+				if(font != style.fontFamily){
+					style.fontFamily = font;
 
-			var style = document.getElementById("txt"+activeText).style;
-			
-			style.fontFamily = font;
-
-			var spec = {
-				id: activeText,
-				tipo: "text",
-				font: font,
-				fontSize: style.fontSize.split("em")[0]
-			};
-			
-			var command = concreteEditFontCommand(spec);
-			inv.execute(command);
- 
-			loader.addUpdate(activeText);
+					var spec = {
+						id: activeText,
+						tipo: "text",
+						font: font,
+						fontSize: style.fontSize.split("em")[0]
+					};
+					
+					var command = concreteEditFontCommand(spec);
+					inv.execute(command);inserisci
+		 
+					loader.addUpdate(activeText);
+				}
+			}
 		}
 
 		$scope.aggiornaTesto = function(textId, textContent, spec){
@@ -623,16 +667,19 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				document.getElementById("txt"+spec.id).value = spec.content;
 			}
 			else{
-				var spec = {
-					id: textId,
-					tipo: "text",
-					content: textContent
-				};
+				var oldContent = insertEditRemove().getElement(textId).content;
+				if(oldContent != textContent){
+					var spec = {
+						id: textId,
+						tipo: "text",
+						content: textContent
+					};
 
-				var command = concreteEditContentCommand(spec);
-				inv.execute(command);
+					var command = concreteEditContentCommand(spec);
+					inv.execute(command);
 
-				loader.addUpdate(textId);
+					loader.addUpdate(textId);
+				}
 			}
 		}
 
@@ -645,6 +692,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(inv.getUndoStack()){
 				var annulla = inv.undo(); //insert edit delete editpath
 
+				console.log(annulla);
 				switch(annulla.action){
 					case "insert": 
 						loader.addInsert(annulla.id);
@@ -820,7 +868,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.aggiungiMainPath = function (spec) {
 			if(Utils.isObject(spec)){
 				mainPath().addToMainPath(spec.id, spec.pos);
-				
 			}
 			else {
 				var activeElement = active().getId();
@@ -849,8 +896,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 
 		$scope.rimuoviMainPath = function (id, spec) {
+			$scope.canHaveBookmark = false;
+			$scope.canAddBookmark = false;
+			$scope.canRemoveBookmark = false;
+
 			if(Utils.isObject(spec)){
 				mainPath().removeFromMainPath(spec);
+
+				$scope.updateBookmark(spec);
 			}
 			else{
 				mainPath().removeFromMainPath(id);
@@ -859,20 +912,26 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				inv.execute(command);
 				
 				loader.addPaths();
-			}
 
-			$scope.canHaveBookmark = false;
-			$scope.updateBookmark(id);
+				$scope.updateBookmark(id);
+			}
 		}
 
 		$scope.portaAvanti = function(spec){
 			if(Utils.isObject(spec)){
-				portaAvanti(spec.id);
+				var that = $("#" + spec.id);
+				that.zIndex(that.zIndex() + 1);
+
+				if(spec.other){
+					var prev = $("#" + spec.other);
+					prev.zIndex(prev.zIndex() - 1);
+				}
 			}
 			else {
 				var idElement = active().getId();
 				var tipoElement = active().getTipo();
-				portaAvanti(idElement);
+				
+				var prev = portaAvanti(idElement);
 
 				var style = $("#" + idElement);
 
@@ -882,6 +941,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					zIndex: style.zIndex()
 				};
 
+				if(prev && prev != -1){
+					loader.addUpdate(prev.id);
+					spec.other = prev.id;
+				}
+
 				var command = concretePortaAvantiCommand(spec);
 				inv.execute(command);
 
@@ -890,22 +954,33 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		$scope.portaDietro = function(spec){
 			if(Utils.isObject(spec)){
-				mandaDietro(spec.id);
+				var that = $("#" + spec.id);
+				that.zIndex(that.zIndex() - 1);
+
+				if(spec.other){
+					var next = $("#" + spec.other);
+					next.zIndex(next.zIndex() + 1);
+				}
 			}
 			else{
 				var idElement = active().getId();
 				var tipoElement = active().getTipo();
-				var zIndexElement = insertEditRemove().getElement(idElement).zIndex;
-				console.log("il maledettissimo zindex è " + zIndexElement);
-				mandaDietro(idElement);
+				//var zIndexElement = insertEditRemove().getElement(idElement).zIndex;
+				
+				var next = mandaDietro(idElement);
 
 				var style = $("#" + idElement);
 
 				var spec = {
 					id: idElement,
 					tipo: tipoElement,
-					zIndex: zIndexElement
+					zIndex: style.zIndex()
 				};
+
+				if(next && next != -1){
+					loader.addUpdate(next.id);
+					spec.other = next.id;
+				}
 				
 				var command = concretePortaDietroCommand(spec);
 				inv.execute(command);
@@ -1006,27 +1081,22 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				$scope.canAddBookmark = false;
 				$scope.canRemoveBookmark = true;
 			}
-			else {
+			else if($scope.canRemoveBookmark == true){
 				$scope.canHaveBookmark = true;
 				$scope.canAddBookmark = true;
 				$scope.canRemoveBookmark = false;
 			}
-			if (!$scope.canAddBookmark && !$scope.canRemoveBookmark) {
+			else if (!$scope.canAddBookmark && !$scope.canRemoveBookmark) {
 				$scope.canHaveBookmark = false;
 			}
 			safeApply();
 		}
 
-		var impostaPrimoSfondo = function(param){
+		var impostaPrimoSfondo = function(){
 			var spec = {
 				height: h,
 				width: l
 			};
-
-			if(param){
-				spec.color = param.color;
-				spec.image = param.image;
-			}
 			
 			var sfondo = concreteBackgroundInsertCommand(spec);
 			inv.execute(sfondo);
@@ -1049,10 +1119,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(Utils.isObject(background.width) && Utils.isObject(background.height)){
 				var style = document.getElementById('content').style;
 				
-				if(Utils.isObject(background.color))
-					style.backgroundColor = background.color;
+				style.backgroundColor = background.color;
+
 				if(Utils.isObject(background.image))
-					style.backgroundImage = "url(" + background.image + ")";
+					if(background.image.indexOf("url") == -1)
+						style.backgroundImage = "url(" + background.image + ")";
+					else
+						style.backgroundImage = background.image;
 		
 				if(background.width != l)
 					prop = (background.width / l);

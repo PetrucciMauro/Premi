@@ -393,12 +393,11 @@ var inserisciElemento = function (classe, spec) {
 	//TRADUTTORE
 
 	div.style.position = "absolute";
-	div.style.zIndex = zindex;
 	div.setAttribute("class", classe+" elemento");
 	var id = contatore;
 
 	//TRADUTTORE EDIT
-	if(spec && spec.id){
+	if(spec && !isNaN(spec.id)){
 		if(contatore < spec.id)//in contatore si salva l'id maggiore
 			contatore = spec.id;
 		id = spec.id;
@@ -414,7 +413,6 @@ var inserisciElemento = function (classe, spec) {
 	}
 
 	if (spec && spec.yIndex && spec.xIndex) {
-	    console.log("c'è spec.xIndex");
 		div.style.top = spec.yIndex + "px";
 		div.style.left = spec.xIndex + "px";
 	}
@@ -422,13 +420,22 @@ var inserisciElemento = function (classe, spec) {
 		div.style.top = 0 + "px";
 		div.style.left = 0 + "px";
 	}
+	var z = zindex;
+	if(spec && !isNaN(spec.zIndex)){
+		if(zindex < spec.zIndex)
+			zindex = spec.zIndex;
+		z = spec.zIndex;
+	}
 
+	div.style.zIndex = z;
 	div.id=id;
 	//TRADUTTORE EDIT
 
 	if(classe=="frame"){
 		div.style.backgroundColor = spec.color || undefined;
-		div.style.backgroundImage = spec.image || undefined;
+		div.style.backgroundImage = "url(" + spec.ref + ")" || undefined;
+		console.log(div.style.backgroundImage);
+		console.log(spec.ref);
 		document.getElementById("frames").appendChild(div);
 	}
 	else {
@@ -457,7 +464,6 @@ var inserisciElemento = function (classe, spec) {
 }
 
 var inserisciFrame = function (spec) {
-    console.log(JSON.stringify(spec));
 	var div=inserisciElemento("frame", spec);
 	$(function() {
 		$( div ).resizable({
@@ -488,7 +494,7 @@ var inserisciTesto=function(spec){
 		txt.style.color = spec.color;
 		txt.style.fontFamily = spec.font;
 		txt.style.fontSize = spec.fontSize + "em";
-		txt.value = spec.content;
+		txt.value = spec.content || "";
 		txt.style.height = spec.height + "px";
 		txt.style.width = spec.width + "px";
 		div.style.width= spec.width + "px";
@@ -727,19 +733,28 @@ function portaAvanti(id) {
 	var original = $("#" + id).zIndex();
 	var superior = getElementByZIndex(original + 1);
 
+	$("#" + id).zIndex(original + 1);
 	if (superior) {
 		superior.style.zIndex = original;
-		$("#" + id).css({ "z-index": original + 1 });
+		return superior;
 	}
+	else
+		return -1;
 }
 
 function mandaDietro(id){
     if ($("#" + id).zIndex() > 0) {
         var original = $("#" + id).zIndex();
 		var element = getElementByZIndex(original - 1);
+
+		$("#" + id).zIndex(original - 1);
 		if (element)
 		    portaAvanti(element.id);
+
+		return element;
 	}
+	else 
+		return -1;
 }
 
 function toggleElement(id) { 

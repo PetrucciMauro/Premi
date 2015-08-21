@@ -62,7 +62,7 @@ var abstractCommand = function (spec) {
     private.enabler = insertEditRemove();
     private.obj = {};
     private.obj.id = spec.id;
-    private.obj.type = spec.type;
+    private.obj.type = spec.type || spec.tipo;
     
     public.getObj=function(){
         return private.obj;
@@ -119,8 +119,9 @@ var concreteTextInsertCommand = function (spec) {
     public.undoAction = function () {
         public.getEnabler().removeText(public.getId());
         var obj = public.getObj();
+        console.log(obj);
         obj.action = "delete";
-        angular.element($("#content")).scope().rimuoviElemento(spec);
+        angular.element($("#content")).scope().rimuoviElemento(spec.id);
         return obj;
     };
     return public;
@@ -145,9 +146,8 @@ var concreteImageInsertCommand = function (spec) {
         public.getEnabler().removeImage(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
-        angular.element($("#content")).scope().rimuoviElemento(spec);
+        angular.element($("#content")).scope().rimuoviElemento(spec.id);
         return obj;
-        //controller.remove(id)
     };
     return public;
 };
@@ -171,7 +171,7 @@ var concreteFrameInsertCommand = function (spec) {
         public.getEnabler().removeFrame(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
-        angular.element($("#content")).scope().rimuoviElemento(spec);
+        angular.element($("#content")).scope().rimuoviElemento(spec.id);
         return obj;
     };
     return public;
@@ -186,7 +186,7 @@ var concreteSVGInsertCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            angular.element($("#content")).scope().inserisciSVG(spec);
+           // angular.element($("#content")).scope().inserisciSVG(spec);
         }
         var obj = public.getObj();
         obj.action = "insert";
@@ -196,7 +196,7 @@ var concreteSVGInsertCommand = function (spec) {
         public.getEnabler().removeSVG(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
-        angular.element($("#content")).scope().rimuoviElemento(spec);
+       // angular.element($("#content")).scope().rimuoviElemento(spec.id);
         return obj;
     };
     return public;
@@ -221,7 +221,7 @@ var concreteAudioInsertCommand = function (spec) {
         public.getEnabler().removeAudio(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
-        angular.element($("#content")).scope().rimuoviElemento(spec);
+        angular.element($("#content")).scope().rimuoviElemento(spec.id);
         return obj;
     };
     return public;
@@ -247,7 +247,7 @@ var concreteVideoInsertCommand = function (spec) {
         public.getEnabler().removeVideo(public.getId());
         var obj = public.getObj();
         obj.action = "delete";
-        angular.element($("#content")).scope().rimuoviElemento(spec);
+        angular.element($("#content")).scope().rimuoviElemento(spec.id);
         return obj;
     };
     return public;
@@ -259,6 +259,7 @@ var concreteBackgroundInsertCommand = function (spec) {
     private.oldBackground = {};
     public.doAction = function () {
         private.oldBackground = public.getEnabler().insertBackground(spec);
+        console.log(spec.image + " - " +spec.ref);
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }
@@ -273,7 +274,7 @@ var concreteBackgroundInsertCommand = function (spec) {
         public.getEnabler().insertBackground(private.oldBackground);
         var obj = public.getObj();
         obj.action = "delete";
-        angular.element($("#content")).scope().updateSfondo(private.oldBackground);//BISOGNA PASSARE I DATI DEL VECCHIO BCKGR
+        angular.element($("#content")).scope().updateSfondo(private.oldBackground);
         return obj;
     };
     return public;
@@ -366,7 +367,7 @@ var concreteSVGRemoveCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            angular.element($("#content")).scope().rimuoviElemento(spec);
+           // angular.element($("#content")).scope().rimuoviElemento(spec);
         }
         var obj = public.getObj();
         obj.action = "delete";
@@ -377,7 +378,7 @@ var concreteSVGRemoveCommand = function (spec) {
         public.getEnabler().insertSVG(private.oldSVG);
         var obj = public.getObj();
         obj.action = "insert";
-        angular.element($("#content")).scope().inserisciSVG(undefined, private.oldSVG);
+        //angular.element($("#content")).scope().inserisciSVG(undefined, private.oldSVG);
         return obj;
     };
     return public;
@@ -537,16 +538,14 @@ var concreteEditContentCommand = function (spec) {
         }
         var obj = public.getObj();
         obj.action = "edit";
-        //console.log(spec.id+" "+JSON.stringify(public.getEnabler().getPresentazione()));
         return obj;
     };
     public.undoAction = function () {
         public.getEnabler().editContent(private.oldContent);
         var obj = public.getObj();
-        obj.action = "edit";console.log("annulla contenuto: "+private.oldContent);
+        obj.action = "edit";
         angular.element($("#content")).scope().aggiornaTesto(undefined, undefined, private.oldContent);
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
@@ -592,7 +591,7 @@ var concreteEditColorCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            //controller.update(public.getId());
+            angular.element($("#content")).scope().cambiaColoreTesto(undefined, spec);
         }
         var obj = public.getObj();
         obj.action = "edit";
@@ -602,8 +601,8 @@ var concreteEditColorCommand = function (spec) {
         public.getEnabler().editColor(private.oldColor);
         var obj = public.getObj();
         obj.action = "edit";
+        angular.element($("#content")).scope().cambiaColoreTesto(undefined, private.oldColor);
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
@@ -644,14 +643,15 @@ var concreteEditFontCommand = function (spec) {
     var private = {};
     private.oldFont = {};
     public.doAction = function () {
-        private.oldFont.font = public.getEnabler().editFont(spec);
+        private.oldFont = public.getEnabler().editFont(spec);
         private.oldFont.id = spec.id;
         private.oldFont.tipo = spec.tipo;
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }
         else {
-            //controller.update(public.getId());
+
+            angular.element($("#content")).scope().updateFont(spec);
         }
         var obj = public.getObj();
         obj.action = "edit";
@@ -661,21 +661,18 @@ var concreteEditFontCommand = function (spec) {
         public.getEnabler().editFont(private.oldFont);
         var obj = public.getObj();
         obj.action = "edit";
+        angular.element($("#content")).scope().updateFont(private.oldFont);
         return obj;
-        //controller.update(public.getId());
     };
     return public;
 };
-
-
-
-
 
 var concretePortaAvantiCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldZIndex = {};
     public.doAction = function () {
+        private.oldZIndex.other = spec.other;
         private.oldZIndex.id = spec.id;
         private.oldZIndex.tipo = spec.tipo;
         public.getEnabler().portaAvanti(spec);
@@ -685,15 +682,13 @@ var concretePortaAvantiCommand = function (spec) {
         else {
             angular.element($("#content")).scope().portaAvanti(spec);
         }
-        console.log(JSON.stringify(insertEditRemove().getPresentazione()))
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
     };
     public.undoAction = function () {
         public.getEnabler().portaDietro(private.oldZIndex);
-        console.log("le specifiche dell'annulla sono " + JSON.stringify(spec))
-        angular.element($("#content")).scope().portaDietro(spec);
+        angular.element($("#content")).scope().portaDietro(private.oldZIndex);
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
@@ -707,6 +702,7 @@ var concretePortaDietroCommand = function (spec) {
     var private = {};
     private.oldZIndex = {};
     public.doAction = function () {
+        private.oldZIndex.other = spec.other;
         private.oldZIndex.id = spec.id;
         private.oldZIndex.tipo = spec.tipo;
         public.getEnabler().portaDietro(spec);
@@ -722,7 +718,7 @@ var concretePortaDietroCommand = function (spec) {
     };
     public.undoAction = function () {
         public.getEnabler().portaAvanti(private.oldZIndex);
-        angular.element($("#content")).scope().portaAvanti(spec);
+        angular.element($("#content")).scope().portaAvanti(private.oldZIndex);
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
@@ -753,7 +749,7 @@ var concreteAddToMainPathCommand = function (spec) {
         public.getEnabler().removeFrameFromMainPath(spec.id);
         var obj = public.getObj();
         obj.action = "editPath";
-        angular.element($("#content")).scope().rimuoviMainPath(spec);
+        angular.element($("#content")).scope().rimuoviMainPath(undefined, spec.id);
         return obj;
     };
     return public;

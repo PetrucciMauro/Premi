@@ -85,7 +85,6 @@ var MongoRelation = function(hostname, auth_obj){
 			//return res.success;
 			callback();
 		};
-		console.log("GIOVANNI GUARDA QUA E DIMMI COSA C'E' =) :: "+element_updated);
 		req.send(JSON.stringify(objSend));
 	};
 	

@@ -278,6 +278,7 @@ var insertEditRemove = function () {
             for (var i = 0; i < private.presentazione.proper.frames.length && !found; i++) {
                 if (private.presentazione.proper.frames[i].id === spec.id) {
                     oldBackground.ref = private.presentazione.proper.frames[i].ref;
+                    console.log("oldback: "+oldBackground.ref);
                     oldBackground.color = private.presentazione.proper.frames[i].color;
                     private.presentazione.proper.frames[i].ref = spec.ref;
                     private.presentazione.proper.frames[i].color = spec.color;
@@ -368,6 +369,8 @@ var insertEditRemove = function () {
             
             var element = public.getElement(spec.id);
             if (element) {
+                original = element.zIndex;
+                element.zIndex = original - 1;
                 for (var i = 1; i < contatore; i++) {
                     if(public.getElement(i) && i != spec.id){
                         console.log("z index trovato " + public.getElement(i).zIndex + " z index atteso " + (spec.zIndex -1));

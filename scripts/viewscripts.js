@@ -1,3 +1,23 @@
+/*
+ Name : viewscripts.js
+ Package : View
+ Location : /scripts
+
+ History :
+ -Version 
+	1.0.0
+ -Date 
+	21/08/2015
+ -Programmer 
+    Manuel Fossa
+    Matteo Busetto
+	Giovanni Venturelli
+ - Description
+	Definizione delle funzioni che si occupano di gestire le modifiche visuali della pagina edit.html.
+
+*/
+
+
 //TRADUTTORE NO MODIFICARE
 var l=screen.width;
 l=l*0.989;

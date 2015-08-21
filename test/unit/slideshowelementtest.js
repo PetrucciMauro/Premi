@@ -1,4 +1,19 @@
-
+/*
+2 * Name : slideshowelementtest.js
+3 * Module : UnitTest
+4 * Location : test/unit
+5 *
+6 * History :
+7 * -Version 
+	1.0.0
+8 * -Date 
+	21/08/2015
+9 * -Programmer 
+	Pietro Tollot
+10 * - Description
+	Si tratta dei test inerenti alle classi del package SlideShow
+11 *
+12 */
 describe('slideshowtest', function() {
   var $jsText=text({id: 1, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13,  waste: 0, content: "babba", font:"arial", color:"black"});
   var $jsFrame=frame({id: 2, xIndex: 10, yIndex: 20, rotation: 2, zIndex: 0, height: 15, width: 13, waste: 0, bookmark: 1, ref:"prova", color:"rgb(2,23,244,1)"});
@@ -199,50 +214,3 @@ it('verifyOldShape', function(){
     });
     
   });
-/*
-  describe('$scope.grade', function() {
-    var $scope, controller;
-
-    beforeEach(function() {
-      $scope = {};
-      controller = $controller('premiLoginController', { $scope: $scope });
-    });
-
-    it('sets the strength to "strong" if the password length is >8 chars', function() {
-      $scope.user.password = 'longerthaneightchars';
-      $scope.grade();
-      expect($scope.strength).toEqual('strong');
-    });
-
-    it('sets the strength to "weak" if the password length <3 chars', function() {
-      $scope.user.password = 'ahhhhhh';
-      $scope.grade();
-      expect($scope.strength).toEqual('weak');
-    });
-  });
-});*/
-/*
-var poligono=function(spec){
-var public={};
-var private={};
-private.lati=spec.lati;
-private.altezza=spec.altezza;
-private.larghezza=spec.larghezza;
-public.getAltezza(){
-  return private.altezza;
-}
-public.getLarghezza(){
-  return private.larghezza;
-}
-public.getLati(){
-  return private.lati;
-}
-return public;
-}
-
-var rettangolo=function(spec){
-spec.lati=4;
-var public=poligono(spec);
-var private={};
-return that;
-}*/

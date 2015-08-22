@@ -4,18 +4,19 @@
   "version": "0.0.1",
   "homepage": "https://github.com/PetrucciMauro/Premi.git",
   "dependencies": {
-    "angular": "^1.3.17",
-    "angular-mocks": "^1.3.17",
+    "angular": "latest",
+    "angular-mocks": "latest",
     "jquery": "~2.1.1",
     "bootstrap": "~3.1.1",
-    "angular-route": "1.3.17",
-    "angular-animate": "1.3.17",
-    "angular-aria": "1.3.17",
+    "angular-route": "latest",
+    "angular-animate": "latest",
+    "angular-aria": "latest",
     "angular-material": "latest",
-    "angular-resource" : "^1.3.17",
+    "angular-resource" : "latest",
     "jscolor": "latest"
   },
   "devdependencies":{
-    "angular-material": "latest"
+    "angular-material": "latest",
+    "angular-mocks": "latest"
   }
 }

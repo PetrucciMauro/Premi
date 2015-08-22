@@ -1,5 +1,9 @@
 Premi better than Prezi
 
-<a href='https://coveralls.io/r/PetrucciMauro/sourceAngular?branch=master'><img src='https://coveralls.io/repos/PetrucciMauro/sourceAngular/badge.svg?branch=master' alt='Coverage Status' /></a>
+Istruzioni per l'installazione
 
-<!--<a href='https://travis-ci.org/PetrucciMauro/sourceAngular.svg?branch=master'><img src='https://travis-ci.org/PetrucciMauro/sourceAngular.svg?branch=master' alt='Build Status' /></a>-->
+Eseguire da terminale le seguenti istruzioni
+
+- npm install (Potrà richiedere diverso tempo a seconda della velocità della connessione e del computer , spesso potrebbero comparire warning o errori durante il download dei moduli ma non ci sono problemi)
+- bower install
+

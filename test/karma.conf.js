@@ -44,7 +44,7 @@ module.exports = function(config){
 
     frameworks: ['jasmine'],
 
-
+    browsers: ['PhantomJS'],
 
     plugins : [
 

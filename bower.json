@@ -14,9 +14,6 @@
     "angular-material": "latest",
     "angular-resource" : "latest",
     "jscolor": "latest"
-  },
-  "devdependencies":{
-    "angular-material": "latest",
-    "angular-mocks": "latest"
   }
+
 }

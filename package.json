@@ -66,7 +66,7 @@
     "prestart": "npm install",
     "start": "http-server -a 0.0.0.0 -p 8000",
     "pretest": "npm install",
-    "test": "./node_modules/.bin/karma start test/karma.conf.js --single-run=false ",
+    "test": "./node_modules/.bin/karma start test/karma.conf.js --single-run ",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",

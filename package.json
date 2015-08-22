@@ -21,7 +21,10 @@
     "files": [
     "./binary-extensions.json"
   ],
-
+  "engines":{
+    "node": "0.12.6",
+    "npm": "2.11.2"
+  },
   "devDependencies": {
     "image-size": "latest",
     "karma": "0.12.37",

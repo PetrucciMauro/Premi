@@ -726,19 +726,25 @@ function portaAvanti(id) {
 	var original = $("#" + id).zIndex();
 	var superior = getElementByZIndex(original + 1);
 
+	var ris = -1;
 	if (superior) {
 		superior.style.zIndex = original;
 		$("#" + id).css({ "z-index": original + 1 });
+		ris = superior;
 	}
+
+	return ris;
 }
 
 function mandaDietro(id){
+	var ris = -1;
     if ($("#" + id).zIndex() > 0) {
         var original = $("#" + id).zIndex();
 		var element = getElementByZIndex(original - 1);
 		if (element)
-		    portaAvanti(element.id);
+		    ris = portaAvanti(element.id);
 	}
+	return ris;
 }
 
 function toggleElement(id) { 

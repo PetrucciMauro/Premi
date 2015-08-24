@@ -2,6 +2,7 @@ var screenWidth = 0;
 var screenHeight = 0;
 
 function framePosition(left,top,width){
+console.log("frame "+left+" "+top+" "+width);
 	console.log(left + " " + top + " " +width+" "+screenWidth+" "+screenHeight);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
 	return position;
@@ -12,6 +13,7 @@ function imagePosition(left,top,waste,width,height){
 	return position;
 }
 function audioPosition(left,top,width,height){
+console.log("audio "+left+" "+top+" "+width);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600),(19.19/screenWidth)*width];
 	return position;
 }

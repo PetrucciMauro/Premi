@@ -406,6 +406,7 @@ var inserisciElemento = function (classe, spec) {
 	div.setAttribute("class", classe+" elemento");
 	var id = contatore;
 
+	console.log(spec);
 	//TRADUTTORE EDIT
 	if(spec && spec.id){
 		if(contatore < spec.id)//in contatore si salva l'id maggiore
@@ -568,14 +569,15 @@ var inserisciMedia = function (x, classe, spec) {
 		type="video";
 
 	var element = document.createElement(type);
-
+	console.log(div.style.height);
+	if(!spec){
     element.onload = function () {
 	    var H = this.height,
                 
             W = this.width;
 	}
-
-    
+}
+    console.log(div.style.height);
 	//TRADUTTORE
 	if(!spec){
 		var imgSize=l*0.10;
@@ -590,6 +592,7 @@ var inserisciMedia = function (x, classe, spec) {
 	element.src = url;
 	div.style.padding = 0;
 	div.appendChild(element);
+	console.log(div.style.height);
 	return div;
 }
 
@@ -686,9 +689,11 @@ var inserisciAudio=function(x, spec){
 	$("#"+div.id).css({"background":"url('assets/nota.png') no-repeat", "background-size": "100% 100%"});;
 
 	//TRADUTTORE
-	var adSize=l*0.10;
-	div.style.width=adSize+"px";
-	div.style.height=adSize+"px";
+	if(!spec){
+		var adSize=l*0.10;
+		div.style.width=adSize+"px";
+		div.style.height=adSize+"px";
+	}
 	//TRADUTTORE
 	return div;
 }

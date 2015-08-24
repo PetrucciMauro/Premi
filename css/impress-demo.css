@@ -283,8 +283,10 @@ video{
 }
 
 .audio{
-	width: 595.238095px;
-	height: 595.238095px;
+	width: 750px;
+	height: 750px;
+	/*width: 595.238095px;
+	height: 595.238095px;*/
 	padding: 0;
 	background-image: url("../assets/nota.png");
 	background-size: 100% 100%;

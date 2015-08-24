@@ -382,7 +382,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				yIndex: top,
 				height: eleheight,
 				width: elewidth,
-				waste: (elewidth - eleouterwidth) / 2,
+				waste: eleouterwidth,
 				rotation: 0,
 				ref: url,
 				zIndex: Number(style.zIndex),
@@ -617,7 +617,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			
 			if(Utils.isObject(activeText) && active().getTipo() == "text"){
 				var text = document.getElementById("txt" + activeText).style;
-				if(value != style.fontSize){
+				if(value != text.fontSize){
 					text.fontSize = value + "em";
 
 					var spec = {

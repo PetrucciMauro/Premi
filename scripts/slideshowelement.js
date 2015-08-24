@@ -67,7 +67,7 @@ var frame = function (spec) {
     var that = slideShowElement(spec);
     that.bookmark=spec.bookmark||0;
     that.ref=spec.ref||"";
-    that.color=spec.color||"rgb(255,255,255)";
+    that.color=spec.color||"rgba(255,255,255,0)";
     that.zIndex = spec.zIndex;
     that.type = "frame";
         

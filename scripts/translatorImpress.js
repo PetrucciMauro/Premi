@@ -4,7 +4,21 @@ var screenHeight = 0;
 function framePosition(left,top,width){
 console.log("frame "+left+" "+top+" "+width);
 	console.log(left + " " + top + " " +width+" "+screenWidth+" "+screenHeight);
-	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
+
+	var area = width*width;
+	var scale = area/(screenWidth*screenHeight)*10;
+
+	var scaleW = (width/2) / screenWidth * 10;
+	var scaleH = (width/2) / screenHeight * 10;
+	console.log("myframe");
+	console.log(scale);
+
+	var x = (left + width/2) + (left + width/2)*scale + 7440*2/screenWidth - 7440;
+	var y = (top + width/2) + (top + width/2)*scale + 3600*2/screenHeight - 3600;
+
+	//piux = piuy = ((7440)*(3600))/(screenWidth*screenHeight);
+	//console.log(piux);
+	var position=[x,y,scale];
 	return position;
 }
 function imagePosition(left,top,waste,width,height){
@@ -22,24 +36,17 @@ function videoPosition(left,top,waste,width,height){
 	var position=[(((left+(width/2)+waste)/screenWidth)*(7440*2)-7440),(((top+(height/2)+waste)/screenHeight)*(3600*2)-3600)+(180/19.19)*scale,scale];
 	return position;
 }
-function textPosition(left,top,waste,size,width,height){
-	console.log(left + " " + top + " " +width+" "+height+" "+screenWidth+" "+screenHeight+" "+waste+" "+size);
+function textPosition(left,top,waste,size,width,height,def){
 	//var scale=(33.5/(1290/1899))*(size*14/screenWidth)*6.5;
-	//scale=scale*0.95;
-	//scale=3;
-	var widthPerc = width/height;
-	var heightPerc = height/width;
-	var divide = widthPerc + heightPerc;
-	var scale = ((18/screenWidth)*width*heightPerc + (18/screenHeight)*height*widthPerc)/divide;
-	var textPadding = 100;
-	console.log(width/height);
-	console.log(height/width);
-	if(!waste)
-		waste=0;
-	//var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600)+(180/19.19)*scale,scale];
-	//var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440+textPadding),(((top+(height/2))/screenHeight)*(3600*2)-3600+textPadding),scale];
-	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
-		return position;
+	var scale = (def*width)/screenWidth + (def*height)/screenHeight;
+	scale = scale * 1.05;
+	console.log("scale 2:"+scale);
+	//scale = 11;
+	var textPadding = 0;
+	
+	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440+textPadding),(((top+(height/2))/screenHeight)*(3600*2)-3600+textPadding),scale];
+	//var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
+	return position;
 	}
 
 var translateImpress = function(json){
@@ -218,15 +225,15 @@ var translateImpress = function(json){
 		for(i=0; i<json.proper.texts.length; ++i){
 			var text = json.proper.texts[i];
 
-			var coordinates=textPosition(text.xIndex,text.yIndex,text.waste,text.fontSize,text.width,text.height);
+			var coordinates=textPosition(text.xIndex,text.yIndex,text.waste,text.fontSize,text.width,text.height, defaultSize);
 
 			var style="style=\"z-index:"+text.zIndex+";\"";
 			presentation+="<div class=\"step testo\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+">";
 
-			var height = text.height/defaultSize;
-			var width = text.width/defaultSize;
-
-			var styleQ="style=\"text-align:left;width:"+width+"em;height:"+height+"em;top:0em;left:0em;display:block;font-size:"+text.fontSize+"em;color:"+text.color+";font-family:"+text.font+";\"";
+			var height = text.height;
+			var width = text.width;
+			//var content = text.content.replace(/(\r\n|\n|\r)/g,"<br/>");
+			var styleQ="style=\"text-align:left;width:"+width+"px;height:"+height+"px;top:0em;left:0em;display:block;font-size:"+text.fontSize*defaultSize+"px;color:"+text.color+";font-family:"+text.font+";\"";
 			presentation+="<p "+styleQ+">"+text.content+"</p></div>";
 		}
 		console.log(presentation);

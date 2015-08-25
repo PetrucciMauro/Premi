@@ -69,6 +69,92 @@ $(document).keyup(function(e){
         }
     }
 });
+var repeating = false;
+var repeatRateTimer = null;
+var repeating = false;
+var repeatRateTimer = null;
+
+
+$(document).bind('keydown', function (input) {
+    if (active().getId()) {
+        input.preventDefault();
+    }
+    if (repeating == true) {
+        if (repeatRateTimer != null) {
+            clearTimeout(repeatRateTimer);
+            repeatRateTimer = null;
+        }
+        else {
+            repeatRateTimer = setTimeout(function () { repeating = false; }, 0.0000000001);
+        }
+        keyMove(input);
+        return;
+    }
+    repeating = true;
+});
+
+function keyMove(input){
+switch (input.which) {
+    case 37:
+
+        if (active().getId()) {
+            $("#" + active().getId()).stop().animate({
+                left: '-=1'
+            }); //left arrow key
+            input.preventDefault();
+        }
+        break;
+    case 38:
+
+        if (active().getId()) {
+            $("#" + active().getId()).stop().animate({
+                top: '-=1'
+            }); //up arrow key
+            input.preventDefault();
+        }
+        break;
+    case 39:
+
+        if (active().getId()) {
+            $("#" + active().getId()).stop().animate({
+                left: '+=1'
+            }); //right arrow key
+            input.preventDefault();
+        }
+        break;
+    case 40:
+
+        if (active().getId()) {
+            $("#" + active().getId()).stop().animate({
+                top: '+=1'
+            }); //bottom arrow key
+            input.preventDefault();
+        }
+        break;
+}
+}
+
+
+
+
+$(document).keyup(function (e) {
+    switch (e.which) {
+        case 37:
+                angular.element($("#" + active().getId())).scope().muoviElemento();
+             
+            break;
+        case 38:
+            angular.element($("#" + active().getId())).scope().muoviElemento(); //up arrow key
+            break;
+        case 39:
+            angular.element($("#" + active().getId())).scope().muoviElemento(); //right arrow key
+            break;
+        case 40:
+            angular.element($("#" + active().getId())).scope().muoviElemento(); //bottom arrow key
+            break;
+    }
+})
+
 $(window).scroll(function (event) {
     $("#premiHeader").attr("style", "margin-top: " + $(document).scrollTop() + "px !important; margin-left: " + $(document).scrollLeft() + "px !important; -webkit-transition: margin-top 0.2s; transition: margin-top 0.2s;");
     var newTop = parseFloat(originalTopMenu) + parseFloat($(document).scrollTop());

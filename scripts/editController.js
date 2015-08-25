@@ -1080,6 +1080,31 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.getRedoStack = function () {
 		    return invoker().getRedoStack();
 		}
+		$scope.undoMessage = "";
+		$scope.redoMessage = "";
+		$scope.getUndoMessages = function () {
+		    var value="";
+		    if (invoker().getUndoStack())
+		        value = invoker().getUndoMessages()[(invoker().getUndoMessages().length - 1)];
+            return value
+		}
+
+		$scope.getRedoMessages = function () {
+		    var value = "";
+		    if (invoker().getRedoStack())
+		        value = invoker().getRedoMessages()[(invoker().getRedoMessages().length-1)];
+		    return value
+		}
+
+		$scope.updateMessages = function () {
+		    $scope.undoMessage = $scope.getUndoMessages();
+		    $scope.redoMessage = $scope.getRedoMessages();
+		    safeApply();
+		    console.log("messaggio di annulla " + $scope.undoMessage);
+		    console.log("messaggio di ripristina " + $scope.redoMessage);
+		    
+		}
+		
 		$scope.updateBookmark = function(id){
 			var idElement;
 			if(Utils.isObject(id))
@@ -1293,7 +1318,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		}
 		else
 			impostaPrimoSfondo();
-
 }])
 
 premiEditController.controller('BottomSheetController', ['scope',

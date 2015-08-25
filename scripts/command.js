@@ -13,19 +13,39 @@ var invoker = function () {
     if (!invokerInstanced) {
         var public = {};
         var private = {};
+        
         private.undoStack = new Array();
         private.redoStack = new Array();
+        public.getUndoMessages = function () {
+            var arr=new Array();
+            for (var i = 0; i < private.undoStack.length; i++) {
+                arr.push(private.undoStack[i].getCommandAction());
+            }
+            console.log("update undo");
+            return arr;
+        }
+
+        public.getRedoMessages = function () {
+            var arr = new Array();
+            for (var i = 0; i < private.redoStack.length; i++) {
+                arr.push(private.redoStack[i].getCommandAction());
+            }
+            
+            return arr;
+        }
+
         public.execute = function (com) {
             com.doAction();
             private.undoStack.push(com);
             private.redoStack = [];
-
+            angular.element(content).scope().updateMessages();
             
         };
         public.undo = function () {
             var temp = private.undoStack.pop();
             var obj=temp.undoAction();
             private.redoStack.push(temp);
+            angular.element(content).scope().updateMessages();
             return obj;
         };
         public.redo = function () {
@@ -33,6 +53,7 @@ var invoker = function () {
                 var temp = private.redoStack.pop();
                 var obj = temp.doAction();
                 private.undoStack.push(temp);
+                angular.element(content).scope().updateMessages()
                 return obj;
             }
         };
@@ -66,7 +87,13 @@ var abstractCommand = function (spec) {
     private.obj = {};
     private.obj.id = spec.id;
     private.obj.type = spec.type || spec.tipo;
-    
+    private.commandAction="";
+    public.setCommandAction = function (action) {
+        private.commandAction = action;
+    }
+    public.getCommandAction = function () {
+        return private.commandAction;
+    }
     public.getObj=function(){
         return private.obj;
     }
@@ -107,6 +134,7 @@ var abstractCommand = function (spec) {
 var concreteTextInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("inserimento testo");
     public.doAction = function () {
         public.getEnabler().insertText(spec);
         if (public.getExecuted() === 0) {
@@ -132,6 +160,7 @@ var concreteTextInsertCommand = function (spec) {
 var concreteImageInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("inserimento immagine");
     public.doAction = function () {
         public.getEnabler().insertImage(spec);
         if (public.getExecuted() === 0) {
@@ -157,6 +186,7 @@ var concreteImageInsertCommand = function (spec) {
 var concreteFrameInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("inserimento frame");
     public.doAction = function () {
         public.getEnabler().insertFrame(spec);
         if (public.getExecuted() === 0) {
@@ -182,6 +212,7 @@ var concreteFrameInsertCommand = function (spec) {
 var concreteSVGInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("inserimento SVG");
     public.doAction = function () {
         public.getEnabler().insertSVG(spec);
         if (public.getExecuted() === 0) {
@@ -207,6 +238,7 @@ var concreteSVGInsertCommand = function (spec) {
 var concreteAudioInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("inserimento audio");
     public.doAction = function () {
         public.getEnabler().insertAudio(spec);
         if (public.getExecuted() === 0) {
@@ -232,6 +264,7 @@ var concreteAudioInsertCommand = function (spec) {
 var concreteVideoInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("inserimento video");
     public.doAction = function () {
         public.getEnabler().insertVideo(spec);
         if (public.getExecuted() === 0) {
@@ -285,6 +318,7 @@ var concreteBackgroundInsertCommand = function (spec) {
 var concreteTextRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("eliminazione testo");
     public.doAction = function () {
         private.oldText = public.getEnabler().removeText(spec);
         if (public.getExecuted() === 0) {
@@ -310,6 +344,7 @@ var concreteTextRemoveCommand = function (spec) {
 var concreteImageRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("eliminazione immagine");
     public.doAction = function () {
         private.oldImage = public.getEnabler().removeImage(spec);
         if (public.getExecuted() === 0) {
@@ -336,6 +371,7 @@ var concreteImageRemoveCommand = function (spec) {
 var concreteFrameRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("eliminazione frame");
     public.doAction = function () {
         private.oldFrame = public.getEnabler().removeFrame(spec);
         if (public.getExecuted() === 0) {
@@ -362,6 +398,7 @@ var concreteFrameRemoveCommand = function (spec) {
 var concreteSVGRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("eliminazione SVG");
     public.doAction = function () {
         private.oldSVG = public.getEnabler().removeSVG(spec);
         if (public.getExecuted() === 0) {
@@ -388,6 +425,7 @@ var concreteSVGRemoveCommand = function (spec) {
 var concreteAudioRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("eliminazione audio");
     public.doAction = function () {
         private.oldAudio = public.getEnabler().removeAudio(spec);
         if (public.getExecuted() === 0) {
@@ -414,6 +452,7 @@ var concreteAudioRemoveCommand = function (spec) {
 var concreteVideoRemoveCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("eliminazione video");
     public.doAction = function () {
         private.oldVideo = public.getEnabler().removeVideo(spec);
         if (public.getExecuted() === 0) {
@@ -442,6 +481,7 @@ var concreteEditPositionCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldPosition = {};
+    public.setCommandAction("sposta elemento");
     public.doAction = function () {
         private.oldPosition = public.getEnabler().editPosition(spec);
         private.oldPosition.id = spec.id;
@@ -471,6 +511,7 @@ var concreteEditRotationCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldRotation = {};
+    public.setCommandAction("ruota elemento");
     public.doAction = function () {
         private.oldRotation.rotation = public.getEnabler().editRotation(spec);
         private.oldRotation.id = spec.id;
@@ -499,6 +540,7 @@ var concreteEditSizeCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldSize = {};
+    public.setCommandAction("ridimensiona elemento");
     public.doAction = function () {
         private.oldSize = public.getEnabler().editSize(spec);
         private.oldSize.id = spec.id;
@@ -527,6 +569,7 @@ var concreteEditContentCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldContent = {};
+    public.setCommandAction("modifica testo");
     public.doAction = function () {
         private.oldContent.content = public.getEnabler().editContent(spec);
         private.oldContent.id = spec.id;
@@ -555,6 +598,7 @@ var concreteEditBackgroundCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldBackground = {};
+    public.setCommandAction("modifica sfondo");
     public.doAction = function () {
         private.oldBackground = public.getEnabler().editBackground(spec);
         private.oldBackground.id = spec.id;
@@ -583,7 +627,9 @@ var concreteEditBackgroundCommand = function (spec) {
 var concreteEditColorCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+
     private.oldColor = {};
+    public.setCommandAction("modifica colore sfondo");
     public.doAction = function () {
         private.oldColor.color = public.getEnabler().editColor(spec);
         private.oldColor.id = spec.id;
@@ -612,6 +658,11 @@ var concreteEditBookmarkCommand = function (spec) {
     public = abstractCommand(spec);
     public.doAction = function () {
         var bookmark = public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
+        if (public.getEnabler().getElement(spec.id).bookmark = 1) {
+            public.setCommandAction("assegna bookmark");
+        }
+        else
+            public.setCommandAction("rimuovi bookmark");
         if (public.getExecuted() === 0) {
             public.setExecuted(1);        }
         else {
@@ -641,6 +692,7 @@ var concreteEditFontCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldFont = {};
+    public.setCommandAction("modifica font");
     public.doAction = function () {
         private.oldFont = public.getEnabler().editFont(spec);
         private.oldFont.id = spec.id;
@@ -670,6 +722,7 @@ var concretePortaAvantiCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldZIndex = {};
+    public.setCommandAction("porta avanti");
     public.doAction = function () {
         private.oldZIndex.other = spec.other;
         private.oldZIndex.id = spec.id;
@@ -700,6 +753,7 @@ var concretePortaDietroCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldZIndex = {};
+    public.setCommandAction("porta dietro");
     public.doAction = function () {
         private.oldZIndex.other = spec.other;
         private.oldZIndex.id = spec.id;
@@ -732,6 +786,7 @@ var concretePortaDietroCommand = function (spec) {
 var concreteAddToMainPathCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
+    public.setCommandAction("aggiungi a percorso principale");
     public.doAction = function () {
         console.log("inserisco nel percorso principale");
         public.getEnabler().addFrameToMainPath(spec);
@@ -759,6 +814,7 @@ var concreteSetMainPathCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     var oldPath = {};
+    public.setCommandAction("modifica percorso principale");
     public.doAction = function () {
         console.log("modifico percorso principale");
         oldPath = public.getEnabler().setMainPath(spec.path);
@@ -786,6 +842,7 @@ var concreteSetMainPathCommand = function (spec) {
 var concreteRemoveFromMainPathCommand = function (spec) {
     var public = abstractCommand(spec);
     var oldFrame = {};
+    public.setCommandAction("rimuovi da percorso principale");
     public.doAction = function () {
         oldFrame = public.getEnabler().removeFrameFromMainPath(spec);
         if (public.getExecuted() === 0) {
@@ -810,7 +867,7 @@ var concreteRemoveFromMainPathCommand = function (spec) {
 
 var concreteAddToChoicePathCommand = function (spec) {
     var public = abstractCommand(spec);
-
+    public.setCommandAction("aggiungi a percorso scelta");
     public.doAction = function () {
         public.getEnabler().addFrameToChoicePath(spec);
         if (public.getExecuted() === 0) {
@@ -836,6 +893,7 @@ var concreteAddToChoicePathCommand = function (spec) {
 var concreteRemoveFromChoicePathCommand = function (spec) {
     var public = abstractCommand(spec);
     var oldFrame = {};
+    public.setCommandAction("rimuovi da percorso scelta");
     public.doAction = function () {
         oldFrame = public.getEnabler().removeFrameFromChoicePath(spec);
         if (public.getExecuted() === 0) {
@@ -861,6 +919,8 @@ var concreteRemoveFromChoicePathCommand = function (spec) {
 var concreteNewChoicePathCommand = function (spec) {
     var public = abstractCommand(spec);
     var pathId;
+
+    public.setCommandAction("crea percorso scelta");
     public.doAction = function () {
         pathId = public.getEnabler().addChoicePath(spec.id);
         if (public.getExecuted() === 0) {
@@ -886,6 +946,7 @@ var concreteNewChoicePathCommand = function (spec) {
 var concreteDeleteChoicePathCommand = function (spec) {
     var public = abstractCommand(spec);
     var oldPath = {};
+    public.setCommandAction("elimina percorso scelta");
     public.doAction = function () {
         oldPath = public.getEnabler().deleteChoicePath(spec.pathId);
         if (public.getExecuted() === 0) {

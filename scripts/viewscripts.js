@@ -44,6 +44,12 @@ $(document).ready(function () {
 	document.getElementById("premiFooter").style.position = "relative";
 });
 
+$(window).scroll(function (event) {
+    
+    var margin = parseFloat($("#contextual-menu").css("margin-left").replace("px", ""));
+    console.log($(document).scrollLeft());
+    $("#contextual-menu").css("margin-left", ($(document).scrollLeft())+"px");
+});
 
 
 //oggetto che tiene traccia dell'elemento selezionato//

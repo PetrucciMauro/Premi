@@ -869,12 +869,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		//aggiungi al percorso principale
 		$scope.aggiungiMainPath = function (spec) {
 			if(Utils.isObject(spec)){
-				mainPath().addToMainPath(spec.id, spec.pos);
+			    mainPath().addToMainPath(spec.id, spec.pos);
+			    
 			}
 			else {
 				var activeElement = active().getId();
 				mainPath().addToMainPath(activeElement,0);
-
+				
 				var spec = {
 					id: activeElement
 				};
@@ -888,7 +889,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				var command = concreteAddToMainPathCommand(spec);
 				inv.execute(command);
-
+				
 				loader.addPaths();
 			}
 			$scope.canHaveBookmark = true;
@@ -1309,7 +1310,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				mainPath().addToMainPath(mainpath[i], i);
 
 			if(prop !== 1)
-				loader.update(function(){});
+			    loader.update(function () { });
+			safeApply();
 			active().deselect();
 		};
 		

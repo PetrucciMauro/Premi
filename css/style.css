@@ -1,5 +1,6 @@
 ﻿body{  
 margin:0;
+overflow: scroll;
 }
 .profile{
 	margin-top: 2em;

@@ -2,12 +2,12 @@
 <script type="text/javascript" src="scripts/viewscripts.js"></script>
 <script type="text/javascript" src="scripts/FileUp.js"></script>
 
-<md-sidenav id="barraPercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
+<md-sidenav id=" barrapercorsi" class="site-sidenav md-sidenav-left md-whiteframe-z2 ng-isolate-scope md-locked-open md-closed" md-component-id="left" tabindex="-1" flex>
     <md-list>
         <md-list-item>
             <div print-path></div>
         </md-list-item>
-        
+
         <md-list-item>
 
             <md-list id="sortable">
@@ -77,7 +77,7 @@
                     <md-menu-item>
                         <md-button id="insertAudio" class="fileContainer"><p id="insertAudioActivator">Inserisci Audio</p><input multiple type="file" id="audioLoader" name="Inserisci Audio" onchange="angular.element(this).scope().inserisciAudio(this.files)" /></md-button>
                     </md-menu-item>
-                    
+
                 </md-menu-content>
             </md-menu>
 
@@ -106,12 +106,12 @@
                 </md-menu-content>
             </md-menu>
             <!--Menu di gestione sfondo-->
-            
+
             <md-button aria-label="Esegui presentazione" class="menu md-button md-default-theme" id="esegui" ng-click="goExecute()">
                 <md-tooltip>Esegui Presentazione</md-tooltip>
                 <md-icon md-svg-src="assets/svg/play.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-            
+
         </div>
         <!--Menu generico delle presentazioni-->
         <!--Menu generico degli elementi-->
@@ -128,7 +128,7 @@
                 <md-tooltip>Porta dietro</md-tooltip>
                 <md-icon md-svg-src="assets/svg/bringback.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-           
+
 
         </div>
 

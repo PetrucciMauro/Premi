@@ -902,7 +902,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			$scope.canHaveBookmark = false;
 			$scope.canAddBookmark = false;
 			$scope.canRemoveBookmark = false;
-			/*document.getElementById("removeFromMainPath"+id).className = "";*/
+		    /*document.getElementById("removeFromMainPath"+id).className = "";*/
 			if(Utils.isObject(spec)){
 				mainPath().removeFromMainPath(spec);
 
@@ -1339,7 +1339,7 @@ premiApp.directive('printPath', function ($compile) {
 				element.empty();
 
 				for (var i = 0; i < mainPath().getPercorso().length; i++) {
-				    element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath' + mainPath().getPercorso()[i] + '" ng-click="rimuoviMainPath(' + mainPath().getPercorso()[i] + ')"><md-tooltip>Rimuovi dal percorso principale</md-tooltip><md-icon md-svg-src="assets/svg/background.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
+				    element.append($compile('<md-list-item class="ui-state-default" id="sort' + mainPath().getPercorso()[i] + '" onMouseOver="highlight(' + mainPath().getPercorso()[i] + ')"  onMouseOut="highlight(' + mainPath().getPercorso()[i] + ')" onClick="flash(' + mainPath().getPercorso()[i] + ')"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item ' + mainPath().getPercorso()[i] + '<md-button class="menu md-button md-default-theme" id="removeFromMainPath' + mainPath().getPercorso()[i] + '" ng-click="rimuoviMainPath(' + mainPath().getPercorso()[i] + ')"><md-icon md-svg-src="assets/svg/delete.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon></md-button> </md-list-item>')($scope));
 					var obj = {};
 					obj.id = "sort" + mainPath().getPercorso()[i];
 					obj.association = mainPath().getPercorso()[i];

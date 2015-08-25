@@ -30,8 +30,6 @@ describe('slideshowtest', function() {
   pres.insertBackground($back);
   var $back2 = background({id: 0, image: "http:\\www.facebook.com", color: "rgb(31,23,22,1)"});
   pres.insertBackground($back2);
-  /*var $newPos = {id: 1, tipo: "text", xIndex:114, yIndex:32};
-  pres.editPosition($newPos);*/
   var presDue = insertEditRemove();
 
 
@@ -69,12 +67,13 @@ var texDue;
     it('verifySVGConstruction', function(){
       expect (JSON.stringify($jsSVG)).toEqual('{"id":6,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"shape":"0,2,3,4","color":"rgb(2,23,244,1)","type":"SVG"}');
     });
+    it('verifyTextInsertions', function(){
+      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"content":"babba","font":"arial","fontSize":1,"color":"black","type":"text"},{"id":7,"xIndex":10,"yIndex":20,"rotation":32,"zIndex":0,"height":1,"width":134,"waste":0,"content":"babba2","font":"times","fontSize":1,"color":"black","type":"text"}],"frames":[{"id":2,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"bookmark":1,"ref":"prova","color":"rgb(2,23,244,1)","type":"frame"}],"images":[{"id":3,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"url":"","type":"image"}],"SVGs":[{"id":6,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"shape":"0,2,3,4","color":"rgb(2,23,244,1)","type":"SVG"}],"audios":[{"id":4,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"url":"","type":"audio"}],"videos":[{"id":5,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"type":"video"}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"waste":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)","type":"background"}}}');
+    });
     it('verifySingleton', function(){
       expect (printPres).toEqual(printPresDue);
     });
-    it('verifyInsertions', function(){
-      expect (printPres).toEqual('{"meta":{"id":1,"data_ultima_modifica":2015,"titolo":"presentazione di prova"},"proper":{"texts":[{"id":1,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"content":"babba","font":"arial","fontSize":1,"color":"black","type":"text"},{"id":7,"xIndex":10,"yIndex":20,"rotation":32,"zIndex":0,"height":1,"width":134,"waste":0,"content":"babba2","font":"times","fontSize":1,"color":"black","type":"text"}],"frames":[{"id":2,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"bookmark":1,"ref":"prova","color":"rgb(2,23,244,1)","type":"frame"}],"images":[{"id":3,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"url":"","type":"image"}],"SVGs":[{"id":6,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"shape":"0,2,3,4","color":"rgb(2,23,244,1)","type":"SVG"}],"audios":[{"id":4,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"url":"","type":"audio"}],"videos":[{"id":5,"xIndex":10,"yIndex":20,"rotation":2,"zIndex":0,"height":15,"width":13,"waste":0,"type":"video"}],"background":{"id":0,"xIndex":0,"yIndex":0,"rotation":0,"zIndex":0,"height":0,"width":0,"waste":0,"image":"http:\\\\www.facebook.com","color":"rgb(31,23,22,1)","type":"background"}}}');
-    });
+    
     it('verifyEditPosition', function(){
       texUno = pres.editPosition({id: 1, tipo: "text", xIndex:100, yIndex: 200});
       fram = pres.editPosition({id: 2, tipo: "frame", xIndex:100, yIndex: 200});

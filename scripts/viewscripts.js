@@ -61,6 +61,14 @@ $(document).ready(function () {
 	    height: 300
 	});*/
 });
+
+$(document).keyup(function(e){
+    if (e.keyCode == 46) {
+        if (active().getId()) {
+            $("#deleteElement").click();
+        }
+    }
+});
 $(window).scroll(function (event) {
     $("#premiHeader").attr("style", "margin-top: " + $(document).scrollTop() + "px !important; margin-left: " + $(document).scrollLeft() + "px !important; -webkit-transition: margin-top 0.2s; transition: margin-top 0.2s;");
     var newTop = parseFloat(originalTopMenu) + parseFloat($(document).scrollTop());

@@ -21,7 +21,8 @@ styleContent.height = h + "px";
 
 //TRADUTTORE
 var zindex = 0;
-var contatore=1;
+var contatore = 1;
+var originalTopMenu;
 $(document).ready(function () {
 	var origin;
 	$("#sortable").sortable({
@@ -42,13 +43,17 @@ $(document).ready(function () {
 	$("#sortable").disableSelection();
 	document.getElementById("premiFooter").style.marginTop = styleContent.height;
 	document.getElementById("premiFooter").style.position = "relative";
-});
 
+	originalTopMenu = $("#contextual-menu").css("margin-top").replace("px", "");
+	$("#content").css("margin-top", $("#contextual-menu").height());
+});
 $(window).scroll(function (event) {
+    $("#premiHeader").attr("style", "margin-top: " + $(document).scrollTop() + "px !important; margin-left: " + $(document).scrollLeft() + "px !important");
+    var newTop = parseFloat(originalTopMenu) + parseFloat($(document).scrollTop());
+    $("#contextual-menu").css("margin-top", (newTop) + "px");
+    console.log("premi header top " + $("#premiHeader").css("margin-top"));
+    $("#contextual-menu").css("margin-left", ($(document).scrollLeft()) + "px");
     
-    var margin = parseFloat($("#contextual-menu").css("margin-left").replace("px", ""));
-    console.log($(document).scrollLeft());
-    $("#contextual-menu").css("margin-left", ($(document).scrollLeft())+"px");
 });
 
 

@@ -73,13 +73,14 @@ margin:0;
 
 .image{
 	background-color: none; 
-	position: absolute;
+      position: absolute;
 	padding:0;
 }
 #contextual-menu{
 	padding:0.2em;
 	min-height: 2.5em;
     max-height: 3em;
+      position: absolute;
 }
 
 #contextual-menu md-icon{
@@ -87,6 +88,7 @@ margin:0;
 	vertical-align: none;
 	height: 1.6em;
 	width: 1.6em;
+  
 }
 
 #contextual-menu button{

@@ -13,7 +13,7 @@ html, body {
   display: table-row;
 }
 #premiHeader{
-  position:fixed !important;
+  position:absolute;
   min-height:3em;
   width:100%;
 

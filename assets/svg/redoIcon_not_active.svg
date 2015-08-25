@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Livello_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="334.228px" height="334.228px" viewBox="0 0 334.228 334.228" enable-background="new 0 0 334.228 334.228"
+	 xml:space="preserve">
+<g opacity="0.7">
+	<g>
+		<defs>
+			<circle id="SVGID_1_" cx="167.114" cy="167.114" r="167.114"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  overflow="visible"/>
+		</clipPath>
+		<circle clip-path="url(#SVGID_2_)" fill="#5E9DD5" cx="166.218" cy="167.114" r="167.114"/>
+	</g>
+	<g>
+		<defs>
+			<circle id="SVGID_3_" cx="167.114" cy="167.114" r="167.114"/>
+		</defs>
+		<clipPath id="SVGID_4_">
+			<use xlink:href="#SVGID_3_"  overflow="visible"/>
+		</clipPath>
+		<g clip-path="url(#SVGID_4_)">
+			<path fill="#FFFFFF" stroke="#FFFFFF" stroke-miterlimit="10" d="M40.529,74.536l1.861,6.489l23.123,6.459
+				c24.24,7.025,47.673,16.941,61.948,33.915c11.256,13.339,20.342,26.006,28.261,51.006L105.45,186.82l115.319,97.832
+				l45.971-144.013l-50.587,14.505c-13.144-39.182-32.631-64.342-61.29-80.123c-42.584-23.446-83.701-9.201-94.284-6.167
+				C54.974,70.462,46.892,72.712,40.529,74.536z"/>
+		</g>
+	</g>
+</g>
+<circle fill="none" cx="167.114" cy="167.114" r="167.114"/>
+</svg>

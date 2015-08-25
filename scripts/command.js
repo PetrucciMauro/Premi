@@ -762,7 +762,7 @@ var concreteSetMainPathCommand = function (spec) {
     public.doAction = function () {
         console.log("modifico percorso principale");
         oldPath = public.getEnabler().setMainPath(spec.path);
-
+        console.log("oldpath = " + JSON.stringify(oldPath));
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }
@@ -774,7 +774,6 @@ var concreteSetMainPathCommand = function (spec) {
         return obj;
     };
     public.undoAction = function () {
-        public.getEnabler().setMainPath(oldPath);
         var obj = public.getObj();
         obj.action = "editPath";
         angular.element($("#content")).scope().setMainPath(oldPath);

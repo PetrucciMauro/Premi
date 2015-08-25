@@ -10598,9 +10598,13 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
      * @param isOpen
      * @returns {*}
      */
-    function toggleOpen( isOpen ) {
+    //array che conterrà lo stato del percorso principale prima della sua modifica
+    var tempMainPath = new Array();
+    function toggleOpen(isOpen) {
+        tempMainPath = mainPath().getPercorso();
+        console.log("mainpath=" + JSON.stringify(tempMainPath));
       if (scope.isOpen == isOpen ) {
-
+        
         return $q.when(true);
 
       } else {
@@ -10643,14 +10647,19 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
      * apply the CSS close transition... Then notify the controller
      * to close() and perform its own actions.
      */
+     
     function close(ev) {
       ev.preventDefault();
       ev.stopPropagation();
       console.log("chiudo sidenav");
-      if(mainPath().getSidenav() == 1) {
-          console.log("ok");
-			        
-          mainPath().setMainPath(obj);
+      if (mainPath().getSidenav() == 1) {
+          
+              console.log("ok");
+              if (mainPath().getPercorso() != tempMainPath) {
+                  
+              angular.element(content).scope().setMainPath();
+          }
+          mainPath().clearSidenav();
       }
 
       return sidenavCtrl.close();

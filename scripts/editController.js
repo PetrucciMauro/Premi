@@ -922,7 +922,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		    console.log("chiaramente qui non arriva");
 		    mainPath().clearSidenav();
 		    if (Utils.isObject(spec)) {
-		        mainpath().setMainPath();
+		        console.log("spec.path=" + JSON.stringify(spec.path));
+		        mainPath().setPath(spec.path);
 		    }
 		    else {
 		        var spec = {};
@@ -1009,6 +1010,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
             if(id!="undef")
 			var position = insertEditRemove().getPaths().main.indexOf(id);
             else
+                if (insertEditRemove().getPaths().main)
                 var position = insertEditRemove().getPaths().main.indexOf(active().getId());
 			if(position != -1)
 				return true;
@@ -1072,6 +1074,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 		}
 
+		$scope.getUndoStack = function () {
+		    return invoker().getUndoStack();
+		}
+		$scope.getRedoStack = function () {
+		    return invoker().getRedoStack();
+		}
 		$scope.updateBookmark = function(id){
 			var idElement;
 			if(Utils.isObject(id))

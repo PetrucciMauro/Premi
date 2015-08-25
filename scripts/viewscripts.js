@@ -36,7 +36,7 @@ $(document).ready(function () {
 			stop: function (event, ui) {
 				mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
 				mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
-				mainPath().upSidenav();
+
 			}
 		});
 	$("#sortable").disableSelection();

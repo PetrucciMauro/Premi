@@ -43,11 +43,17 @@
             <md-button class="menu md-button md-default-theme" aria-label="Salva" ng-click="salvaPresentazione()">
                 <md-tooltip>Salva</md-tooltip><md-icon md-svg-src="assets/svg/save.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-            <md-button class="menu md-button md-default-theme" aria-label="Annulla" ng-click="annullaModifica()">
+            <md-button class="menu md-button md-default-theme" aria-label="Annulla" ng-click="annullaModifica()" ng-show="getUndoStack()">
                 <md-tooltip>Annulla</md-tooltip><md-icon md-svg-src="assets/svg/undoIcon.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
-            <md-button class="menu md-button md-default-theme" aria-label="Ripristina" ng-click="ripristinaModifica()">
+            <md-button class="menu md-button md-default-theme" aria-label="Annulla Non Abilitato" ng-show="!getUndoStack()" disabled="disabled">
+                <md-tooltip>Annulla</md-tooltip><md-icon md-svg-src="assets/svg/undoIcon_not_active.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+            </md-button>
+            <md-button class="menu md-button md-default-theme" aria-label="Ripristina" ng-click="ripristinaModifica()" ng-show="getRedoStack()">
                 <md-tooltip>Ripristina</md-tooltip><md-icon md-svg-src="assets/svg/redoIcon.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
+            </md-button>
+            <md-button class="menu md-button md-default-theme" aria-label="Ripristina" ng-show="!getRedoStack()" disabled="disabled">
+                <md-tooltip>Ripristina</md-tooltip><md-icon md-svg-src="assets/svg/redoIcon_not_active.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>
             <!--Menu di inserimento-->
 

@@ -47,7 +47,7 @@ $(document).ready(function () {
 	originalTopMenu = $("#contextual-menu").css("margin-top").replace("px", "");
 	$("#content").css("margin-top", $("#contextual-menu").height());
 
-	html2canvas($("#content"), {
+	/*html2canvas($("#content"), {
 	    onrendered: function (canvas) {
 	        // canvas is the final rendered <canvas> element
 	        var myImage = canvas.toDataURL("image/png");
@@ -59,7 +59,7 @@ $(document).ready(function () {
 	    },
 	    width: 300,
 	    height: 300
-	});
+	});*/
 });
 $(window).scroll(function (event) {
     $("#premiHeader").attr("style", "margin-top: " + $(document).scrollTop() + "px !important; margin-left: " + $(document).scrollLeft() + "px !important; -webkit-transition: margin-top 0.2s; transition: margin-top 0.2s;");

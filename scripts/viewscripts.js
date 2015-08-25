@@ -48,9 +48,10 @@ $(document).ready(function () {
 	$("#content").css("margin-top", $("#contextual-menu").height());
 });
 $(window).scroll(function (event) {
-    $("#premiHeader").attr("style", "margin-top: " + $(document).scrollTop() + "px !important; margin-left: " + $(document).scrollLeft() + "px !important");
+    $("#premiHeader").attr("style", "margin-top: " + $(document).scrollTop() + "px !important; margin-left: " + $(document).scrollLeft() + "px !important; -webkit-transition: margin-top 0.2s; transition: margin-top 0.2s;");
     var newTop = parseFloat(originalTopMenu) + parseFloat($(document).scrollTop());
-    $("#contextual-menu").css("margin-top", (newTop) + "px");
+    var menuStyle = $("#contextual-menu").attr("style") + " margin-top:" + (newTop) + "px; ; -webkit-transition: margin-top 0.2s; transition: margin-top 0.2s;";
+    $("#contextual-menu").attr("style", menuStyle);
     console.log("premi header top " + $("#premiHeader").css("margin-top"));
     $("#contextual-menu").css("margin-left", ($(document).scrollLeft()) + "px");
     

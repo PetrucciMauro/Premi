@@ -36,12 +36,15 @@ $(document).ready(function () {
 			stop: function (event, ui) {
 				mainPath().removeFromMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), origin);
 				mainPath().addToMainPath(mainPath().getAssociation($(ui.item[0]).attr("id")), ui.item.index());
+				mainPath().upSidenav();
 			}
 		});
 	$("#sortable").disableSelection();
 	document.getElementById("premiFooter").style.marginTop = styleContent.height;
 	document.getElementById("premiFooter").style.position = "relative";
 });
+
+
 
 //oggetto che tiene traccia dell'elemento selezionato//
 var activeInstance={};
@@ -146,15 +149,22 @@ var mainPath=function(){
 	{
 		mainPathInstanced=true;
 		var that={};
-		var private={};
+		var private = {};
+		private.sindenav = 0; // viene impostato a 1 quando si esegue un'operazione durante la visualizzazione della barra laterale
 		private.percorso=new Array();
 		private.associations=new Array();
-		that.getPercorso=function(){
+		that.getSidenav = function () {
+		    return private.sidenav;
+		}
+		that.clearSidenav = function () {
+		    private.sidenav = 0;
+		}
+		that.getPercorso = function () {
 			return private.percorso;
 		}
 		that.addToMainPath = function (id, position) {
-			if (!mainPath().contains(id)) {
-				var pos = position || private.percorso.length;
+		    if (!mainPath().contains(id)) {
+		        var pos = position || private.percorso.length;
 				private.percorso.splice(pos, 0, id);
 				var s = "";
 				for (var i = 0; i < private.percorso.length; i++) {
@@ -165,10 +175,18 @@ var mainPath=function(){
 			   if (document.getElementById("addToMain"))
 			   	document.getElementById("addToMain").removeAttribute("onclick");
 			   selezionaPercorso(id);
-			}
+		    }
+            
 		};
+		that.upSidenav = function () {
+		    console.log("up sidenav");
+		    private.sidenav = 1;
+		    console.log(that.getSidenav());
+		}
 		
-		
+		that.setMainPath = function (spec) {
+		    private.percorso = spec.path;
+		}
 
 		that.removeFromMainPath=function(id){
 			var index = new Array();
@@ -200,7 +218,8 @@ var mainPath=function(){
 		};
 
 		that.setPath = function (newPath) {
-			private.percorso.length=0;
+		    private.percorso.length = 0;
+
 			private.percorso = newPath;
 		}
 
@@ -1119,6 +1138,7 @@ $(function () {
 
 			});
 			mainPath().setPath(ids);
+			mainPath().upSidenav();
 		}
 	});
 	$("#sortable").disableSelection();

@@ -394,6 +394,14 @@ var insertEditRemove = function () {
             return oldFrame;
         };
 
+        public.setMainPath = function (arr) {
+            var oldPath = {};
+            var found = false;
+            oldPath.path = private.presentazione.proper.paths.main;
+            private.presentazione.proper.paths.main=arr;
+            return oldPath;
+        };
+
         public.addChoicePath = function (id) {
             var path = {};
             var l = private.presentazione.proper.paths.choices.length;

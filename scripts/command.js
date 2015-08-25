@@ -733,6 +733,7 @@ var concreteAddToMainPathCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     public.doAction = function () {
+        console.log("inserisco nel percorso principale");
         public.getEnabler().addFrameToMainPath(spec);
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
@@ -753,6 +754,35 @@ var concreteAddToMainPathCommand = function (spec) {
     };
     return public;
 };
+
+var concreteSetMainPathCommand = function (spec) {
+    var public = abstractCommand(spec);
+    var private = {};
+    var oldPath = {};
+    public.doAction = function () {
+        console.log("modifico percorso principale");
+        oldPath = public.getEnabler().setMainPath(spec.path);
+
+        if (public.getExecuted() === 0) {
+            public.setExecuted(1);
+        }
+        else {
+            angular.element($("#content")).scope().setMainPath(spec);
+        }
+        var obj = public.getObj();
+        obj.action = "editPath";
+        return obj;
+    };
+    public.undoAction = function () {
+        public.getEnabler().setMainPath(oldPath);
+        var obj = public.getObj();
+        obj.action = "editPath";
+        angular.element($("#content")).scope().setMainPath(oldPath);
+        return obj;
+    };
+    return public;
+};
+
 
 var concreteRemoveFromMainPathCommand = function (spec) {
     var public = abstractCommand(spec);

@@ -200,6 +200,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				inv.execute(command);
 
 				loader.addInsert(frame.id);
+				console.log(insertEditRemove().getPresentazione());
 			}
 		}
 		$scope.inserisciTesto = function(spec){
@@ -220,7 +221,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					yIndex: top,
 					height: height,
 					width: width,
-					waste: left,
 					size: thistext.css("font-size"),
 					rotation: 0,
 					font: thistext.css("font-family"),
@@ -389,7 +389,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				yIndex: top,
 				height: eleheight,
 				width: elewidth,
-				waste: eleouterwidth,
 				rotation: 0,
 				ref: url,
 				zIndex: Number(style.zIndex),
@@ -832,32 +831,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					tipo: tipoElement
 				};
 
-				if(tipoElement === "frame"){//c'erano outerheight e outerwidth ma non li prende
-					spec.height = ele.offsetHeight;
-					spec.width = ele.offsetWidth;
-				}
-				else if(tipoElement === "text"){
-					var thistext = document.getElementById("txt" + idElement).style;
-					spec.height = Number(thistext.height.split("px")[0]);
-					spec.width = Number(thistext.width.split("px")[0]);
-					spec.waste = Number(thistext.left.split("px")[0]);
-				}
-				else if(tipoElement === "image"){
-					var immagine = document.getElementById("img" + idElement);
-					spec.height = Number(immagine.style.height.split("px")[0]);
-					spec.width = Number(immagine.style.width.split("px")[0]);
-					spec.waste = (Number(immagine.style.width.split("px")[0]) - immagine.offsetWidth)/2;
-				}
-				else if(tipoElement === "audio"){
-					spec.height = Number(style.height.split("px")[0]);
-					spec.width = Number(style.width.split("px")[0]);
-				}
-				else if(tipoElement === "video"){
-					var thisvideo = document.getElementById("video" + idElement);
-					spec.height = thisvideo.offsetHeight;
-					spec.width = thisvideo.offsetWidth;
-					spec.waste = (Number(thisvideo.style.width.split("px")[0]) - thisvideo.offsetWidth)/2;
-				}
+				if(tipoElement === "text")
+					style = document.getElementById("txt" + idElement).style;
+				else if(tipoElement === "image")
+					style = document.getElementById("img" + idElement);
+				else if(tipoElement === "video")
+					style = document.getElementById("video" + idElement);
+
+				spec.height = Number(style.height.split("px")[0]);
+				spec.width = Number(style.width.split("px")[0]);
 
 				var command = concreteEditSizeCommand(spec);
 				inv.execute(command);
@@ -1008,11 +990,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		$scope.model = {};
 	  
 		$scope.inPath = function (id) {
-            if(id!="undef")
-			var position = insertEditRemove().getPaths().main.indexOf(id);
+			var position = -1;
+            
+            if(Utils.isObject(id))
+				position = insertEditRemove().getPaths().main.indexOf(id);
             else
-                if (insertEditRemove().getPaths().main)
-                var position = insertEditRemove().getPaths().main.indexOf(active().getId());
+                if(insertEditRemove().getPaths().main)
+                	var position = insertEditRemove().getPaths().main.indexOf(active().getId());
+			
 			if(position != -1)
 				return true;
 
@@ -1155,6 +1140,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
 
+			console.log(json);
+			console.log(ins.getPresentazione());
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();
 			var prop = 1;
@@ -1213,7 +1200,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					height: text.height * prop,
 					width: text.width * prop,
 					zIndex: text.zIndex,
-					waste: text.waste * prop,
 					rotation: text.rotation,
 					content: text.content,
 					font: text.font,
@@ -1242,7 +1228,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					height: img.height * prop,
 					width: img.width * prop,
 					zIndex: img.zIndex,
-					waste: img.waste * prop,
 					rotation: img.rotation,
 					ref: img.url
 				};
@@ -1289,7 +1274,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					yIndex: video.yIndex * prop,
 					height: video.height * prop,
 					width: video.width * prop,
-					waste: video.waste * prop,
 					zIndex: video.zIndex,
 					rotation: video.rotation,
 					ref: video.url
@@ -1312,7 +1296,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(prop !== 1)
 			    loader.update(function () { });
 			safeApply();
-			active().deselect();
+			//active().deselect();
 		};
 		
 		if(Utils.isObject(SharedData.getPresentazione())){

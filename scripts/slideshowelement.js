@@ -18,7 +18,6 @@ function slideShowElement(spec) {
     that.zIndex = spec.zIndex || 0;
     that.height = spec.height || 0;
     that.width = spec.width || 0;
-    that.waste = spec.waste || 0;
     return that; // Return the object
 }
 

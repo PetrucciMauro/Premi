@@ -76,7 +76,7 @@ var repeatRateTimer = null;
 
 
 $(document).bind('keydown', function (input) {
-    if (active().getId()) {
+    if (active().getId() && (input==37 || input==38 || input == 39 || input ==40)) {
         input.preventDefault();
     }
     if (repeating == true) {

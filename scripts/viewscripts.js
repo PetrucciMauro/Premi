@@ -60,6 +60,8 @@ $(document).ready(function () {
 	    width: 300,
 	    height: 300
 	});*/
+
+	
 });
 
 $(document).keyup(function(e){
@@ -188,6 +190,8 @@ var active=function(){
 			if($(private.element).hasClass("frame")){
 				angular.element(content).scope().AddBookmark();
 				angular.element(content).scope().RemoveBookmark();
+				
+
 			}
 			updateDraggable();
 			
@@ -270,15 +274,10 @@ var mainPath=function(){
 		mainPathInstanced=true;
 		var that={};
 		var private = {};
-		private.sindenav = 0; // viene impostato a 1 quando si esegue un'operazione durante la visualizzazione della barra laterale
+		
 		private.percorso=new Array();
 		private.associations=new Array();
-		that.getSidenav = function () {
-		    return private.sidenav;
-		}
-		that.clearSidenav = function () {
-		    private.sidenav = 0;
-		}
+	
 		that.getPercorso = function () {
 			return private.percorso;
 		}
@@ -298,11 +297,7 @@ var mainPath=function(){
 		    }
             
 		};
-		that.upSidenav = function () {
-		    console.log("up sidenav");
-		    private.sidenav = 1;
-		    console.log(that.getSidenav());
-		}
+		
 		
 		that.setMainPath = function (spec) {
 		    private.percorso = spec.path;
@@ -393,7 +388,6 @@ var mainPath=function(){
 	return mainPathInstance;
 }
 //--end percorso principale --//
-
 
 
 //percorsi scelta//
@@ -1258,7 +1252,6 @@ $(function () {
 
 			});
 			mainPath().setPath(ids);
-			mainPath().upSidenav();
 		}
 	});
 	$("#sortable").disableSelection();

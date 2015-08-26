@@ -847,10 +847,13 @@ var concreteRemoveFromMainPathCommand = function (spec) {
         oldFrame = public.getEnabler().removeFrameFromMainPath(spec);
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
+
         }
         else {
             angular.element($("#content")).scope().rimuoviMainPath(undefined, spec);
         }
+
+        angular.element(content).scope().updateBookmark(spec.id);
         var obj = public.getObj();
         obj.action = "editPath";
         return obj;
@@ -860,6 +863,8 @@ var concreteRemoveFromMainPathCommand = function (spec) {
         var obj = public.getObj();
         obj.action = "editPath";
         angular.element($("#content")).scope().aggiungiMainPath(oldFrame);
+
+        angular.element(content).scope().updateBookmark(oldFrame.id);
         return obj;
     };
     return public;
@@ -968,3 +973,58 @@ var concreteDeleteChoicePathCommand = function (spec) {
     };
     return public;
 };
+
+/*var multiCommandInstance;
+
+var multiCommand = function () {
+        var public = {};
+        var private = {};
+        private.commands = new Array();
+        private.commandAction;
+        public.pushCommand = function (cmd) {
+            private.commands.push(cmd);
+        }
+        private.executedCommands = new Array();
+        public.getCommands = function () {
+            return private.commands;
+        }
+        public.getCommandAction = function () {
+            if (private.commands[0])
+                return private.commands[0].getCommandAction();
+            else if (private.executedCommands[0])
+                return private.executedCommands[0].getCommandAction();
+        }
+        public.setCommandAction = function (undef) {
+            if (private.commands[0])
+                commandAction = private.commands[0].getCommandAction();
+            else if(private.executedCommands[0])
+                commandAction = private.executedCommands[0].getCommandAction();
+        }
+
+        public.doAction = function () {
+            var obj;
+            while (private.commands.length) {
+
+                var execute = private.commands.pop();
+                obj=execute.doAction();
+                executedCommands.push(execute);
+            }
+            
+            
+
+            multiCommandInstance = 0;
+            return obj;
+        };
+        public.undoAction = function () {
+            var obj;
+            while (private.executedCommands.length) {
+                var execute = private.executedCommands.pop();
+                obj=execute.undoAction();
+                commands.push(execute);
+            }
+            return obj;
+        };
+        multiCommandInstance = public;
+        return multiCommandInstance;
+}*/
+

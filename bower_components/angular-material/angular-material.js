@@ -10651,17 +10651,8 @@ function SidenavDirective($timeout, $animate, $parse, $log, $mdMedia, $mdConstan
     function close(ev) {
       ev.preventDefault();
       ev.stopPropagation();
-      console.log("chiudo sidenav");
-      if (mainPath().getSidenav() == 1) {
-          
-              console.log("ok");
-              if (mainPath().getPercorso() != tempMainPath) {
-                  
-              angular.element(content).scope().setMainPath();
-          }
-          mainPath().clearSidenav();
-      }
-
+      angular.element(content).scope().unsetMulti();
+      //angular.element(content).scope().multiAction();
       return sidenavCtrl.close();
     }
 

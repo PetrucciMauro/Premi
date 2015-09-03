@@ -702,15 +702,29 @@ var inserisciMedia = function (x, classe, spec) {
 		type="video";
 
 	var element = document.createElement(type);
-	console.log(div.style.height);
-	if(!spec){
-    element.onload = function () {
-	    var H = this.height,
-                
-            W = this.width;
+
+	element.setAttribute("class", "resizable");
+	element.id = type + div.id;
+	element.src = x;
+	div.appendChild(element);
+	
+	if(type === "img"){
+		element = $("#img"+div.id);
+		
+		element.load(function() {
+			var width = this.width;
+			var height = this.height;
+			if(spec){
+				width = spec.width;
+				height = spec.height;
+			}
+			div.width = width;
+			div.height = height;
+		});
 	}
-}
-    console.log(div.style.height);
+
+	div.style.padding = 0;
+	/*
 	//TRADUTTORE
 	if(!spec){
 		var imgSize=l*0.10;
@@ -720,13 +734,26 @@ var inserisciMedia = function (x, classe, spec) {
 		}
 	}
 	//TRADUTTORE
-	element.setAttribute("class", "resizable");
-	element.id=type+div.id;
-	element.src = url;
-	div.style.padding = 0;
-	div.appendChild(element);
-	console.log(div.style.height);
+	
+*/
+
 	return div;
+}
+
+function convertImgToBase64URL(url, callback, outputFormat){
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');
+        canvas.height = this.height;
+        canvas.width = this.width;
+        ctx.drawImage(this, 0, 0);
+        var dataURL = canvas.toDataURL(outputFormat || 'image/png');
+        callback(dataURL);
+        canvas = null; 
+    };
+    img.src = url;
 }
 
 var inserisciImmagine=function(x, spec){

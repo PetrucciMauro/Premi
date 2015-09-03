@@ -298,14 +298,14 @@ video{
 }
 
 /* AGGIUNTA MANUEL */
-.bookmark {
+/*.bookmark {
 	display: block;
 
 	border-left: 50px solid black;
 	border-right: 50px solid black;
 	border-top: 50px solid black;
 	border-bottom: 50px solid black;
-}
+}*/
 /* AGGIUNTA MANUEL */
 .testo{
 	font-family: Arial, Helvetica, sans-serif;

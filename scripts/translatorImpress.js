@@ -1,14 +1,18 @@
 var screenWidth = 0;
 var screenHeight = 0;
-
+//calcola la posizione del frame, coordinate e data-scale
 function framePosition(left,top,width){
+	console.log("Frame "+left+" "+top+" "+width);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
-	console.log(position[0] + " - " + position[1] + " - " + position[2]);
+	console.log("Frame "+position[0] + " - " + position[1] + " - " + position[2]);
 	return position;
 }
+//calcola la posizione delle immagini, coordinate e data-scale
 function imagePosition(left,top,width,height){
-	var scale=(19.19/screenWidth)*width;
+	console.log("Immagini "+left+" "+top+" "+width);
+	var scale=(19.19*width)/screenWidth;
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600)+(180/19.19)*scale,scale];
+	console.log("Immagini "+position[0] + " - " + position[1] + " - " + position[2]);
 	return position;
 }
 function audioPosition(left,top,width,height){

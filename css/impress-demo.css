@@ -190,8 +190,8 @@ input:focus {
 .step {
 	position: relative;
 	
-	padding: 40px;
-	margin: 20px auto;
+	/*padding: 40px;
+	margin: 20px auto;*/
 
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing:    border-box;
@@ -275,11 +275,11 @@ input:focus {
 /* AGGIUNTA MANUEL */
 
 img{
-	width: 595.238095px;
+	width: 750px;
 }
 
 video{
-	width: 595.238095px;
+	width: 750px;
 }
 
 .audio{

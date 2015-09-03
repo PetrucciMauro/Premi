@@ -19,10 +19,30 @@ var ObjectID = require('mongodb').ObjectID
 var get = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                      if(err) {
+                      
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+
+                      
+                      }
 							  var name_pres = req.originalUrl.split("/")[4];
 							  db.collection('presentations'+req.user).findOne({ 'meta.titolo': name_pres }, function(err, doc){
-																							  if(err) throw err;
+                                                if(err) {
+                                                
+                                                                console.log(err);
+                                                                res.status(400);
+                                                                res.json({
+                                                                         success: false,
+                                                                         message: err
+                                                                         });
+
+                                                                
+                                                }
 																							  
 																							  res.json({
 																										  success: true,
@@ -37,10 +57,28 @@ var get = function(req, res){
 var del = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                      if(err) {
+                      
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+
+                      
+                      }
 							  var name_pres = req.originalUrl.split("/")[4];
 							  db.collection('presentations'+req.user).remove({ 'meta.titolo': name_pres }, function(err, removed){
-																							 if(err) throw err;
+                                              if(err) {
+                                                               console.log(err);
+                                                               res.status(400);
+                                                               res.json({
+                                                                        success: false,
+                                                                        message: err
+                                                                        });
+                 
+                                              }
 																																																																				
 																							 res.json({
 																										 success: true,

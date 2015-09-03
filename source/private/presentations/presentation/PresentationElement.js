@@ -19,7 +19,17 @@ var ObjectID = require('mongodb').ObjectID
 var put = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                      if(err) {
+                      
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+
+                      
+                      }
 							  var name_pres = req.originalUrl.split("/")[4];
 							  var id_element = req.body.element.id;
 							  
@@ -75,7 +85,17 @@ var put = function(req, res){
 							  if(field_path == "proper.background"){
 							  
 							  db.collection("presentations"+req.user).update(query, {"$set" : { "proper.background" : new_element } }, function(err,doc){
-																							 if(err) throw err;
+                                                if(err) {
+                                                
+                                                               console.log(err);
+                                                               res.status(400);
+                                                               res.json({
+                                                                        success: false,
+                                                                        message: err
+                                                                        });
+
+                                                               
+                                                }
 																							 res.json({
 																										 success: true,
 																										 message: 'element replaced'
@@ -87,7 +107,17 @@ var put = function(req, res){
 							  else{
 							  
 							  db.collection("presentations"+req.user).update(query, {"$set" : to_set }, function(err,doc){
-																							 if(err) throw err;
+                                              if(err) {
+                                              
+                                                               console.log(err);
+                                                               res.status(400);
+                                                               res.json({
+                                                                        success: false,
+                                                                        message: err
+                                                                        });
+
+                                                               
+                                              }
 																							 
 																							 db.collection('presentations'+req.user).findOne({},function(err,doc){
 																																						 res.json({
@@ -112,7 +142,17 @@ var put = function(req, res){
 var post = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                      if(err) {
+                      
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+
+                      
+                      }
 							  var name_pres = req.originalUrl.split("/")[4];
 
 							  var new_element = req.body.element;
@@ -154,7 +194,17 @@ var post = function(req, res){
 							  to_push[field_path] = new_element;
 							  
 							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, {$push : to_push},{'upsert' : true},  function(err, doc){
-																							 if(err) throw err;
+                                              if(err) {
+                                              
+                                                               console.log(err);
+                                                               res.status(400);
+                                                               res.json({
+                                                                        success: false,
+                                                                        message: err
+                                                                        });
+
+                                                               
+                                              }
 																							 
 																							 res.json({
 																										 success: true

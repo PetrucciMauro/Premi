@@ -19,10 +19,26 @@ var MongoClient = require('mongodb').MongoClient;
 var get = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                if(err) {
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+
+                }
 							  
 							  db.collection('presentations'+req.user).find().toArray(function(err, doc){
-																										if(err) throw err;
+                                                    if(err) {
+                                                            console.log(err);
+                                                            res.status(400);
+                                                            res.json({
+                                                                    success: false,
+                                                                    message: err
+                                                                    });
+
+                                                    }
 																										message = [];
 																										doc.forEach(function(pres){
 																														message.push(pres.meta);

@@ -19,12 +19,30 @@ var ObjectID = require('mongodb').ObjectID
 var post = function(req, res){
 																								
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                      if(err) {
+                      
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+                      }
 							  var oldName_pres = req.originalUrl.split("/")[4];
 							  var name_pres = req.originalUrl.split("/")[6];
 
 							  db.collection('presentations'+req.user).update({ 'meta.titolo': oldName_pres }, {$set: { 'meta.titolo' : name_pres }}, function(err, doc){
-																							 if(err) throw err;
+                                              if(err) {
+                                              
+                                                               console.log(err);
+                                                               res.status(400);
+                                                               res.json({
+                                                                        success: false,
+                                                                        message: err
+                                                                        });
+
+                                                               
+                                              }
 																							 
 																							 res.json({
 																										 success: true,

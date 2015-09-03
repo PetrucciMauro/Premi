@@ -26,27 +26,42 @@ var get = function(req, res) {
 	pass=parts[1];
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                if(err) {
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+
+                }
 							  
 							  db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
-																		if(err) throw err;
+                                    if(err) {
+                                               console.log(err);
+                                               res.status(400);
+                                               res.json({
+                                                        success: false,
+                                                        message: err
+                                                        });
+                                    }
 																		if(doc == null){
 																		
 																		res.status(400);
 																		res.json({
 																					success: false,
-																					message: 'Username or password incorrect'
+                                          message: "user or password not correct"
 																					});
 																		}
 																		else{
 																		var token = jwt.sign({user: user}, secret, {
-																									expiresInMinutes: 1440 // expires in 24 hours
-																									});
+																									expiresInMinutes: 1440 // minutes
+                                                         });
 																		
 																		res.writeHead(200, {"Content-Type": "application/json", "authorization": token});
 																		var json = JSON.stringify({
 																										  success: true,
-																										  message: 'Enjoy your token!',
+                                                      message: "ok"
 																										  });
 																		res.end(json);
 																		}

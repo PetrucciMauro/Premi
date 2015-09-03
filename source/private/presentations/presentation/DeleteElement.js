@@ -19,7 +19,15 @@ var ObjectID = require('mongodb').ObjectID
 var del = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                if(err) {
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+                      
+                }
 							  var name_pres = req.originalUrl.split("/")[4];
 							  
 							  var type_element = req.originalUrl.split("/")[6];
@@ -63,7 +71,15 @@ var del = function(req, res){
 							  to_pull[field_path] = to_id;
 							  
 							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, { $pull : to_pull }, function(err, doc){
-																							 if(err) throw err;
+                                                if(err) {
+                                                               console.log(err);
+                                                               res.status(400);
+                                                               res.json({
+                                                                        success: false,
+                                                                        message: err
+                                                                        });
+               
+                                                }
 																							 res.json({
 																										 success: true,
 																										 message: 'deleted element'

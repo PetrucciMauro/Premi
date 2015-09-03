@@ -24,12 +24,35 @@ var post = function(req, res) {
 	pass=parts[1];
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                if(err) {
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+                }
 							  db.collection('users').findOne({'username': user}, function(err, doc) {
-																		if(err) throw err;
+                                    if(err) {
+                                               console.log(err);
+                                               res.status(400);
+                                               res.json({
+                                                        success: false,
+                                                        message: err
+                                                        });
+
+                                    }
 																		if(doc == null){
 																		db.collection('users').insert({'username': user, 'password': pass}, function(err, doc){
-																												if(err) throw err;
+                                                        if(err) {
+                                                                  console.log(err);
+                                                                  res.status(400);
+                                                                  res.json({
+                                                                           success: false,
+                                                                           message: err
+                                                                           });
+
+                                                        }
 																												console.dir('called insert()');
 																												res.status(200);
 																												res.json({

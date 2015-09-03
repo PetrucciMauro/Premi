@@ -19,7 +19,17 @@ var ObjectID = require('mongodb').ObjectID
 var put = function(req, res){
 	
 	MongoClient.connect(database, function(err, db) {
-							  if(err) throw err;
+                      if(err) {
+                      
+                      console.log(err);
+                      res.status(400);
+                      res.json({
+                               success: false,
+                               message: err
+                               });
+
+                      
+                      }
 							  
 							  var name_pres = req.originalUrl.split("/")[4];
 							  var new_element = req.body.element;
@@ -29,7 +39,17 @@ var put = function(req, res){
 							  var query = {"meta.titolo": name_pres};
 							  
 							  db.collection('presentations'+req.user).update( {"meta.titolo" : name_pres}, {"$set" : {"proper.paths" : new_element} }, function(err, doc){
-																							  if(err) throw err;
+                                                if(err) {
+                                                
+                                                               console.log(err);
+                                                               res.status(400);
+                                                               res.json({
+                                                                        success: false,
+                                                                        message: err
+                                                                        });
+
+                                                               
+                                                }
 																							  
 																							  res.json({
 																										  success: true,

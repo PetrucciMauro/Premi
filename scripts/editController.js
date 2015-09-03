@@ -1322,7 +1322,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(prop !== 1)
 			    loader.update(function () { });
 			safeApply();
-			//active().deselect();
+			active().deselect();
 		};
 		
 		if(Utils.isObject(SharedData.getPresentazione())){

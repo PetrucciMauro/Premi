@@ -347,8 +347,8 @@ premiService.factory('SlideShow', ['$resource','Main',
 }]);*/
 
 //Servizio che reindirizza alla pagina corretta attivando il middleware node per la verifica del token
-premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedData',
-	function($location,$http, Main, Utils, SharedData){
+premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedData', '$route',
+	function($location,$http, Main, Utils, SharedData, $route){
 		var baseUrl = Utils.hostname();
 
 		var sendRequest = function(dest, success, error){
@@ -378,7 +378,7 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 			//PAGINA HOME
 			homepage: function() {
 				var success = function(){$location.path('/private/home');};
-				return sendRequest('/private/home.html', success, error);
+				return sendRequest('/private/htdocs/home.html', success, error);
 			},
 			//PAGINA EDIT
 			editpage: function(slideId) {
@@ -386,8 +386,11 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 					$location.path('/private/edit');
 					if(Utils.isObject(slideId))
 						SharedData.getPresentazione(slideId);
-				};
-				return sendRequest('/private/edit.html', success, error);
+					};
+					/*$location.href = baseUrl + '/#/private/edit';
+					window.location.href = $location.href;
+					window.location.reload(true);*/
+				return sendRequest('/private/htdocs/edit.html', success, error);
 			},
 			//PAGINA DI ESECUZIONE
 			executionpage: function(slideId) {
@@ -396,12 +399,12 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 					if(Utils.isObject(slideId))
 						SharedData.getPresentazione(slideId);
 				};
-				return sendRequest('/private/execution.html', success, error);
+				return sendRequest('/private/htdocs/execution.html', success, error);
 			},
 			//PAGINA DI PROFILO
 			profilepage: function() {
 				var success = function(){$location.path('/private/profile');};
-				return sendRequest('/private/profile.html', success, error);
+				return sendRequest('/private/htdocs/profile.html', success, error);
 			}
 		};
 

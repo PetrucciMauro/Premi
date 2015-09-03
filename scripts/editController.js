@@ -182,15 +182,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            var ele = document.getElementById(frame.id);
 	            var top = Number(ele.style.top.split("px")[0]);
 	            var left = Number(ele.style.left.split("px")[0]);
-	            var outerHeight = ele.offsetHeight;
-	            var outerWidth = ele.offsetWidth;
+	            var height = Number(style.height.split("px")[0]);
+	            var width = Number(style.width.split("px")[0]);
 
 	            var spec = {
 	                id: frame.id,
 	                xIndex: left,
 	                yIndex: top,
-	                height: outerHeight,
-	                width: outerWidth,
+	                height: height,
+	                width: width,
 	                rotation: 0,
 	                zIndex: Number(ele.style.zIndex),
 	                type: "frame"
@@ -312,10 +312,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    }
 	    $scope.dragMedia = function(files, spec){
 	        uploadmedia(files, function (file) {
-	            /*var file = [{
-					name: spec.filename,
-					type: spec.type
-				}]*/
 	            var fileUrl = Upload.getFileUrl(file);
 
 	            var tipo = {};
@@ -812,11 +808,21 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        if(Utils.isObject(spec)){
 	            var style = document.getElementById(spec.id).style;
 
-	            if(spec.tipo == "text"){
-	                var txtStyle = document.getElementById("txt" + spec.id).style;
-	                txtStyle.height = spec.height + "px";
-	                txtStyle.width = spec.width + "px";
+	            var type = {};
+	            if(spec.tipo == "text")
+	                type = "txt";
+	            else if(spec.tipo == "image")
+	            	type = "img";
+	            else if(spec.tipo == "video")
+	            	type = "video";
+
+	            var	ele = document.getElementById(type + spec.id).style;
+
+	            if(Utils.isObject(ele)){
+	            	ele.height = spec.height + "px";
+	                ele.width = spec.width + "px";
 	            }
+
 	            style.height = spec.height + "px";
 	            style.width = spec.width + "px";
 	        }

@@ -82,6 +82,7 @@ overflow: scroll;
 	min-height: 2.5em;
     max-height: 3em;
       position: absolute;
+      z-index: 9999;
 }
 
 #contextual-menu md-icon{
@@ -214,9 +215,10 @@ input.autogrow{
   #standardMenu{
       padding-left: 0.4em;
   }
-#barraPercorsi{
+#barrapercorsi{
     background-color: rgba(255, 255, 255, 0.9);
     height: 100%;
+    z-index: 10000;
 }
 
 #sortable { list-style-type: none; margin: 0; padding: 0; margin-bottom: 10%; width: 60%; bottom: 0; position: fixed; }

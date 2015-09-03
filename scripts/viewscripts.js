@@ -41,8 +41,8 @@ $(document).ready(function () {
 			}
 		});
 	$("#sortable").disableSelection();
-	document.getElementById("premiFooter").style.marginTop = styleContent.height;
-	document.getElementById("premiFooter").style.position = "relative";
+	//document.getElementById("premiFooter").style.marginTop = styleContent.height;
+	//document.getElementById("premiFooter").style.position = "relative";
 
 	originalTopMenu = $("#contextual-menu").css("margin-top").replace("px", "");
 	$("#content").css("margin-top", $("#contextual-menu").height());

@@ -73,7 +73,7 @@ app.post('/account/changepassword', Changepassword.post );
 
 app.use('/publicpages', express.static('public_html'));
 
-app.use('/private', express.static('private_html'));
+app.use('/private/htdocs', express.static('private_html'));
 
 
 //==================

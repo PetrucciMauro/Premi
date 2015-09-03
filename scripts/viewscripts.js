@@ -18,7 +18,7 @@ var h=l/2.06666667;
 var styleContent = document.getElementById("content").style;
 styleContent.width = l+"px";
 styleContent.height = h + "px";
-
+var scale = 1;
 //TRADUTTORE
 var zindex = 0;
 var contatore = 1;
@@ -60,7 +60,19 @@ $(document).ready(function () {
 	    width: 300,
 	    height: 300
 	});*/
+	$("#contextual-menu").dblclick(function (e) {
+	    $("#interno").css({
+	        "transform": "scale(1)",
+	        "webkit-transform": "scale(1)",
+	        "left": "0",
+	        "top": "0",
+	        "transition": "all 0.5s",
 
+	        "webkit-transition": "all 0.5s"
+
+	    });
+	    scale = 1;
+	});
 	
 });
 
@@ -596,7 +608,8 @@ var inserisciElemento = function (classe, spec) {
 	});
 	if(!spec)
 		active().select(div.id);
-
+	$(div).dblclick(function () {
+	zoom(div)});
 	return div;
 }
 
@@ -1185,8 +1198,8 @@ function updateDraggable(element){
 			drag: function(event, ui){
 				var original = ui.originalPosition;
 
-				var left = event.clientX - click.x + original.left;
-				var top = event.clientY - click.y + original.top;
+				var left = (event.clientX - click.x + original.left)/scale;
+				var top = (event.clientY - click.y + original.top)/scale;
 
 				if(left>0 && top>0 && (left+originalWidth)<l && (top+originalHeight)<h){
 					ui.position = {
@@ -1199,8 +1212,8 @@ function updateDraggable(element){
 					others.length = 0;
 				//muovi gli elementi dentro il frame
 				for(var i=0; i<others.length; ++i){
-					var leftEle = event.clientX - click.x + others[i].originalLeft;
-					var topEle = event.clientY - click.y + others[i].originalTop;
+					var leftEle = (event.clientX - click.x + others[i].originalLeft)/scale;
+					var topEle = (event.clientY - click.y + others[i].originalTop)/scale;
 					
 					var topOk = leftOk = true;
 
@@ -1329,48 +1342,32 @@ $(function () {
 	});
 });
 
-$(document).ready(function()
-{
-    var scale = 1;  // scale of the image
-    var xLast = 0;  // last x location on the screen
-    var yLast = 0;  // last y location on the screen
-    var xImage = 0; // last x location on the image
-    var yImage = 0; // last y location on the image
 
-    // if mousewheel is moved
-    $("#content").mousewheel(function(e, delta)
-    {
-    	console.log("mousewheel");
-        // find current location on screen 
-        var xScreen = e.pageX - $(this).offset().left;
-        var yScreen = e.pageY - $(this).offset().top;
-
-        // find current location on the image at the current scale
-        xImage = xImage + ((xScreen - xLast) / scale);
-        yImage = yImage + ((yScreen - yLast) / scale);
-
-        // determine the new scale
-        if (delta > 0)
-        {
-            scale *= 2;
-        }
-        else
-        {
-            scale /= 2;
-        }
-        scale = scale < 1 ? 1 : (scale > 64 ? 64 : scale);
-
-        // determine the location on the screen at the new scale
-        var xNew = (xScreen - xImage) / scale;
-        var yNew = (yScreen - yImage) / scale;
-
-        // save the current screen location
-        xLast = xScreen;
-        yLast = yScreen;
-        
-        // redraw
-        $(this).find('div').css('-moz-transform', 'scale(' + scale + ')' + 'translate(' + xNew + 'px, ' + yNew + 'px' + ')')
-                           .css('-moz-transform-origin', xImage + 'px ' + yImage + 'px')
-        return false;
-    });
-});
+function zoom(div) {
+    console.log("left " + $(div).position().left);
+    if (scale == 1) {
+        $("#interno").css({
+            "transform": "scale(" + $("#content").outerHeight() / $(div).outerHeight() + ")",
+            "webkit-transform": "scale(" + $("#content").outerHeight() *0.8/ $(div).outerHeight() + ")",
+            "transition": "all 0.5s",
+            "webkit-transition": "all 0.5s",
+            "position": "absolute",
+            "left": 0 - $(div).position().left,
+            "top": 0 - $(div).position().top
+        });
+        scale = $("#content").outerHeight() *0.8/ $(div).outerHeight();
+    }
+    else {
+        $("#interno").css({
+            "transform": "scale(1)",
+            "webkit-transform": "scale(1)",
+            "left": "0",
+            "top": "0",
+            "transition": "all 0.5s",
+            
+            "webkit-transition": "all 0.5s"
+            
+        });
+        scale = 1;
+    }
+}

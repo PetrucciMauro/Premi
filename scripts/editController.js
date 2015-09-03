@@ -182,8 +182,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            var ele = document.getElementById(frame.id);
 	            var top = Number(ele.style.top.split("px")[0]);
 	            var left = Number(ele.style.left.split("px")[0]);
-	            var height = Number(style.height.split("px")[0]);
-	            var width = Number(style.width.split("px")[0]);
+	            var height = Number(ele.style.height.split("px")[0]);
+	            var width = Number(ele.style.width.split("px")[0]);
 
 	            var spec = {
 	                id: frame.id,
@@ -312,6 +312,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    }
 	    $scope.dragMedia = function(files, spec){
 	        uploadmedia(files, function (file) {
+	            /*var file = [{
+					name: spec.filename,
+					type: spec.type
+				}]*/
 	            var fileUrl = Upload.getFileUrl(file);
 
 	            var tipo = {};

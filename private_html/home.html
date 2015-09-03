@@ -1,4 +1,4 @@
-<div id="home" class="col-12 home">
+<div id="home">
 <div layout="column" class="col-4 left-menu" layout-align="space-around center">
 	<md-button class="md-raised md-cornered" ng-click="newSS = !newSS">Nuova Presentazione</md-button>
 	<div ng-show="newSS">
@@ -10,10 +10,10 @@
 	</div>
 </div>
 
-<div layout="row" class="col-8 right-pres">
+<div layout="row" class="right-pres">
 	<dl class="slideshows">
-		<dd ng-repeat="slide in getSS() track by $index | limitTo: display_limit" class="slide">
-			<span  class="md-body-2" id="slideTitolo" ng-bind="slide.titolo"></span>
+		<dd ng-repeat="slide in getSS() | limitTo: display_limit" class="slide">
+			<span  class="labelSS" id="slideTitolo" ng-bind="slide.titolo"></span>
 			<md-button class="md-raised md-cornered submit" ng-click="goEdit(slide.titolo)">Edit</md-button>
 			<md-button class="md-raised md-cornered submit" ng-click="goExecute(slide.titolo)">Esegui</md-button>
 			<md-button class="md-raised md-cornered submit" ng-click="deleteSlideShow(slide.titolo)">Elimina</md-button>

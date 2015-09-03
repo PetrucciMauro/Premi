@@ -27,6 +27,8 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
 		$scope.mongo = mongo;
 
+		var allSS = {};
+
 		var update = function(){
 			allSS = mongo.getPresentationsMeta();
 			for(var i=0; i<allSS.length; ++i){
@@ -39,7 +41,6 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 			}
 		};
 		
-		var allSS = {};
 		update();
 		
 		$scope.allSS =  allSS;

@@ -29,6 +29,19 @@ var premiApp = angular.module('premiApp', [
 	]);
 
 premiApp.run(function($log, $rootScope, Main, Utils, toPages){
+
+    $rootScope.$on('$locationChangeSuccess', function ($event, changeTo, changeFrom) {
+		if (changeTo == changeFrom)
+			return;
+		if (changeFrom.indexOf("execution") == -1)
+			return;
+		if (changeTo.indexOf("execution") != -1)
+			return;
+
+		window.location.href = changeTo;
+		window.location.reload(true);
+    });
+
 	$log.debug("PremiApp attivo :)");
 
 	//Metodo che ad ogni cambio di pagina controlla per le pagine in cui isToken=true
@@ -117,7 +130,8 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 
 	$provide.decorator("$exceptionHandler", function($delegate, $injector){
 		return function(exception, cause){
-			alert(exception.message);
+			if(exception.indexOf("Failed to load template") != -1)
+				alert(exception.message);
 			$delegate(exception, cause);
 
 		};

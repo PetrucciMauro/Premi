@@ -377,7 +377,9 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 			//Le seguenti pagine sono tutte accessibili solo dopo essersi autenticati al server
 			//PAGINA HOME
 			homepage: function() {
-				var success = function(){$location.path('/private/home');};
+				var success = function(){
+					$location.path('/private/home');
+				};
 				return sendRequest('/private/htdocs/home.html', success, error);
 			},
 			//PAGINA EDIT
@@ -386,10 +388,13 @@ premiService.factory('toPages', ['$location','$http', 'Main', 'Utils', 'SharedDa
 					$location.path('/private/edit');
 					if(Utils.isObject(slideId))
 						SharedData.getPresentazione(slideId);
+					//$location.href = baseUrl + '/#/private/edit';
+					//$route.reload();
+					//$window.location.href = baseUrl + '/#/private/edit';
+					//$window.location.reload();
+					//$state.reload();
 					};
-					/*$location.href = baseUrl + '/#/private/edit';
-					window.location.href = $location.href;
-					window.location.reload(true);*/
+					
 				return sendRequest('/private/htdocs/edit.html', success, error);
 			},
 			//PAGINA DI ESECUZIONE

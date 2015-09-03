@@ -12,12 +12,13 @@
 
 <div layout="row" class="right-pres">
 	<dl class="slideshows">
-		<dd ng-repeat="slide in getSS() | limitTo: display_limit" class="slide">
-			<span  class="labelSS" id="slideTitolo" ng-bind="slide.titolo"></span>
-			<md-button class="md-raised md-cornered submit" ng-click="goEdit(slide.titolo)">Edit</md-button>
-			<md-button class="md-raised md-cornered submit" ng-click="goExecute(slide.titolo)">Esegui</md-button>
-			<md-button class="md-raised md-cornered submit" ng-click="deleteSlideShow(slide.titolo)">Elimina</md-button>
-			<md-button class="md-raised md-cornered submit" ng-click="renameSlideShow(slide.titolo)">Rinomina</md-button>
+		<dd ng-repeat="slide in getSS() | limitTo: display_limit | orderBy:'-titolo':true" class="slideSS">
+			<span class="labelSS" ng-bind="slide.titolo"></span>
+			<div class="backgroundSS" ng-style="setStyleSS(slide)"></div>
+			<md-button class="btnSS md-raised md-cornered submit" ng-click="goEdit(slide.titolo)">Edit</md-button>
+			<md-button class="btnSS md-raised md-cornered submit" ng-click="goExecute(slide.titolo)">Esegui</md-button>
+			<md-button class="btnSS md-raised md-cornered submit" ng-click="deleteSlideShow(slide.titolo)">Elimina</md-button>
+			<md-button class="btnSS md-raised md-cornered submit" ng-click="renameSlideShow(slide.titolo)">Rinomina</md-button>
 		</dd>
 	</dl>
 </div></div>

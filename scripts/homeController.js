@@ -26,19 +26,41 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		{   //nel caso l'utente sia loggato instanzia queste variabili.
 		var mongo = MongoRelation(Utils.hostname(), Main.login());
 		$scope.mongo = mongo;
-		var allSS = mongo.getPresentationsMeta();
-		console.log(allSS);
+
+		var update = function(){
+			allSS = mongo.getPresentationsMeta();
+			for(var i=0; i<allSS.length; ++i){
+				var presentazione = JSON.parse(JSON.stringify(mongo.getPresentation(allSS[i].titolo)));
+
+				var background = presentazione.proper.background;
+
+				allSS[i].color = background.color;
+				allSS[i].image = background.image;
+			}
+		};
+		
+		var allSS = {};
+		update();
 		
 		$scope.allSS =  allSS;
 		}
 		$scope.display_limit = 50;
 
-		//istanziazione di mongoRelation
+		$scope.setStyleSS = function(slide){
+			var spec = {};
+			if(Utils.isObject(slide.image)){
+				spec = {
+					'background-color': slide.color,
+					'background-image': "url(" + slide.image + ")"
+				}
+			} else {
+				spec = {
+					'background-color': slide.color
+				}
+			}
+			return spec;
+		}
 
-		var update = function(){
-			allSS = mongo.getPresentationsMeta();
-		};
-		
 		//Metodi per il reindirizzamento
 		$scope.goEdit = function(slideId){
 			toPages.editpage(slideId);

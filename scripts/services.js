@@ -321,9 +321,9 @@ premiService.factory('Utils', [
 					ris = true;
 				else if(typeof object === 'null')
 					ris = true;
-				else if(object === 'null')
+				else if(object == 'null')
 					ris = true;
-				else if(object === 'undefined')
+				else if(object == 'undefined')
 					ris = true;
 				else if(object.length === 0)
 					ris = true;

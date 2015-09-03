@@ -490,7 +490,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            var style = document.getElementById('interno').style;
 	            style.backgroundImage = "url(" + fileurl + ")";
-
+	            style.backgroundSize = "inherit";
+	            style.backgroundRepeat = "no-repeat";
 	            var spec = {
 	                id: 0,
 	                color: style.backgroundColor,
@@ -1179,10 +1180,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				if(Utils.isObject(background.image))
 					if(background.image.indexOf("url") == -1)
-						style.backgroundImage = "url(" + background.image + ")";
+					    style.backgroundImage = "url(" + background.image + ")";
+				
 					else
 						style.backgroundImage = background.image;
-		
+				style.backgroundSize = "inherit";
+				style.backgroundRepeat = "no-repeat";
 				if(background.width != l)
 					prop = (background.width / l);
 			}

@@ -73,6 +73,9 @@ $(document).ready(function () {
 	    });
 	    scale = 1;
 	});
+
+	$("#interno").height($("#content").height());
+	$("#interno").width($("#content").width());
 	
 });
 

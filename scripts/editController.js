@@ -460,7 +460,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	    $scope.backcolor = "#ffffff";
 	    $scope.cambiaColoreSfondo = function(color){
-	        var style = document.getElementById('content').style;
+	        var style = document.getElementById('interno').style;
 	        style.backgroundColor = color;
 			
 	        var url = "";
@@ -488,7 +488,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        uploadmedia(files, function(file){
 	            var fileurl = Upload.getFileUrl(file);
 
-	            var style = document.getElementById('content').style;
+	            var style = document.getElementById('interno').style;
 	            style.backgroundImage = "url(" + fileurl + ")";
 
 	            var spec = {
@@ -1173,7 +1173,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var prop = 1;
 
 			if(Utils.isObject(background.width) && Utils.isObject(background.height)){
-				var style = document.getElementById('content').style;
+				var style = document.getElementById('interno').style;
 				
 				style.backgroundColor = background.color;
 

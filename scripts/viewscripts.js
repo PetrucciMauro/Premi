@@ -162,7 +162,6 @@ $(window).scroll(function (event) {
     var newTop = parseFloat(originalTopMenu) + parseFloat($(document).scrollTop());
     var menuStyle = $("#contextual-menu").attr("style") + " margin-top:" + (newTop) + "px; ; -webkit-transition: margin-top 0.2s; transition: margin-top 0.2s;";
     $("#contextual-menu").attr("style", menuStyle);
-    console.log("premi header top " + $("#premiHeader").css("margin-top"));
     $("#contextual-menu").css("margin-left", ($(document).scrollLeft()) + "px");
     
 });
@@ -565,6 +564,9 @@ var inserisciElemento = function (classe, spec) {
 		div.style.left = 0 + "px";
 	}
 
+	console.log(document.getElementById("frames"));
+	console.log($("#frames"));
+
 	div.id=id;
 	//TRADUTTORE EDIT
 
@@ -600,6 +602,7 @@ var inserisciElemento = function (classe, spec) {
 
 var inserisciFrame = function (spec) {
 	var div=inserisciElemento("frame", spec);
+
 	$(function() {
 		$( div ).resizable({
 			aspectRatio: 1 / 1,
@@ -1326,3 +1329,48 @@ $(function () {
 	});
 });
 
+$(document).ready(function()
+{
+    var scale = 1;  // scale of the image
+    var xLast = 0;  // last x location on the screen
+    var yLast = 0;  // last y location on the screen
+    var xImage = 0; // last x location on the image
+    var yImage = 0; // last y location on the image
+
+    // if mousewheel is moved
+    $("#content").mousewheel(function(e, delta)
+    {
+    	console.log("mousewheel");
+        // find current location on screen 
+        var xScreen = e.pageX - $(this).offset().left;
+        var yScreen = e.pageY - $(this).offset().top;
+
+        // find current location on the image at the current scale
+        xImage = xImage + ((xScreen - xLast) / scale);
+        yImage = yImage + ((yScreen - yLast) / scale);
+
+        // determine the new scale
+        if (delta > 0)
+        {
+            scale *= 2;
+        }
+        else
+        {
+            scale /= 2;
+        }
+        scale = scale < 1 ? 1 : (scale > 64 ? 64 : scale);
+
+        // determine the location on the screen at the new scale
+        var xNew = (xScreen - xImage) / scale;
+        var yNew = (yScreen - yImage) / scale;
+
+        // save the current screen location
+        xLast = xScreen;
+        yLast = yScreen;
+        
+        // redraw
+        $(this).find('div').css('-moz-transform', 'scale(' + scale + ')' + 'translate(' + xNew + 'px, ' + yNew + 'px' + ')')
+                           .css('-moz-transform-origin', xImage + 'px ' + yImage + 'px')
+        return false;
+    });
+});

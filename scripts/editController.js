@@ -1004,9 +1004,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            loader.addUpdate(idElement);
 	        }
 	    }
-
-	    $scope.config = {};
-	    $scope.model = {};
 	  
 	    $scope.inPath = function (id) {
 	        var position = -1;

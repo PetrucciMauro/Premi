@@ -59,7 +59,8 @@
     "xmlhttprequest":"latest",
     "serve-static":"latest",
     "rimraf":"latest",
-    "fs":"latest"
+    "fs":"latest",
+    "jquery-mousewheel": "3.1.13"
   },
   
   "scripts": {

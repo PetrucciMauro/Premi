@@ -64,22 +64,18 @@ $(document).ready(function () {
 	    $("#interno").css({
 	        "left": "0",
 	        "top": "0",
-	        "transition": "all 0.5s",
-
-	        "webkit-transition": "all 0.5s"
-
+	        "transition": "all 0.5s",     
+	        "webkit-transition": "all 0.5s"           
 	    });
 	    $("#content").css({
 	        "transform": "scale(1)",
 	        "webkit-transform": "scale(1)",
-	        "left": "0",
-	        "top": "0",
-	        "transition": "all 0.5s",
-
+	        "transition": "all 0.5s",          
 	        "webkit-transition": "all 0.5s"
-
+            
 	    });
 	    scale = 1;
+	
 	});
 
 	$("#interno").height($("#content").height());

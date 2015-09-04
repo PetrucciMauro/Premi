@@ -1366,7 +1366,7 @@ function zoom(div) {
         $("#interno").css({
             "position": "absolute",
             "left": (0 - (parseFloat(nleft) + $(div).width() / 2 - $("#content").width() / 2)),
-            "top": (0 - (parseFloat(ntop) + $(div).height() / 2 - $("#content").height() / 2))-(2*scale),
+            "top": (0 - (parseFloat(ntop) + $(div).height() / 2 - $("#content").height() / 2)),
             "transition": "all 0.5s",
             "webkit-transition": "all 0.5s",
             "position": "absolute"

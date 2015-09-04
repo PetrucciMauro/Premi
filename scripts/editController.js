@@ -1107,7 +1107,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        console.log("messaggio di ripristina " + $scope.redoMessage);
 		    
 	    }
-        
+	    $scope.scale = function () {
+	        return scale;
+	    }
 	    $scope.multi = 0;
 	    $scope.setMulti = function () {
 	                $scope.multi = 1;

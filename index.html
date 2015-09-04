@@ -63,7 +63,7 @@
 		<!--The right side-->
 		<span>
 			<!--Elementi che si attivano solo se NON connessi-->
-			<span class="saluto" data-ng-show="isToken()">Ciao {{who()}}!</span>
+			<span class="saluto" data-ng-show="isToken()">Ciao <span ng-bind="who()"></span>!</span>
 			<md-button aria-label="Vai alla pagina di login" ng-click="goLogin()" data-ng-hide="isToken()">Accedi</md-button>
 			<md-button aria-label="Vai alla pagina di registrazione" ng-click="goRegistrazione()" data-ng-hide="isToken()">Registrati</md-button>
 
@@ -74,7 +74,7 @@
 		</span>
 		</md-toolbar>
 		<section class="error">
-			<span>{{error()}}</span>
+            <span ng-bind="error()"></span>
 		</section>
 	</header>
 

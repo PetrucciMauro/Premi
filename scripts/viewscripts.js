@@ -62,6 +62,7 @@ $(document).ready(function () {
 	});*/
 	$("#contextual-menu").dblclick(function () {
 	    $("#interno").css({
+	        "position": "absolute",
 	        "left": "0",
 	        "top": "0",
 	        "transition": "all 0.5s",     
@@ -1386,15 +1387,13 @@ function zoom(div) {
             "left": "0",
             "top": "0",
             "transition": "all 0.5s",
-            
+            "position" : "relative",
             "webkit-transition": "all 0.5s"
             
         });
         $("#content").css({
             "transform": "scale(1)",
             "webkit-transform": "scale(1)",
-            "left": "0",
-            "top": "0",
             "transition": "all 0.5s",
             
             "webkit-transition": "all 0.5s"

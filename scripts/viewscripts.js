@@ -60,8 +60,16 @@ $(document).ready(function () {
 	    width: 300,
 	    height: 300
 	});*/
-	$("#contextual-menu").dblclick(function (e) {
+	$("#contextual-menu").dblclick(function () {
 	    $("#interno").css({
+	        "left": "0",
+	        "top": "0",
+	        "transition": "all 0.5s",
+
+	        "webkit-transition": "all 0.5s"
+
+	    });
+	    $("#content").css({
 	        "transform": "scale(1)",
 	        "webkit-transform": "scale(1)",
 	        "left": "0",
@@ -1349,19 +1357,44 @@ $(function () {
 function zoom(div) {
     console.log("left " + $(div).position().left);
     if (scale == 1) {
+
+        scale = $("#content").outerHeight() * 0.8 / $(div).outerHeight();
+        width = parseFloat($("#interno").width());
+        height = parseFloat($("#interno").height());
+
+        console.log("posizione " + ((width / 2) + $(div).position().left));
+        $("#content").position().left = 0 - (($("#interno").position().left) + $("#interno").width() / 2) + "px";
+        var nleft = (document.getElementById(active().getId()).style.left);
+        var ntop = (document.getElementById(active().getId()).style.top);
         $("#interno").css({
-            "transform": "scale(" + $("#content").outerHeight() / $(div).outerHeight() + ")",
-            "webkit-transform": "scale(" + $("#content").outerHeight() *0.8/ $(div).outerHeight() + ")",
+            "position": "absolute",
+            "left": (0 - (parseFloat(nleft) + $(div).width() / 2 - $("#content").width() / 2)),
+            "top": (0 - (parseFloat(ntop) + $(div).height() / 2 - $("#content").height() / 2))-(2*scale),
             "transition": "all 0.5s",
             "webkit-transition": "all 0.5s",
-            "position": "absolute",
-            "left": 0 - $(div).position().left,
-            "top": 0 - $(div).position().top
+            "position": "absolute"
         });
-        scale = $("#content").outerHeight() *0.8/ $(div).outerHeight();
+        console.log("nuova sinistra " + document.getElementById("interno").style.left);
+        $("#content").css({
+            
+            "transform": "scale(" + $("#content").outerHeight() / $(div).outerHeight() + ")",
+            "webkit-transform": "scale(" + $("#content").outerHeight() * 0.8 / $(div).outerHeight() + ")",
+             "transition": "all 0.5s",
+            "webkit-transition": "all 0.5s",
+            "position": "absolute"
+            
+        });
     }
     else {
         $("#interno").css({
+            "left": "0",
+            "top": "0",
+            "transition": "all 0.5s",
+            
+            "webkit-transition": "all 0.5s"
+            
+        });
+        $("#content").css({
             "transform": "scale(1)",
             "webkit-transform": "scale(1)",
             "left": "0",

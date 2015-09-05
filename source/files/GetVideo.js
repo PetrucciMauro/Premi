@@ -20,6 +20,8 @@ var multer  = require('multer')
 var get = function (req, res) {
 	
   var file_name = req.originalUrl.split("/")[4];
+  var re = new RegExp("%20", 'g');
+  var file_name = file_name.replace(re, " ");
   var user = req.originalUrl.split("/")[2];
 
   var options = {
@@ -31,7 +33,7 @@ var get = function (req, res) {
 	}
 	};
 	
-	var file_name = req.originalUrl.split("/")[5];
+	//var file_name = req.originalUrl.split("/")[5];
 	var there_is = fs.existsSync(__dirname + '/../../../../files/'+user+'/video/'+file_name);
 	
 	if(there_is == false){

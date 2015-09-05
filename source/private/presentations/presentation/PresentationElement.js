@@ -31,10 +31,11 @@ var put = function(req, res){
                       
                       }
 							  var name_pres = req.originalUrl.split("/")[4];
+                var re = new RegExp("%20", 'g');
+                var name_pres = name_pres.replace(re, " ");
 							  var id_element = req.body.element.id;
 							  
 							  var new_element = req.body.element;
-							   // ***
 							  
 							  if(new_element == null){ res.json({
 																			success: false,
@@ -154,6 +155,8 @@ var post = function(req, res){
                       
                       }
 							  var name_pres = req.originalUrl.split("/")[4];
+                var re = new RegExp("%20", 'g');
+                var name_pres = name_pres.replace(re, " ");
 
 							  var new_element = req.body.element;
 							  if(new_element == null){ res.json({

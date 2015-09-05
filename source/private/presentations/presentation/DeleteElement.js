@@ -29,6 +29,8 @@ var del = function(req, res){
                       
                 }
 							  var name_pres = req.originalUrl.split("/")[4];
+                var re = new RegExp("%20", 'g');
+                var name_pres = name_pres.replace(re, " ");
 							  
 							  var type_element = req.originalUrl.split("/")[6];
 							  var id_element = req.originalUrl.split("/")[7];

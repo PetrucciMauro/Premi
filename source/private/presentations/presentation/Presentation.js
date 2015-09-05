@@ -31,6 +31,9 @@ var get = function(req, res){
                       
                       }
 							  var name_pres = req.originalUrl.split("/")[4];
+                var re = new RegExp("%20", 'g');
+                var name_pres = name_pres.replace(re, " ");
+                      
 							  db.collection('presentations'+req.user).findOne({ 'meta.titolo': name_pres }, function(err, doc){
                                                 if(err) {
                                                 
@@ -65,10 +68,11 @@ var del = function(req, res){
                                success: false,
                                message: err
                                });
-
-                      
                       }
 							  var name_pres = req.originalUrl.split("/")[4];
+                var re = new RegExp("%20", 'g');
+                var name_pres = name_pres.replace(re, " ");
+                      
 							  db.collection('presentations'+req.user).remove({ 'meta.titolo': name_pres }, function(err, removed){
                                               if(err) {
                                                                console.log(err);

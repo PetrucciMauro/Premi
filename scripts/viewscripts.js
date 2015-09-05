@@ -554,7 +554,7 @@ var inserisciElemento = function (classe, spec) {
 	//TRADUTTORE
 
 	div.style.position = "absolute";
-	div.style.zIndex = zindex;
+	
 	div.setAttribute("class", classe+" elemento");
 	var id = contatore;
 
@@ -583,7 +583,16 @@ var inserisciElemento = function (classe, spec) {
 		div.style.top = 0 + "px";
 		div.style.left = 0 + "px";
 	}
-
+	if (spec && spec.zIndex) {
+	    div.style.zIndex = spec.zIndex;
+	    if (zindex < spec.zIndex) {
+	        zindex = spec.zIndex + 1;
+	    }
+	}
+	else {
+	    div.style.zIndex = zindex;
+	    zindex++;
+	}
 	console.log(document.getElementById("frames"));
 	console.log($("#frames"));
 
@@ -604,7 +613,7 @@ var inserisciElemento = function (classe, spec) {
 	//TRADUTTORE EDIT
 
 	contatore++;
-	zindex++;
+	
 
 	var xInit;
 	var yInit;

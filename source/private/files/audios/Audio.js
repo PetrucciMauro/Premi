@@ -20,8 +20,6 @@ var multer  = require('multer')
 var del = function(req, res){
 	var dir= __dirname+'/../../../../files/'+req.user+'/audio/';
 	var name = req.originalUrl.split("/")[5];
-  var re = new RegExp("%20", 'g');
-  var name = name.replace(re, " ");
 	var there_is = fs.existsSync(dir+name);
 	
 	if(there_is){
@@ -52,8 +50,6 @@ var post = [ multer({
 																				
 																				rename: function (fieldname, filename, req, res) {
 																				var new_name = req.originalUrl.split("/")[5];
-                                        var re = new RegExp("%20", 'g');
-                                        var new_name = new_name.replace(re, " ");
 																				return new_name; }
 																				
 																				}),

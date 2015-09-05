@@ -29,12 +29,7 @@ var post = function(req, res){
 
                 }
 							  var name_pres = req.originalUrl.split("/")[5];
-                var re = new RegExp("%20", 'g');
-                var name_pres = name_pres.replace(re, " ");
 							  var name_tocopy = req.originalUrl.split("/")[6];
-                var re = new RegExp("%20", 'g');
-                var name_tocopy= name_tocopy.replace(re, " ");
-                      
 							  db.collection('presentations'+req.user).findOne({'meta.titolo' : name_pres},function(err, doc){
 																							  if(doc != null){
 																							  res.json({success : false});

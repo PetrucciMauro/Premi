@@ -16,8 +16,9 @@ function imagePosition(left,top,width,height){
 	return position;
 }
 function audioPosition(left,top,width,height){
+	console.log("Audio "+left+" "+top+" "+width);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600),(19.19*width)/screenWidth];
-	console.log(position[0] + " - " + position[1] + " - " + position[2]);
+	console.log("Audio "+position[0] + " - " + position[1] + " - " + position[2]);
 	return position;
 }
 function videoPosition(left,top,width,height){

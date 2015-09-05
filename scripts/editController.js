@@ -1122,6 +1122,10 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
         $scope.multiAction = function () {
             invoker().execute(multiCommand());
         }
+
+        $scope.zoomout = function () {
+            zoomout();
+        }
 		$scope.updateBookmark = function(id){
 			var idElement;
 			if(Utils.isObject(id))

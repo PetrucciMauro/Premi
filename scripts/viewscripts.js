@@ -60,30 +60,28 @@ $(document).ready(function () {
 	    width: 300,
 	    height: 300
 	});*/
-	$("#contextual-menu").dblclick(function () {
-	    $("#interno").css({
-	        "position": "absolute",
-	        "left": "0",
-	        "top": "0",
-	        "transition": "all 0.5s",     
-	        "webkit-transition": "all 0.5s"           
-	    });
-	    $("#content").css({
-	        "transform": "scale(1)",
-	        "webkit-transform": "scale(1)",
-	        "transition": "all 0.5s",          
-	        "webkit-transition": "all 0.5s"
-            
-	    });
-	    scale = 1;
-	
-	});
 
 	$("#interno").height($("#content").height());
 	$("#interno").width($("#content").width());
 	
 });
+function zoomout() {
+    $("#interno").css({
+        "position": "absolute",
+        "left": "0",
+        "top": "0",
+        "transition": "all 0.5s",
+        "webkit-transition": "all 0.5s"
+    });
+    $("#content").css({
+        "transform": "scale(1)",
+        "webkit-transform": "scale(1)",
+        "transition": "all 0.5s",
+        "webkit-transition": "all 0.5s"
 
+    });
+    scale = 1;
+}
 $(document).keyup(function(e){
     if (e.keyCode == 46) {
         if (active().getId()) {

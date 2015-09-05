@@ -967,6 +967,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            inv.execute(command);
 
 	            loader.addUpdate(idElement);
+	            console.log("presentazione: " + JSON.stringify(insertEditRemove().getPresentazione()));
 	        }
 	    }
 	    $scope.portaDietro = function(spec){
@@ -1003,6 +1004,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            inv.execute(command);
 
 	            loader.addUpdate(idElement);
+	            console.log("presentazione: " + JSON.stringify(insertEditRemove().getPresentazione()));
 	        }
 	    }
 	  

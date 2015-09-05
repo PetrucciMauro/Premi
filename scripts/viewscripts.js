@@ -689,7 +689,7 @@ var inserisciTesto=function(spec){
 	$( "#txt"+div.id ).focus();
 	$(function() {
 		$(div).resizable({
-			aspectRatio: 1 / 1,
+			
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();

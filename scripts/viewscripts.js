@@ -977,7 +977,7 @@ $(document).mousedown(function(e) {
 			var addToMain=document.getElementById("addToMain");
 			//SFONDO FRAME
 		}
-		else if( $(event.target).is('#content')|| $(event.target).parents().is('#elements')){
+		else if ($(event.target).is('#content') || $(event.target).is('#interno') || $(event.target).parents().is('#elements')) {
 			active().deselect();
 		}
 	}

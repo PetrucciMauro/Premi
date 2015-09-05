@@ -600,9 +600,11 @@ var inserisciElemento = function (classe, spec) {
 	div.id=id;
 	//TRADUTTORE EDIT
 
-	if(classe=="frame"){
+	if (classe == "frame") {
+	    console.log("carico il frame");
+	    console.log(JSON.stringify(spec));
 		div.style.backgroundColor = spec.color || undefined;
-		div.style.backgroundImage = spec.image || undefined;
+		div.style.backgroundImage = "url('"+spec.ref+"')" || undefined;
 		document.getElementById("frames").appendChild(div);
 	}
 	else {

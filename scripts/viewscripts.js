@@ -584,8 +584,9 @@ var inserisciElemento = function (classe, spec) {
 		div.style.left = 0 + "px";
 	}
 	if (spec && spec.zIndex) {
+	    console.log("carico zIndex");
 	    div.style.zIndex = spec.zIndex;
-	    if (zindex < spec.zIndex) {
+	    if (zindex < spec.zIndex+1) {
 	        zindex = spec.zIndex + 1;
 	    }
 	}

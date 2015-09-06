@@ -302,13 +302,13 @@ var concreteBackgroundInsertCommand = function (spec) {
             angular.element($("#content")).scope().updateSfondo(spec);
         }
         var obj = public.getObj();
-        obj.action = "insert";
+        obj.action = "edit";
         return obj;
     };
     public.undoAction = function () {
         public.getEnabler().insertBackground(private.oldBackground);
         var obj = public.getObj();
-        obj.action = "delete";
+        obj.action = "edit";
         angular.element($("#content")).scope().updateSfondo(private.oldBackground);
         return obj;
     };

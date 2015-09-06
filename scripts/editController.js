@@ -429,7 +429,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	    //Gestione sfondo Presentazione
 	    $scope.updateSfondo = function(spec){
-	        var style = document.getElementById('content').style;
+	        var style = document.getElementById('interno').style;
 	        style.backgroundColor = spec.color;
 	        if(Utils.isObject(spec.image))
 	            if(spec.image.indexOf("url") == -1)

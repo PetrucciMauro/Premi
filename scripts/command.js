@@ -292,6 +292,7 @@ var concreteBackgroundInsertCommand = function (spec) {
     var public = abstractCommand(spec);
     var private = {};
     private.oldBackground = {};
+    public.setCommandAction("modifica sfondo presentazione");
     public.doAction = function () {
         private.oldBackground = public.getEnabler().insertBackground(spec);
         if (public.getExecuted() === 0) {

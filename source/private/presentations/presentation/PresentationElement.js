@@ -22,7 +22,7 @@ var put = function(req, res){
                       if(err) {
                       
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -37,7 +37,9 @@ var put = function(req, res){
 							  
 							  var new_element = req.body.element;
 							  
-							  if(new_element == null){ res.json({
+							  if(new_element == null){
+                                      res.status(404);
+                                      res.json({
 																			success: false,
 																			message: 'body.element not sent'
 																			});
@@ -70,6 +72,7 @@ var put = function(req, res){
 							  field_path = "proper.background";
 							  break;
 							  default:
+                res.status(404);
 							  res.json({
 										  success: false,
 										  message: 'element type: '+type_element+' not known'
@@ -89,7 +92,7 @@ var put = function(req, res){
                                                 if(err) {
                                                 
                                                                console.log(err);
-                                                               res.status(400);
+                                                               res.status(500);
                                                                res.json({
                                                                         success: false,
                                                                         message: err
@@ -111,7 +114,7 @@ var put = function(req, res){
                                               if(err) {
                                               
                                                                console.log(err);
-                                                               res.status(400);
+                                                               res.status(500);
                                                                res.json({
                                                                         success: false,
                                                                         message: err
@@ -121,6 +124,7 @@ var put = function(req, res){
                                               }
 																							 
 																							 db.collection('presentations'+req.user).findOne({},function(err,doc){
+                                                                             res.status(200);
 																																						 res.json({
 																																									 success: true,
 																																									 message: 'element replaced'
@@ -146,7 +150,7 @@ var post = function(req, res){
                       if(err) {
                       
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -159,7 +163,9 @@ var post = function(req, res){
                 var name_pres = name_pres.replace(re, " ");
 
 							  var new_element = req.body.element;
-							  if(new_element == null){ res.json({
+							  if(new_element == null){
+                                      res.status(404);
+                                      res.json({
 																			success: false,
 																			});
 							  return;
@@ -187,6 +193,7 @@ var post = function(req, res){
 							  field_path = 'proper.videos';
 							  break;
 							  default:
+                res.status(404);
 							  res.json({
 										  success: false,
 										  message: 'element type: '+type_element+' not known'
@@ -200,7 +207,7 @@ var post = function(req, res){
                                               if(err) {
                                               
                                                                console.log(err);
-                                                               res.status(400);
+                                                               res.status(500);
                                                                res.json({
                                                                         success: false,
                                                                         message: err

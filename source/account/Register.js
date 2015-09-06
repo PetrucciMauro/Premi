@@ -26,7 +26,7 @@ var post = function(req, res) {
 	MongoClient.connect(database, function(err, db) {
                 if(err) {
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -35,7 +35,7 @@ var post = function(req, res) {
 							  db.collection('users').findOne({'username': user}, function(err, doc) {
                                     if(err) {
                                                console.log(err);
-                                               res.status(400);
+                                               res.status(500);
                                                res.json({
                                                         success: false,
                                                         message: err
@@ -46,7 +46,7 @@ var post = function(req, res) {
 																		db.collection('users').insert({'username': user, 'password': pass}, function(err, doc){
                                                         if(err) {
                                                                   console.log(err);
-                                                                  res.status(400);
+                                                                  res.status(500);
                                                                   res.json({
                                                                            success: false,
                                                                            message: err
@@ -67,7 +67,7 @@ var post = function(req, res) {
 																												});
 																		}
 																		else{
-																		res.status(400);
+																		res.status(304);
 																		res.json({
 																					success: false,
 																					message: 'Username already registered'

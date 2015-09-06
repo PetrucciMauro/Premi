@@ -22,7 +22,7 @@ var get = function(req, res){
                       if(err) {
                       
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -38,7 +38,7 @@ var get = function(req, res){
                                                 if(err) {
                                                 
                                                                 console.log(err);
-                                                                res.status(400);
+                                                                res.status(500);
                                                                 res.json({
                                                                          success: false,
                                                                          message: err
@@ -46,7 +46,7 @@ var get = function(req, res){
 
                                                                 
                                                 }
-																							  
+                                                res.status(200);
 																							  res.json({
 																										  success: true,
 																										  message: doc
@@ -63,7 +63,7 @@ var del = function(req, res){
                       if(err) {
                       
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -76,14 +76,14 @@ var del = function(req, res){
 							  db.collection('presentations'+req.user).remove({ 'meta.titolo': name_pres }, function(err, removed){
                                               if(err) {
                                                                console.log(err);
-                                                               res.status(400);
+                                                               res.status(500);
                                                                res.json({
                                                                         success: false,
                                                                         message: err
                                                                         });
                  
                                               }
-																																																																				
+                                               res.status(200);
 																							 res.json({
 																										 success: true,
 																										 message: 'removed presentation: '+name_pres

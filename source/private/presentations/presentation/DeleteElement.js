@@ -21,7 +21,7 @@ var del = function(req, res){
 	MongoClient.connect(database, function(err, db) {
                 if(err) {
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -60,8 +60,9 @@ var del = function(req, res){
 							  field_path = 'proper.background';
 							  break;
 							  default:
+                res.status(404);
 							  res.json({
-										  success: true,
+										  success: false,
 										  message: 'element type: '+type_element+' not known'
 										  });
 							  return;
@@ -74,14 +75,15 @@ var del = function(req, res){
 							  
 							  db.collection('presentations'+req.user).update({'meta.titolo': name_pres}, { $pull : to_pull }, function(err, doc){
                                                 if(err) {
-                                                               console.log(err);
-                                                               res.status(400);
+                                                               //console.log(err);
+                                                               res.status(500);
                                                                res.json({
                                                                         success: false,
                                                                         message: err
                                                                         });
                
                                                 }
+                                               res.status(200);
 																							 res.json({
 																										 success: true,
 																										 message: 'deleted element'

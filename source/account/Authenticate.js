@@ -28,7 +28,7 @@ var get = function(req, res) {
 	MongoClient.connect(database, function(err, db) {
                 if(err) {
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -39,7 +39,7 @@ var get = function(req, res) {
 							  db.collection('users').findOne({'username': user, 'password': pass}, function(err, doc) {
                                     if(err) {
                                                console.log(err);
-                                               res.status(400);
+                                               res.status(500);
                                                res.json({
                                                         success: false,
                                                         message: err
@@ -50,7 +50,7 @@ var get = function(req, res) {
 																		res.status(400);
 																		res.json({
 																					success: false,
-                                          message: "user or password not correct"
+                                          message: "no user found or password not corrected"
 																					});
 																		}
 																		else{

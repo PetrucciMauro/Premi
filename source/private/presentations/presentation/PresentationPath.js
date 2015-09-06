@@ -22,7 +22,7 @@ var put = function(req, res){
                       if(err) {
                       
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -44,7 +44,7 @@ var put = function(req, res){
                                                 if(err) {
                                                 
                                                                console.log(err);
-                                                               res.status(400);
+                                                               res.status(500);
                                                                res.json({
                                                                         success: false,
                                                                         message: err
@@ -52,7 +52,7 @@ var put = function(req, res){
 
                                                                
                                                 }
-																							  
+                                                res.status(200);
 																							  res.json({
 																										  success: true,
 																										  });

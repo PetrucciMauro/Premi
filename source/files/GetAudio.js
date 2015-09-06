@@ -38,7 +38,7 @@ var get = function (req, res) {
 	var there_is = fs.existsSync( __dirname+'/../../../../files/'+user+'/audio/'+file_name);
 	
 	if(there_is == false){
-		res.status(407).send({
+		res.status(404).send({
 																							success: false,
 																							message: 'File not found'
 																							});

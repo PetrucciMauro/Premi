@@ -22,7 +22,7 @@ var post = function(req, res){
                       if(err) {
                       
                       console.log(err);
-                      res.status(400);
+                      res.status(500);
                       res.json({
                                success: false,
                                message: err
@@ -37,9 +37,8 @@ var post = function(req, res){
 
 							  db.collection('presentations'+req.user).update({ 'meta.titolo': oldName_pres }, {$set: { 'meta.titolo' : name_pres }}, function(err, doc){
                                               if(err) {
-                                              
                                                                console.log(err);
-                                                               res.status(400);
+                                                               res.status(500);
                                                                res.json({
                                                                         success: false,
                                                                         message: err
@@ -47,7 +46,7 @@ var post = function(req, res){
 
                                                                
                                               }
-																							 
+                                               res.status(200);
 																							 res.json({
 																										 success: true,
 																										 message: 'renamed presentation: '+name_pres

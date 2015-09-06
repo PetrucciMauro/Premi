@@ -52,7 +52,7 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 	};
 	
 	that.addDelete = function(typeObj, id_element){
-		console.log("addDelete:: type: "+typeObj+", id: "+id_element);
+		//console.log("addDelete:: type: "+typeObj+", id: "+id_element);
 		var found = false;
 		var pos = -1;
 		for(var i=0; i < toInsert.length; i++){
@@ -96,16 +96,16 @@ var Loader = function(mongoRelation_obj, showElements_obj){
 		if(toPaths){count_paths = 1;}
 		
 		//console.log("TO_INSERT_LENGTH: "+count_insert);
-		for(var i=0; i<count_insert; i++){
-			console.log(toInsert[i]);
-		}
+		//for(var i=0; i<count_insert; i++){
+		//	console.log(toInsert[i]);
+		//}
 		//console.log("TO_DELETE_LENGTH: "+count_delete);
-		for(var i=0; i<count_delete; i++){
-			console.log(toDelete[i]);
-		}
-		for(var i=0; i<count_update; i++){
-			console.log(toUpdate[i]);
-		}
+		//for(var i=0; i<count_delete; i++){
+		//	console.log(toDelete[i]);
+		//}
+		//for(var i=0; i<count_update; i++){
+		//	console.log(toUpdate[i]);
+		//}
 		//console.log("TO_UPDATE_LENGTH: "+count_update);
 		
 		var test_obj = function(callback){

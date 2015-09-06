@@ -32,6 +32,7 @@ var post = function(req, res){
 																	
 	}
 	else{
+    res.status(404);
 		res.json({
 					success: false,
 					message: 'file '+dir+name+' does not exists'

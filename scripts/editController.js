@@ -440,7 +440,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            style.backgroundImage = "";
 	    }
 	    $scope.rimuoviSfondo = function(){
-	        var style = document.getElementById('content').style;
+	        var style = document.getElementById('interno').style;
 	        style.removeProperty('background');
 
 	        var spec = {

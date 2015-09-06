@@ -213,7 +213,7 @@
 
 
             <md-menu md-offset="0 -7">
-                <md-button aria-label="Aggiungi al percorso principale" ng-show="!inPath('undef')" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()" >
+                <md-button aria-label="Aggiungi al percorso principale" ng-show="!isInPath" class="menu md-button md-default-theme" id="addToMainPath" ng-click="$mdOpenMenu()" >
                     <md-tooltip>Aggiungi a un percorso</md-tooltip>
                     <md-icon md-svg-src="assets/svg/path.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
                 </md-button>
@@ -225,7 +225,7 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-            <md-button aria-label="Aggiungi al percorso principale" class="menu md-button md-default-theme" disabled="disabled" id="addToMainPath"  ng-show="inPath('undef')">
+            <md-button aria-label="Aggiungi al percorso principale" class="menu md-button md-default-theme" disabled="disabled" id="addToMainPath"  ng-show="isInPath">
                 <md-tooltip>Aggiungi a un percorso</md-tooltip>
                 <md-icon md-svg-src="assets/svg/path_disabled.svg" class="ng-scope ng-isolate-scope md-default-theme"></md-icon>
             </md-button>

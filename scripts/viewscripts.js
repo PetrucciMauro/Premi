@@ -207,8 +207,7 @@ var active=function(){
 			if($(private.element).hasClass("frame")){
 				angular.element(content).scope().AddBookmark();
 				angular.element(content).scope().RemoveBookmark();
-				
-
+				angular.element(content).scope().setInPath();
 			}
 			updateDraggable();
 			

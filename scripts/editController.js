@@ -863,12 +863,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    $scope.aggiungiMainPath = function (spec) {
 	        if(Utils.isObject(spec)){
 	            mainPath().addToMainPath(spec.id, spec.pos);
-			    
+	         
 	        }
 	        else {
 	            var activeElement = active().getId();
 	            mainPath().addToMainPath(activeElement,0);
-				
+	            
 	            var spec = {
 	                id: activeElement
 	            };
@@ -893,6 +893,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        $scope.canHaveBookmark = true;
 	        $scope.canAddBookmark = true;
 	        $scope.canRemoveBookmark = false;
+	        $scope.setInPath();
 	        safeApply();
 	    }
 
@@ -920,6 +921,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            loader.addPaths();
 
 	        }
+	        $scope.setInPath();
+	        safeApply();
 	    }
 	    $scope.setMainPath = function (spec) {
 	        console.log("chiaramente qui non arriva");
@@ -1025,6 +1028,18 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    var safeApply = function(){
 	        if(!$scope.$$phase)
 	            $scope.$apply();
+	    }
+
+	    $scope.isInPath = false;
+
+	    $scope.setInPath = function () {
+	        var idElement = active().getId();
+	        if (insertEditRemove().getPaths().main.indexOf(idElement) != -1) {
+	            $scope.isInPath = true;
+	        }
+	        else
+	            $scope.isInPath = false;
+	        safeApply();
 	    }
 	    $scope.canHaveBookmark = false;
 	    $scope.canAddBookmark = false;

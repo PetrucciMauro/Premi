@@ -18,8 +18,8 @@
 
 var premiHomeController = angular.module('premiHomeController', ['premiService'])
 
-premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window','SharedData', '$location',
-	function($scope, Main, toPages, Utils, $window, SharedData, $location) {
+premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window','SharedData', '$location', '$mdDialog',
+	function ($scope, Main, toPages, Utils, $window, SharedData, $location,  $mdDialog) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
 			toPages.loginpage();
 		else
@@ -78,16 +78,14 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		$scope.getSS = function() {
 			return allSS;
 		};
-		$scope.deleteSlideShow = function(slideId) {
-			var confirm = $window.confirm('Sicuro di voler eliminare la presentazione?');
-
+		$scope.confirm = false;
+		$scope.deleteSlideShow = function(slideId, ev) {
+			var confirm = $scope.showConfirmDelete(ev, slideId);
+			console.log(confirm);
 			if(!confirm)
 				return;
 
-			if(!mongo.deletePresentation(slideId))
-				throw new Error(mongo.getMessage());
-
-			update();
+			
 		};
 		$scope.renameSlideShow = function(nameSS) {
 			var rename = $window.prompt('Nome:', undefined);
@@ -113,5 +111,71 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 			$scope.newSS = !$scope.newSS;
 			update();
 		};
+
+		$scope.status = '  ';
+		$scope.showAlert = function (ev) {
+		    // Appending dialog to document.body to cover sidenav in docs app
+		    // Modal dialogs should fully cover application
+		    // to prevent interaction outside of dialog
+		    $mdDialog.show(
+              $mdDialog.alert()
+                .parent(angular.element(document.querySelector('#popupContainer')))
+                .clickOutsideToClose(true)
+                .title('This is an alert title')
+                .content('You can specify some description text in here.')
+                .ariaLabel('Alert Dialog Demo')
+                .ok('Got it!')
+                .targetEvent(ev)
+            );
+		};
+
+		$scope.showConfirmDelete = function (ev, slideId) {
+		    // Appending dialog to document.body to cover sidenav in docs app
+		    var res = false;
+		    var confirm = $mdDialog.confirm()
+                  .title('ELIMINARE QUESTA PRESENTAZIONE?')
+                  .content('Una volta effettuata questa operazione non sara\' piu\' possibile tornare indietro.')
+                  .ariaLabel('Elimina presentazione')
+                  .targetEvent(ev)
+                  .ok('SI\'')
+                  .cancel('NO');
+		    $mdDialog.show(confirm).then(function () {
+		        if (!mongo.deletePresentation(slideId))
+		            throw new Error(mongo.getMessage());
+		        update();
+		    }, function () {
+		        res = false;
+		        console.log("res " + res);
+		        
+		    });
+		    
+		    return res;
+		};
+		$scope.showAdvanced = function (ev) {
+		    $mdDialog.show({
+		        controller: DialogController,
+		        templateUrl: 'dialog1.tmpl.html',
+		        parent: angular.element(document.body),
+		        targetEvent: ev,
+		        clickOutsideToClose: true
+		    })
+            .then(function (answer) {
+                $scope.status = 'You said the information was "' + answer + '".';
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
+            });
+		};
 		
-}])
+	}])
+
+function DialogController($scope, $mdDialog) {
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+  $scope.answer = function(answer) {
+    $mdDialog.hide(answer);
+  };
+}

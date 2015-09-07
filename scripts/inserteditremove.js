@@ -341,16 +341,14 @@ var insertEditRemove = function () {
             var found = false;
             var original;
             var element = public.getElement(spec.id);
-            console.log("richiamato porta avanti con id " + spec.id);
+            
             if (element) {
                 original = element.zIndex;
                 element.zIndex = original + 1;
-                console.log("porto avanti " + element.id + " z index " + original + " assegno " + element.zIndex);
+                
                 for (var i = 1; i < contatore; i++) {
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == element.zIndex) {
-                        console.log("porto dietro " + public.getElement(i).id + " z index " + public.getElement(i).zIndex);
                         public.getElement(i).zIndex = original;
-                        console.log("assegno z index " + public.getElement(i).zIndex);
                         found = true;
                     }
                 }
@@ -359,20 +357,29 @@ var insertEditRemove = function () {
 
         public.portaDietro = function (spec) {
             var found = false;
-
+            var original;
             var element = public.getElement(spec.id);
+            
             if (element) {
-                original = element.zIndex-1;
+                original = element.zIndex;
+                element.zIndex = original - 1;
+
                 for (var i = 1; i < contatore; i++) {
-                    console.log("sto ciclando");
+                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == element.zIndex) {
+                        public.getElement(i).zIndex = original;
+                        found = true;
+                    }
+                }
+                /*original = element.zIndex-1;
+                for (var i = 1; i < contatore; i++) {
+                    
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == (original)) {
-                        console.log("entrato nell'if");
                         var obj = public.getElement(i);
                         public.portaAvanti(obj);
                         found = true;
 
                     }
-                }
+                }*/
 
             }
         };

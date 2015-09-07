@@ -555,7 +555,6 @@ var inserisciElemento = function (classe, spec) {
 	div.setAttribute("class", classe+" elemento");
 	var id = contatore;
 
-	console.log(spec);
 	//TRADUTTORE EDIT
 	if(spec && spec.id){
 		if(contatore < spec.id)//in contatore si salva l'id maggiore
@@ -581,7 +580,6 @@ var inserisciElemento = function (classe, spec) {
 		div.style.left = 0 + "px";
 	}
 	if (spec && spec.zIndex) {
-	    console.log("carico zIndex");
 	    div.style.zIndex = spec.zIndex;
 	    if (zindex < spec.zIndex+1) {
 	        zindex = spec.zIndex + 1;
@@ -591,17 +589,15 @@ var inserisciElemento = function (classe, spec) {
 	    div.style.zIndex = zindex;
 	    zindex++;
 	}
-	console.log(document.getElementById("frames"));
-	console.log($("#frames"));
 
 	div.id=id;
 	//TRADUTTORE EDIT
 
 	if (classe == "frame") {
-	    console.log("carico il frame");
-	    console.log(JSON.stringify(spec));
 		div.style.backgroundColor = spec.color || undefined;
-		div.style.backgroundImage = "url('"+spec.ref+"')" || undefined;
+		if(spec.ref && spec.ref !== ""){
+			div.style.backgroundImage = "url('"+spec.ref+"')";
+		}
 		document.getElementById("frames").appendChild(div);
 	}
 	else {
@@ -719,7 +715,8 @@ var inserisciTesto=function(spec){
 
 var inserisciMedia = function (x, classe, spec) {
 	var div = inserisciElemento(classe, spec);
-
+	if(classe =="audio")
+	console.log(spec);
 	var url = {};
 	if(spec && spec.ref)
 		url = spec.ref;
@@ -738,7 +735,7 @@ var inserisciMedia = function (x, classe, spec) {
 
 	element.setAttribute("class", "resizable");
 	element.id = type + div.id;
-	element.src = x;
+	element.src = url;
 	div.appendChild(element);
 	
 	if(type === "img"){
@@ -921,6 +918,7 @@ function getElementByZIndex(zvalue) {
 }
 
 function portaAvanti(id) {
+	console.log("viescripts portaAvanti");
 	var original = $("#" + id).zIndex();
 	var superior = getElementByZIndex(original + 1);
 
@@ -929,20 +927,28 @@ function portaAvanti(id) {
 		superior.style.zIndex = original;
 		$("#" + id).css({ "z-index": original + 1 });
 		ris = superior;
+	} else if(original < zindex) {
+		$("#" + id).zIndex(original + 1);
 	}
 
 	return ris;
 }
 
 function mandaDietro(id){
+	console.log("viescripts mandaDietro");
 	var ris = -1;
     if ($("#" + id).zIndex() > 0) {
         var original = $("#" + id).zIndex();
 		var element = getElementByZIndex(original - 1);
-		if (element)
-		    ris = portaAvanti(element.id);
+
+		if (element){
+		    portaAvanti(element.id);
+		    ris = element;
+		} else if (original > 0) {
+			$("#" + id).zIndex(original - 1);
+		}
 	}
-	return ris;
+	return ris; 
 }
 
 function toggleElement(id) { 
@@ -1192,74 +1198,88 @@ function updateDraggable(element){
 	var originalLeft=$(div).css("left");
 	var originalTop=$(div).css("top");
 
-
-	var elements = $("#elements").children();
-	for(var i=0; i<elements.length && elements[i].id != div.id && tipo == "frame"; ++i){
-		var x = $("#" + elements[i].id);
-		if (isInside(div, x)) {
-		    var spec = {
-		        id: elements[i].id,
-		        originalLeft: x.position().left,
-		        originalTop: x.position().top
-		    }
-		    others.push(spec);
-		}
-		}
-
-		$(div).draggable({
-			start: function(event, ui) {
-				click.x = event.clientX;
-				click.y = event.clientY;
-			},
-			containment: "#content",
-			drag: function(event, ui){
-				var original = ui.originalPosition;
-
-				var left = (event.clientX - click.x + original.left)/scale;
-				var top = (event.clientY - click.y + original.top)/scale;
-
-				if(left>0 && top>0 && (left+originalWidth)<l && (top+originalHeight)<h){
-					ui.position = {
-						left: left,
-						top:  top
-					};
-				}
-
-				if(!others[0])
-					others.length = 0;
-				//muovi gli elementi dentro il frame
-				for(var i=0; i<others.length; ++i){
-					var leftEle = (event.clientX - click.x + others[i].originalLeft)/scale;
-					var topEle = (event.clientY - click.y + others[i].originalTop)/scale;
-					
-					var topOk = leftOk = true;
-
-					if(left < 0 || (left + originalWidth)>l)
-						leftOk = false;
-					if(top < 0 || (top+originalHeight)>h)
-						topOk = false;
-					
-					var x = $("#" + others[i].id);
-					if(leftOk)	
-						x.css("left", (leftEle));
-					if(topOk)
-						x.css("top", (topEle));
-				}
-			},
-			stop: function (event, ui){
-				angular.element(this).scope().muoviElemento();
-				if(!others[0])
-					others.length = 0;
-
-				for(var i=0; i<others.length; ++i){
-					var spec = {
-						id: others[i].id,
-						toUpdate: true
-					}
-					angular.element(this).scope().muoviElemento(spec);
-				}
-				others = [];
+	if(tipo == "frame"){
+		var elements = $("#elements").children();
+		for(var i=0; i<elements.length && elements[i].id != div.id; ++i){
+			var x = $("#" + elements[i].id);
+			if (isInside(div, x)) {
+			    var spec = {
+			        id: elements[i].id,
+			        originalLeft: x.position().left,
+			        originalTop: x.position().top
+			    }
+			    others.push(spec);
 			}
+		}
+
+		var frames = $("#frames").children();
+		for(var i=0; i<frames.length && frames[i].id != div.id; ++i){
+			var x = $("#" + frames[i].id);
+			if (isInside(div, x)) {
+			    var spec = {
+			        id: frames[i].id,
+			        originalLeft: x.position().left,
+			        originalTop: x.position().top
+			    }
+			    others.push(spec);
+			}
+		}
+	}
+
+	$(div).draggable({
+		start: function(event, ui) {
+			click.x = event.clientX;
+			click.y = event.clientY;
+		},
+		containment: "#content",
+		drag: function(event, ui){
+			var original = ui.originalPosition;
+
+			var left = (event.clientX - click.x + original.left)/scale;
+			var top = (event.clientY - click.y + original.top)/scale;
+
+			if(left>0 && top>0 && (left+originalWidth)<l && (top+originalHeight)<h){
+				ui.position = {
+					left: left,
+					top:  top
+				};
+			}
+
+			if(!others[0])
+				others.length = 0;
+			//muovi gli elementi dentro il frame
+			for(var i=0; i<others.length; ++i){
+				var leftEle = (event.clientX - click.x + others[i].originalLeft)/scale;
+				var topEle = (event.clientY - click.y + others[i].originalTop)/scale;
+				
+				var topOk = leftOk = true;
+
+				if(left < 0 || (left + originalWidth)>l)
+					leftOk = false;
+				if(top < 0 || (top+originalHeight)>h)
+					topOk = false;
+				
+				var x = $("#" + others[i].id);
+				if(leftOk)	
+					x.css("left", (leftEle));
+				if(topOk)
+					x.css("top", (topEle));
+			}
+		},
+		stop: function (event, ui){
+			angular.element(this).scope().muoviElemento();
+			if(!others[0])
+				others.length = 0;
+
+			for(var i=0; i<others.length; ++i){
+				var spec = {
+					id: others[i].id,
+					toUpdate: true
+				}
+				angular.element(this).scope().muoviElemento(spec);
+			}
+			others = [];
+		}
 });
 
 $(".droppable").droppable({
@@ -1361,14 +1381,12 @@ $(function () {
 
 
 function zoom(div) {
-    console.log("left " + $(div).position().left);
     if (scale == 1) {
 
         scale = $("#content").outerHeight() * 0.8 / $(div).outerHeight();
         width = parseFloat($("#interno").width());
         height = parseFloat($("#interno").height());
 
-        console.log("posizione " + ((width / 2) + $(div).position().left));
         $("#content").position().left = 0 - (($("#interno").position().left) + $("#interno").width() / 2) + "px";
         var nleft = (document.getElementById(active().getId()).style.left);
         var ntop = (document.getElementById(active().getId()).style.top);
@@ -1380,7 +1398,7 @@ function zoom(div) {
             "webkit-transition": "all 0.5s",
             "position": "absolute"
         });
-        console.log("nuova sinistra " + document.getElementById("interno").style.left);
+        
         $("#content").css({
             
             "transform": "scale(" + $("#content").outerHeight() / $(div).outerHeight() + ")",

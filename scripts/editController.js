@@ -48,10 +48,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        pending.then(function(){
 	            $mdSidenav('left').toggle();
 	            $scope.showSidenav = ($scope.showSidenav + 1);
-	            console.log("toggle " + $scope.showSidenav);
+	            
 	            if ($scope.showSidenav == 0 && mainPath().getSidenav() == 1) {
-	                console.log("ok");
-			        
 	                mainPath().setMainPath(obj);
 	            }
 	            $("#sortable").slideUp();
@@ -200,8 +198,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            inv.execute(command);
 
 	            loader.addInsert(frame.id);
-	            console.log(insertEditRemove().getPresentazione());
-	        }
+	       }
 	    }
 	    $scope.inserisciTesto = function(spec){
 	        var text = inserisciTesto(spec); //view
@@ -331,11 +328,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            var attr = {};
 	            var ele = {};
 	            switch(tipo){
-	                case "image":
-	                    ele = inserisciImmagine(fileUrl, spec);
-	                    attr = getMediaSpec(ele, tipo, fileUrl);
-	                    command = concreteImageInsertCommand(attr);
-	                    break;
 	                case "audio":
 	                    ele = inserisciAudio(fileUrl, spec);
 	                    attr = getMediaSpec(ele, tipo, fileUrl);
@@ -348,9 +340,22 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                    break;
 	            }
 
-	            inv.execute(command);
+	            if(tipo == "image"){
+	            	convertImgToBase64URL(fileUrl, function(url64){
+						var img = inserisciImmagine(url64, spec); //view
 
-	            loader.addInsert(ele.id);
+		                var info = getMediaSpec(img, "image", fileUrl);
+
+		                var command = concreteImageInsertCommand(info); //model
+		                inv.execute(command);
+
+		                loader.addInsert(img.id);
+	            	});
+	            } else {
+		            inv.execute(command);
+
+		            loader.addInsert(ele.id);
+		        }
 	        });
 	    }
 
@@ -924,12 +929,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        $scope.setInPath();
 	        safeApply();
 	    }
-	    $scope.setMainPath = function (spec) {
-	        console.log("chiaramente qui non arriva");
-		  
+	    $scope.setMainPath = function (spec) {		  
 	        if (Utils.isObject(spec)) {
-	            console.log("spec.path=" + JSON.stringify(spec.path));
-	            mainPath().setPath(spec.path);
+	           	mainPath().setPath(spec.path);
 	        }
 	        else {
 	            var spec = {};
@@ -968,9 +970,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	            var command = concretePortaAvantiCommand(spec);
 	            inv.execute(command);
-
+	            
 	            loader.addUpdate(idElement);
-	            console.log("presentazione: " + JSON.stringify(insertEditRemove().getPresentazione()));
 	        }
 	    }
 	    $scope.portaDietro = function(spec){
@@ -1005,9 +1006,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				
 	            var command = concretePortaDietroCommand(spec);
 	            inv.execute(command);
-
+	            
 	            loader.addUpdate(idElement);
-	            console.log("presentazione: " + JSON.stringify(insertEditRemove().getPresentazione()));
 	        }
 	    }
 	  
@@ -1119,10 +1119,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    $scope.updateMessages = function () {
 	        $scope.undoMessage = $scope.getUndoMessages();
 	        $scope.redoMessage = $scope.getRedoMessages();
-	        safeApply();
-	        console.log("messaggio di annulla " + $scope.undoMessage);
-	        console.log("messaggio di ripristina " + $scope.redoMessage);
-		    
+	        safeApply();  
 	    }
 	    $scope.scale = function () {
 	        return scale;
@@ -1190,7 +1187,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
 
-			console.log(json);
 			console.log(ins.getPresentazione());
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();

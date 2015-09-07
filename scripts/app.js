@@ -130,7 +130,7 @@ premiApp.config(function($routeProvider,$mdIconProvider,$mdThemingProvider,$http
 
 	$provide.decorator("$exceptionHandler", function($delegate, $injector){
 		return function(exception, cause){
-			if(exception.indexOf("Failed to load template") != -1)
+			if(!exception.indexOf || exception.indexOf && exception.indexOf("Failed to load template") != -1)
 				alert(exception.message);
 			$delegate(exception, cause);
 

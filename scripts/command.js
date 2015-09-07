@@ -21,7 +21,7 @@ var invoker = function () {
             for (var i = 0; i < private.undoStack.length; i++) {
                 arr.push(private.undoStack[i].getCommandAction());
             }
-            console.log("update undo");
+
             return arr;
         }
 
@@ -756,6 +756,8 @@ var concretePortaDietroCommand = function (spec) {
     private.oldZIndex = {};
     public.setCommandAction("porta dietro");
     public.doAction = function () {
+        console.log("command portaDietro");
+        console.log(spec);
         private.oldZIndex.other = spec.other;
         private.oldZIndex.id = spec.id;
         private.oldZIndex.tipo = spec.tipo;
@@ -789,7 +791,6 @@ var concreteAddToMainPathCommand = function (spec) {
     var private = {};
     public.setCommandAction("aggiungi a percorso principale");
     public.doAction = function () {
-        console.log("inserisco nel percorso principale");
         public.getEnabler().addFrameToMainPath(spec);
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
@@ -817,9 +818,8 @@ var concreteSetMainPathCommand = function (spec) {
     var oldPath = {};
     public.setCommandAction("modifica percorso principale");
     public.doAction = function () {
-        console.log("modifico percorso principale");
         oldPath = public.getEnabler().setMainPath(spec.path);
-        console.log("oldpath = " + JSON.stringify(oldPath));
+        
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }

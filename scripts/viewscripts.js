@@ -537,13 +537,15 @@ function elimina(id) {
 
 var resizeDiv = function(that, tipo){
 	var div = $("#" + tipo + that.id);
+
 	div.css("height",that.style.height);
 	div.css("width",that.style.width);
 }
 
 var inserisciElemento = function (classe, spec) {
 	var div=document.createElement('div');
-
+	console.log("inserisciElemento");
+	console.log(spec);
 	//TRADUTTORE NON MODIFICARE
 	var vdSize=l*0.10;
 	if(classe==="video")
@@ -562,7 +564,7 @@ var inserisciElemento = function (classe, spec) {
 		id = spec.id;
 	}
 
-	if(spec && spec.height && spec.width){
+	if(spec && spec.height >= 0 && spec.width >= 0){
 		div.style.height = spec.height + "px";
 		div.style.width = spec.width + "px";
 	}
@@ -571,7 +573,7 @@ var inserisciElemento = function (classe, spec) {
 		div.style.width = 230 + "px";
 	}
 
-	if (spec && spec.yIndex && spec.xIndex) {
+	if (spec && spec.yIndex >= 0 && spec.xIndex >= 0) {
 		div.style.top = spec.yIndex + "px";
 		div.style.left = spec.xIndex + "px";
 	}
@@ -579,7 +581,7 @@ var inserisciElemento = function (classe, spec) {
 		div.style.top = 0 + "px";
 		div.style.left = 0 + "px";
 	}
-	if (spec && spec.zIndex) {
+	if (spec && spec.zIndex >= 0) {
 	    div.style.zIndex = spec.zIndex;
 	    if (zindex < spec.zIndex+1) {
 	        zindex = spec.zIndex + 1;
@@ -632,6 +634,7 @@ var inserisciFrame = function (spec) {
 	$(function() {
 		$( div ).resizable({
 			aspectRatio: 1 / 1,
+			containment: $("#content"),
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();
@@ -694,7 +697,8 @@ var inserisciTesto=function(spec){
 	$( "#txt"+div.id ).focus();
 	$(function() {
 		$(div).resizable({
-			
+			aspectRatio: 1/1,
+			containment: $("#content"),
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();
@@ -812,6 +816,7 @@ var inserisciImmagine=function(x, spec){
 	$(function() {
 		$(div).resizable({
 			aspectRatio: width / height,
+			containment: $("#content"),
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();
@@ -844,6 +849,7 @@ var inserisciVideo=function(x, spec){
 	$(function() {
 		$(div).resizable({
 			aspectRatio: width / height,
+			containment: $("#content"),
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();
@@ -865,6 +871,7 @@ var inserisciAudio=function(x, spec){
 	$(function() {
 		$(div).resizable({
 			aspectRatio: 1 / 1,
+			containment: $("#content"),
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();

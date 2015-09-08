@@ -826,11 +826,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	            else if(spec.tipo == "video")
 	            	type = "video";
 
-	            var	ele = document.getElementById(type + spec.id).style;
+	            var	ele = document.getElementById(type + spec.id);
 
 	            if(Utils.isObject(ele)){
-	            	ele.height = spec.height + "px";
-	                ele.width = spec.width + "px";
+	            	ele.style.height = spec.height + "px";
+	                ele.style.width = spec.width + "px";
 	            }
 
 	            style.height = spec.height + "px";
@@ -1215,6 +1215,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var frames = ins.getFrames();
 			for (var i = 0; i < frames.length; ++i) {
 				var frame = frames[i];
+				console.log(frame);
 				var spec = {
 					id: frame.id,
 					xIndex: frame.xIndex * prop,

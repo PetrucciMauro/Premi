@@ -1,24 +1,19 @@
 var screenWidth = 0;
 var screenHeight = 0;
+var corr = 2;
 //calcola la posizione del frame, coordinate e data-scale
 function framePosition(left,top,width){
-	console.log("Frame "+left+" "+top+" "+width);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
-	console.log("Frame "+position[0] + " - " + position[1] + " - " + position[2]);
 	return position;
 }
 //calcola la posizione delle immagini, coordinate e data-scale
 function imagePosition(left,top,width,height){
-	console.log("Immagini "+left+" "+top+" "+width);
 	var scale=(19.19*width)/screenWidth;
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600)+(180/19.19)*scale,scale];
-	console.log("Immagini "+position[0] + " - " + position[1] + " - " + position[2]);
 	return position;
 }
 function audioPosition(left,top,width,height){
-	console.log("Audio "+left+" "+top+" "+width);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600),(19.19*width)/screenWidth];
-	console.log("Audio "+position[0] + " - " + position[1] + " - " + position[2]);
 	return position;
 }
 function videoPosition(left,top,width,height){
@@ -27,21 +22,10 @@ function videoPosition(left,top,width,height){
 	return position;
 }
 function textPosition(left,top,size,width,height){
-	console.log(left + " " + top + " " +width+" "+height+" "+screenWidth+" "+screenHeight+" "+size);
-	//var scale=(33.5/(1290/1899))*(size*14/screenWidth)*6.5;
-	//scale=scale*0.95;
-	//scale=3;
-	var widthPerc = width/height;
-	var heightPerc = height/width;
-	var divide = widthPerc + heightPerc;
-	var scale = ((18/screenWidth)*width*heightPerc + (18/screenHeight)*height*widthPerc)/divide;
-	var textPadding = 100;
-	console.log(width/height);
-	console.log(height/width);
-	//var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(height/2))/screenHeight)*(3600*2)-3600)+(180/19.19)*scale,scale];
-	//var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440+textPadding),(((top+(height/2))/screenHeight)*(3600*2)-3600+textPadding),scale];
-	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
-		return position;
+	var number = (7440*2)/(width*corr);
+	console.log(number);
+	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((number*width)/screenWidth)*0.85];
+	return position;
 	}
 
 var translateImpress = function(json){
@@ -222,11 +206,16 @@ var translateImpress = function(json){
 
 			var coordinates=textPosition(text.xIndex,text.yIndex,text.fontSize,text.width,text.height);
 
-			var style="style=\"z-index:"+text.zIndex+";\"";
+			var height = text.height*corr;
+			var width = text.width*corr;
+
+			var style="style=\"height:"+height+"px;width:"+width+"px;z-index:"+text.zIndex+";\"";
 			presentation+="<div class=\"step testo\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+">";
 
-			var styleQ="style=\"text-align:left;width:"+text.width+"px;height:"+text.height+"px;top:0em;left:0em;display:block;font-size:"+text.fontSize+"em;color:"+text.color+";font-family:"+text.font+";\"";
-			presentation+="<p "+styleQ+">"+text.content+"</p></div>";
+			var styleQ="style=\"height:"+height+"px;width:"+width+"px;text-align:left;font-size:"+text.fontSize*defaultSize*corr+"px;color:"+text.color+";font-family:"+text.font+";\"";
+			var content = text.content.replace(/[\n\r]/g, '<br/>');
+			console.log(content);
+			presentation+="<p "+styleQ+">"+content+"</p></div>";
 		}
 		console.log(presentation);
 		//presentation+="</div>";

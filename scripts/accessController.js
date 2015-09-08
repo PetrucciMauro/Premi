@@ -101,7 +101,7 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 			Main.login(formData, function() {	//function richiamata in caso di successo
 				toPages.homepage();
 			}, function(res) {						//function richiamata in caso di errore
-				throw new Error(res.message);
+				alert(res.message);	
 			})
 		};
 
@@ -142,7 +142,7 @@ premiAccessController.controller('AuthenticationController', ['$scope', 'Main', 
 			Main.register(formData, function() {	//function richiamata in caso di successo
 				toPages.homepage();
 			}, function(res) {
-				throw new Error(res.message);		//function richiamata in caso di successo
+				alert(res.message);		//function richiamata in caso di successo
 			})
 		};
 	}])

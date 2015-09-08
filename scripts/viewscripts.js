@@ -544,8 +544,7 @@ var resizeDiv = function(that, tipo){
 
 var inserisciElemento = function (classe, spec) {
 	var div=document.createElement('div');
-	console.log("inserisciElemento");
-	console.log(spec);
+
 	//TRADUTTORE NON MODIFICARE
 	var vdSize=l*0.10;
 	if(classe==="video")
@@ -720,7 +719,7 @@ var inserisciTesto=function(spec){
 var inserisciMedia = function (x, classe, spec) {
 	var div = inserisciElemento(classe, spec);
 	if(classe =="audio")
-	console.log(spec);
+
 	var url = {};
 	if(spec && spec.ref)
 		url = spec.ref;
@@ -925,7 +924,6 @@ function getElementByZIndex(zvalue) {
 }
 
 function portaAvanti(id) {
-	console.log("viescripts portaAvanti");
 	var original = $("#" + id).zIndex();
 	var superior = getElementByZIndex(original + 1);
 
@@ -942,7 +940,6 @@ function portaAvanti(id) {
 }
 
 function mandaDietro(id){
-	console.log("viescripts mandaDietro");
 	var ris = -1;
     if ($("#" + id).zIndex() > 0) {
         var original = $("#" + id).zIndex();

@@ -157,7 +157,7 @@
                     <md-menu-item id="textSizeMenu">
                         <md-button aria-label="Cambia colore sfondo" class="colorContainer" id="slideshowColor">
                             <md-input-container class="md-button md-default-theme inputContainer" style="width:3em">
-                                <md-tooltip>Cambia dimensione testo</md-tooltip><input id="textSize" type="number" min="1" max="20" value="1" aria-label="Cambia le dimensioni del tuo testo" ng-model="size" ng-change="cambiaSizeTesto(size)">
+                                <md-tooltip>Cambia dimensione testo</md-tooltip><input id="textSize" type="number" min="0" max="4" step="0.1" ng-init="size = 1" aria-label="Cambia le dimensioni del tuo testo" ng-model="size" ng-change="cambiaSizeTesto(size)">
                             </md-input-container>
                         </md-button>
                     </md-menu-item>

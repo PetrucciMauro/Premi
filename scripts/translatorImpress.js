@@ -1,6 +1,6 @@
 var screenWidth = 0;
 var screenHeight = 0;
-var corr = 2;
+var corr = 4;
 //calcola la posizione del frame, coordinate e data-scale
 function framePosition(left,top,width){
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((19.19*width)/screenWidth)];
@@ -24,7 +24,7 @@ function videoPosition(left,top,width,height){
 function textPosition(left,top,size,width,height){
 	var number = (7440*2)/(width*corr);
 	console.log(number);
-	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((number*width)/screenWidth)*0.85];
+	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((number*width)/screenWidth)*0.95];
 	return position;
 	}
 

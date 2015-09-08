@@ -172,6 +172,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	    $scope.salvaPresentazione = function(){
 	        save();
 	    }
+
+	    var safeApply = function(){
+	        if(!$scope.$$phase)
+	            $scope.$apply();
+	    }
+
 	    //Inserimento elementi
 	    $scope.inserisciFrame = function(spec){
 	        var frame = inserisciFrame(spec); //view
@@ -231,7 +237,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        }
 	    }
 
-
 	    var uploadmedia = function(files, callback){
 	        Upload.uploadmedia(files, callback);
 	    }
@@ -247,10 +252,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	                throw new Error("Estensione non corretta");
 
 	            uploadmedia(files, function (file) {
-	                var fileurl = Upload.getFileUrl(files[0]);
-	                var obj={ top: 0, 
-	                    left: 0
-	                };
+	                var fileurl = Upload.getFileUrl(file);
 
 	                convertImgToBase64URL(fileurl, function(url64){
 						var img = inserisciImmagine(url64, obj); //view
@@ -490,10 +492,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 	        if(!Upload.isImage(files))
 	            throw new Error("Estensione non corretta");
 
-	        uploadmedia(files, function(file){
+	        uploadmedia(files, function (file){
 	            var fileurl = Upload.getFileUrl(file);
 
 	            var style = document.getElementById('interno').style;
+	            console.log(fileurl);
 	            style.backgroundImage = "url(" + fileurl + ")";
 	            style.backgroundSize = "inherit";
 	            style.backgroundRepeat = "no-repeat";
@@ -1025,10 +1028,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 	        return false;
 	    }
-	    var safeApply = function(){
-	        if(!$scope.$$phase)
-	            $scope.$apply();
-	    }
 
 	    $scope.isInPath = false;
 
@@ -1169,6 +1168,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				$scope.canHaveBookmark = false;
 			}
 			safeApply();
+			console.log(insertEditRemove().getPresentazione());
 		}
 
 		var impostaPrimoSfondo = function(){

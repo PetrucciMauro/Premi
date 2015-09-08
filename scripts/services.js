@@ -216,7 +216,7 @@ premiService.factory('Upload', ['$http','Main','Utils',
 					req.setRequestHeader("Authorization", token());
 					getFile(files[i]);
 					var after = function(){
-					    callback(getFile());
+					    callback(thisFile);
 					}
 					var error = function(){
 						throw new Error("Impossibile caricare i file");

@@ -363,8 +363,8 @@ var concreteImageRemoveCommand = function (spec) {
         public.getEnabler().insertImage(private.oldImage);
         var obj = public.getObj();
         obj.action = "insert";
-        return obj;
         angular.element($("#content")).scope().inserisciImmagine(undefined, private.oldImage);
+        return obj;
     };
     return public;
 };
@@ -659,7 +659,7 @@ var concreteEditBookmarkCommand = function (spec) {
     public = abstractCommand(spec);
     public.doAction = function () {
         var bookmark = public.getEnabler().getElement(spec.id).bookmark = (public.getEnabler().getElement(spec.id).bookmark + 1) % 2;
-        if (public.getEnabler().getElement(spec.id).bookmark = 1) {
+        if (public.getEnabler().getElement(spec.id).bookmark == 1) {
             public.setCommandAction("assegna bookmark");
         }
         else

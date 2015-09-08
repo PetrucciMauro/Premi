@@ -534,6 +534,14 @@ function elimina(id) {
 	clearMenu();
 }
 
+function rotate(el,value) {
+	var ele = document.getElementById(el)
+	ele.style.webkitTransform="rotate(" + value + "deg)";
+	ele.style.msTransform="rotate(" + value + "deg)";
+	ele.style.MozTransform="rotate(" + value + "deg)";
+	ele.style.OTransform="rotate(" + value + "deg)";
+	ele.style.transform="rotate(" + value + "deg)";
+};
 
 var resizeDiv = function(that, tipo){
 	var div = $("#" + tipo + that.id);
@@ -606,7 +614,11 @@ var inserisciElemento = function (classe, spec) {
 	}
 
 	//TRADUTTORE EDIT
-
+	var rotation = 0;
+	if (spec && spec.rotation > 0) {
+		rotation = spec.rotation;
+		rotate(id, rotation);
+	}
 	//TRADUTTORE EDIT
 
 	contatore++;
@@ -623,9 +635,9 @@ var inserisciElemento = function (classe, spec) {
 	if(!spec)
 		active().select(div.id);
 	$(div).dblclick(function () {
-	zoom(div)});
-	return div;
-}
+		zoom(div, rotation)});
+		return div;
+	}
 
 var inserisciFrame = function (spec) {
 	var div=inserisciElemento("frame", spec);
@@ -1031,11 +1043,12 @@ function countChar(val) {
 //NEWTEXT
 
 function selezionaPercorso(id){
-	if (mainPath().getPercorso().indexOf(id)>-1){
-
-		for (var i = 0; i < mainPath().getPercorso().length; i++) {
-			if (document.getElementById(mainPath().getPercorso()[i]))
-				document.getElementById(mainPath().getPercorso()[i]).style.border= "0.25em solid red"
+	var percorso = mainPath().getPercorso();
+	if (percorso.indexOf(id)>-1){
+		for (var i = 0; i < percorso.length; i++) {
+			var ele = document.getElementById(id);
+			if (ele)
+				ele.style.border= "0.25em solid red"
 		}
 	}
 	for (var i=0; i<choicePaths().getPercorsi().length; i++){
@@ -1054,7 +1067,9 @@ function deselezionaPercorso(id){
 	
 	if (main.getPercorso().indexOf(id)==-1){
 		for (var i=0; i<main.getPercorso().length; i++){
-			document.getElementById(main.getPercorso()[i]).style.removeProperty('border');
+			var ele = document.getElementById(id);
+			if (ele)
+				ele.style.removeProperty('border');
 		}
 	}
 	for (var i=0; i<choicePaths().getPercorsi().length; i++){
@@ -1384,7 +1399,7 @@ $(function () {
 });
 
 
-function zoom(div) {
+function zoom(div, rotation) {
     if (scale == 1) {
 
         scale = $("#content").outerHeight() * 0.8 / $(div).outerHeight();
@@ -1402,16 +1417,22 @@ function zoom(div) {
             "webkit-transition": "all 0.5s",
             "position": "absolute"
         });
-        
+
+        var cssRotation = "";
+        if(rotation > 0){
+        	rotation = -1*rotation;
+        	cssRotation = "rotate(" + rotation + "deg)";
+        }
         $("#content").css({
-            
-            "transform": "scale(" + $("#content").outerHeight() / $(div).outerHeight() + ")",
-            "webkit-transform": "scale(" + $("#content").outerHeight() * 0.8 / $(div).outerHeight() + ")",
+        	"-ms-transform": cssRotation,
+            "transform": "scale(" + $("#content").outerHeight() / $(div).outerHeight() + ") " + cssRotation,
+            "webkit-transform": "scale(" + $("#content").outerHeight() * 0.8 / $(div).outerHeight() + ") " + cssRotation,
              "transition": "all 0.5s",
             "webkit-transition": "all 0.5s",
             "position": "absolute"
             
         });
+        
     }
     else {
         $("#interno").css({

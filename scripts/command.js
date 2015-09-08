@@ -521,7 +521,7 @@ var concreteEditRotationCommand = function (spec) {
             public.setExecuted(1);
         }
         else {
-            angular.element($("#content")).scope().ruotaElemento(spec);
+            angular.element($("#content")).scope().ruotaElemento(spec.rotation,spec);
         }
         var obj = public.getObj();
         obj.action = "edit";
@@ -531,7 +531,7 @@ var concreteEditRotationCommand = function (spec) {
         public.getEnabler().editPosition(private.oldRotation);
         var obj = public.getObj();
         obj.action = "edit";
-        angular.element($("#content")).scope().ruotaElemento(private.oldRotation);
+        angular.element($("#content")).scope().ruotaElemento(private.oldRotation.rotation, private.oldRotation);
         return obj;
     };
     return public;

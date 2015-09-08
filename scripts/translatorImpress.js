@@ -210,7 +210,11 @@ var translateImpress = function(json){
 			var width = text.width*corr;
 
 			var style="style=\"height:"+height+"px;width:"+width+"px;z-index:"+text.zIndex+";\"";
-			presentation+="<div class=\"step testo\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+">";
+			presentation+="<div class=\"step testo\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+			if(text.rotation != 0){
+				presentation+="data-rotate=\"" + text.rotation + "\"";
+			}
+			presentation+=style+">";
 
 			var styleQ="style=\"height:"+height+"px;width:"+width+"px;text-align:left;font-size:"+text.fontSize*defaultSize*corr+"px;color:"+text.color+";font-family:"+text.font+";\"";
 			var content = text.content.replace(/[\n\r]/g, '<br/>');

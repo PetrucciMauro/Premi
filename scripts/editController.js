@@ -413,8 +413,11 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var tipoElement = active().getTipo();
 
 				var command = {};
-				if(tipoElement == 'frame')
+				if(tipoElement == 'frame'){
+					insertEditRemove().removeFrameFromMainPath(id);
 					command = concreteFrameRemoveCommand(id);
+					loader.addPaths();
+				}
 				else if(tipoElement == 'image')
 					command = concreteImageRemoveCommand(id);
 				else if(tipoElement == 'audio')
@@ -748,6 +751,9 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var activeElement = active().getId();
 				var tipoElement = active().getTipo();
 
+				var frame = $("#" + activeElement);
+				var frameRot = getRotationDegrees(frame);
+
 				rotate(activeElement, value);
 
 				var spec = {
@@ -761,41 +767,79 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 				loader.addUpdate(activeElement);
 
-				if (tipoElement == "frame") {
-					var frame = $("#" + activeElement);
+				if (tipoElement == "frame") {					
 					var elements = $("#elements").children();
-					for(var i=0; i<elements.length; ++i){
-						activeElement = elements[i].id;
-						var ele = $("#" + activeElement);
+					var toRotate = findForRotation(frame, elements, value, frameRot);
+					
+					for(var i=0; i<toRotate.length; ++i){
+						var id = toRotate[i].id;
+						var rot = toRotate[i].rotation;
+						rotate(id, rot);
 
-						if(isInside(frame, ele)) {
-							rotate(activeElement, value);
+						var command = concreteEditRotationCommand(toRotate[i]);
+						inv.execute(command);
 
-							if(ele.hasClass("image"))
-								tipoElement="image";
-							else if(ele.hasClass("text"))
-								tipoElement="text";
-							else if(ele.hasClass("audio"))
-								tipoElement="audio";
-							else if(ele.hasClass("video"))
-								tipoElement="video";
-
-							var spec = {
-								id: activeElement,
-								tipo: tipoElement,
-								rotation: value
-							}
-
-							var command = concreteEditRotationCommand(spec);
-							inv.execute(command);
-
-							loader.addUpdate(activeElement);
-							}
+						loader.addUpdate(id);
 					}
 
+					elements = $("#frames").children();
+					toRotate = findForRotation(frame, elements, value, frameRot);
+					
+					for(var i=0; i<toRotate.length; ++i){
+						var id = toRotate[i].id;
+						var rot = toRotate[i].rotation;
+						rotate(id, rot);
 
+						var command = concreteEditRotationCommand(toRotate[i]);
+						inv.execute(command);
+
+						loader.addUpdate(id);
+					}
 				}
 			}
+		}
+
+		var findForRotation = function(frame, elements, value, oldValue) {
+			var toRotate = [];
+
+			for(var i=0; i<elements.length && elements[i].id != frame.attr("id"); ++i){
+				var activeElement = elements[i].id;
+				var tipoElement = '';
+				var ele = $("#" + activeElement);
+
+				if(isInside(frame, ele)) {
+					if(ele.hasClass("image"))
+						tipoElement="image";
+					else if(ele.hasClass("text"))
+						tipoElement="text";
+					else if(ele.hasClass("audio"))
+						tipoElement="audio";
+					else if(ele.hasClass("video"))
+						tipoElement="video";
+					else if(ele.hasClass("frame"))
+						tipoElement="frame";
+
+					var rotation = getRotationDegrees(ele);
+
+					var diff = Math.abs(oldValue - value);
+					if (oldValue < value) {
+						rotation = rotation + diff;
+					} else if(oldValue > value) {
+						rotation = rotation - diff;
+					}
+
+					rotation = Number(rotation);
+
+					var spec = {
+						id: activeElement,
+						tipo: tipoElement,
+						rotation: rotation
+					}
+
+					toRotate.push(spec);
+				}
+			}
+			return toRotate;
 		}
 
 		$scope.muoviElemento = function(spec){

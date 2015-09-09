@@ -751,9 +751,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var activeElement = active().getId();
 				var tipoElement = active().getTipo();
 
-				var frame = $("#" + activeElement);
-				var frameRot = getRotationDegrees(frame);
-
 				value = Number(value);
 				rotate(activeElement, value);
 
@@ -767,72 +764,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				inv.execute(command);
 
 				loader.addUpdate(activeElement);
-
-				if (tipoElement == "frame") {					
-					var elements = $("#elements").children();
-					var toRotate = findForRotation(frame, elements, value, frameRot);
-					
-					for(var i=0; i<toRotate.length; ++i){
-						var id = toRotate[i].id;
-						var rot = toRotate[i].rotation;
-						rotate(id, rot);
-
-						var command = concreteEditRotationCommand(toRotate[i]);
-						inv.execute(command);
-
-						loader.addUpdate(id);
-					}
-
-					elements = $("#frames").children();
-					toRotate = findForRotation(frame, elements, value, frameRot);
-					
-					for(var i=0; i<toRotate.length; ++i){
-						var id = toRotate[i].id;
-						var rot = toRotate[i].rotation;
-						rotate(id, rot);
-
-						var command = concreteEditRotationCommand(toRotate[i]);
-						inv.execute(command);
-
-						loader.addUpdate(id);
-					}
-				}
 			}
-		}
-
-		var findForRotation = function(frame, elements, value, oldValue) {
-			var toRotate = [];
-
-			for(var i=0; i<elements.length; ++i){
-				if(elements[i].id != frame.attr("id")){
-				var activeElement = elements[i].id;
-				var tipoElement = '';
-				var ele = $("#" + activeElement);
-
-				if(isInside(frame, ele)) {
-					tipoElement = getTipo(activeElement);
-
-					var rotation = getRotationDegrees(ele);
-
-					var diff = Math.abs(oldValue - value);
-					if (oldValue < value) {
-						rotation = rotation + diff;
-					} else if(oldValue > value) {
-						rotation = rotation - diff;
-					}
-
-					rotation = Number(rotation);
-
-					var spec = {
-						id: activeElement,
-						tipo: tipoElement,
-						rotation: rotation
-					}
-
-					toRotate.push(spec);
-				}
-			}}
-			return toRotate;
 		}
 
 		$scope.muoviElemento = function(spec){

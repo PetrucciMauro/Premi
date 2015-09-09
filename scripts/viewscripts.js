@@ -826,7 +826,7 @@ var inserisciImmagine=function(x, spec){
     var div = inserisciMedia(x, "image", spec);
 
     var img = document.getElementById('img' + div.id);
-    if (spec.id && spec.height && spec.width) {
+    if (spec && spec.id && spec.height && spec.width) {
         div.style.height = spec.height + "px";
         div.style.width = spec.width + "px";
         img.style.height = spec.height + "px";
@@ -866,18 +866,28 @@ var inserisciImmagine=function(x, spec){
 var inserisciVideo=function(x, spec){
 	var div = inserisciMedia(x,"video", spec);
 
-	if(spec){
-		div.style.height = spec.height + "px";
-		div.style.width = spec.width + "px"; 
-	}
-	var vid = document.getElementById('video'+div.id);
+	var video = document.getElementById('video' + div.id);
+    if (spec && spec.id && spec.height && spec.width) {
+        div.style.height = spec.height + "px";
+        div.style.width = spec.width + "px";
+        video.style.height = spec.height + "px";
+        video.style.width = spec.width + "px";
+    }
+    var width = $(video).outerWidth();
+	var height = $(video).outerHeight();
+
+    video.style.height = height + "px";
+    video.style.width = width + "px";
+    video.style.padding=0;
+	div.style.height = height + "px";
+	div.style.width = width + "px";
+	div.style.padding="0.2em";
 	//TRADUTTORE
-	vid.style.padding="0";
+	video.style.padding="0";
+
+	div.setAttribute("onresize","resizeDiv(this, \"video\")");
+	resizeDiv(div, "video");
 	//TRADUTTORE
-	vid.style.height="inherit";
-	vid.style.width="inherit";
-	var width = vid.clientWidth;
-	var height = vid.clientHeight;
 	$(function() {
 		$(div).resizable({
 			aspectRatio: width / height,

@@ -341,40 +341,80 @@ var insertEditRemove = function () {
             var found = false;
             var original;
             var element = public.getElement(spec.id);
-            
+            var ris = {};
             if (element) {
                 original = element.zIndex;
                 element.zIndex = original + 1;
                 
                 for (var i = 1; i < contatore; i++) {
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original+1) {
-                        
+                        ris.id = public.getElement(i).id;
                         public.getElement(i).zIndex = original;
+                        console.log("ho trovato next " + ris.id);
                         found = true;
                     }
                 }
             }
             console.log(JSON.stringify(public.getFrames()));
+            return ris;
         };
 
         public.portaDietro = function (spec) {
             var found = false;
             var original;
             var element = public.getElement(spec.id);
-            
+            var prev = {};
             if (element) {
                 original = element.zIndex;
                 element.zIndex = original - 1;
+                var maxid=contatore;
+                var frames = insertEditRemove().getFrames();
+                for (var index = 0; index < frames.length; index++) {
+                    if (frames[index].id > maxid) {
+                        maxid = frames[index].id;
+                    }
+                }
+                var texts = insertEditRemove().getTexts();
+                for (var index = 0; index < texts.length; index++) {
+                    if (texts[index].id > maxid) {
+                        maxid = texts[index].id;
+                    }
+                }
 
-                for (var i = 1; i < contatore; i++) {
+                var images = insertEditRemove().getImages();
+                for (var index = 0; index < images.length; index++) {
+                    if (texts[index].id > maxid) {
+                        maxid = images[index].id;
+                    }
+                }
+
+                var videos = public.getVideos();
+                for (var index = 0; index < videos.length; index++) {
+                    if (videos[index].id > maxid) {
+                        maxid = videos[index].id;
+                    }
+                }
+
+                var audios = public.getAudios();
+                for (var index = 0; index < audios.length; index++) {
+                    if (audios[index].id > maxid) {
+                        maxid = audios[index].id;
+                    }
+                }
+
+
+                for (var i = 1; i < maxid; i++) {
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original-1) {
-                        
+                        prev.id = public.getElement(i).id;
                         public.getElement(i).zIndex = original;
+                        console.log("ho trovato prev " + prev.id);
                         found = true;
                     }
                 }
             }
+           
             console.log(JSON.stringify(public.getFrames()));
+            return prev;
         };
 
         public.addFrameToMainPath = function (spec) {

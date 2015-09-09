@@ -740,8 +740,11 @@ var concretePortaAvantiCommand = function (spec) {
         return obj;
     };
     public.undoAction = function () {
-        public.getEnabler().portaDietro(private.oldZIndex);
-        angular.element($("#content")).scope().portaDietro(private.oldZIndex);
+        var prev = public.getEnabler().portaDietro(private.oldZIndex);
+        
+        angular.element($("#content")).scope().portaDietro(spec);
+        if (prev)
+            angular.element($("#content")).scope().portaAvanti(prev);
         var obj = public.getObj();
         obj.action = "edit";
         return obj;
@@ -773,9 +776,11 @@ var concretePortaDietroCommand = function (spec) {
         return obj;
     };
     public.undoAction = function () {
-        public.getEnabler().portaAvanti(private.oldZIndex);
-        angular.element($("#content")).scope().portaAvanti(private.oldZIndex);
+        var next = public.getEnabler().portaAvanti(private.oldZIndex);
         
+        angular.element($("#content")).scope().portaAvanti(spec);
+        if (next)
+            angular.element($("#content")).scope().portaDietro(next);
         var obj = public.getObj();
         obj.action = "edit";
         console.log("hey" + JSON.stringify(public.getEnabler().getPresentazione()));

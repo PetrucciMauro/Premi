@@ -667,12 +667,16 @@ var inserisciFrame = function (spec) {
 		$( div ).resizable({
 			aspectRatio: 1 / 1,
 			containment: $("#content"),
+			minWidth: -($("#content").width()) * 10,  // these need to be large and negative
+			minHeight: -($("#content").height()) * 10, // so we can shrink our resizable while scaled
+			
 			start: function(){
 				if(active().getId() != div.id){
 					active().deselect();
 					active().select(div.id);
 				}
 			},
+            resize: resizeFix,
 			stop: function(event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
 			}
@@ -680,6 +684,18 @@ var inserisciFrame = function (spec) {
 	});
 	return div;
 }
+
+function resizeFix(event, ui) {
+    var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
+    var newWidth = ui.originalSize.width + changeWidth / scale; // adjust new width by our zoomScale
+
+    var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
+    var newHeight = ui.originalSize.height + changeHeight / scale; // adjust new height by our zoomScale
+
+    ui.size.width = newWidth;
+    ui.size.height = newHeight;
+}
+
 
 //NEWTEXT
 var inserisciTesto=function(spec){

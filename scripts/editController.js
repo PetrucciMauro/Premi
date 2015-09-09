@@ -955,11 +955,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(Utils.isObject(spec)){
 				var that = $("#" + spec.id);
 				that.zIndex(that.zIndex() + 1);
-
-				if(spec.other){
-					var prev = $("#" + spec.other);
-					prev.zIndex(prev.zIndex() - 1);
-				}
+				loader.addUpdate(spec.id);
 			}
 			else {
 				var idElement = active().getId();
@@ -976,13 +972,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				};
 
 				if(prev && prev != -1){
-					loader.addUpdate(prev.id);
-					spec.other = prev.id;
-				
+					
 
 				var command = concretePortaAvantiCommand(spec);
 				inv.execute(command);
-				
+				loader.addUpdate(prev.id);
+				spec.other = prev.id;
+
 				loader.addUpdate(idElement);
 				}
 			}
@@ -991,11 +987,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			if(Utils.isObject(spec)){
 				var that = $("#" + spec.id);
 				that.zIndex(that.zIndex() - 1);
+				loader.addUpdate(spec.id);
 
-				if(spec.other){
-					var next = $("#" + spec.other);
-					next.zIndex(next.zIndex() + 1);
-				}
 			}
 			else{
 				var idElement = active().getId();
@@ -1012,14 +1005,15 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					zIndex: style.zIndex()
 				};
 
-				if(next && next != -1){
-					loader.addUpdate(next.id);
-					spec.other = next.id;
+				if (next && next != -1) {
+				    console.log("next " + next.id);
+					
 				
 				
 				var command = concretePortaDietroCommand(spec);
 				inv.execute(command);
-				
+				loader.addUpdate(next.id);
+				spec.other = next.id;
 				loader.addUpdate(idElement);
 				}
 			}

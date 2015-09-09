@@ -741,7 +741,6 @@ var concretePortaAvantiCommand = function (spec) {
     };
     public.undoAction = function () {
         var prev = public.getEnabler().portaDietro(private.oldZIndex);
-        
         angular.element($("#content")).scope().portaDietro(spec);
         if (prev)
             angular.element($("#content")).scope().portaAvanti(prev);

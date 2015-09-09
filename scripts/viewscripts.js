@@ -676,7 +676,18 @@ var inserisciFrame = function (spec) {
 					active().select(div.id);
 				}
 			},
-            resize: resizeFix,
+			resize: function(event, ui) {
+
+			    var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
+			    var newWidth = ui.originalSize.width + changeWidth / scale; // adjust new width by our zoomScale
+
+			    var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
+			    var newHeight = ui.originalSize.height + changeHeight / scale; // adjust new height by our zoomScale
+
+			    ui.size.width = newWidth;
+			    ui.size.height = newHeight;
+
+			},
 			stop: function(event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
 			}
@@ -685,16 +696,6 @@ var inserisciFrame = function (spec) {
 	return div;
 }
 
-function resizeFix(event, ui) {
-    var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
-    var newWidth = ui.originalSize.width + changeWidth / scale; // adjust new width by our zoomScale
-
-    var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
-    var newHeight = ui.originalSize.height + changeHeight / scale; // adjust new height by our zoomScale
-
-    ui.size.width = newWidth;
-    ui.size.height = newHeight;
-}
 
 
 //NEWTEXT
@@ -752,6 +753,18 @@ var inserisciTesto=function(spec){
 					active().deselect();
 					active().select(div.id);
 				}
+			},
+			resize: function(event, ui) {
+
+			    var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
+			    var newWidth = ui.originalSize.width + changeWidth / scale; // adjust new width by our zoomScale
+
+			    var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
+			    var newHeight = ui.originalSize.height + changeHeight / scale; // adjust new height by our zoomScale
+
+			    ui.size.width = newWidth;
+			    ui.size.height = newHeight;
+
 			},
 			stop: function (event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
@@ -871,6 +884,18 @@ var inserisciImmagine=function(x, spec){
 					active().select("image"+div.id);
 				}
 			},
+			resize: function (event, ui) {
+
+			    var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
+			    var newWidth = ui.originalSize.width + changeWidth / scale; // adjust new width by our zoomScale
+
+			    var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
+			    var newHeight = ui.originalSize.height + changeHeight / scale; // adjust new height by our zoomScale
+
+			    ui.size.width = newWidth;
+			    ui.size.height = newHeight;
+
+			},
 			stop: function(event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
 			}
@@ -914,6 +939,18 @@ var inserisciVideo=function(x, spec){
 					active().select("video"+div.id);
 				}
 			},
+			resize: function (event, ui) {
+
+			    var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
+			    var newWidth = ui.originalSize.width + changeWidth / scale; // adjust new width by our zoomScale
+
+			    var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
+			    var newHeight = ui.originalSize.height + changeHeight / scale; // adjust new height by our zoomScale
+
+			    ui.size.width = newWidth;
+			    ui.size.height = newHeight;
+
+			},
 			stop: function (event, ui) {
 				angular.element(this).scope().ridimensionaElemento()
 			}
@@ -935,6 +972,18 @@ var inserisciAudio=function(x, spec){
 					active().deselect();
 					active().select("audio"+div.id);
 				}
+			},
+			resize: function (event, ui) {
+
+			    var changeWidth = ui.size.width - ui.originalSize.width; // find change in width
+			    var newWidth = ui.originalSize.width + changeWidth / scale; // adjust new width by our zoomScale
+
+			    var changeHeight = ui.size.height - ui.originalSize.height; // find change in height
+			    var newHeight = ui.originalSize.height + changeHeight / scale; // adjust new height by our zoomScale
+
+			    ui.size.width = newWidth;
+			    ui.size.height = newHeight;
+
 			},
 			stop: function (event, ui) {
 				angular.element(this).scope().ridimensionaElemento(undefined, spec.id)

@@ -17,7 +17,6 @@ var ObjectID = require('mongodb').ObjectID
 // resource
 //=========
 var put = function(req, res){
-    console.log("lato server " + JSON.stringify(req.body.element));
 	MongoClient.connect(database, function(err, db) {
                       if(err) {
                       

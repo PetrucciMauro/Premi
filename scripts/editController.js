@@ -1005,14 +1005,19 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			safeApply();
 		}
 		$scope.setMainPath = function (spec) {		  
-			if (Utils.isObject(spec)) {
-				mainPath().setPath(spec.path);
+			/*if (Utils.isObject(spec)) {
+				
 			}
 			else {
-				var spec = {};
-				var command = concreteSetMainPathCommand(spec);
-				inv.execute(command);
-			}
+				var spec = {};*/
+		    if (spec.executed)
+		        mainPath().setPath(spec.path);
+		    else {
+		        var command = concreteSetMainPathCommand(spec);
+		        inv.execute(command);
+		        loader.addPaths();
+		    }
+			//}
 		}
 		$scope.portaAvanti = function(spec){
 			if(Utils.isObject(spec)){
@@ -1084,6 +1089,12 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				
 				loader.addUpdate(idElement);
 			}
+		}
+		$scope.reduceZIndex = function (id) {
+		    console.log("eliminato e z index modificato "+JSON.stringify(insertEditRemove().getElement(id)));
+		    var el=insertEditRemove().getElement(id);
+		    el.zIndex = el.zIndex - 1;
+		    console.log("eliminato e z index modificato " + JSON.stringify(insertEditRemove().getElement(id)));
 		}
 	  
 		$scope.inPath = function (id) {

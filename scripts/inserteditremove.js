@@ -344,16 +344,17 @@ var insertEditRemove = function () {
             
             if (element) {
                 original = element.zIndex;
-                
+                element.zIndex = original + 1;
                 
                 for (var i = 1; i < contatore; i++) {
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original+1) {
-                        element.zIndex = original + 1;
+                        
                         public.getElement(i).zIndex = original;
                         found = true;
                     }
                 }
             }
+            console.log(JSON.stringify(public.getFrames()));
         };
 
         public.portaDietro = function (spec) {
@@ -363,16 +364,17 @@ var insertEditRemove = function () {
             
             if (element) {
                 original = element.zIndex;
-                
+                element.zIndex = original - 1;
 
                 for (var i = 1; i < contatore; i++) {
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original-1) {
-                        element.zIndex = original - 1;
+                        
                         public.getElement(i).zIndex = original;
                         found = true;
                     }
                 }
             }
+            console.log(JSON.stringify(public.getFrames()));
         };
 
         public.addFrameToMainPath = function (spec) {

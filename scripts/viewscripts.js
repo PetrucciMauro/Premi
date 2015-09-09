@@ -23,6 +23,7 @@ var scale = 1;
 var zindex = 0;
 var contatore = 1;
 var originalTopMenu;
+var tempoArray = new Array();
 $(document).ready(function () {
 	var origin;
 	$("#sortable").sortable({
@@ -351,7 +352,10 @@ var mainPath=function(){
 		that.setPath = function (newPath) {
 		    private.percorso.length = 0;
 
-			private.percorso = newPath;
+		    private.percorso = newPath;
+		    var spec = {}
+		    spec.path = newPath;
+		    angular.element($("#content")).scope().setMainPath(spec);
 		}
 
 		that.deleteFrame=function(id){
@@ -509,7 +513,8 @@ function elimina(id) {
 	var frames = document.getElementById("frames").children;
 	for (var i = 0; i < frames.length; i++) {
 	    if (frames[i].id != id && frames[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
-			frames[i].style.zIndex = frames[i].style.zIndex - 1;
+	        frames[i].style.zIndex = frames[i].style.zIndex - 1;
+	        angular.element("#content").scope().reduceZIndex(frames[i].id);
 		}
 	}
 
@@ -517,7 +522,8 @@ function elimina(id) {
 	for (var i = 0; i < elements.length; i++) {
 	    if (elements[i].id != id && elements[i].style.getPropertyValue("z-index") > $("#" + id).zIndex()) {
 	        
-			elements[i].style.zIndex = elements[i].style.zIndex - 1;
+	        elements[i].style.zIndex = elements[i].style.zIndex - 1;
+	        angular.element("#content").scope().reduceZIndex(elements[i].id);
 		}
 	}
 
@@ -959,26 +965,22 @@ function portaAvanti(id) {
 		superior.style.zIndex = original;
 		$("#" + id).css({ "z-index": original + 1 });
 		ris = superior;
-	} else if(original < zindex) {
-		$("#" + id).zIndex(original + 1);
-	}
+	} 
 
 	return ris;
 }
 
 function mandaDietro(id){
-	var ris = -1;
-    if ($("#" + id).zIndex() > 0) {
-        var original = $("#" + id).zIndex();
-		var element = getElementByZIndex(original - 1);
+    var original = $("#" + id).zIndex();
+    var inferior = getElementByZIndex(original - 1);
 
-		if (element){
-		    portaAvanti(element.id);
-		    ris = element;
-		} else if (original > 0) {
-			$("#" + id).zIndex(original - 1);
-		}
-	}
+    var ris = -1;
+    if (inferior) {
+        inferior.style.zIndex = original;
+        $("#" + id).css({ "z-index": original - 1 });
+        ris = inferior;
+    } 
+
 	return ris; 
 }
 

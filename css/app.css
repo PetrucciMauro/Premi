@@ -66,6 +66,9 @@ md-list .md-button {
     padding: 0px 0px 8px 0px;
   }
 
+  .md-sidenav-left, md-sidenav{
+      z-index: 10000;
+  }
 
 /* Primary content area */
 

@@ -82,7 +82,7 @@ overflow: scroll;
 	min-height: 2.5em;
     max-height: 3em;
       position: absolute;
-      z-index:9999;
+      z-index:99;
 }
 
 #contextual-menu md-icon{

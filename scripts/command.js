@@ -775,6 +775,7 @@ var concretePortaDietroCommand = function (spec) {
     public.undoAction = function () {
         public.getEnabler().portaAvanti(private.oldZIndex);
         angular.element($("#content")).scope().portaAvanti(private.oldZIndex);
+        
         var obj = public.getObj();
         obj.action = "edit";
         console.log("hey" + JSON.stringify(public.getEnabler().getPresentazione()));
@@ -821,18 +822,21 @@ var concreteSetMainPathCommand = function (spec) {
     public.setCommandAction("modifica percorso principale");
     public.doAction = function () {
         oldPath = public.getEnabler().setMainPath(spec.path);
-        
+        oldPath.executed = 1;
         if (public.getExecuted() === 0) {
             public.setExecuted(1);
         }
+           
         else {
             angular.element($("#content")).scope().setMainPath(spec);
         }
+        console.log("percorso nel model "+JSON.stringify(public.getEnabler().getPresentazione().proper.paths.main));
         var obj = public.getObj();
         obj.action = "editPath";
         return obj;
     };
     public.undoAction = function () {
+        console.log("oldpath " + JSON.stringify(oldPath));
         var obj = public.getObj();
         obj.action = "editPath";
         angular.element($("#content")).scope().setMainPath(oldPath);

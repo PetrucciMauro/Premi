@@ -1,0 +1,30 @@
+﻿<md-dialog aria-label="Rinomina Presentazione">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Crea una nuova presentazione</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="max-width:800px;max-height:810px; ">
+            <div>
+                <p>
+                    Inserisci il titolo della nuova presentazione:
+                </p>
+                <md-input-container>
+                    <label>Titolo</label>
+                    <input id="newName" ng-model="newName">
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button ng-click="answer('annulla')">
+                ANNULLA
+            </md-button>
+            <md-button onclick="setAns($('#newName').val());" ng-click="answer('ok')" style="margin-right:20px;">
+                OK
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

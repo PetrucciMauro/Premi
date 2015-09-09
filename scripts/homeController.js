@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 /*
 * Name :  homeController.js
@@ -20,9 +20,11 @@ var premiHomeController = angular.module('premiHomeController', ['premiService']
 var ans = "";
 function setAns(val) {
     ans = val;
-    console.log("settata " + ans);
 }
 
+$('document').ready(function () {
+    $('body').css("overflow-x", "visible");
+});
 
 premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window','SharedData', '$location', '$mdDialog',
 	function ($scope, Main, toPages, Utils, $window, SharedData, $location,  $mdDialog) {
@@ -87,7 +89,6 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		$scope.confirm = false;
 		$scope.deleteSlideShow = function(slideId, ev) {
 			var confirm = $scope.showConfirmDelete(ev, slideId);
-			console.log(confirm);
 			if(!confirm)
 				return;		
 		};
@@ -96,10 +97,10 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		    $scope.changeTitleDialog(ev, nameSS);
 		};
 		$scope.createSlideShow = function() {
-			if(Utils.isUndefined($scope.slideshow.name))
+			if(Utils.isUndefined(ans)||ans==="")
 				throw new Error("E' necessario specificare un nome per la presentazione");
 
-			if(!mongo.newPresentation($scope.slideshow.name))
+			if(!mongo.newPresentation(ans))
 				throw new Error(mongo.getMessage());
 
 			$scope.newSS = !$scope.newSS;
@@ -118,24 +119,25 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		};
 
 		$scope.status = '  ';
-		$scope.showAlert = function (ev) {
+		$scope.showAlert = function (ev, father, header, body) {
 		    // Appending dialog to document.body to cover sidenav in docs app
 		    // Modal dialogs should fully cover application
 		    // to prevent interaction outside of dialog
 		    $mdDialog.show(
               $mdDialog.alert()
-                .parent(angular.element(document.querySelector('#popupContainer')))
+                .parent(angular.element(document.querySelector('#'+father.id)))
                 .clickOutsideToClose(true)
-                .title('This is an alert title')
-                .content('You can specify some description text in here.')
-                .ariaLabel('Alert Dialog Demo')
-                .ok('Got it!')
+                .title(header)
+                .content(body)
+                .ariaLabel('Alert Dialog')
+                .ok('Ok')
                 .targetEvent(ev)
             );
 		};
 
 		$scope.showConfirmDelete = function (ev, slideId) {
 		    // Appending dialog to document.body to cover sidenav in docs app
+		   
 		    var res = false;
 		    var confirm = $mdDialog.confirm()
                   .title('ELIMINARE QUESTA PRESENTAZIONE?')
@@ -166,14 +168,21 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		        clickOutsideToClose: true
 		    })
             .then(function (answer) {
-                console.log("risposta " + ans);
-                
-                    
-                if (Utils.isUndefined(answer) || answer === "annulla" || ans ==="") {
-                    console.log("Nope");
+                allSS = mongo.getPresentationsMeta();
+                var found = false;
+                for (var i = 0; i < allSS.length && !found; ++i) {
+                    if (allSS[i].titolo == ans){
+                        found = true;
+                    }
+                }
+
+                if (found == true) {
+                    $scope.showAlert(ev, $('#sectionBody'), "Titolo già presente", "Scegliere un altro titolo per la presentazione.");
+                }
+                else if (Utils.isUndefined(answer) || answer === "annulla" || ans ==="" || nameSS=== ans) {
                     return;
                 }
-                if (!mongo.renamePresentation(nameSS, ans))
+                else if (!mongo.renamePresentation(nameSS, ans))
                     throw new Error(mongo.getMessage());
 
                 update();
@@ -182,6 +191,43 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
             });
 		};
 		
+
+
+		$scope.newSlideShow = function (ev) {
+		    $mdDialog.show({
+		        controller: DialogController,
+		        templateUrl: 'scripts/newSlideShowTemplate.html',
+		        parent: angular.element(document.body),
+		        targetEvent: ev,
+		        clickOutsideToClose: true
+		    })
+            .then(function (answer) {
+                allSS = mongo.getPresentationsMeta();
+                var found = false;
+                if (Utils.isUndefined(answer) || answer === "annulla" || ans === "") {
+                    return;
+                }
+                for (var i = 0; i < allSS.length && !found; ++i) {
+                    
+                    if (allSS[i].titolo == ans)
+                        found = true;
+                }
+
+                if (found) {
+                    $scope.showAlert(ev, $('#sectionBody'), "Titolo già presente", "Scegliere un altro titolo per la presentazione.");
+                }
+              
+                else $scope.createSlideShow()
+
+                update();
+            }, function () {
+                return;
+            });
+		};
+
+
+
+
 	}])
 
 function DialogController($scope, $mdDialog) {

@@ -3,7 +3,7 @@
  Package : Command
  Location : /scripts/
  Description
-	Definizione delle classi di command finalizzati allo sviluppo delle funzionalit‡ di annulla/ripristina
+	Definizione delle classi di command finalizzati allo sviluppo delle funzionalitÅEdi annulla/ripristina
 
 */
 
@@ -777,6 +777,7 @@ var concretePortaDietroCommand = function (spec) {
         angular.element($("#content")).scope().portaAvanti(private.oldZIndex);
         var obj = public.getObj();
         obj.action = "edit";
+        console.log("hey" + JSON.stringify(public.getEnabler().getPresentazione()));
         return obj;
         
     };
@@ -807,6 +808,7 @@ var concreteAddToMainPathCommand = function (spec) {
         var obj = public.getObj();
         obj.action = "editPath";
         angular.element($("#content")).scope().rimuoviMainPath(undefined, spec.id);
+
         return obj;
     };
     return public;

@@ -344,10 +344,11 @@ var insertEditRemove = function () {
             
             if (element) {
                 original = element.zIndex;
-                element.zIndex = original + 1;
+                
                 
                 for (var i = 1; i < contatore; i++) {
-                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == element.zIndex) {
+                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original+1) {
+                        element.zIndex = original + 1;
                         public.getElement(i).zIndex = original;
                         found = true;
                     }
@@ -362,25 +363,15 @@ var insertEditRemove = function () {
             
             if (element) {
                 original = element.zIndex;
-                element.zIndex = original - 1;
+                
 
                 for (var i = 1; i < contatore; i++) {
-                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == element.zIndex) {
+                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original-1) {
+                        element.zIndex = original - 1;
                         public.getElement(i).zIndex = original;
                         found = true;
                     }
                 }
-                /*original = element.zIndex-1;
-                for (var i = 1; i < contatore; i++) {
-                    
-                    if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == (original)) {
-                        var obj = public.getElement(i);
-                        public.portaAvanti(obj);
-                        found = true;
-
-                    }
-                }*/
-
             }
         };
 

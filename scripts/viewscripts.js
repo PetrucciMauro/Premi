@@ -540,7 +540,10 @@ function elimina(id) {
 	clearMenu();
 }
 
-function rotate(el,value) {
+function rotate(el, value) {
+    if (value > 180) {
+        value = 0 - (360 - value);
+    }
 	var ele = document.getElementById(el)
 	ele.style.webkitTransform="rotate(" + value + "deg)";
 	ele.style.msTransform="rotate(" + value + "deg)";

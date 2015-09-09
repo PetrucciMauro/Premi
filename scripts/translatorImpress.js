@@ -173,8 +173,12 @@ var translateImpress = function(json){
 				contStep++;
 				var bookmark="";
 				if(json.proper.frames[i].bookmark)
-					bookmark=" bookmark ";
-				presentation+="<div class=\"step extraFrame"+bookmark+"\" data-rotate=\""+json.proper.frames[i].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+				    bookmark = " bookmark ";
+				var rotate = json.proper.frames[i].rotation;
+				if (rotate > 180) {
+				    rotate = 0 - (360 - rotate);
+				}
+				presentation+="<div class=\"step extraFrame"+bookmark+"\" data-rotate=\""+rotate+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 				
 				presentation+=style+"></div>";
 			}

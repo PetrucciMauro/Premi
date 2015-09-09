@@ -26,6 +26,14 @@ $('document').ready(function () {
     $('body').css("overflow-x", "visible");
 });
 
+function compare(a, b) {
+    if (a.titolo < b.titolo)
+        return -1;
+    if (a.titolo > b.titolo)
+        return 1;
+    return 0;
+}
+
 premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window','SharedData', '$location', '$mdDialog',
 	function ($scope, Main, toPages, Utils, $window, SharedData, $location,  $mdDialog) {
 		if(Utils.isUndefined(Main.getToken()))//check che sia autenticato
@@ -36,9 +44,10 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		$scope.mongo = mongo;
 
 		var allSS = {};
-
+        
 		var update = function(){
-			allSS = mongo.getPresentationsMeta();
+		    allSS = mongo.getPresentationsMeta();
+		    allSS.sort(compare);
 			for(var i=0; i<allSS.length; ++i){
 				var presentazione = JSON.parse(JSON.stringify(mongo.getPresentation(allSS[i].titolo)));
 

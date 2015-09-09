@@ -149,7 +149,11 @@ var translateImpress = function(json){
 			if(json.proper.frames[n].bookmark)
 				bookmark=" bookmark ";
 				console.log("strano");
-			presentation+="<div class=\"step frame"+bookmark+"\" data-rotate=\""+json.proper.frames[n].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+				var rotate = json.proper.frames[n].rotation;
+				if (rotate > 180) {
+				    rotate = 0 - (360 - rotate);
+				}
+			presentation+="<div class=\"step frame"+bookmark+"\" data-rotate=\""+rotate+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 			
 			presentation+=style+"></div>";
 		}

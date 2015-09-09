@@ -1046,12 +1046,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(prev && prev != -1){
 					loader.addUpdate(prev.id);
 					spec.other = prev.id;
-				}
+				
 
 				var command = concretePortaAvantiCommand(spec);
 				inv.execute(command);
 				
 				loader.addUpdate(idElement);
+				}
 			}
 		}
 		$scope.portaDietro = function(spec){
@@ -1082,12 +1083,13 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				if(next && next != -1){
 					loader.addUpdate(next.id);
 					spec.other = next.id;
-				}
+				
 				
 				var command = concretePortaDietroCommand(spec);
 				inv.execute(command);
 				
 				loader.addUpdate(idElement);
+				}
 			}
 		}
 		$scope.reduceZIndex = function (id) {

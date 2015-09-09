@@ -60,9 +60,10 @@ var translateImpress = function(json){
 
 	var oldFrames=[];
 	for(i=0; i<json.proper.paths.main.length; ++i){
+		console.log("Entro");
 		var ins=false;
-		oldFrames=oldFrames.concat(json.proper.paths.main[i]);
-		for(j=0; j<json.proper.paths.choices.length; ++j){
+		oldFrames=oldFrames.concat(json.proper.paths.main[i]);;
+		/*for(j=0; j<json.proper.paths.choices.length; ++j){
 			if(json.proper.paths.choices[j].pathId==json.proper.paths.main[i]){
 				for(k=0; k<json.proper.paths.choices[j].choicePath.length; ++k){
 					for(s=0; json.proper.frames[s].id!=json.proper.paths.choices[j].choicePath[k]; s++){
@@ -131,32 +132,36 @@ var translateImpress = function(json){
 					contStep++;
 				}
 			}
-		}
+		}*/
 		if(!ins){
-			console.log(i);
-			var coordinates=framePosition(json.proper.frames[i].xIndex,json.proper.frames[i].yIndex,json.proper.frames[i].width);
-			var style="style=\"z-index:"+json.proper.frames[i].zIndex+";";//c'era [k]
+			var n=0;
+			for(;json.proper.paths.main[i]!=json.proper.frames[n].id;n++){}
+			var coordinates=framePosition(json.proper.frames[n].xIndex,json.proper.frames[n].yIndex,json.proper.frames[n].width);
+			var style="style=\"z-index:"+json.proper.frames[n].zIndex+";";//c'era [k]
 			var bi=bc="";
-			if(json.proper.frames[i].ref!="")
-				bi="background: url('"+json.proper.frames[i].ref+"'); background-size:100% 100%;";
-			if(json.proper.frames[i].color!="")
-				bc="background-color:"+json.proper.frames[i].color+";";
+			if(json.proper.frames[n].ref!="")
+				bi="background: url('"+json.proper.frames[n].ref+"'); background-size:100% 100%;";
+			if(json.proper.frames[n].color!="")
+				bc="background-color:"+json.proper.frames[n].color+";";
 			style+=bi+bc+"\"";
 			contStep++;
 			var bookmark="";
-			if(json.proper.frames[i].bookmark)
+			if(json.proper.frames[n].bookmark)
 				bookmark=" bookmark ";
-			presentation+="<div class=\"step frame"+bookmark+"\" data-rotate=\""+json.proper.frames[i].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+				console.log("strano");
+			presentation+="<div class=\"step frame"+bookmark+"\" data-rotate=\""+json.proper.frames[n].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 			
 			presentation+=style+"></div>";
 		}
 	}
+	console.log(oldFrames);
 	for(i=0; i<json.proper.frames.length; ++i){
 		var found=false;
 		for(j=0; j<oldFrames.length; j++)
-			if(oldFrames[i]==json.proper.frames[i].id)
+			if(oldFrames[j]==json.proper.frames[i].id)
 				found=true;
 			if(!found){
+				console.log("dovrebbe essere 1,3"+json.proper.frames[i].id)
 				var coordinates=framePosition(json.proper.frames[i].xIndex,json.proper.frames[i].yIndex,json.proper.frames[i].width);
 				var style="style=\"z-index:"+json.proper.frames[i].zIndex+";";
 				var bi=bc="";

@@ -57,7 +57,8 @@ module.exports = function(config){
     ],
 
      preprocessors : {
-      '**/scripts/**/*.js': ['coverage']
+      '**/scripts/inserteditremove.js': ['coverage'],
+      '**/scripts/slideshowelement.js': ['coverage']
    },
 
         // optionally, configure the reporter

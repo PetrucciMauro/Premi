@@ -259,8 +259,8 @@ input:focus {
 	width: 750px;
 	height: 750px;
 	padding: 40px 60px;
-
-	border: 5px dotted #ccc;
+    border: none;
+	/*border: 5px dotted #ccc;*/
 }
 
 .extraFrame {
@@ -269,8 +269,8 @@ input:focus {
 	width: 750px;
 	height: 750px;
 	padding: 40px 60px;
-
-	border: 5px dotted #ccc;
+    border: none;
+	/*border: 5px dotted #ccc;*/
 }
 /* AGGIUNTA MANUEL */
 

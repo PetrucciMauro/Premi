@@ -161,7 +161,6 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		        update();
 		    }, function () {
 		        res = false;
-		        console.log("res " + res);
 		        
 		    });
 		    

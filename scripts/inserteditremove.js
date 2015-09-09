@@ -350,12 +350,11 @@ var insertEditRemove = function () {
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original+1) {
                         ris.id = public.getElement(i).id;
                         public.getElement(i).zIndex = original;
-                        console.log("ho trovato next " + ris.id);
                         found = true;
                     }
                 }
             }
-            console.log(JSON.stringify(public.getFrames()));
+            
             return ris;
         };
 
@@ -407,13 +406,11 @@ var insertEditRemove = function () {
                     if (public.getElement(i) && i != spec.id && !found && public.getElement(i).zIndex == original-1) {
                         prev.id = public.getElement(i).id;
                         public.getElement(i).zIndex = original;
-                        console.log("ho trovato prev " + prev.id);
                         found = true;
                     }
                 }
             }
            
-            console.log(JSON.stringify(public.getFrames()));
             return prev;
         };
 

@@ -149,7 +149,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				templateUrl: 'bottomsheet-percorsi',
 				controller: 'BottomSheetController'
 			}).then(function() {
-				//console.log("fatto")
+				
 			});
 		}; 
 
@@ -499,7 +499,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var fileurl = Upload.getFileUrl(file);
 
 				var style = document.getElementById('interno').style;
-				console.log(fileurl);
 				style.backgroundImage = "url(" + fileurl + ")";
 				style.backgroundSize = "inherit";
 				style.backgroundRepeat = "no-repeat";
@@ -897,7 +896,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 					inv.execute(command);
 			   /* }
 				else {
-					console.log($scope.multi);
 					multiCommand().pushCommand(command);
 				}*/
 				loader.addPaths();
@@ -1006,7 +1004,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				};
 
 				if (next && next != -1) {
-				    console.log("next " + next.id);
 					
 				
 				
@@ -1019,10 +1016,8 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			}
 		}
 		$scope.reduceZIndex = function (id) {
-		    console.log("eliminato e z index modificato "+JSON.stringify(insertEditRemove().getElement(id)));
 		    var el=insertEditRemove().getElement(id);
 		    el.zIndex = el.zIndex - 1;
-		    console.log("eliminato e z index modificato " + JSON.stringify(insertEditRemove().getElement(id)));
 		}
 	  
 		$scope.inPath = function (id) {
@@ -1179,7 +1174,6 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				$scope.canHaveBookmark = false;
 			}
 			safeApply();
-			console.log(insertEditRemove().getPresentazione());
 		}
 
 		var impostaPrimoSfondo = function(){
@@ -1198,7 +1192,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var ins = insertEditRemove();
 			ins.constructPresentazione(json);
 
-			console.log(ins.getPresentazione());
+
 			//RICREO IL BACKGROUND
 			var background = ins.getBackground();
 			var prop = 1;
@@ -1226,7 +1220,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 			var frames = ins.getFrames();
 			for (var i = 0; i < frames.length; ++i) {
 				var frame = frames[i];
-				console.log(frame);
+
 				var spec = {
 					id: frame.id,
 					xIndex: frame.xIndex * prop,

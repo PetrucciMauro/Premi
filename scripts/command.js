@@ -758,8 +758,6 @@ var concretePortaDietroCommand = function (spec) {
     private.oldZIndex = {};
     public.setCommandAction("porta dietro");
     public.doAction = function () {
-        console.log("command portaDietro");
-        console.log(spec);
         private.oldZIndex.other = spec.other;
         private.oldZIndex.id = spec.id;
         private.oldZIndex.tipo = spec.tipo;
@@ -782,7 +780,6 @@ var concretePortaDietroCommand = function (spec) {
             angular.element($("#content")).scope().portaDietro(next);
         var obj = public.getObj();
         obj.action = "edit";
-        console.log("hey" + JSON.stringify(public.getEnabler().getPresentazione()));
         return obj;
         
     };
@@ -834,13 +831,11 @@ var concreteSetMainPathCommand = function (spec) {
         else {
             angular.element($("#content")).scope().setMainPath(spec);
         }
-        console.log("percorso nel model "+JSON.stringify(public.getEnabler().getPresentazione().proper.paths.main));
         var obj = public.getObj();
         obj.action = "editPath";
         return obj;
     };
     public.undoAction = function () {
-        console.log("oldpath " + JSON.stringify(oldPath));
         var obj = public.getObj();
         obj.action = "editPath";
         angular.element($("#content")).scope().setMainPath(oldPath);

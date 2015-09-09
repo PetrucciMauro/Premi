@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Premi</title>
+	<link rel="stylesheet" href="css/homeofflinecontroller.css">
+	
+
+	<link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
+
+
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+	<!-- Inserire script che servono -->
+	<script src="scripts/homeofflinecontroller.js"></script>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+</head>
+<body layout="column" layout-fill>
+	Premi - offline
+
+	<div layout="row" id="slideshows">
+		<script type="text/javascript">
+			manifest.makePage();
+		</script>
+	</div>
+
+	<iframe src="execution-offline.html" style="position:absolute;top:-999em;visibility:hidden"></iframe>
+</body>
+</html>

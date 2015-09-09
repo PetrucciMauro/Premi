@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+	<title>Premi</title>
+	<meta charset="utf-8">
+	
+	<script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="lib/jquery-ui.js"></script>
+	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
+	<link rel='stylesheet' href="css/impress-demo.css" rel="stylesheet" />
+	<script type="text/javascript" src="lib/impress.js"></script>
+	<script type="text/javascript" src="scripts/images-localstorage.js"></script>
+    <script type="text/javascript" src="scripts/homeofflinecontroller.js"></script>
+
+	<link rel="stylesheet" href="css/access.css" />
+	<link rel="stylesheet" href="bower_components/angular-material/angular-material.css"/>
+	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700' />
+	<link href="css/impress-demo.css" rel="stylesheet" />    
+    <link rel="shortcut icon" href="favicon.png" />
+
+
+	
+<script>
+	$(function(){
+		var presentation = location.search.split("pres=")[1];
+		console.log(presentation);
+		console.log(manifest.renderCurrentPage(presentation));
+		var imp=document.getElementById("impress");
+		var html=manifest.renderCurrentPage(presentation);
+		imp.insertAdjacentHTML('beforeend', html);
+		// $("#impress").append(presentation);
+	});
+</script>
+
+</head>
+<body>
+	Premi - offline
+
+	<div id="impress"></div> 
+
+<script>
+    var api=impress();
+		api.init();
+</script>
+</body>
+
+
+</html>

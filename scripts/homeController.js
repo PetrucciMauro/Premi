@@ -111,6 +111,17 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 			$scope.newSS = !$scope.newSS;
 			update();
 		};
+		$scope.salvaManifest = function(title) {
+			var json = JSON.parse(JSON.stringify(mongo.getPresentation(title)));
+			console.log("salvaManifest");
+			// var manifest = manifest();
+			manifest.salvaManifest(title,json);
+		};
+
+		$scope.deleteManifest = function(title) {
+			console.log("deleteManifest");
+			manifest.deleteManifest(title);
+		};
 
 		$scope.status = '  ';
 		$scope.showAlert = function (ev) {

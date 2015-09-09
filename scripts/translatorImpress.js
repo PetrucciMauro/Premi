@@ -25,6 +25,7 @@ function textPosition(left,top,size,width,height){
 	var number = (7440*2)/(width*corr);
 	console.log(number);
 	var position=[(((left+(width/2))/screenWidth)*(7440*2)-7440),(((top+(width/2))/screenHeight)*(3600*2)-3600),((number*width)/screenWidth)*0.95];
+	console.log(position);
 	return position;
 	}
 
@@ -78,7 +79,7 @@ var translateImpress = function(json){
 					contStep++;
 					if(k==0)
 						choiceSteps=choiceSteps.concat(contStep);
-					presentation+="<div class=\"step frame scelta\" data-rotate="+json.proper.frames[s].rotate+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+					presentation+="<div class=\"step frame scelta\" data-rotate=\""+json.proper.frames[s].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 					if(json.proper.frames[s].rotation != 0){
 						presentation+="data-rotate=\"" + json.proper.frames[s].rotation + "\"";
 					}
@@ -105,14 +106,14 @@ var translateImpress = function(json){
 				ins=true;
 				if(other){
 					contStep++;
-					presentation+="<div class=\"step frame"+bookmark+"\" data-rotate="+json.proper.frames[k].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+					presentation+="<div class=\"step frame"+bookmark+"\" data-rotate=\""+json.proper.frames[k].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 					if(json.proper.frames[k].rotation != 0){
 						presentation+="data-rotate=\"" + json.proper.frames[k].rotation + "\"";
 					}
 					presentation+=style+"></div>";
 				}
 				else{
-					presentation+="<div class=\"step frame copia"+bookmark+"\" data-rotate="+json.proper.frames[k].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+					presentation+="<div class=\"step frame copia"+bookmark+"\" data-rotate=\""+json.proper.frames[k].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 					if(json.proper.frames[k].rotation != 0){
 						presentation+="data-rotate=\"" + json.proper.frames[k].rotation + "\"";
 					}
@@ -145,7 +146,7 @@ var translateImpress = function(json){
 			var bookmark="";
 			if(json.proper.frames[i].bookmark)
 				bookmark=" bookmark ";
-			presentation+="<div class=\"step frame"+bookmark+"\" data-rotate="+json.proper.frames[i].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+			presentation+="<div class=\"step frame"+bookmark+"\" data-rotate=\""+json.proper.frames[i].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 			
 			presentation+=style+"></div>";
 		}
@@ -168,7 +169,7 @@ var translateImpress = function(json){
 				var bookmark="";
 				if(json.proper.frames[i].bookmark)
 					bookmark=" bookmark ";
-				presentation+="<div class=\"step extraFrame"+bookmark+"\" data-rotate="+json.proper.frames[i].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+				presentation+="<div class=\"step extraFrame"+bookmark+"\" data-rotate=\""+json.proper.frames[i].rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 				
 				presentation+=style+"></div>";
 			}
@@ -179,7 +180,7 @@ var translateImpress = function(json){
 			var coordinates=imagePosition(image.xIndex,image.yIndex,image.width,image.height);
 			var style="style=\"z-index:"+image.zIndex+";\"";
 			
-			presentation+="<div class=\"step immagine\" data-rotate="+json.proper.image[i].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><img src=\""+image.url+"\"/></div>";
+			presentation+="<div class=\"step immagine\" data-rotate=\""+image.rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><img src=\""+image.url+"\"/></div>";
 		}
 		for(i=0; i<json.proper.audios.length; ++i){
 			var audio = json.proper.audios[i];
@@ -187,7 +188,7 @@ var translateImpress = function(json){
 			var coordinates=audioPosition(audio.xIndex,audio.yIndex,audio.width,audio.height);
 			var style="style=\"z-index:"+audio.zIndex+";\"";
 			
-			presentation+="<div class=\"step audio\" data-rotate="+json.proper.audios[i].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><audio src=\""+audio.url+"\" controls/></div>";
+			presentation+="<div class=\"step audio\" data-rotate=\""+audio.rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><audio src=\""+audio.url+"\" controls/></div>";
 		}
 		for(i=0; i<json.proper.videos.length; ++i){
 			var video = json.proper.videos[i];
@@ -195,7 +196,7 @@ var translateImpress = function(json){
 			var coordinates=videoPosition(video.xIndex,video.yIndex,video.width,video.height);
 			var style="style=\"z-index:"+video.zIndex+";\"";
 			
-			presentation+="<div class=\"step video\" data-rotate="+json.proper.videos[i].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><video src=\""+video.url+"\" controls/></div>";
+			presentation+="<div class=\"step video\" data-rotate=\""+video.rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" "+style+"><video src=\""+video.url+"\" controls/></div>";
 		}
 		for(i=0; i<json.proper.texts.length; ++i){
 			var text = json.proper.texts[i];
@@ -206,7 +207,7 @@ var translateImpress = function(json){
 			var width = text.width*corr;
 
 			var style="style=\"height:"+height+"px;width:"+width+"px;z-index:"+text.zIndex+";\"";
-			presentation+="<div class=\"step testo\" data-rotate="+json.proper.text[i].rotate+"\"data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
+			presentation+="<div class=\"step testo\" data-rotate=\""+text.rotation+"\" data-x=\""+coordinates[0]+"\" data-y=\""+coordinates[1]+"\" data-scale=\""+coordinates[2]+"\" ";
 			
 			presentation+=style+">";
 

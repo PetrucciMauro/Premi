@@ -754,6 +754,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 				var frame = $("#" + activeElement);
 				var frameRot = getRotationDegrees(frame);
 
+				value = Number(value);
 				rotate(activeElement, value);
 
 				var spec = {
@@ -802,22 +803,14 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 		var findForRotation = function(frame, elements, value, oldValue) {
 			var toRotate = [];
 
-			for(var i=0; i<elements.length && elements[i].id != frame.attr("id"); ++i){
+			for(var i=0; i<elements.length; ++i){
+				if(elements[i].id != frame.attr("id")){
 				var activeElement = elements[i].id;
 				var tipoElement = '';
 				var ele = $("#" + activeElement);
 
 				if(isInside(frame, ele)) {
-					if(ele.hasClass("image"))
-						tipoElement="image";
-					else if(ele.hasClass("text"))
-						tipoElement="text";
-					else if(ele.hasClass("audio"))
-						tipoElement="audio";
-					else if(ele.hasClass("video"))
-						tipoElement="video";
-					else if(ele.hasClass("frame"))
-						tipoElement="frame";
+					tipoElement = getTipo(activeElement);
 
 					var rotation = getRotationDegrees(ele);
 
@@ -838,7 +831,7 @@ premiEditController.controller('EditController', ['$scope', 'Main', 'toPages', '
 
 					toRotate.push(spec);
 				}
-			}
+			}}
 			return toRotate;
 		}
 

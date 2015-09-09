@@ -158,10 +158,10 @@ switch (input.which) {
 
 
 $(document).keyup(function (e) {
+	if(active().getId()){
     switch (e.which) {
         case 37:
-                angular.element($("#" + active().getId())).scope().muoviElemento();
-             
+            angular.element($("#" + active().getId())).scope().muoviElemento();
             break;
         case 38:
             angular.element($("#" + active().getId())).scope().muoviElemento(); //up arrow key
@@ -173,7 +173,7 @@ $(document).keyup(function (e) {
             angular.element($("#" + active().getId())).scope().muoviElemento(); //bottom arrow key
             break;
     }
-})
+}})
 
 $(window).scroll(function (event) {
     $("#premiHeader").attr("style", "margin-top: " + $(document).scrollTop() + "px !important; margin-left: " + $(document).scrollLeft() + "px !important; -webkit-transition: margin-top 0.2s; transition: margin-top 0.2s;");
@@ -650,7 +650,7 @@ var inserisciElemento = function (classe, spec) {
 	if(!spec)
 		active().select(div.id);
 	$(div).dblclick(function () {
-		zoom(div, rotation)});
+		zoom(div)});
 		return div;
 	}
 
@@ -1414,7 +1414,7 @@ $(function () {
 });
 
 
-function zoom(div, rotation) {
+function zoom(div) {
     if (scale == 1) {
 
         scale = $("#content").outerHeight() * 0.8 / $(div).outerHeight();
@@ -1434,6 +1434,7 @@ function zoom(div, rotation) {
         });
 
         var cssRotation = "";
+        var rotation = getRotationDegrees($(div));
         if(rotation > 0){
         	rotation = -1*rotation;
         	cssRotation = "rotate(" + rotation + "deg)";

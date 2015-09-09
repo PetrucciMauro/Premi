@@ -17,6 +17,12 @@
 */
 
 var premiHomeController = angular.module('premiHomeController', ['premiService'])
+var ans = "";
+function setAns(val) {
+    ans = val;
+    console.log("settata " + ans);
+}
+
 
 premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'Utils', '$window','SharedData', '$location', '$mdDialog',
 	function ($scope, Main, toPages, Utils, $window, SharedData, $location,  $mdDialog) {
@@ -83,23 +89,11 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 			var confirm = $scope.showConfirmDelete(ev, slideId);
 			console.log(confirm);
 			if(!confirm)
-				return;
-
-			
+				return;		
 		};
-		$scope.renameSlideShow = function(nameSS) {
-			var rename = $window.prompt('Nome:', undefined);
 
-			if(rename === null)
-				return;
-
-			if(Utils.isUndefined(rename))
-				throw new Error("E' necessario specificare un nome per poter rinominare la presentazione");
-
-			if(!mongo.renamePresentation(nameSS,rename))
-				throw new Error(mongo.getMessage());
-
-			update();
+		$scope.renameSlideShow = function(nameSS, ev) {
+		    $scope.changeTitleDialog(ev, nameSS);
 		};
 		$scope.createSlideShow = function() {
 			if(Utils.isUndefined($scope.slideshow.name))
@@ -162,18 +156,29 @@ premiHomeController.controller('HomeController',['$scope', 'Main', 'toPages', 'U
 		    
 		    return res;
 		};
-		$scope.showAdvanced = function (ev) {
+		$scope.newName = "";
+		$scope.changeTitleDialog = function (ev, nameSS) {
 		    $mdDialog.show({
 		        controller: DialogController,
-		        templateUrl: 'dialog1.tmpl.html',
+		        templateUrl: 'scripts/nameTemplate.html',
 		        parent: angular.element(document.body),
 		        targetEvent: ev,
 		        clickOutsideToClose: true
 		    })
             .then(function (answer) {
-                $scope.status = 'You said the information was "' + answer + '".';
+                console.log("risposta " + ans);
+                
+                    
+                if (Utils.isUndefined(answer) || answer === "annulla" || ans ==="") {
+                    console.log("Nope");
+                    return;
+                }
+                if (!mongo.renamePresentation(nameSS, ans))
+                    throw new Error(mongo.getMessage());
+
+                update();
             }, function () {
-                $scope.status = 'You cancelled the dialog.';
+                return;
             });
 		};
 		

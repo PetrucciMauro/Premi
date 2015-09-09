@@ -1550,3 +1550,4 @@ function zoom(div) {
         scale = 1;
     }
 }
+

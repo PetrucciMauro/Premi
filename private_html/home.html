@@ -7,7 +7,7 @@
         <dl class="slideshows">
             <dd ng-repeat="slide in getSS() | limitTo: display_limit | orderBy:'-titolo':true" class="slideSS">
                 <span class="labelSS" ng-bind="slide.titolo"></span>
-                <div class="backgroundSS" ng-style="setStyleSS(slide)"></div>
+                <div class="backgroundSS" ng-style="setStyleSS(slide)" ng-dblclick="goEdit(slide.titolo)"></div>
                 <md-button class="btnSS md-raised md-cornered submit" ng-click="goEdit(slide.titolo)">Edit</md-button>
                 <md-button class="btnSS md-raised md-cornered submit" ng-click="goExecute(slide.titolo)">Esegui</md-button>
                 <md-button class="btnSS md-raised md-cornered submit" ng-click="deleteSlideShow(slide.titolo, $event)">Elimina</md-button>

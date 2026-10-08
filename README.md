@@ -35,7 +35,8 @@ Il server legge queste variabili d'ambiente:
 ## Sviluppo
 
 ```bash
-npm run dev:server   # server con riavvio automatico (oppure npm run start:memory)
+npm run dev:server          # server con riavvio automatico (richiede MongoDB su localhost:27017 o MONGODB_URI)
+npm run dev:server:memory   # come sopra, ma con un MongoDB in memoria (i dati si azzerano a ogni riavvio)
 npm run dev:client   # ng serve su http://localhost:4200, con proxy verso il server
 npm test             # test del server (node:test) e del client (Vitest)
 ```

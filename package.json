@@ -20,6 +20,7 @@
     "start:memory": "npm run dev:memory --prefix server",
     "dev:client": "npm start --prefix client",
     "dev:server": "npm run dev --prefix server",
+    "dev:server:memory": "npm run dev:memory --prefix server",
     "test": "npm run test:server && npm run test:client",
     "test:server": "npm test --prefix server",
     "test:client": "npm test --prefix client -- --watch=false"

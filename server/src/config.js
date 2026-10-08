@@ -14,6 +14,9 @@ const config = {
 	database: process.env.MONGODB_URI || 'mongodb://localhost:27017/premi',
 	secret: process.env.JWT_SECRET || 'griever',
 	tokenExpiresIn: '24h',
+	// dimensione massima del corpo JSON (immagini in base64, importazione di presentazioni);
+	// un documento MongoDB non può comunque superare i 16 MB
+	jsonLimit: process.env.JSON_LIMIT || '16mb',
 	// cartella in cui vengono salvati i file caricati dagli utenti: files/<utente>/<image|audio|video>
 	filesDir: process.env.FILES_DIR || path.join(serverRoot, 'files'),
 	// build di produzione del client Angular, servita come sito statico

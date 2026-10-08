@@ -20,6 +20,11 @@
           <input type="search" placeholder="Cerca…" aria-label="Cerca presentazioni" [value]="query()" (input)="query.set($any($event.target).value)" />
         </label>
       }
+      <button matButton="outlined" class="new-button" [disabled]="importing()" (click)="importInput.click()">
+        <mat-icon svgIcon="upload" />
+        Importa
+      </button>
+      <input #importInput hidden type="file" accept=".json,application/json" (change)="importFile(importInput)" />
       <button matButton="filled" class="new-button" (click)="create()">
         <mat-icon svgIcon="plus" />
         Nuova presentazione
@@ -91,6 +96,9 @@
             <button mat-menu-item (click)="edit(slide.titolo)"><mat-icon svgIcon="pencil" />Modifica</button>
             <button mat-menu-item (click)="execute(slide.titolo)"><mat-icon svgIcon="play-outline" />Presenta</button>
             <button mat-menu-item (click)="rename(slide.titolo)"><mat-icon svgIcon="type" />Rinomina</button>
+            <button mat-menu-item (click)="exportJson(slide.titolo)" [disabled]="exporting() === slide.titolo">
+              <mat-icon svgIcon="file-json" />Esporta in JSON
+            </button>
             <mat-divider />
             @if (offline.titles().includes(slide.titolo)) {
               <button mat-menu-item (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">

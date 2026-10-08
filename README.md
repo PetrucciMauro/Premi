@@ -31,6 +31,7 @@ Il server legge queste variabili d'ambiente:
 | `MONGODB_URI` | `mongodb://localhost:27017/premi`  |
 | `JWT_SECRET`  | segreto di sviluppo: **da impostare in produzione** |
 | `FILES_DIR`   | `server/files`                     |
+| `JSON_LIMIT`  | `16mb` (corpo massimo delle richieste JSON: immagini base64, importazione) |
 
 ## Sviluppo
 

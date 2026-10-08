@@ -230,6 +230,47 @@ export function normalizePresentation(raw: unknown): Presentation {
   };
 }
 
+// ---------------------------------------------------------------- esportazione / importazione JSON
+
+export const EXPORT_FORMAT = 'premi-presentation';
+export const EXPORT_VERSION = 1;
+
+export interface ExportedPresentation {
+  format: typeof EXPORT_FORMAT;
+  version: number;
+  exportedAt: string;
+  presentation: Presentation;
+}
+
+export function toExport(presentation: Presentation): ExportedPresentation {
+  return { format: EXPORT_FORMAT, version: EXPORT_VERSION, exportedAt: new Date().toISOString(), presentation };
+}
+
+/**
+ * Legge il contenuto di un file esportato. Accetta anche un documento { meta, proper }
+ * senza involucro, come quello salvato su MongoDB.
+ */
+export function parseExport(text: string): Presentation {
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new Error('Il file non contiene JSON valido');
+  }
+  const doc = data as Record<string, any> | null;
+  const raw = doc?.['format'] === EXPORT_FORMAT ? doc['presentation'] : doc;
+  if (doc?.['format'] === EXPORT_FORMAT && Number(doc['version']) > EXPORT_VERSION)
+    throw new Error('Il file è stato esportato da una versione più recente di Premi');
+  if (!raw || typeof raw !== 'object' || typeof raw['proper'] !== 'object' || raw['proper'] === null)
+    throw new Error('Il file non contiene una presentazione di Premi');
+  return normalizePresentation(raw);
+}
+
+/** Indirizzi di tutte le immagini usate nella presentazione (elementi, sfondo, sfondi dei frame). */
+export function imageUrls(proper: Proper): string[] {
+  return [proper.background.image, ...proper.frames.map((f) => f.ref), ...proper.images.map((el) => el.url)].filter(Boolean);
+}
+
 /** I file caricati sono salvati come "files/<utente>/<tipo>/<nome>", relativi alla radice del sito. */
 export function mediaSrc(url: string): string {
   return url.startsWith('files/') ? '/' + url : url;

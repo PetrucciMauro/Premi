@@ -66,6 +66,23 @@ router.post('/new/:name/:copyOf', async (req, res) => {
 	res.json({ success: true, message: 'inserted presentation' });
 });
 
+// importa una presentazione esportata in JSON: body.presentation = { meta, proper }
+router.post('/import', async (req, res) => {
+	const presentation = req.body?.presentation;
+	const titolo = presentation?.meta?.titolo;
+	if (typeof titolo !== 'string' || !titolo.trim() || titolo.includes('/')
+		|| typeof presentation.proper !== 'object' || presentation.proper === null || Array.isArray(presentation.proper))
+		return res.status(400).json({ success: false, message: 'presentazione non valida' });
+
+	const collection = presentations(req.user);
+	if (await collection.findOne({ 'meta.titolo': titolo }) !== null)
+		return res.status(409).json({ success: false, message: 'presentation already exists' });
+
+	const proper = { ...emptyPresentation(titolo).proper, ...presentation.proper };
+	await collection.insertOne({ meta: { titolo }, proper });
+	res.json({ success: true, message: 'imported presentation' });
+});
+
 router.get('/:name', async (req, res) => {
 	const doc = await presentations(req.user).findOne({ 'meta.titolo': req.params.name });
 

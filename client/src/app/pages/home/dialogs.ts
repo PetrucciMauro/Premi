@@ -41,6 +41,8 @@ export interface TitleDialogData {
   heading: string;
   message: string;
   title?: string;
+  /** Testo del pulsante di conferma, se diverso da "Crea"/"Rinomina". */
+  confirm?: string;
 }
 
 /** Richiesta del titolo di una presentazione (creazione e rinomina). */
@@ -61,7 +63,7 @@ export interface TitleDialogData {
       <mat-dialog-actions align="end">
         <button matButton type="button" mat-dialog-close>Annulla</button>
         <button matButton="filled" type="submit" [disabled]="!title.trim()">
-          {{ data.title ? 'Rinomina' : 'Crea' }}
+          {{ data.confirm ?? (data.title ? 'Rinomina' : 'Crea') }}
         </button>
       </mat-dialog-actions>
     </form>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_CANVAS_WIDTH, normalizePresentation, stripCssUrl, toHexColor } from './presentation';
+import { DEFAULT_CANVAS_WIDTH, imageUrls, normalizePresentation, parseExport, stripCssUrl, toExport, toHexColor } from './presentation';
 
 describe('normalizePresentation', () => {
   it('converte i dati salvati dalla vecchia versione', () => {
@@ -44,5 +44,34 @@ describe('utility', () => {
     expect(toHexColor('rgba(255,255,255,0)')).toBe('#ffffff');
     expect(toHexColor('#ABC')).toBe('#aabbcc');
     expect(toHexColor('black', '#000000')).toBe('#000000');
+  });
+});
+
+describe('esportazione JSON', () => {
+  const presentation = normalizePresentation({
+    meta: { titolo: 'Esportata' },
+    proper: {
+      images: [{ id: 1, url: 'data:image/png;base64,AAAA' }],
+      frames: [{ id: 2, ref: 'files/u/image/a.png' }],
+      background: { id: 0, image: '' },
+    },
+  });
+
+  it('rilegge il file esportato', () => {
+    expect(parseExport(JSON.stringify(toExport(presentation)))).toEqual(presentation);
+  });
+
+  it('accetta anche un documento senza involucro', () => {
+    expect(parseExport(JSON.stringify({ _id: 'x', ...presentation }))).toEqual(presentation);
+  });
+
+  it('rifiuta file non validi', () => {
+    expect(() => parseExport('non json')).toThrow('JSON valido');
+    expect(() => parseExport('{"a":1}')).toThrow('presentazione');
+    expect(() => parseExport(JSON.stringify({ ...toExport(presentation), version: 99 }))).toThrow('più recente');
+  });
+
+  it('elenca le immagini usate', () => {
+    expect(imageUrls(presentation.proper)).toEqual(['files/u/image/a.png', 'data:image/png;base64,AAAA']);
   });
 });

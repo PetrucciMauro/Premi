@@ -14,6 +14,7 @@ import { firstValueFrom } from 'rxjs';
 import { NotifyService } from '../../core/notify.service';
 import { OfflineStore } from '../../core/offline-store.service';
 import { PresentationApi } from '../../core/presentation-api.service';
+import { PresentationTransfer } from '../../core/presentation-transfer.service';
 import { Background, mediaSrc } from '../../model/presentation';
 import { ConfirmDialog, ConfirmDialogData, TitleDialog, TitleDialogData } from './dialogs';
 
@@ -34,11 +35,14 @@ export class Home implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly notify = inject(NotifyService);
   private readonly router = inject(Router);
+  private readonly transfer = inject(PresentationTransfer);
   protected readonly offline = inject(OfflineStore);
 
   protected readonly slideShows = signal<SlideShowCard[]>([]);
   protected readonly loading = signal(true);
   protected readonly savingOffline = signal<string | null>(null);
+  protected readonly exporting = signal<string | null>(null);
+  protected readonly importing = signal(false);
   protected readonly query = signal('');
   protected readonly filtered = computed(() => {
     const query = this.query().trim().toLocaleLowerCase();
@@ -149,6 +153,44 @@ export class Home implements OnInit {
       await this.update();
     } catch (err) {
       this.notify.error(err);
+    }
+  }
+
+  protected async exportJson(titolo: string): Promise<void> {
+    this.exporting.set(titolo);
+    try {
+      await this.transfer.export(titolo);
+    } catch (err) {
+      this.notify.error(err);
+    } finally {
+      this.exporting.set(null);
+    }
+  }
+
+  protected async importFile(input: HTMLInputElement): Promise<void> {
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    this.importing.set(true);
+    try {
+      const presentation = await this.transfer.read(file);
+      let title: string | undefined = presentation.meta.titolo.trim() || file.name.replace(/\.json$/i, '');
+      // se il titolo è già usato (o non valido) se ne chiede un altro
+      if (title.includes('/') || this.slideShows().some((s) => s.titolo === title))
+        title = await this.askTitle({
+          heading: 'Importa presentazione',
+          message: `Il titolo "${title}" è già usato o non è valido: scegli il titolo della presentazione importata.`,
+          title: `${title} (importata)`.replaceAll('/', '-'),
+          confirm: 'Importa',
+        });
+      if (!title) return;
+      await this.transfer.import(presentation, title);
+      this.notify.info(`"${title}" importata`);
+      await this.update();
+    } catch (err) {
+      this.notify.error(err);
+    } finally {
+      this.importing.set(false);
     }
   }
 

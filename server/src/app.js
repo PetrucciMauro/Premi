@@ -19,7 +19,8 @@ export function createApp({ logging = true } = {}) {
 
 	if (logging)
 		app.use(morgan('dev'));
-	app.use(express.json({ limit: '1mb' }));
+	// le immagini sono salvate in base64 dentro la presentazione
+	app.use(express.json({ limit: config.jsonLimit }));
 
 	app.use('/account', account);
 	app.use('/files', publicFiles);
@@ -41,6 +42,11 @@ export function createApp({ logging = true } = {}) {
 	app.use((req, res) => res.status(404).json({ success: false, message: 'Not found' }));
 
 	app.use((err, req, res, next) => {
+		// presentazione troppo grande per un documento MongoDB (16 MB), di solito per le immagini in base64
+		if (err.code === 10334 || err.codeName === 'BSONObjectTooLarge' || /larger than the maximum size/i.test(err.message ?? ''))
+			return res.status(413).json({ success: false, message: 'La presentazione supera la dimensione massima consentita (16 MB): usare immagini più leggere' });
+		if (err.type === 'entity.too.large')
+			return res.status(413).json({ success: false, message: 'Richiesta troppo grande: usare immagini più leggere' });
 		console.error(err);
 		res.status(err.status || 500).json({ success: false, message: err.message });
 	});

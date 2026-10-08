@@ -112,6 +112,23 @@ describe('presentations', () => {
 		doc = (await auth(request(app).get('/private/api/presentations/Vecchia'))).body.message;
 		assert.equal(doc.proper.frames.length, 0);
 	});
+
+	test('importazione di una presentazione in JSON con immagini base64', async () => {
+		const url = 'data:image/png;base64,' + Buffer.alloc(2 * 1024 * 1024).toString('base64');
+		const image = { id: 1, type: 'image', xIndex: 0, yIndex: 0, width: 10, height: 10, rotation: 0, zIndex: 0, url };
+		const presentation = { meta: { titolo: 'Importata' }, proper: { paths: { main: [], choices: [] }, images: [image] } };
+
+		await auth(request(app).post('/private/api/presentations/import')).send({ presentation }).expect(200);
+		await auth(request(app).post('/private/api/presentations/import')).send({ presentation }).expect(409);
+		await auth(request(app).post('/private/api/presentations/import'))
+			.send({ presentation: { meta: { titolo: 'a/b' }, proper: {} } }).expect(400);
+		await auth(request(app).post('/private/api/presentations/import')).send({ presentation: { proper: {} } }).expect(400);
+
+		const doc = (await auth(request(app).get('/private/api/presentations/Importata'))).body.message;
+		assert.equal(doc.proper.images[0].url, url);
+		assert.deepEqual(doc.proper.texts, []);
+		await auth(request(app).delete('/private/api/presentations/Importata')).expect(200);
+	});
 });
 
 describe('client', () => {

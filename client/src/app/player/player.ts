@@ -12,9 +12,11 @@ import {
   DestroyRef,
   OnInit,
   computed,
+  effect,
   inject,
   input,
   signal,
+  untracked,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
@@ -23,7 +25,7 @@ import { OfflineStore } from '../core/offline-store.service';
 import { PresentationApi } from '../core/presentation-api.service';
 import { FrameElement, Presentation, mediaSrc } from '../model/presentation';
 import { SlideCanvas } from '../shared/slide-canvas';
-import { Size, Target, cssMatrix, overviewMatrix, viewMatrix } from '../shared/view-transform';
+import { CameraAnimator, Size, Target, cameraFor, sameCamera } from '../shared/view-transform';
 
 const viewportSize = (): Size => ({ width: window.innerWidth, height: window.innerHeight });
 
@@ -66,20 +68,35 @@ export class Player implements OnInit {
       .filter((frame): frame is FrameElement => !!frame);
   });
 
-  protected readonly transform = computed(() => {
+  /** inquadratura del passo corrente */
+  private readonly camera = computed(() => {
     const proper = this.presentation()?.proper;
-    if (!proper) return '';
-    const target: Target | undefined = this.extraFrame() ?? this.frames()[this.step() - 1];
-    return cssMatrix(
-      target ? viewMatrix(this.viewport(), target) : overviewMatrix(this.viewport(), proper.background),
-    );
-  });
+    if (!proper) return null;
+    const target: Target = this.extraFrame() ?? this.frames()[this.step() - 1] ?? { xIndex: 0, yIndex: 0, rotation: 0, ...proper.background };
+    return cameraFor(this.viewport(), target);
+  }, { equal: sameCamera });
+
+  private readonly animator = new CameraAnimator({ min: 900, max: 2200, perUnit: 650 });
+  protected readonly transform = this.animator.transform;
 
   // indirizzi locali dei file salvati offline, da liberare all'uscita
   private readonly objectUrls: string[] = [];
 
   constructor() {
-    inject(DestroyRef).onDestroy(() => this.objectUrls.forEach((url) => URL.revokeObjectURL(url)));
+    inject(DestroyRef).onDestroy(() => {
+      this.animator.stop();
+      this.objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    });
+
+    // la telecamera si muove verso ogni nuovo passo; al ridimensionamento della finestra salta
+    let lastViewport: Size | null = null;
+    effect(() => {
+      const camera = this.camera();
+      const viewport = this.viewport();
+      if (!camera) return;
+      untracked(() => this.animator.moveTo(viewport, camera, viewport === lastViewport));
+      lastViewport = viewport;
+    });
   }
 
   async ngOnInit(): Promise<void> {

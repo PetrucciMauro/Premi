@@ -14,8 +14,8 @@
   inset: 0;
 
   app-slide-canvas {
+    // la telecamera è animata da CameraAnimator: una transition CSS sgranerebbe i testi durante lo zoom
     box-shadow: 0 30px 80px rgb(0 0 0 / 45%);
-    transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
   }
 }
 

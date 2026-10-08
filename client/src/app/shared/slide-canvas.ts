@@ -83,10 +83,10 @@ export interface TextCommitEvent {
             <img [src]="src(asMedia(el).url)" alt="" draggable="false" />
           }
           @case ('video') {
-            <video [src]="src(asMedia(el).url)" [controls]="!editable()" preload="metadata"></video>
+            <video [src]="src(asMedia(el).url)" [controls]="!editable()" preload="metadata" (loadedmetadata)="fixDuration($event)"></video>
           }
           @case ('audio') {
-            <audio [src]="src(asMedia(el).url)" [controls]="!editable()" preload="none"></audio>
+            <audio [src]="src(asMedia(el).url)" [controls]="!editable()" preload="metadata" (loadedmetadata)="fixDuration($event)"></audio>
           }
         }
         @if (editable() && el.id === selectedId()) {
@@ -127,6 +127,23 @@ export class SlideCanvas {
 
   protected cssUrl(url: string): string | null {
     return url ? `url("${this.src(url).replace(/"/g, '\\"')}")` : null;
+  }
+
+  /**
+   * I file WebM registrati con MediaRecorder non dichiarano la durata (duration = Infinity)
+   * e la barra di avanzamento non funziona. Cercando oltre la fine il browser legge tutto
+   * il file e calcola la durata reale; poi si torna all'inizio.
+   */
+  protected fixDuration(event: Event): void {
+    const media = event.target as HTMLMediaElement;
+    if (Number.isFinite(media.duration)) return;
+    const restore = () => {
+      if (!Number.isFinite(media.duration)) return;
+      media.removeEventListener('durationchange', restore);
+      media.currentTime = 0;
+    };
+    media.addEventListener('durationchange', restore);
+    media.currentTime = Number.MAX_SAFE_INTEGER;
   }
 
   protected asText = (el: SlideElement) => el as TextElement;

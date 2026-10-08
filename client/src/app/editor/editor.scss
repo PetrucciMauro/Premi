@@ -259,9 +259,6 @@
     border-radius: 2px;
     box-shadow: var(--premi-shadow-lg);
 
-    &.animated {
-      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
   }
 }
 

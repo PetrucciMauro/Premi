@@ -14,9 +14,11 @@ import {
   OnInit,
   afterNextRender,
   computed,
+  effect,
   inject,
   input,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -42,7 +44,7 @@ import {
   toHexColor,
 } from '../model/presentation';
 import { ElementPointerEvent, SlideCanvas, TextCommitEvent } from '../shared/slide-canvas';
-import { Size, Target, cssMatrix, overviewMatrix, viewMatrix } from '../shared/view-transform';
+import { CameraAnimator, Size, Target, cameraFor, cameraMatrix, sameCamera } from '../shared/view-transform';
 import { EditorStore } from './editor-store';
 
 export const FONTS = [
@@ -182,14 +184,20 @@ export class Editor implements OnInit {
     return type === 'audio' || type === 'video';
   });
 
-  private readonly matrix = computed(() => {
+  /** inquadratura richiesta; quella mostrata la raggiunge con CameraAnimator */
+  private readonly camera = computed(() => {
     const proper = this.proper();
     const viewport = this.viewportSize();
     const target = this.zoomTarget();
-    if (target) return viewMatrix(viewport, target, 0.8);
-    return proper ? overviewMatrix(viewport, proper.background, 0.98) : new DOMMatrix();
+    if (target) return cameraFor(viewport, target, 0.8);
+    return proper ? cameraFor(viewport, { xIndex: 0, yIndex: 0, rotation: 0, ...proper.background }, 0.98) : null;
+  }, { equal: sameCamera });
+  private readonly matrix = computed(() => {
+    const camera = this.camera();
+    return camera ? cameraMatrix(this.viewportSize(), camera) : new DOMMatrix();
   });
-  protected readonly canvasTransform = computed(() => cssMatrix(this.matrix()));
+  private readonly animator = new CameraAnimator({ min: 350, max: 900, perUnit: 400 });
+  protected readonly canvasTransform = this.animator.transform;
   protected readonly zoomed = computed(() => this.zoomTarget() !== null);
 
   protected readonly backgroundHex = computed(() => toHexColor(this.proper()?.background.color ?? ''));
@@ -211,6 +219,17 @@ export class Editor implements OnInit {
       observer.observe(element);
       destroyRef.onDestroy(() => observer.disconnect());
     });
+
+    // la vista si sposta con un'animazione solo dopo la prima misura e se la finestra non è cambiata
+    let lastViewport: Size | null = null;
+    effect(() => {
+      const camera = this.camera();
+      const viewport = this.viewportSize();
+      if (!camera) return;
+      untracked(() => this.animator.moveTo(viewport, camera, this.animated() && viewport === lastViewport));
+      lastViewport = viewport;
+    });
+    destroyRef.onDestroy(() => this.animator.stop());
 
     const autosave = setInterval(() => this.autosave(), AUTOSAVE_MS);
     destroyRef.onDestroy(() => {

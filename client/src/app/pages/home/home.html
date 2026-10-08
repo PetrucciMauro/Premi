@@ -1,37 +1,112 @@
-<div class="header">
-  <button matButton="filled" (click)="create()">Nuova Presentazione</button>
-</div>
+<div class="page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Area di lavoro</p>
+      <h1 class="page-title">Le tue presentazioni</h1>
+      @if (!loading()) {
+        <p class="page-subtitle">
+          @switch (slideShows().length) {
+            @case (0) { Nessuna presentazione, per ora }
+            @case (1) { 1 presentazione }
+            @default { {{ slideShows().length }} presentazioni }
+          }
+        </p>
+      }
+    </div>
+    <div class="header-actions">
+      @if (slideShows().length > 0) {
+        <label class="search">
+          <mat-icon svgIcon="search" />
+          <input type="search" placeholder="Cerca…" aria-label="Cerca presentazioni" [value]="query()" (input)="query.set($any($event.target).value)" />
+        </label>
+      }
+      <button matButton="filled" class="new-button" (click)="create()">
+        <mat-icon svgIcon="plus" />
+        Nuova presentazione
+      </button>
+    </div>
+  </header>
 
-@if (loading()) {
-  <mat-spinner diameter="48" />
-} @else if (slideShows().length === 0) {
-  <p class="empty">Non hai ancora nessuna presentazione: creane una!</p>
-}
-
-<div class="slideshows">
-  @for (slide of slideShows(); track slide.titolo) {
-    <mat-card class="slideshow" appearance="outlined">
-      <div
-        class="thumbnail"
-        [style.background-color]="slide.background?.color"
-        [style.background-image]="thumbnailImage(slide)"
-        (dblclick)="edit(slide.titolo)"
-      ></div>
-      <mat-card-header>
-        <mat-card-title>{{ slide.titolo }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-actions>
-        <button matButton (click)="edit(slide.titolo)">Edit</button>
-        <button matButton (click)="execute(slide.titolo)">Esegui</button>
-        <button matButton (click)="rename(slide.titolo)">Rinomina</button>
-        <button matButton (click)="remove(slide.titolo)">Elimina</button>
-        @if (offline.titles().includes(slide.titolo)) {
-          <button matButton (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">Aggiorna offline</button>
-          <button matButton (click)="removeOffline(slide.titolo)">Rimuovi offline</button>
-        } @else {
-          <button matButton (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">Salva offline</button>
-        }
-      </mat-card-actions>
-    </mat-card>
+  @if (loading()) {
+    <div class="grid">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="card skeleton">
+          <div class="thumb"></div>
+          <div class="card-body"><span class="line"></span><span class="line short"></span></div>
+        </div>
+      }
+    </div>
+  } @else if (slideShows().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon"><mat-icon svgIcon="presentation" /></span>
+      <h2>Inizia la tua prima presentazione</h2>
+      <p>Crea una tela, aggiungi frame, testi e immagini, poi traccia il percorso che la telecamera seguirà.</p>
+      <button matButton="filled" (click)="create()"><mat-icon svgIcon="plus" />Crea presentazione</button>
+    </div>
+  } @else if (filtered().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon"><mat-icon svgIcon="search" /></span>
+      <h2>Nessun risultato</h2>
+      <p>Nessuna presentazione corrisponde a "{{ query() }}".</p>
+      <button matButton="outlined" (click)="query.set('')">Azzera ricerca</button>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (slide of filtered(); track slide.titolo) {
+        <article class="card">
+          <div
+            class="thumb"
+            role="button"
+            tabindex="0"
+            [attr.aria-label]="'Modifica ' + slide.titolo"
+            [class.blank]="!slide.background?.image"
+            [style.background-color]="slide.background?.color"
+            [style.background-image]="thumbnailImage(slide)"
+            (click)="edit(slide.titolo)"
+            (keydown.enter)="edit(slide.titolo)"
+          >
+            @if (!slide.background?.image) {
+              <span class="thumb-initial">{{ slide.titolo.charAt(0) }}</span>
+            }
+            <div class="thumb-overlay">
+              <button
+                class="play"
+                [attr.aria-label]="'Presenta ' + slide.titolo"
+                (click)="$event.stopPropagation(); execute(slide.titolo)"
+              >
+                <mat-icon svgIcon="play" />
+              </button>
+            </div>
+            @if (offline.titles().includes(slide.titolo)) {
+              <span class="badge"><mat-icon svgIcon="check" />Offline</span>
+            }
+          </div>
+          <div class="card-body">
+            <h3 class="card-title" [title]="slide.titolo">{{ slide.titolo }}</h3>
+            <button matIconButton class="more" [matMenuTriggerFor]="cardMenu" [attr.aria-label]="'Azioni per ' + slide.titolo">
+              <mat-icon svgIcon="more" />
+            </button>
+          </div>
+          <mat-menu #cardMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="edit(slide.titolo)"><mat-icon svgIcon="pencil" />Modifica</button>
+            <button mat-menu-item (click)="execute(slide.titolo)"><mat-icon svgIcon="play-outline" />Presenta</button>
+            <button mat-menu-item (click)="rename(slide.titolo)"><mat-icon svgIcon="type" />Rinomina</button>
+            <mat-divider />
+            @if (offline.titles().includes(slide.titolo)) {
+              <button mat-menu-item (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">
+                <mat-icon svgIcon="refresh" />Aggiorna copia offline
+              </button>
+              <button mat-menu-item (click)="removeOffline(slide.titolo)"><mat-icon svgIcon="cloud-off" />Rimuovi da offline</button>
+            } @else {
+              <button mat-menu-item (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">
+                <mat-icon svgIcon="download" />Rendi disponibile offline
+              </button>
+            }
+            <mat-divider />
+            <button mat-menu-item class="danger" (click)="remove(slide.titolo)"><mat-icon svgIcon="trash" />Elimina</button>
+          </mat-menu>
+        </article>
+      }
+    </div>
   }
 </div>

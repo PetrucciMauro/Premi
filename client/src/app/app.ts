@@ -1,13 +1,21 @@
 /*
  * Name : Matteo Busetto
  * Module : Controller::HeaderController
- * Description: intestazione con saluto e collegamenti alle pagine.
+ * Description: intestazione con marchio, navigazione e menu utente.
  */
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { ActivatedRouteSnapshot, NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  ActivatedRouteSnapshot,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { filter, map } from 'rxjs';
 import { AuthService } from './core/auth.service';
 
@@ -17,7 +25,7 @@ const deepest = (route: ActivatedRouteSnapshot): ActivatedRouteSnapshot =>
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatToolbarModule, RouterLink, RouterOutlet],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -25,7 +33,7 @@ export class App {
   protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
-  /** Il player occupa tutto lo schermo, senza intestazione. */
+  /** Editor e player occupano tutto lo schermo, senza intestazione. */
   protected readonly fullscreen = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -33,6 +41,8 @@ export class App {
     ),
     { initialValue: false },
   );
+
+  protected readonly initial = computed(() => (this.auth.username() || '?').charAt(0));
 
   protected logout(): void {
     this.auth.logout();

@@ -5,21 +5,54 @@
 </div>
 
 <nav class="player-menu" [class.open]="menuOpen()">
-  <button matIconButton class="menu-button" aria-label="Menu" (click)="menuOpen.set(!menuOpen())">
-    <mat-icon svgIcon="menu" />
+  <button class="glass round" [attr.aria-label]="menuOpen() ? 'Chiudi menu' : 'Apri menu'" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())">
+    <mat-icon [svgIcon]="menuOpen() ? 'close' : 'menu'" />
   </button>
   @if (menuOpen()) {
-    <div class="menu-items">
-      <button class="menu-item" (click)="goHome()">Home</button>
-      @if (!offline()) {
-        <button class="menu-item" (click)="goEdit()">Edit</button>
-      }
-      <button class="menu-item" [class.active]="step() === 0" (click)="goto(0)">Vista d'insieme</button>
-      @for (frame of frames(); track frame.id; let i = $index) {
-        <button class="menu-item" [class.active]="step() === i + 1" (click)="goto(i + 1)">
-          {{ i + 1 }}. Frame {{ frame.id }}@if (frame.bookmark) { ★ }
+    <div class="glass panel">
+      <div class="panel-head">
+        <span class="panel-title">{{ title() }}</span>
+        <div class="panel-actions">
+          <button class="pill" (click)="goHome()"><mat-icon svgIcon="home" />Esci</button>
+          @if (!offline()) {
+            <button class="pill" (click)="goEdit()"><mat-icon svgIcon="pencil" />Modifica</button>
+          }
+        </div>
+      </div>
+      <div class="steps">
+        <button class="step-item" [class.active]="step() === 0" (click)="goto(0)">
+          <span class="num"><mat-icon svgIcon="grid" /></span>
+          Vista d'insieme
         </button>
-      }
+        @for (frame of frames(); track frame.id; let i = $index) {
+          <button class="step-item" [class.active]="step() === i + 1" (click)="goto(i + 1)">
+            <span class="num">{{ i + 1 }}</span>
+            Frame {{ frame.id }}
+            @if (frame.bookmark) {
+              <mat-icon class="bookmark" svgIcon="bookmark-filled" aria-label="Bookmark" />
+            }
+          </button>
+        }
+      </div>
+      <p class="keys">
+        <kbd>←</kbd><kbd>→</kbd> naviga · <kbd>Spazio</kbd> bookmark · <kbd>Esc</kbd> menu
+      </p>
     </div>
   }
 </nav>
+
+<div class="controls glass">
+  <button class="round" aria-label="Precedente" (click)="prev()"><mat-icon svgIcon="chevron-left" /></button>
+  <span class="counter">
+    @if (step() === 0) {
+      Panoramica
+    } @else {
+      {{ step() }} <span class="of">/ {{ frames().length }}</span>
+    }
+  </span>
+  <button class="round" aria-label="Successivo" (click)="next()"><mat-icon svgIcon="chevron-right" /></button>
+</div>
+
+<div class="progress" aria-hidden="true">
+  <span [style.width.%]="frames().length ? (step() / frames().length) * 100 : 0"></span>
+</div>

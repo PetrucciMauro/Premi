@@ -1,8 +1,127 @@
+<header class="topbar">
+  <div class="section start">
+    <button matIconButton aria-label="Torna alle presentazioni" matTooltip="Torna alle presentazioni" (click)="goHome()">
+      <mat-icon svgIcon="arrow-left" />
+    </button>
+    <div class="doc">
+      <span class="title" [title]="store.title()">{{ store.title() }}</span>
+      <span class="status" [class.pending]="store.dirty() || store.saving()">
+        <span class="status-dot"></span>
+        @if (store.saving()) {
+          Salvataggio…
+        } @else if (store.dirty()) {
+          Modifiche non salvate
+        } @else {
+          Tutto salvato
+        }
+      </span>
+    </div>
+  </div>
+
+  <div class="section tools">
+    <button
+      matIconButton
+      aria-label="Annulla"
+      [matTooltip]="'Annulla ' + store.undoLabel()"
+      [disabled]="!store.canUndo()"
+      (click)="store.undo()"
+    >
+      <mat-icon svgIcon="undo" />
+    </button>
+    <button
+      matIconButton
+      aria-label="Ripristina"
+      [matTooltip]="'Ripristina ' + store.redoLabel()"
+      [disabled]="!store.canRedo()"
+      (click)="store.redo()"
+    >
+      <mat-icon svgIcon="redo" />
+    </button>
+
+    <span class="divider"></span>
+
+    <button
+      matButton="tonal"
+      class="insert"
+      [matMenuTriggerFor]="insertMenu"
+      [matMenuTriggerRestoreFocus]="false"
+      [disabled]="!store.loaded()"
+    >
+      <mat-icon svgIcon="plus" />
+      Inserisci
+    </button>
+    <mat-menu #insertMenu="matMenu" (closed)="onInsertMenuClosed()">
+      <button mat-menu-item (click)="insertFrame()"><mat-icon svgIcon="frame" />Frame</button>
+      <button mat-menu-item (click)="insertText()"><mat-icon svgIcon="type" />Testo</button>
+      <button mat-menu-item (click)="imageInput.click()"><mat-icon svgIcon="image" />Immagine</button>
+      <button mat-menu-item (click)="videoInput.click()"><mat-icon svgIcon="video" />Video</button>
+      <button mat-menu-item (click)="audioInput.click()"><mat-icon svgIcon="music" />Audio</button>
+    </mat-menu>
+    <input #imageInput hidden type="file" accept="image/*" multiple (change)="onFilesSelected(imageInput)" />
+    <input #videoInput hidden type="file" accept="video/*" multiple (change)="onFilesSelected(videoInput)" />
+    <input #audioInput hidden type="file" accept="audio/*" multiple (change)="onFilesSelected(audioInput)" />
+
+    <button
+      matIconButton
+      aria-label="Sfondo della presentazione"
+      matTooltip="Sfondo della presentazione"
+      [matMenuTriggerFor]="backgroundMenu"
+      [disabled]="!store.loaded()"
+    >
+      <mat-icon svgIcon="palette" />
+    </button>
+    <mat-menu #backgroundMenu="matMenu">
+      <label mat-menu-item class="color-item" (click)="$event.stopPropagation()">
+        <mat-icon svgIcon="palette" />
+        Colore di sfondo
+        <input type="color" [value]="backgroundHex()" (input)="setBackgroundColor($any($event.target).value)" />
+      </label>
+      <button mat-menu-item (click)="backgroundInput.click()"><mat-icon svgIcon="image" />Immagine di sfondo…</button>
+      <button mat-menu-item (click)="removeBackground()"><mat-icon svgIcon="image-off" />Rimuovi sfondo</button>
+    </mat-menu>
+    <input #backgroundInput hidden type="file" accept="image/*" (change)="setBackgroundImage(backgroundInput)" />
+
+    <button matIconButton aria-label="Vista d'insieme" matTooltip="Vista d'insieme" [disabled]="!zoomed()" (click)="zoomOut()">
+      <mat-icon svgIcon="zoom-out" />
+    </button>
+  </div>
+
+  <div class="section end">
+    <button
+      matIconButton
+      aria-label="Percorso"
+      matTooltip="Percorso"
+      [class.active]="pathsOpen()"
+      (click)="pathsOpen.set(!pathsOpen())"
+    >
+      <mat-icon svgIcon="route" />
+    </button>
+    <button matIconButton aria-label="Salva" matTooltip="Salva (Ctrl+S)" (click)="save()" [disabled]="!store.loaded()">
+      <mat-icon svgIcon="save" />
+    </button>
+    <button matButton="filled" class="present" (click)="execute()" [disabled]="!store.loaded()">
+      <mat-icon svgIcon="play" />
+      <span class="present-label">Presenta</span>
+    </button>
+  </div>
+</header>
+
 <mat-sidenav-container class="editor">
-  <mat-sidenav mode="side" [opened]="pathsOpen()" class="paths-panel">
-    <h3>Percorso principale</h3>
+  <mat-sidenav mode="side" position="end" [opened]="pathsOpen()" class="paths-panel">
+    <div class="panel-header">
+      <div>
+        <h2>Percorso</h2>
+        <p>{{ store.mainPath().length }} {{ store.mainPath().length === 1 ? 'tappa' : 'tappe' }}</p>
+      </div>
+      <button matIconButton aria-label="Chiudi" (click)="pathsOpen.set(false)">
+        <mat-icon svgIcon="close" />
+      </button>
+    </div>
     @if (store.mainPath().length === 0) {
-      <p class="hint">Seleziona un frame e aggiungilo al percorso principale.</p>
+      <div class="hint">
+        <mat-icon svgIcon="route" />
+        <p>Seleziona un frame sulla tela e aggiungilo al percorso: la presentazione lo seguirà in ordine.</p>
+      </div>
     }
     <ol class="path-list" cdkDropList (cdkDropListDropped)="reorderPath($event)">
       @for (id of store.mainPath(); track id; let i = $index) {
@@ -15,15 +134,22 @@
           (mouseleave)="highlightId.set(null)"
           (click)="focusFrame(id)"
         >
-          <span class="drag-handle" cdkDragHandle aria-label="Trascina per riordinare">⠿</span>
-          <span class="path-label">{{ i + 1 }}. Frame {{ id }}</span>
+          <span class="drag-handle" cdkDragHandle aria-label="Trascina per riordinare">
+            <mat-icon svgIcon="grip" />
+          </span>
+          <span class="step">{{ i + 1 }}</span>
+          <span class="path-label">Frame {{ id }}</span>
+          @if (isBookmarked(id)) {
+            <mat-icon class="bookmark" svgIcon="bookmark-filled" aria-label="Bookmark" />
+          }
           <button
             matIconButton
+            class="remove"
             aria-label="Rimuovi dal percorso"
             matTooltip="Rimuovi dal percorso"
             (click)="$event.stopPropagation(); removeFromMainPath(id)"
           >
-            <mat-icon svgIcon="delete" />
+            <mat-icon svgIcon="close" />
           </button>
         </li>
       }
@@ -31,184 +157,116 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="editor-main">
-    <mat-toolbar class="toolbar">
-      <button matIconButton aria-label="Percorsi" matTooltip="Percorsi" (click)="pathsOpen.set(!pathsOpen())">
-        <mat-icon svgIcon="menu" />
-      </button>
-      <span class="title">{{ store.title() }}</span>
+    @if (uploading() > 0) {
+      <mat-progress-bar class="upload" mode="indeterminate" />
+    }
 
-      <!-- menu generale della presentazione -->
-      <div class="group">
-        <button matIconButton aria-label="Salva" matTooltip="Salva" (click)="save()" [disabled]="!store.loaded()">
-          <mat-icon svgIcon="save" />
-        </button>
-        <button
-          matIconButton
-          aria-label="Annulla"
-          [matTooltip]="'Annulla ' + store.undoLabel()"
-          [disabled]="!store.canUndo()"
-          (click)="store.undo()"
-        >
-          <mat-icon [svgIcon]="store.canUndo() ? 'undoIcon' : 'undoIcon_not_active'" />
-        </button>
-        <button
-          matIconButton
-          aria-label="Ripristina"
-          [matTooltip]="'Ripristina ' + store.redoLabel()"
-          [disabled]="!store.canRedo()"
-          (click)="store.redo()"
-        >
-          <mat-icon [svgIcon]="store.canRedo() ? 'redoIcon' : 'redoIcon_not_active'" />
-        </button>
+    <!-- barra dell'elemento selezionato -->
+    @if (selected(); as el) {
+      <div class="context-bar" role="toolbar" aria-label="Elemento selezionato">
+        <span class="kind">{{ kindLabel(el) }}</span>
 
-        <button matIconButton aria-label="Inserisci elemento" matTooltip="Inserisci elemento" [matMenuTriggerFor]="insertMenu" [matMenuTriggerRestoreFocus]="false" [disabled]="!store.loaded()">
-          <mat-icon svgIcon="insertElementIcon" />
-        </button>
-        <mat-menu #insertMenu="matMenu" (closed)="onInsertMenuClosed()">
-          <button mat-menu-item (click)="insertFrame()">Inserisci Frame</button>
-          <button mat-menu-item (click)="insertText()">Inserisci Testo</button>
-          <button mat-menu-item (click)="imageInput.click()">Inserisci Immagine</button>
-          <button mat-menu-item (click)="videoInput.click()">Inserisci Video</button>
-          <button mat-menu-item (click)="audioInput.click()">Inserisci Audio</button>
-        </mat-menu>
-        <input #imageInput hidden type="file" accept="image/*" multiple (change)="onFilesSelected(imageInput)" />
-        <input #videoInput hidden type="file" accept="video/*" multiple (change)="onFilesSelected(videoInput)" />
-        <input #audioInput hidden type="file" accept="audio/*" multiple (change)="onFilesSelected(audioInput)" />
-
-        <button matIconButton aria-label="Gestisci sfondo presentazione" matTooltip="Gestisci sfondo presentazione" [matMenuTriggerFor]="backgroundMenu" [disabled]="!store.loaded()">
-          <mat-icon svgIcon="background" />
-        </button>
-        <mat-menu #backgroundMenu="matMenu">
-          <label mat-menu-item class="color-item" (click)="$event.stopPropagation()">
-            Cambia colore sfondo
-            <input type="color" [value]="backgroundHex()" (input)="setBackgroundColor($any($event.target).value)" />
-          </label>
-          <button mat-menu-item (click)="backgroundInput.click()">Scegli Immagine di Sfondo</button>
-          <button mat-menu-item (click)="removeBackground()">Elimina Sfondo Presentazione</button>
-        </mat-menu>
-        <input #backgroundInput hidden type="file" accept="image/*" (change)="setBackgroundImage(backgroundInput)" />
-
-        <button matIconButton aria-label="Zoom out" matTooltip="Zoom Out" [disabled]="!zoomed()" (click)="zoomOut()">
-          <mat-icon svgIcon="zoomout" />
-        </button>
-        <button matIconButton aria-label="Esegui presentazione" matTooltip="Esegui Presentazione" (click)="execute()" [disabled]="!store.loaded()">
-          <mat-icon svgIcon="play" />
-        </button>
-      </div>
-
-      <!-- menu dell'elemento selezionato -->
-      @if (selected(); as el) {
-        <div class="group contextual">
-          <button matIconButton aria-label="Elimina elemento" matTooltip="Elimina elemento" (click)="remove()">
-            <mat-icon svgIcon="delete" />
+        @if (selectedText(); as text) {
+          <button matIconButton aria-label="Font" matTooltip="Font" [matMenuTriggerFor]="fontMenu">
+            <mat-icon svgIcon="type" />
           </button>
-          <button matIconButton aria-label="Porta avanti" matTooltip="Porta avanti" (click)="changeLayer(1)">
-            <mat-icon svgIcon="bringfront" />
-          </button>
-          <button matIconButton aria-label="Porta dietro" matTooltip="Porta dietro" (click)="changeLayer(-1)">
-            <mat-icon svgIcon="bringback" />
-          </button>
-          <button matIconButton aria-label="Ruota" matTooltip="Ruota" [matMenuTriggerFor]="rotateMenu">
-            <mat-icon svgIcon="rotation" />
-          </button>
-          <mat-menu #rotateMenu="matMenu" class="wide-menu">
-            <div class="menu-control" (click)="$event.stopPropagation()" (keydown)="$event.key !== 'Escape' && $event.stopPropagation()">
-              <mat-slider min="0" max="360" step="1" discrete aria-label="Rotazione">
-                <input matSliderThumb [value]="el.rotation" (valueChange)="rotate($event)" />
-              </mat-slider>
-              <span>{{ el.rotation }}°</span>
-            </div>
-          </mat-menu>
-
-          @if (selectedText(); as text) {
-            <label class="icon-color" matTooltip="Cambia colore testo">
-              <mat-icon svgIcon="background" />
-              <input type="color" aria-label="Cambia colore testo" [value]="textHex()" (input)="setTextColor($any($event.target).value)" />
-            </label>
-            <button matIconButton aria-label="Dimensione del testo" matTooltip="Dimensione del testo" [matMenuTriggerFor]="sizeMenu">
-              <mat-icon svgIcon="fontsize" />
-            </button>
-            <mat-menu #sizeMenu="matMenu">
-              <div class="menu-control" (click)="$event.stopPropagation()" (keydown)="$event.key !== 'Escape' && $event.stopPropagation()">
-                <label>
-                  Dimensione (em)
-                  <input
-                    type="number"
-                    min="0.1"
-                    max="4"
-                    step="0.1"
-                    [ngModel]="text.fontSize"
-                    (ngModelChange)="setFontSize($event)"
-                  />
-                </label>
-              </div>
-            </mat-menu>
-            <button matIconButton aria-label="Font del testo" matTooltip="Font del testo" [matMenuTriggerFor]="fontMenu">
-              <mat-icon svgIcon="font" />
-            </button>
-            <mat-menu #fontMenu="matMenu">
-              @for (font of fonts; track font.value) {
-                <button mat-menu-item [class.current]="font.value === text.font" (click)="setFont(font.value)">
-                  <span [style.font-family]="font.value">{{ font.label }}</span>
-                </button>
-              }
-            </mat-menu>
-          }
-
-          @if (selectedFrame(); as frame) {
-            <button matIconButton aria-label="Gestisci sfondo frame" matTooltip="Gestisci sfondo frame" [matMenuTriggerFor]="frameMenu">
-              <mat-icon svgIcon="background" />
-            </button>
-            <mat-menu #frameMenu="matMenu">
-              <label mat-menu-item class="color-item" (click)="$event.stopPropagation()">
-                Cambia colore sfondo
-                <input type="color" [value]="frameHex()" (input)="setFrameColor($any($event.target).value)" />
-              </label>
-              <button mat-menu-item (click)="frameInput.click()">Scegli Immagine di Sfondo</button>
-              <button mat-menu-item (click)="removeFrameBackground()">Elimina Sfondo Frame</button>
-            </mat-menu>
-            <input #frameInput hidden type="file" accept="image/*" (change)="setFrameImage(frameInput)" />
-
-            @if (selectedInPath()) {
-              <button matIconButton disabled aria-label="Il frame è nel percorso principale" matTooltip="Il frame è già nel percorso principale">
-                <mat-icon svgIcon="path_disabled" />
-              </button>
-              <button
-                matIconButton
-                [attr.aria-label]="frame.bookmark ? 'Rimuovi bookmark' : 'Aggiungi bookmark'"
-                [matTooltip]="frame.bookmark ? 'Rimuovi bookmark' : 'Aggiungi bookmark'"
-                (click)="toggleBookmark()"
-              >
-                <mat-icon [svgIcon]="frame.bookmark ? 'bookmark_delete' : 'bookmark'" />
-              </button>
-            } @else {
-              <button matIconButton aria-label="Aggiungi al percorso principale" matTooltip="Aggiungi al percorso principale" (click)="addToMainPath()">
-                <mat-icon svgIcon="path" />
-              </button>
-              <button matIconButton disabled aria-label="Bookmark non disponibile" matTooltip="Solo i frame nel percorso possono avere un bookmark">
-                <mat-icon svgIcon="bookmark_not_active" />
+          <mat-menu #fontMenu="matMenu">
+            @for (font of fonts; track font.value) {
+              <button mat-menu-item [class.current]="font.value === text.font" (click)="setFont(font.value)">
+                <span [style.font-family]="font.value">{{ font.label }}</span>
               </button>
             }
-          }
+          </mat-menu>
+          <button matIconButton aria-label="Dimensione del testo" matTooltip="Dimensione del testo" [matMenuTriggerFor]="sizeMenu">
+            <mat-icon svgIcon="font-size" />
+          </button>
+          <mat-menu #sizeMenu="matMenu">
+            <div class="menu-control" (click)="$event.stopPropagation()" (keydown)="$event.key !== 'Escape' && $event.stopPropagation()">
+              <label>
+                Dimensione (em)
+                <input
+                  type="number"
+                  min="0.1"
+                  max="4"
+                  step="0.1"
+                  [ngModel]="text.fontSize"
+                  (ngModelChange)="setFontSize($event)"
+                />
+              </label>
+            </div>
+          </mat-menu>
+          <label class="icon-color" matTooltip="Colore del testo">
+            <mat-icon svgIcon="text-color" />
+            <span class="swatch" [style.background]="textHex()"></span>
+            <input type="color" aria-label="Colore del testo" [value]="textHex()" (input)="setTextColor($any($event.target).value)" />
+          </label>
+          <span class="divider"></span>
+        }
 
-          @if (isMedia()) {
-            <button matIconButton aria-label="Play/Pausa" matTooltip="Play/Pausa" (click)="toggleMedia()">
-              <mat-icon svgIcon="play" />
+        @if (selectedFrame(); as frame) {
+          <button matIconButton aria-label="Sfondo del frame" matTooltip="Sfondo del frame" [matMenuTriggerFor]="frameMenu">
+            <mat-icon svgIcon="palette" />
+          </button>
+          <mat-menu #frameMenu="matMenu">
+            <label mat-menu-item class="color-item" (click)="$event.stopPropagation()">
+              <mat-icon svgIcon="palette" />
+              Colore di sfondo
+              <input type="color" [value]="frameHex()" (input)="setFrameColor($any($event.target).value)" />
+            </label>
+            <button mat-menu-item (click)="frameInput.click()"><mat-icon svgIcon="image" />Immagine di sfondo…</button>
+            <button mat-menu-item (click)="removeFrameBackground()"><mat-icon svgIcon="image-off" />Rimuovi sfondo</button>
+          </mat-menu>
+          <input #frameInput hidden type="file" accept="image/*" (change)="setFrameImage(frameInput)" />
+
+          @if (selectedInPath()) {
+            <button
+              matIconButton
+              [class.active]="frame.bookmark"
+              [attr.aria-label]="frame.bookmark ? 'Rimuovi bookmark' : 'Aggiungi bookmark'"
+              [matTooltip]="frame.bookmark ? 'Rimuovi bookmark' : 'Aggiungi bookmark (spazio in presentazione)'"
+              (click)="toggleBookmark()"
+            >
+              <mat-icon [svgIcon]="frame.bookmark ? 'bookmark-filled' : 'bookmark'" />
+            </button>
+            <span class="chip"><mat-icon svgIcon="check" />Nel percorso</span>
+          } @else {
+            <button matButton class="add-path" (click)="addToMainPath()">
+              <mat-icon svgIcon="route" />
+              Aggiungi al percorso
             </button>
           }
-        </div>
-      }
+          <span class="divider"></span>
+        }
 
-      <span class="spacer"></span>
-      @if (store.saving()) {
-        <span class="status">Salvataggio…</span>
-      } @else if (store.dirty()) {
-        <span class="status">Modifiche non salvate</span>
-      }
-    </mat-toolbar>
+        @if (isMedia()) {
+          <button matIconButton aria-label="Play/Pausa" matTooltip="Play/Pausa" (click)="toggleMedia()">
+            <mat-icon svgIcon="play-outline" />
+          </button>
+          <span class="divider"></span>
+        }
 
-    @if (uploading() > 0) {
-      <mat-progress-bar mode="indeterminate" />
+        <button matIconButton aria-label="Ruota" matTooltip="Ruota" [matMenuTriggerFor]="rotateMenu">
+          <mat-icon svgIcon="rotate" />
+        </button>
+        <mat-menu #rotateMenu="matMenu" class="wide-menu">
+          <div class="menu-control" (click)="$event.stopPropagation()" (keydown)="$event.key !== 'Escape' && $event.stopPropagation()">
+            <mat-slider min="0" max="360" step="1" discrete aria-label="Rotazione">
+              <input matSliderThumb [value]="el.rotation" (valueChange)="rotate($event)" />
+            </mat-slider>
+            <span class="value">{{ el.rotation }}°</span>
+          </div>
+        </mat-menu>
+        <button matIconButton aria-label="Porta avanti" matTooltip="Porta avanti" (click)="changeLayer(1)">
+          <mat-icon svgIcon="bring-front" />
+        </button>
+        <button matIconButton aria-label="Porta dietro" matTooltip="Porta dietro" (click)="changeLayer(-1)">
+          <mat-icon svgIcon="send-back" />
+        </button>
+        <span class="divider"></span>
+        <button matIconButton class="danger" aria-label="Elimina elemento" matTooltip="Elimina (Canc)" (click)="remove()">
+          <mat-icon svgIcon="trash" />
+        </button>
+      </div>
     }
 
     <div

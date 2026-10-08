@@ -1,17 +1,51 @@
 @use '@angular/material' as mat;
 
 html {
-  color-scheme: light;
+  // chiaro o scuro secondo le preferenze del sistema
+  color-scheme: light dark;
   @include mat.theme(
     (
       color: (
-        primary: mat.$blue-palette,
-        tertiary: mat.$yellow-palette,
+        primary: mat.$violet-palette,
+        tertiary: mat.$orange-palette,
+        theme-type: color-scheme,
       ),
-      typography: Roboto,
+      typography: (
+        plain-family: 'Inter, system-ui, sans-serif',
+        brand-family: "'Bricolage Grotesque', Inter, system-ui, sans-serif",
+      ),
       density: 0,
     )
   );
+
+  @include mat.card-overrides((outlined-container-shape: 18px, elevated-container-shape: 18px));
+  @include mat.dialog-overrides((container-shape: 24px));
+  @include mat.menu-overrides(
+    (
+      container-shape: 14px,
+      item-label-text-size: 14px,
+      item-label-text-weight: 500,
+    )
+  );
+  @include mat.form-field-overrides((outlined-container-shape: 12px));
+  @include mat.button-overrides(
+    (
+      filled-label-text-weight: 600,
+      protected-label-text-weight: 600,
+      outlined-label-text-weight: 600,
+      text-label-text-weight: 600,
+      tonal-label-text-weight: 600,
+    )
+  );
+  @include mat.tooltip-overrides((container-shape: 8px));
+  @include mat.snack-bar-overrides((container-shape: 12px));
+
+  --premi-gradient: linear-gradient(135deg, #7c3aed 0%, #c026d3 55%, #f97316 100%);
+  --premi-canvas: light-dark(#eceaf3, #0d0c11);
+  --premi-canvas-dot: light-dark(rgb(30 20 60 / 12%), rgb(255 255 255 / 7%));
+  --premi-shadow-sm: 0 1px 2px rgb(20 10 40 / 6%), 0 1px 3px rgb(20 10 40 / 8%);
+  --premi-shadow-md: 0 4px 12px rgb(20 10 40 / 8%), 0 1px 3px rgb(20 10 40 / 6%);
+  --premi-shadow-lg: 0 18px 48px rgb(20 10 40 / 16%), 0 4px 12px rgb(20 10 40 / 8%);
 }
 
 html,
@@ -21,47 +55,187 @@ body {
 }
 
 body {
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font: var(--mat-sys-body-medium);
   background: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--mat-sys-headline-medium-font);
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--mat-sys-primary);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--mat-sys-primary) 25%, transparent);
+}
+
+// --------------------------------------------------------------------- utilità condivise
+
+.page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+
+  @media (max-width: 600px) {
+    padding: 24px 16px 48px;
+  }
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.page-subtitle {
+  margin: 6px 0 0;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mat-sys-primary);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 24px;
+  border: 1.5px dashed var(--mat-sys-outline-variant);
+  border-radius: 24px;
+  text-align: center;
+
+  .empty-icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
+    border-radius: 20px;
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+
+    mat-icon {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  p {
+    max-width: 42ch;
+    margin: 0 0 12px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// le voci dei menu hanno un'icona coerente con il resto dell'interfaccia
+.mat-mdc-menu-item .mat-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.mat-mdc-menu-item.danger,
+.mat-mdc-menu-item.danger .mat-icon {
+  color: var(--mat-sys-error);
 }
 
 // i pannelli dei menu sono nell'overlay, fuori dai componenti
 .menu-control {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   padding: 8px 16px;
+  font-weight: 500;
 
   mat-slider {
     width: 220px;
   }
 
+  .value {
+    min-width: 4ch;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
   input[type='number'] {
     width: 5em;
     margin-left: 8px;
+    padding: 6px 8px;
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 8px;
+    background: var(--mat-sys-surface-container-lowest);
+    color: inherit;
+    font: inherit;
+
+    &:focus {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: -1px;
+    }
   }
 }
 
 .mat-mdc-menu-item.color-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   cursor: pointer;
 
+  .mat-mdc-menu-item-text {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
   input[type='color'] {
-    width: 36px;
+    width: 28px;
     height: 28px;
     padding: 0;
-    border: none;
+    border: 1px solid var(--mat-sys-outline-variant);
+    border-radius: 50%;
     background: none;
     cursor: pointer;
+    overflow: hidden;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch,
+    &::-moz-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
   }
 }
 
 .mat-mdc-menu-item.current {
-  font-weight: 700;
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
 }
 
 .wide-menu.mat-mdc-menu-panel {
@@ -71,4 +245,14 @@ body {
 .snack-error {
   --mat-snack-bar-container-color: var(--mat-sys-error-container);
   --mat-snack-bar-supporting-text-color: var(--mat-sys-on-error-container);
+  --mat-snack-bar-button-color: var(--mat-sys-on-error-container);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

@@ -26,7 +26,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { NotifyService } from '../core/notify.service';
@@ -61,6 +60,15 @@ export const FONTS = [
   "'Courier New', Courier, monospace",
   "'Lucida Console', Monaco, monospace",
 ].map((value) => ({ value, label: value.split(',')[0].replace(/'/g, '') }));
+
+const KIND_LABELS: Record<string, string> = {
+  frame: 'Frame',
+  text: 'Testo',
+  image: 'Immagine',
+  video: 'Video',
+  audio: 'Audio',
+  SVG: 'Forma',
+};
 
 const AUTOSAVE_MS = 30_000;
 const MIN_SIZE = 10;
@@ -114,7 +122,6 @@ function naturalSize(type: MediaType, src: string): Promise<Size | null> {
     MatProgressBarModule,
     MatSidenavModule,
     MatSliderModule,
-    MatToolbarModule,
     MatTooltipModule,
     SlideCanvas,
   ],
@@ -162,6 +169,14 @@ export class Editor implements OnInit {
     const frame = this.selectedFrame();
     return !!frame && this.store.mainPath().includes(frame.id);
   });
+  protected kindLabel(element: SlideElement): string {
+    return KIND_LABELS[element.type] ?? 'Elemento';
+  }
+
+  protected isBookmarked(id: number): boolean {
+    return !!this.proper()?.frames.find((frame) => frame.id === id)?.bookmark;
+  }
+
   protected readonly isMedia = computed(() => {
     const type = this.selected()?.type;
     return type === 'audio' || type === 'video';
@@ -236,6 +251,10 @@ export class Editor implements OnInit {
     } catch (err) {
       this.notify.error(err);
     }
+  }
+
+  protected goHome(): void {
+    this.router.navigate(['/private/home']);
   }
 
   protected onBeforeUnload(event: BeforeUnloadEvent): void {

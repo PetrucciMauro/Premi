@@ -16,7 +16,6 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { NotifyService } from '../core/notify.service';
@@ -31,7 +30,7 @@ const viewportSize = (): Size => ({ width: window.innerWidth, height: window.inn
 @Component({
   selector: 'app-player',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatIconModule, SlideCanvas],
+  imports: [MatIconModule, SlideCanvas],
   templateUrl: './player.html',
   styleUrl: './player.scss',
   host: {

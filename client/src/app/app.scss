@@ -1,38 +1,159 @@
-@use "@angular/material" as mat;
-
 :host {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh;
 }
 
 .header {
+  position: relative;
+  z-index: 2;
+  display: flex;
   flex: none;
-  @include mat.toolbar-overrides(
-    (
-      container-background-color: var(--mat-sys-primary),
-      container-text-color: var(--mat-sys-on-primary),
-    )
-  );
+  align-items: center;
+  gap: 8px;
+  height: 64px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  background: color-mix(in srgb, var(--mat-sys-surface) 82%, transparent);
+  backdrop-filter: saturate(1.6) blur(16px);
 }
 
 .brand {
-  color: inherit;
-  font-size: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 16px;
+  color: var(--mat-sys-on-surface);
   text-decoration: none;
+}
+
+// due "frame" sovrapposti su gradiente: il marchio di Premi
+.logo {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--premi-gradient);
+  box-shadow: 0 4px 12px rgb(124 58 237 / 35%);
+
+  span {
+    position: absolute;
+    width: 12px;
+    height: 9px;
+    border-radius: 2.5px;
+    background: #fff;
+  }
+
+  span:first-child {
+    top: 8px;
+    left: 7px;
+    opacity: 0.55;
+  }
+
+  span:last-child {
+    top: 14px;
+    left: 13px;
+  }
+}
+
+.wordmark {
+  font-family: var(--mat-sys-headline-medium-font);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-link {
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface);
+  }
+
+  &.active {
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
 }
 
 .spacer {
   flex: 1;
 }
 
-.greeting {
-  margin-right: 8px;
-  font-size: 16px;
+.avatar-button {
+  padding: 2px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--mat-sys-outline-variant);
+    outline: none;
+  }
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--premi-gradient);
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.menu-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+  padding: 10px 16px 12px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.menu-user-name {
+  font-weight: 600;
+}
+
+.menu-user-hint {
+  font-size: 12px;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 main {
   flex: 1;
   min-height: 0;
   overflow: auto;
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 0 12px;
+  }
+
+  .nav-link {
+    padding: 8px 10px;
+  }
+
+  .wordmark {
+    display: none;
+  }
 }

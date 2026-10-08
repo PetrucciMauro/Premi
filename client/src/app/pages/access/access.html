@@ -1,13 +1,19 @@
-<mat-card class="access-card" appearance="outlined">
-  <mat-card-header>
-    <mat-card-title>
-      <h1>{{ mode() === 'register' ? 'Registrazione utente' : 'Login utente' }}</h1>
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <form (ngSubmit)="submit()">
+<section class="form-side">
+  <div class="form-wrap">
+    <p class="eyebrow">{{ mode() === 'register' ? 'Nuovo account' : 'Bentornato' }}</p>
+    <h1 class="page-title">{{ mode() === 'register' ? 'Crea il tuo account' : 'Accedi a Premi' }}</h1>
+    <p class="page-subtitle">
+      {{
+        mode() === 'register'
+          ? 'Bastano un nome utente e una password per iniziare a creare.'
+          : 'Riprendi da dove avevi lasciato le tue presentazioni.'
+      }}
+    </p>
+
+    <form (ngSubmit)="submit()" novalidate>
       <mat-form-field>
         <mat-label>Username</mat-label>
+        <mat-icon matPrefix svgIcon="user" />
         <input matInput name="username" autocomplete="username" [(ngModel)]="username" (focus)="usernameError.set('')" />
         @if (usernameError()) {
           <mat-hint class="error">{{ usernameError() }}</mat-hint>
@@ -15,32 +21,71 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Password</mat-label>
+        <mat-icon matPrefix svgIcon="lock" />
         <input
           matInput
           name="password"
-          type="password"
+          [type]="showPassword() ? 'text' : 'password'"
           [autocomplete]="mode() === 'register' ? 'new-password' : 'current-password'"
           [(ngModel)]="password"
           (focus)="passwordError.set('')"
         />
+        <button
+          matIconButton
+          matSuffix
+          type="button"
+          [attr.aria-label]="showPassword() ? 'Nascondi password' : 'Mostra password'"
+          (click)="showPassword.set(!showPassword())"
+        >
+          <mat-icon [svgIcon]="showPassword() ? 'eye-off' : 'eye'" />
+        </button>
         @if (passwordError()) {
           <mat-hint class="error">{{ passwordError() }}</mat-hint>
+        } @else if (mode() === 'register') {
+          <mat-hint>Almeno {{ minLength }} caratteri</mat-hint>
         }
       </mat-form-field>
-      <div class="actions">
-        <button matButton="filled" type="submit" [disabled]="busy()">
-          {{ mode() === 'register' ? 'Registrati' : 'Login' }}
-        </button>
-        <button matButton="outlined" type="button" (click)="reset()">Reset</button>
-      </div>
+
+      <button matButton="filled" class="submit" type="submit" [disabled]="busy()">
+        @if (busy()) {
+          <mat-spinner diameter="18" />
+        }
+        {{ mode() === 'register' ? 'Crea account' : 'Accedi' }}
+      </button>
     </form>
-  </mat-card-content>
-  <mat-card-footer>
-    @if (mode() === 'register') {
-      <p>Hai già un account? <a routerLink="/login">Accedi</a></p>
-    } @else {
-      <p>Non hai un account? <a routerLink="/registrazione">Registrati</a></p>
-      <p><a routerLink="/offline">Presentazioni salvate offline</a></p>
+
+    <p class="switch">
+      @if (mode() === 'register') {
+        Hai già un account? <a routerLink="/login">Accedi</a>
+      } @else {
+        Non hai un account? <a routerLink="/registrazione">Registrati</a>
+      }
+    </p>
+
+    @if (mode() === 'login') {
+      <a class="offline-link" routerLink="/offline">
+        <mat-icon svgIcon="download" />
+        <span>
+          <strong>Presentazioni offline</strong>
+          <small>Apri quelle salvate su questo dispositivo, anche senza connessione</small>
+        </span>
+        <mat-icon svgIcon="chevron-right" />
+      </a>
     }
-  </mat-card-footer>
-</mat-card>
+  </div>
+</section>
+
+<section class="hero-side" aria-hidden="true">
+  <div class="hero-canvas">
+    <div class="hero-frame f1"><span></span><span></span><span class="short"></span></div>
+    <div class="hero-frame f2"><span class="dot"></span><span></span><span class="short"></span></div>
+    <div class="hero-frame f3"><span></span><span class="short"></span></div>
+    <svg class="hero-path" viewBox="0 0 400 300" fill="none">
+      <path d="M70 70 C 180 40, 220 160, 300 120 S 260 260, 150 240" />
+    </svg>
+  </div>
+  <div class="hero-copy">
+    <h2>Presentazioni che si muovono.</h2>
+    <p>Disponi le idee su una tela infinita, traccia un percorso e lascia che la telecamera racconti la storia.</p>
+  </div>
+</section>

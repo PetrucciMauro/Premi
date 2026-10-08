@@ -3,11 +3,12 @@
  * Module : Controller::homeController
  * Description: elenco delle presentazioni dell'utente e relative operazioni.
  */
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NotifyService } from '../../core/notify.service';
@@ -24,7 +25,7 @@ interface SlideShowCard {
 @Component({
   selector: 'app-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatCardModule, MatProgressSpinnerModule],
+  imports: [MatButtonModule, MatDividerModule, MatIconModule, MatMenuModule],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -38,6 +39,13 @@ export class Home implements OnInit {
   protected readonly slideShows = signal<SlideShowCard[]>([]);
   protected readonly loading = signal(true);
   protected readonly savingOffline = signal<string | null>(null);
+  protected readonly query = signal('');
+  protected readonly filtered = computed(() => {
+    const query = this.query().trim().toLocaleLowerCase();
+    return query
+      ? this.slideShows().filter((s) => s.titolo.toLocaleLowerCase().includes(query))
+      : this.slideShows();
+  });
 
   ngOnInit(): void {
     this.update();
@@ -80,7 +88,7 @@ export class Home implements OnInit {
 
   private async askTitle(data: TitleDialogData): Promise<string | undefined> {
     const title = await firstValueFrom(
-      this.dialog.open<TitleDialog, TitleDialogData, string>(TitleDialog, { data, width: '420px' }).afterClosed(),
+      this.dialog.open<TitleDialog, TitleDialogData, string>(TitleDialog, { data, width: '440px' }).afterClosed(),
     );
     if (!title) return undefined;
     if (this.slideShows().some((s) => s.titolo === title)) {
@@ -96,8 +104,8 @@ export class Home implements OnInit {
 
   protected async create(): Promise<void> {
     const title = await this.askTitle({
-      heading: 'Crea una nuova presentazione',
-      message: 'Inserisci il titolo della nuova presentazione:',
+      heading: 'Nuova presentazione',
+      message: 'Dai un titolo alla tua presentazione: potrai cambiarlo in qualsiasi momento.',
     });
     if (!title) return;
     try {
@@ -110,8 +118,8 @@ export class Home implements OnInit {
 
   protected async rename(titolo: string): Promise<void> {
     const title = await this.askTitle({
-      heading: 'Assegna un nuovo titolo',
-      message: 'Inserisci il nuovo titolo della presentazione:',
+      heading: 'Rinomina presentazione',
+      message: 'Scegli il nuovo titolo della presentazione.',
       title: titolo,
     });
     if (!title || title === titolo) return;
@@ -128,8 +136,9 @@ export class Home implements OnInit {
       this.dialog
         .open<ConfirmDialog, ConfirmDialogData, boolean>(ConfirmDialog, {
           data: {
-            heading: 'Eliminare questa presentazione?',
-            message: "Una volta effettuata questa operazione non sarà più possibile tornare indietro.",
+            heading: `Eliminare "${titolo}"?`,
+            message: "La presentazione verrà eliminata definitivamente: non sarà più possibile tornare indietro.",
+            confirm: 'Elimina',
           },
         })
         .afterClosed(),

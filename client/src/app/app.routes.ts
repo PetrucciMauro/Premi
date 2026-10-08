@@ -35,6 +35,7 @@ export const routes: Routes = [
       {
         path: 'edit/:title',
         title: 'Premi - Modifica',
+        data: { fullscreen: true },
         loadComponent: () => import('./editor/editor').then((m) => m.Editor),
       },
       {

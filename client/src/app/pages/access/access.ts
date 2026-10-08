@@ -6,9 +6,10 @@
 import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
 import { NotifyService } from '../../core/notify.service';
@@ -19,7 +20,15 @@ export const MIN_PASSWORD_LENGTH = 6;
 @Component({
   selector: 'app-access',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, RouterLink],
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    RouterLink,
+  ],
   templateUrl: './access.html',
   styleUrl: './access.scss',
 })
@@ -36,13 +45,8 @@ export class Access {
   protected readonly usernameError = signal('');
   protected readonly passwordError = signal('');
   protected readonly busy = signal(false);
-
-  protected reset(): void {
-    this.username = '';
-    this.password = '';
-    this.usernameError.set('');
-    this.passwordError.set('');
-  }
+  protected readonly showPassword = signal(false);
+  protected readonly minLength = MIN_PASSWORD_LENGTH;
 
   protected async submit(): Promise<void> {
     const register = this.mode() === 'register';

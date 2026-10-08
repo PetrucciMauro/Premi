@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.empty {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.slideshows {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.thumbnail {
+  aspect-ratio: 2.0667;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px 12px 0 0;
+  background: #fff no-repeat;
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+
+mat-card-actions {
+  flex-wrap: wrap;
+}

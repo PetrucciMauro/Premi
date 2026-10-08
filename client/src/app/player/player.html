@@ -1,0 +1,25 @@
+<div class="stage" (click)="onCanvasClick($event)" (touchstart)="onTouchStart($event)">
+  @if (presentation(); as p) {
+    <app-slide-canvas [proper]="p.proper" [mediaUrl]="mediaUrl()" [style.transform]="transform()" />
+  }
+</div>
+
+<nav class="player-menu" [class.open]="menuOpen()">
+  <button matIconButton class="menu-button" aria-label="Menu" (click)="menuOpen.set(!menuOpen())">
+    <mat-icon svgIcon="menu" />
+  </button>
+  @if (menuOpen()) {
+    <div class="menu-items">
+      <button class="menu-item" (click)="goHome()">Home</button>
+      @if (!offline()) {
+        <button class="menu-item" (click)="goEdit()">Edit</button>
+      }
+      <button class="menu-item" [class.active]="step() === 0" (click)="goto(0)">Vista d'insieme</button>
+      @for (frame of frames(); track frame.id; let i = $index) {
+        <button class="menu-item" [class.active]="step() === i + 1" (click)="goto(i + 1)">
+          {{ i + 1 }}. Frame {{ frame.id }}@if (frame.bookmark) { ★ }
+        </button>
+      }
+    </div>
+  }
+</nav>

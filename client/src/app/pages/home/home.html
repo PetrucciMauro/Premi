@@ -1,0 +1,37 @@
+<div class="header">
+  <button matButton="filled" (click)="create()">Nuova Presentazione</button>
+</div>
+
+@if (loading()) {
+  <mat-spinner diameter="48" />
+} @else if (slideShows().length === 0) {
+  <p class="empty">Non hai ancora nessuna presentazione: creane una!</p>
+}
+
+<div class="slideshows">
+  @for (slide of slideShows(); track slide.titolo) {
+    <mat-card class="slideshow" appearance="outlined">
+      <div
+        class="thumbnail"
+        [style.background-color]="slide.background?.color"
+        [style.background-image]="thumbnailImage(slide)"
+        (dblclick)="edit(slide.titolo)"
+      ></div>
+      <mat-card-header>
+        <mat-card-title>{{ slide.titolo }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-actions>
+        <button matButton (click)="edit(slide.titolo)">Edit</button>
+        <button matButton (click)="execute(slide.titolo)">Esegui</button>
+        <button matButton (click)="rename(slide.titolo)">Rinomina</button>
+        <button matButton (click)="remove(slide.titolo)">Elimina</button>
+        @if (offline.titles().includes(slide.titolo)) {
+          <button matButton (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">Aggiorna offline</button>
+          <button matButton (click)="removeOffline(slide.titolo)">Rimuovi offline</button>
+        } @else {
+          <button matButton (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">Salva offline</button>
+        }
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>

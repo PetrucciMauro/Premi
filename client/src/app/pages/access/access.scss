@@ -1,0 +1,38 @@
+:host {
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.access-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.error {
+  color: var(--mat-sys-error);
+}
+
+mat-card-footer {
+  padding: 0 16px 8px;
+  text-align: center;
+}

@@ -1,0 +1,97 @@
+/*
+ * Chiamate REST verso /private/api: presentazioni e file multimediali.
+ */
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { firstValueFrom, map } from 'rxjs';
+import {
+  Background,
+  ElementType,
+  MediaType,
+  Paths,
+  Presentation,
+  PresentationMeta,
+  SlideElement,
+  normalizePresentation,
+} from '../model/presentation';
+import { AuthService } from './auth.service';
+
+interface ServerResponse<T = unknown> {
+  success: boolean;
+  message: T;
+}
+
+const PRESENTATIONS = '/private/api/presentations';
+const FILES = '/private/api/files';
+const enc = encodeURIComponent;
+
+@Injectable({ providedIn: 'root' })
+export class PresentationApi {
+  private readonly http = inject(HttpClient);
+
+  list(): Promise<PresentationMeta[]> {
+    return firstValueFrom(
+      this.http.get<ServerResponse<PresentationMeta[]>>(PRESENTATIONS).pipe(map((r) => r.message)),
+    );
+  }
+
+  /** Restituisce la presentazione normalizzata e il documento originale salvato sul server. */
+  async get(title: string): Promise<{ presentation: Presentation; raw: unknown }> {
+    const res = await firstValueFrom(this.http.get<ServerResponse>(`${PRESENTATIONS}/${enc(title)}`));
+    return { presentation: normalizePresentation(res.message), raw: res.message };
+  }
+
+  create(title: string): Promise<unknown> {
+    return firstValueFrom(this.http.post(`${PRESENTATIONS}/new/${enc(title)}`, null));
+  }
+
+  remove(title: string): Promise<unknown> {
+    return firstValueFrom(this.http.delete(`${PRESENTATIONS}/${enc(title)}`));
+  }
+
+  rename(title: string, newTitle: string): Promise<unknown> {
+    return firstValueFrom(this.http.post(`${PRESENTATIONS}/${enc(title)}/rename/${enc(newTitle)}`, null));
+  }
+
+  newElement(title: string, element: SlideElement): Promise<unknown> {
+    return firstValueFrom(this.http.post(`${PRESENTATIONS}/${enc(title)}/element`, { element }));
+  }
+
+  updateElement(title: string, element: SlideElement | Background): Promise<unknown> {
+    return firstValueFrom(this.http.put(`${PRESENTATIONS}/${enc(title)}/element`, { element }));
+  }
+
+  deleteElement(title: string, type: ElementType, id: number): Promise<unknown> {
+    return firstValueFrom(this.http.delete(`${PRESENTATIONS}/${enc(title)}/delete/${type}/${id}`));
+  }
+
+  updatePaths(title: string, paths: Paths): Promise<unknown> {
+    return firstValueFrom(this.http.put(`${PRESENTATIONS}/${enc(title)}/paths`, { element: paths }));
+  }
+}
+
+/** Tipo di media in base al MIME type del file, undefined se non supportato. */
+export function mediaType(file: File): MediaType | undefined {
+  const kind = file.type.split('/')[0];
+  return kind === 'image' || kind === 'audio' || kind === 'video' ? kind : undefined;
+}
+
+@Injectable({ providedIn: 'root' })
+export class UploadService {
+  private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
+
+  /** Carica un file sul server e restituisce l'indirizzo con cui referenziarlo nella presentazione. */
+  async upload(file: File): Promise<{ type: MediaType; url: string }> {
+    const type = mediaType(file);
+    if (!type) throw new Error(`Formato del file "${file.name}" non supportato`);
+
+    const name = file.name.replace(/\.[^.]*$/, '') || file.name;
+    const body = new FormData();
+    body.append('file', file);
+    const res = await firstValueFrom(
+      this.http.post<{ success: boolean; name: string }>(`${FILES}/${type}/${enc(name)}`, body),
+    );
+    return { type, url: `files/${this.auth.username()}/${type}/${res.name}` };
+  }
+}

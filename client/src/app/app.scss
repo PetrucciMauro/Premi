@@ -1,0 +1,38 @@
+@use "@angular/material" as mat;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  flex: none;
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--mat-sys-primary),
+      container-text-color: var(--mat-sys-on-primary),
+    )
+  );
+}
+
+.brand {
+  color: inherit;
+  font-size: 22px;
+  text-decoration: none;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.greeting {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+main {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}

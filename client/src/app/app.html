@@ -1,0 +1,18 @@
+@if (!fullscreen()) {
+  <mat-toolbar class="header">
+    <a class="brand" [routerLink]="auth.token() ? '/private/home' : '/login'">Premi</a>
+    <span class="spacer"></span>
+    @if (auth.token()) {
+      <span class="greeting">Ciao {{ auth.username() }}!</span>
+      <a matButton routerLink="/private/home">Home</a>
+      <a matButton routerLink="/private/profile">Profilo</a>
+      <button matButton (click)="logout()">Logout</button>
+    } @else {
+      <a matButton routerLink="/login">Accedi</a>
+      <a matButton routerLink="/registrazione">Registrati</a>
+    }
+  </mat-toolbar>
+}
+<main [class.with-header]="!fullscreen()">
+  <router-outlet />
+</main>

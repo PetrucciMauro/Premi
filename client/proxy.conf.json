@@ -1,0 +1,5 @@
+{
+  "/account": { "target": "http://localhost:8081", "secure": false },
+  "/private/api": { "target": "http://localhost:8081", "secure": false },
+  "/files": { "target": "http://localhost:8081", "secure": false }
+}

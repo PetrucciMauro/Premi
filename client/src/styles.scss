@@ -1,0 +1,74 @@
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$blue-palette,
+        tertiary: mat.$yellow-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+// i pannelli dei menu sono nell'overlay, fuori dai componenti
+.menu-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+
+  mat-slider {
+    width: 220px;
+  }
+
+  input[type='number'] {
+    width: 5em;
+    margin-left: 8px;
+  }
+}
+
+.mat-mdc-menu-item.color-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+
+  input[type='color'] {
+    width: 36px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+}
+
+.mat-mdc-menu-item.current {
+  font-weight: 700;
+}
+
+.wide-menu.mat-mdc-menu-panel {
+  max-width: none;
+}
+
+.snack-error {
+  --mat-snack-bar-container-color: var(--mat-sys-error-container);
+  --mat-snack-bar-supporting-text-color: var(--mat-sys-on-error-container);
+}

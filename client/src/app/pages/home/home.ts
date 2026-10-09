@@ -17,6 +17,7 @@ import { PresentationApi } from '../../core/presentation-api.service';
 import { PresentationTransfer } from '../../core/presentation-transfer.service';
 import { Background, mediaSrc } from '../../model/presentation';
 import { ConfirmDialog, ConfirmDialogData, TitleDialog, TitleDialogData } from './dialogs';
+import { NewPresentation, NewPresentationDialog } from './new-presentation-dialog';
 
 interface SlideShowCard {
   titolo: string;
@@ -94,26 +95,32 @@ export class Home implements OnInit {
     const title = await firstValueFrom(
       this.dialog.open<TitleDialog, TitleDialogData, string>(TitleDialog, { data, width: '440px' }).afterClosed(),
     );
-    if (!title) return undefined;
+    return title && this.validTitle(title) ? title : undefined;
+  }
+
+  private validTitle(title: string): boolean {
     if (this.slideShows().some((s) => s.titolo === title)) {
       this.notify.error('Titolo già presente: scegliere un altro titolo per la presentazione.');
-      return undefined;
+      return false;
     }
     if (title.includes('/')) {
       this.notify.error('Il titolo non può contenere il carattere "/".');
-      return undefined;
+      return false;
     }
-    return title;
+    return true;
   }
 
+  /** Nuova presentazione, vuota o a partire da un modello. */
   protected async create(): Promise<void> {
-    const title = await this.askTitle({
-      heading: 'Nuova presentazione',
-      message: 'Dai un titolo alla tua presentazione: potrai cambiarlo in qualsiasi momento.',
-    });
-    if (!title) return;
+    const choice = await firstValueFrom(
+      this.dialog
+        .open<NewPresentationDialog, void, NewPresentation>(NewPresentationDialog, { width: '760px', maxWidth: '95vw' })
+        .afterClosed(),
+    );
+    if (!choice || !this.validTitle(choice.title)) return;
     try {
-      await this.api.create(title);
+      if (choice.proper) await this.api.import({ meta: { titolo: choice.title }, proper: choice.proper });
+      else await this.api.create(choice.title);
       await this.update();
     } catch (err) {
       this.notify.error(err);
@@ -160,6 +167,18 @@ export class Home implements OnInit {
     this.exporting.set(titolo);
     try {
       await this.transfer.export(titolo);
+    } catch (err) {
+      this.notify.error(err);
+    } finally {
+      this.exporting.set(null);
+    }
+  }
+
+  /** Pagina HTML autonoma, da aprire con un browser anche senza l'app e senza connessione. */
+  protected async exportHtml(titolo: string): Promise<void> {
+    this.exporting.set(titolo);
+    try {
+      await this.transfer.exportHtml(titolo);
     } catch (err) {
       this.notify.error(err);
     } finally {

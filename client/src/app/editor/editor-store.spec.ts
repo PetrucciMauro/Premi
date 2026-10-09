@@ -5,7 +5,7 @@ import { FrameElement, TextElement, normalizePresentation } from '../model/prese
 import { EditorStore } from './editor-store';
 
 const frame = (id: number, zIndex: number): FrameElement => ({
-  id, zIndex, type: 'frame', xIndex: 0, yIndex: 0, width: 100, height: 100, rotation: 0, bookmark: 0, ref: '', color: '',
+  id, zIndex, type: 'frame', xIndex: 0, yIndex: 0, width: 100, height: 100, rotation: 0, bookmark: 0, ref: '', color: '', fit: 'cover', rotateX: 0, rotateY: 0,
 });
 
 const text = (id: number, zIndex: number): TextElement => ({
@@ -66,6 +66,173 @@ describe('EditorStore', () => {
     store.undo();
     expect(store.proper().texts[0].rotation).toBe(0);
     expect(store.canUndo()).toBe(false);
+  });
+
+  it('gli elementi associati seguono il frame', () => {
+    store.attach([2], 1);
+    expect(store.proper().texts[0].anchor).toMatchObject({ frame: 1, x: 0.35, y: 0.2, width: 0.5, height: 0.2 });
+
+    // spostamento e ingrandimento proporzionale: il testo scala, compreso il font
+    store.update(1, 'ridimensiona', (f) => {
+      f.xIndex = 100;
+      f.width = 200;
+      f.height = 200;
+    });
+    expect(store.proper().texts[0]).toMatchObject({ xIndex: 120, yIndex: 20, width: 100, height: 40, fontSize: 2 });
+
+    // rotazione del frame: il testo ruota attorno al centro del frame
+    store.update(1, 'ruota', (f) => (f.rotation = 180));
+    expect(store.proper().texts[0]).toMatchObject({ xIndex: 180, yIndex: 140, rotation: 180 });
+
+    // spostando il testo cambia solo la sua posizione relativa
+    store.update(2, 'sposta', (el) => (el.xIndex += 20));
+    expect(store.proper().frames[0].xIndex).toBe(100);
+    expect(store.proper().texts[0].anchor?.x).toBeCloseTo(0.25);
+
+    store.undo();
+    store.undo();
+    expect(store.proper().texts[0]).toMatchObject({ xIndex: 120, rotation: 0 });
+  });
+
+  it('associando un elemento la sua rotazione diventa relativa al frame', () => {
+    store.update(1, 'ruota', (f) => (f.rotation = 30));
+    store.update(2, 'ruota', (el) => (el.rotation = 10));
+    store.attach([2], 1);
+    expect(store.proper().texts[0].rotation).toBe(40);
+    expect(store.proper().texts[0].anchor?.rotation).toBe(10);
+    // il centro dell'elemento non si sposta
+    expect(store.proper().texts[0]).toMatchObject({ xIndex: 10, yIndex: 10 });
+  });
+
+  describe('livelli degli elementi associati', () => {
+    const layers = () => Object.fromEntries([...store.proper().frames, ...store.proper().texts].map((el) => [el.id, el.zIndex]));
+
+    beforeEach(() => {
+      // frame 1 (z 0), testo 2 (z 1), frame 3 (z 2), testo 4 (z 3)
+      store.insert({ ...frame(0, 0), xIndex: 300 });
+      store.insert({ ...text(0, 0), xIndex: 310 });
+    });
+
+    it('associando un elemento che sta sotto al frame lo porta sopra', () => {
+      store.attach([2], 3);
+      expect(layers()).toEqual({ 1: 0, 3: 1, 2: 2, 4: 3 });
+    });
+
+    it('un elemento associato non scende sotto il suo frame', () => {
+      store.attach([4], 3);
+      store.changeLayer(4, -1);
+      expect(layers()).toEqual({ 1: 0, 2: 1, 3: 2, 4: 3 });
+      expect(store.canUndo()).toBe(true);
+      expect(store.undoLabel()).toBe('associa al frame');
+    });
+
+    it('il frame cambia livello insieme ai suoi elementi', () => {
+      store.attach([4], 3);
+      store.changeLayer(3, -1);
+      expect(layers()).toEqual({ 1: 0, 3: 1, 4: 2, 2: 3 });
+      store.changeLayer(3, -1);
+      expect(layers()).toEqual({ 3: 0, 4: 1, 1: 2, 2: 3 });
+      store.changeLayer(3, 1);
+      store.changeLayer(3, 1);
+      expect(layers()).toEqual({ 1: 0, 2: 1, 3: 2, 4: 3 });
+    });
+
+    it('un elemento non può passare sotto un frame portandoci sopra il frame', () => {
+      store.attach([2], 1);
+      store.changeLayer(1, 1);
+      expect(layers()).toEqual({ 3: 0, 1: 1, 2: 2, 4: 3 });
+    });
+  });
+
+  describe('sottopercorsi', () => {
+    beforeEach(() => {
+      // frame 3 e 4 oltre al frame 1 del percorso principale; testo 2 associato al frame 1
+      store.insert({ ...frame(0, 0), xIndex: 300 });
+      store.insert({ ...frame(0, 0), xIndex: 500 });
+      store.attach([2], 1);
+    });
+
+    it('un frame appartiene a un solo percorso', () => {
+      const sub = store.createSubPath(1, 2);
+      store.addToMainPath(3);
+      store.addToSubPath(sub, 3);
+      store.addToSubPath(sub, 4);
+      expect(store.proper().paths.main).toEqual([1]);
+      expect(store.proper().paths.choices[0]).toMatchObject({ frame: 1, trigger: 2, choicePath: [3, 4] });
+
+      store.addToMainPath(4);
+      expect(store.proper().paths.main).toEqual([1, 4]);
+      expect(store.proper().paths.choices[0].choicePath).toEqual([3]);
+
+      // il frame di partenza non può entrare nel proprio sottopercorso
+      store.addToSubPath(sub, 1);
+      expect(store.proper().paths.choices[0].choicePath).toEqual([3]);
+    });
+
+    it('un elemento avvia un solo sottopercorso', () => {
+      const a = store.createSubPath(1, 2);
+      const b = store.createSubPath(1, null);
+      store.setSubPathTrigger(b, 2);
+      expect(store.proper().paths.choices.map((s) => [s.id, s.trigger])).toEqual([[a, null], [b, 2]]);
+    });
+
+    it('eliminando elementi e frame i sottopercorsi restano coerenti', () => {
+      const sub = store.createSubPath(1, 2);
+      store.addToSubPath(sub, 3);
+      store.addToSubPath(sub, 4);
+      store.remove(3);
+      expect(store.proper().paths.choices[0].choicePath).toEqual([4]);
+      store.remove(2);
+      expect(store.proper().paths.choices[0].trigger).toBeNull();
+      store.remove(1);
+      expect(store.proper().paths.choices).toEqual([]);
+    });
+  });
+
+  it('riordina gli elementi di un frame, ognuno con i propri elementi', () => {
+    // frame 1: testo 2, frame 3 (con testo 4), testo 5
+    store.insert({ ...frame(0, 0), xIndex: 10, yIndex: 10, width: 50, height: 50 });
+    store.insert(text(0, 0));
+    store.insert(text(0, 0));
+    store.attach([2, 3, 5], 1);
+    store.attach([4], 3);
+    const layers = () => Object.fromEntries([...store.proper().frames, ...store.proper().texts].map((el) => [el.id, el.zIndex]));
+    expect(layers()).toEqual({ 1: 0, 2: 1, 3: 2, 4: 3, 5: 4 });
+
+    // dall'alto: frame 3 in primo piano, poi testo 2, poi testo 5
+    store.reorderChildren(1, [3, 2, 5]);
+    expect(layers()).toEqual({ 1: 0, 5: 1, 2: 2, 3: 3, 4: 4 });
+
+    // elementi non associati al frame: nessuna modifica
+    store.reorderChildren(1, [4, 2]);
+    expect(layers()).toEqual({ 1: 0, 5: 1, 2: 2, 3: 3, 4: 4 });
+  });
+
+  it('ridimensionamento libero del frame', () => {
+    store.attach([2], 1);
+    store.update(1, 'ridimensiona', (f) => (f.width = 200));
+    expect(store.proper().texts[0]).toMatchObject({ xIndex: 20, yIndex: 10, width: 100, height: 20 });
+  });
+
+  it('eliminando il frame gli elementi restano dove sono, non più associati', () => {
+    store.attach([2], 1);
+    store.remove(1);
+    expect(store.proper().texts[0].anchor).toBeUndefined();
+    expect(store.proper().texts[0].xIndex).toBe(10);
+  });
+
+  it('non permette associazioni circolari', () => {
+    store.insert({ ...frame(0, 0), anchor: { frame: 1, x: 0, y: 0, width: 0, height: 0, rotation: 0 } });
+    expect(store.proper().frames[1].anchor?.frame).toBe(1);
+    expect(store.canAttach(store.proper(), 1, 3)).toBe(false);
+    store.attach([1], 3);
+    expect(store.proper().frames[0].anchor).toBeUndefined();
+
+    // i frame annidati seguono il frame esterno, e con loro i propri elementi
+    store.attach([2], 3);
+    store.update(1, 'sposta', (f) => (f.yIndex = 50));
+    expect(store.proper().frames[1].yIndex).toBe(50);
+    expect(store.proper().texts[0].yIndex).toBe(60);
   });
 
   it('scambia i livelli', () => {

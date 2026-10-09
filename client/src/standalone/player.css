@@ -1,0 +1,346 @@
+/*
+ * Stili del player autonomo delle presentazioni esportate in HTML.
+ * Riprendono quelli del player dell'app (player.scss) e della tela (slide-canvas.scss).
+ */
+:root {
+  --premi-gradient: linear-gradient(135deg, #7c3aed 0%, #c026d3 55%, #f97316 100%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, #2a2440 0%, #120f1c 70%);
+  color: #fff;
+  font: 14px/1.4 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+/* ---------------------------------------------------------------- tela */
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  /* i frame inclinati sono in 3D: overflow: hidden appiattirebbe la scena */
+  transform-style: preserve-3d;
+}
+
+.scene {
+  position: relative;
+  transform-style: preserve-3d;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 0 30px 80px rgb(0 0 0 / 45%);
+}
+
+.element {
+  position: absolute;
+  user-select: none;
+}
+
+.element-frame {
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.element-text {
+  padding: 0.5em;
+}
+
+.text-content {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  line-height: 1.2;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+.element img,
+.element video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.element-audio {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.element-audio audio {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+/* elementi che avviano un sottopercorso del frame inquadrato */
+.element.trigger {
+  cursor: pointer;
+  border-radius: 0.3em;
+  box-shadow: 0 0 0 0.15em rgb(249 115 22 / 70%), 0 0 1.2em rgb(249 115 22 / 45%);
+  transition: box-shadow 0.2s;
+}
+
+.element.trigger:hover {
+  box-shadow: 0 0 0 0.25em rgb(249 115 22 / 95%), 0 0 1.6em rgb(249 115 22 / 60%);
+}
+
+/* ---------------------------------------------------------------- controlli */
+
+button {
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+svg.icon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.glass {
+  border: 1px solid rgb(255 255 255 / 14%);
+  background: rgb(20 16 32 / 78%);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 30%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+
+.round {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.round:hover {
+  background: rgb(255 255 255 / 14%);
+}
+
+.round.glass:hover {
+  background: rgb(48 40 72 / 88%);
+}
+
+.player-menu,
+.controls {
+  opacity: 0.35;
+  transition: opacity 0.25s;
+}
+
+.player-menu:hover,
+.player-menu:focus-within,
+.player-menu.open,
+.controls:hover,
+.controls:focus-within {
+  opacity: 1;
+}
+
+.player-menu {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.panel {
+  display: none;
+  flex-direction: column;
+  width: min(300px, calc(100vw - 32px));
+  max-height: calc(100vh - 120px);
+  border-radius: 20px;
+  overflow: hidden;
+  animation: drop 0.18s ease-out;
+}
+
+.player-menu.open .panel {
+  display: flex;
+}
+
+.panel-head {
+  padding: 16px 16px 12px;
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
+}
+
+.panel-title {
+  display: block;
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  background: none;
+  text-align: left;
+}
+
+.step-item:hover {
+  background: rgb(255 255 255 / 8%);
+}
+
+.step-item.active {
+  background: rgb(255 255 255 / 16%);
+  font-weight: 600;
+}
+
+.step-item.active .num {
+  background: var(--premi-gradient);
+}
+
+.sub-item {
+  margin-left: 22px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+.num {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: rgb(255 255 255 / 12%);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.num svg.icon {
+  width: 14px;
+  height: 14px;
+}
+
+.bookmark {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  color: #fb923c;
+}
+
+.keys {
+  margin: 0;
+  padding: 10px 16px 14px;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  font-size: 12px;
+  color: rgb(255 255 255 / 60%);
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.4em;
+  margin-right: 3px;
+  padding: 1px 5px;
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 5px;
+  font: inherit;
+  text-align: center;
+}
+
+.controls {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+}
+
+.counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 96px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.counter .of {
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.counter svg.icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+}
+
+.progress {
+  position: fixed;
+  inset: auto 0 0;
+  height: 3px;
+  background: rgb(255 255 255 / 8%);
+}
+
+.progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--premi-gradient);
+  transition: width 0.6s ease;
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (hover: none) {
+  .player-menu,
+  .controls {
+    opacity: 0.8;
+  }
+}

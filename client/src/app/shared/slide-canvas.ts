@@ -13,6 +13,8 @@ import {
   Proper,
   SlideElement,
   TextElement,
+  elementTransform,
+  tiltLayers,
   mediaSrc,
 } from '../model/presentation';
 
@@ -31,30 +33,40 @@ export interface TextCommitEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './slide-canvas.scss',
   host: {
-    '[style.width.px]': 'proper().background.width',
-    '[style.height.px]': 'proper().background.height',
-    '[style.font-size.px]': 'baseFontSize',
-    '[style.background-color]': 'proper().background.color',
-    '[style.background-image]': 'cssUrl(proper().background.image)',
     '[class.editable]': 'editable()',
   },
+  // la scena è impaginata alla scala della telecamera (zoom), così testi, bordi e immagini
+  // vengono disegnati alla risoluzione con cui si vedono; l'host riceve solo la transform
   template: `
+    <div
+      class="scene"
+      [style.zoom]="zoom()"
+      [style.width.px]="proper().background.width"
+      [style.height.px]="proper().background.height"
+      [style.font-size.px]="baseFontSize"
+      [style.background-color]="proper().background.color"
+      [style.background-image]="cssUrl(proper().background.image)"
+    >
     @for (el of elements(); track el.type + el.id) {
       <div
         class="element"
         [class]="'element element-' + el.type"
         [class.selected]="el.id === selectedId()"
+        [class.editing]="el.id === editingId()"
         [class.in-path]="el.type === 'frame' && pathIds().includes(el.id)"
         [class.highlighted]="el.id === highlightId()"
+        [class.anchor-frame]="el.id === anchorFrameId()"
+        [class.trigger]="triggerIds().includes(el.id)"
         [attr.data-element-id]="el.id"
         [style.left.px]="el.xIndex"
         [style.top.px]="el.yIndex"
         [style.width.px]="el.width"
         [style.height.px]="el.height"
         [style.z-index]="el.zIndex"
-        [style.transform]="'rotate(' + el.rotation + 'deg)'"
+        [style.transform]="transforms().get(el.id)"
         [style.background-color]="el.type === 'frame' ? asFrame(el).color : null"
         [style.background-image]="el.type === 'frame' ? cssUrl(asFrame(el).ref) : null"
+        [style.background-size]="el.type === 'frame' ? backgroundSize(asFrame(el)) : null"
         (pointerdown)="elementPointerDown.emit({ event: $event, element: el })"
         (dblclick)="elementDblClick.emit(el)"
       >
@@ -97,14 +109,23 @@ export interface TextCommitEvent {
         }
       </div>
     }
+    </div>
   `,
 })
 export class SlideCanvas {
   readonly proper = input.required<Proper>();
   readonly editable = input(false);
   readonly selectedId = input<number | null>(null);
+  /** testo in modifica: solo questo riceve i clic nella sua casella di testo */
+  readonly editingId = input<number | null>(null);
   readonly pathIds = input<number[]>([]);
   readonly highlightId = input<number | null>(null);
+  /** frame a cui è associato l'elemento selezionato */
+  readonly anchorFrameId = input<number | null>(null);
+  /** scala a cui impaginare la tela; la transform applicata all'host deve compensarla */
+  readonly zoom = input(1);
+  /** elementi che avviano un sottopercorso */
+  readonly triggerIds = input<number[]>([]);
   /** Permette al player offline di sostituire gli indirizzi dei file con quelli salvati in locale. */
   readonly mediaUrl = input<(url: string) => string>(mediaSrc);
 
@@ -121,12 +142,22 @@ export class SlideCanvas {
     return [...p.frames, ...p.texts, ...p.images, ...p.videos, ...p.audios];
   });
 
+  protected readonly transforms = computed(() => {
+    const p = this.proper();
+    const layers = tiltLayers(p);
+    return new Map(this.elements().map((el) => [el.id, elementTransform(p, el, layers.get(el.id))]));
+  });
+
   protected src(url: string): string {
     return this.mediaUrl()(url);
   }
 
   protected cssUrl(url: string): string | null {
     return url ? `url("${this.src(url).replace(/"/g, '\\"')}")` : null;
+  }
+
+  protected backgroundSize(frame: FrameElement): string {
+    return frame.fit === 'fill' ? '100% 100%' : frame.fit;
   }
 
   /**

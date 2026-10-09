@@ -42,3 +42,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Player autonomo generato da scripts/build-standalone.mjs
+/src/standalone/runtime.generated.ts

@@ -15,7 +15,7 @@
 
   app-slide-canvas {
     // la telecamera è animata da CameraAnimator: una transition CSS sgranerebbe i testi durante lo zoom
-    box-shadow: 0 30px 80px rgb(0 0 0 / 45%);
+    --slide-canvas-shadow: 0 30px 80px rgb(0 0 0 / 45%);
   }
 }
 
@@ -162,6 +162,12 @@ button {
   }
 }
 
+.sub-item {
+  margin-left: 22px;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
 .num {
   display: grid;
   flex: none;
@@ -226,6 +232,13 @@ kbd {
   .of {
     font-weight: 400;
     opacity: 0.6;
+  }
+
+  .sub-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    vertical-align: -3px;
   }
 }
 

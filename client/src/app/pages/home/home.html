@@ -99,6 +99,9 @@
             <button mat-menu-item (click)="exportJson(slide.titolo)" [disabled]="exporting() === slide.titolo">
               <mat-icon svgIcon="file-json" />Esporta in JSON
             </button>
+            <button mat-menu-item (click)="exportHtml(slide.titolo)" [disabled]="exporting() === slide.titolo">
+              <mat-icon svgIcon="presentation" />Esporta in HTML
+            </button>
             <mat-divider />
             @if (offline.titles().includes(slide.titolo)) {
               <button mat-menu-item (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">

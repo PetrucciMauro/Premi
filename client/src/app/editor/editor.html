@@ -56,6 +56,18 @@
       <button mat-menu-item (click)="imageInput.click()"><mat-icon svgIcon="image" />Immagine</button>
       <button mat-menu-item (click)="videoInput.click()"><mat-icon svgIcon="video" />Video</button>
       <button mat-menu-item (click)="audioInput.click()"><mat-icon svgIcon="music" />Audio</button>
+      @if (insertFrameTarget(); as target) {
+        <button
+          mat-menu-item
+          role="menuitemcheckbox"
+          class="attach-toggle"
+          [attr.aria-checked]="attachOnInsert()"
+          (click)="$event.stopPropagation(); attachOnInsert.set(!attachOnInsert())"
+        >
+          <mat-icon [svgIcon]="attachOnInsert() ? 'check' : 'link'" />
+          Associa a Frame {{ target.id }}
+        </button>
+      }
     </mat-menu>
     <input #imageInput hidden type="file" accept="image/*" multiple (change)="onFilesSelected(imageInput)" />
     <input #videoInput hidden type="file" accept="video/*" multiple (change)="onFilesSelected(videoInput)" />
@@ -89,8 +101,8 @@
   <div class="section end">
     <button
       matIconButton
-      aria-label="Percorso"
-      matTooltip="Percorso"
+      aria-label="Percorsi e frame"
+      matTooltip="Percorsi e frame"
       [class.active]="pathsOpen()"
       (click)="pathsOpen.set(!pathsOpen())"
     >
@@ -109,51 +121,236 @@
 <mat-sidenav-container class="editor">
   <mat-sidenav mode="side" position="end" [opened]="pathsOpen()" class="paths-panel">
     <div class="panel-header">
-      <div>
-        <h2>Percorso</h2>
-        <p>{{ store.mainPath().length }} {{ store.mainPath().length === 1 ? 'tappa' : 'tappe' }}</p>
+      <div class="panel-tabs" role="tablist">
+        <button role="tab" [attr.aria-selected]="panelTab() === 'paths'" [class.active]="panelTab() === 'paths'" (click)="panelTab.set('paths')">
+          <mat-icon svgIcon="route" />Percorsi
+        </button>
+        <button role="tab" [attr.aria-selected]="panelTab() === 'frames'" [class.active]="panelTab() === 'frames'" (click)="panelTab.set('frames')">
+          <mat-icon svgIcon="frame" />Frame <span class="count">{{ frameList().length }}</span>
+        </button>
       </div>
       <button matIconButton aria-label="Chiudi" (click)="pathsOpen.set(false)">
         <mat-icon svgIcon="close" />
       </button>
     </div>
-    @if (store.mainPath().length === 0) {
-      <div class="hint">
-        <mat-icon svgIcon="route" />
-        <p>Seleziona un frame sulla tela e aggiungilo al percorso: la presentazione lo seguirà in ordine.</p>
-      </div>
-    }
-    <ol class="path-list" cdkDropList (cdkDropListDropped)="reorderPath($event)">
-      @for (id of store.mainPath(); track id; let i = $index) {
-        <li
-          class="path-item"
-          cdkDrag
-          cdkDragLockAxis="y"
-          [class.selected]="id === store.selectedId()"
-          (mouseenter)="highlightId.set(id)"
-          (mouseleave)="highlightId.set(null)"
-          (click)="focusFrame(id)"
-        >
-          <span class="drag-handle" cdkDragHandle aria-label="Trascina per riordinare">
-            <mat-icon svgIcon="grip" />
-          </span>
-          <span class="step">{{ i + 1 }}</span>
-          <span class="path-label">Frame {{ id }}</span>
-          @if (isBookmarked(id)) {
-            <mat-icon class="bookmark" svgIcon="bookmark-filled" aria-label="Bookmark" />
-          }
-          <button
-            matIconButton
-            class="remove"
-            aria-label="Rimuovi dal percorso"
-            matTooltip="Rimuovi dal percorso"
-            (click)="$event.stopPropagation(); removeFromMainPath(id)"
-          >
-            <mat-icon svgIcon="close" />
-          </button>
-        </li>
+
+    @if (panelTab() === 'paths') {
+      <h3 class="panel-section">
+        Percorso principale
+        <span class="count">{{ store.mainPath().length }} {{ store.mainPath().length === 1 ? 'tappa' : 'tappe' }}</span>
+      </h3>
+      @if (store.mainPath().length === 0) {
+        <div class="hint">
+          <mat-icon svgIcon="route" />
+          <p>Seleziona un frame sulla tela e aggiungilo al percorso: la presentazione lo seguirà in ordine.</p>
+        </div>
       }
-    </ol>
+      <ol class="path-list" cdkDropList (cdkDropListDropped)="reorderPath($event)">
+        @for (id of store.mainPath(); track id; let i = $index) {
+          <li
+            class="path-item"
+            cdkDrag
+            cdkDragLockAxis="y"
+            [class.selected]="id === store.selectedId()"
+            (mouseenter)="highlightId.set(id)"
+            (mouseleave)="highlightId.set(null)"
+            (click)="focusFrame(id)"
+          >
+            <span class="drag-handle" cdkDragHandle aria-label="Trascina per riordinare">
+              <mat-icon svgIcon="grip" />
+            </span>
+            <span class="step">{{ i + 1 }}</span>
+            <span class="path-label">Frame {{ id }}</span>
+            @if (isBookmarked(id)) {
+              <mat-icon class="bookmark" svgIcon="bookmark-filled" aria-label="Bookmark" />
+            }
+            <button
+              matIconButton
+              class="remove"
+              aria-label="Rimuovi dal percorso"
+              matTooltip="Rimuovi dal percorso"
+              (click)="$event.stopPropagation(); removeFromMainPath(id)"
+            >
+              <mat-icon svgIcon="close" />
+            </button>
+          </li>
+        }
+      </ol>
+
+      <h3 class="panel-section">
+        Sottopercorsi
+        <span class="count">{{ subPaths().length }}</span>
+      </h3>
+      @for (item of subPaths(); track item.sub.id) {
+        @let sub = item.sub;
+        <section class="sub-path" [class.open]="expandedSub() === sub.id">
+          <header (click)="expandedSub.set(expandedSub() === sub.id ? null : sub.id)">
+            <mat-icon class="chevron" svgIcon="chevron-right" />
+            <div class="sub-title">
+              <span>Da Frame {{ sub.frame }}</span>
+              <small>
+                @if (sub.trigger !== null) {
+                  al clic su «{{ elementLabel(sub.trigger) }}»
+                } @else {
+                  nessun elemento di avvio
+                }
+                · {{ sub.choicePath.length }} frame
+              </small>
+            </div>
+            <button
+              matIconButton
+              class="remove"
+              aria-label="Elimina sottopercorso"
+              matTooltip="Elimina sottopercorso"
+              (click)="$event.stopPropagation(); store.removeSubPath(sub.id)"
+            >
+              <mat-icon svgIcon="trash" />
+            </button>
+          </header>
+          @if (!item.originInMain) {
+            <p class="warning">Il Frame {{ sub.frame }} non è nel percorso principale: il sottopercorso non verrà mostrato.</p>
+          } @else if (sub.trigger === null) {
+            <p class="warning">Scegli l'elemento che avvia il sottopercorso.</p>
+          } @else if (!sub.choicePath.length) {
+            <p class="warning">Aggiungi almeno un frame.</p>
+          }
+          @if (expandedSub() === sub.id) {
+            <button matButton class="trigger-select" [matMenuTriggerFor]="triggerMenu">
+              <mat-icon svgIcon="link" />
+              {{ sub.trigger !== null ? 'Avvio: ' + elementLabel(sub.trigger) : 'Scegli elemento di avvio' }}
+            </button>
+            <mat-menu #triggerMenu="matMenu">
+              @for (el of triggerCandidates(sub); track el.id) {
+                <button
+                  mat-menu-item
+                  role="menuitemradio"
+                  [attr.aria-checked]="sub.trigger === el.id"
+                  [class.current]="sub.trigger === el.id"
+                  (mouseenter)="highlightId.set(el.id)"
+                  (mouseleave)="highlightId.set(null)"
+                  (click)="highlightId.set(null); store.setSubPathTrigger(sub.id, el.id)"
+                >
+                  <mat-icon [svgIcon]="sub.trigger === el.id ? 'check' : kindIcon(el)" />{{ elementLabel(el.id) }}
+                </button>
+              } @empty {
+                <p class="menu-note">Associa degli elementi al Frame {{ sub.frame }} per poterli usare come avvio.</p>
+              }
+            </mat-menu>
+            <ol class="path-list sub-list" cdkDropList (cdkDropListDropped)="reorderSubPath(sub.id, $event)">
+              @for (id of sub.choicePath; track id; let i = $index) {
+                <li
+                  class="path-item"
+                  cdkDrag
+                  cdkDragLockAxis="y"
+                  [class.selected]="id === store.selectedId()"
+                  (mouseenter)="highlightId.set(id)"
+                  (mouseleave)="highlightId.set(null)"
+                  (click)="focusFrame(id)"
+                >
+                  <span class="drag-handle" cdkDragHandle aria-label="Trascina per riordinare">
+                    <mat-icon svgIcon="grip" />
+                  </span>
+                  <span class="step sub-step">{{ i + 1 }}</span>
+                  <span class="path-label">Frame {{ id }}</span>
+                  <button
+                    matIconButton
+                    class="remove"
+                    aria-label="Rimuovi dal sottopercorso"
+                    matTooltip="Rimuovi dal sottopercorso"
+                    (click)="$event.stopPropagation(); store.removeFromSubPath(sub.id, id)"
+                  >
+                    <mat-icon svgIcon="close" />
+                  </button>
+                </li>
+              }
+            </ol>
+            <button
+              matButton
+              class="add-to-sub"
+              [disabled]="!selectedFrame() || selectedFrame()!.id === sub.frame || selectedPath() === sub.id"
+              (click)="addToSubPath(sub.id)"
+            >
+              <mat-icon svgIcon="plus" />Aggiungi il frame selezionato
+            </button>
+          }
+        </section>
+      } @empty {
+        <div class="hint">
+          <p>
+            Un sottopercorso parte da un frame del percorso principale quando, in presentazione, si fa clic su
+            un suo elemento; finiti i suoi frame si torna al frame di partenza.
+          </p>
+        </div>
+      }
+      <button matButton="tonal" class="new-sub" [disabled]="subPathOrigin() === null" (click)="newSubPath()">
+        <mat-icon svgIcon="plus" />Nuovo sottopercorso
+      </button>
+      @if (subPathOrigin() === null) {
+        <p class="panel-note">Seleziona un frame del percorso principale, o un elemento associato a esso.</p>
+      }
+    } @else {
+      @if (frameList().length === 0) {
+        <div class="hint">
+          <mat-icon svgIcon="frame" />
+          <p>Nessun frame: inseriscine uno dal menu Inserisci.</p>
+        </div>
+      }
+      <ul class="frame-list">
+        @for (item of frameList(); track item.frame.id) {
+          <li class="frame-entry" [class.expanded]="item.frame.id === focusFrameId()">
+            <div
+              class="path-item"
+              [class.selected]="item.frame.id === store.selectedId()"
+              (mouseenter)="highlightId.set(item.frame.id)"
+              (mouseleave)="highlightId.set(null)"
+              (click)="select(item.frame.id)"
+              (dblclick)="focusFrame(item.frame.id)"
+            >
+              <mat-icon class="kind-icon" svgIcon="frame" />
+              <span class="path-label">Frame {{ item.frame.id }}</span>
+              @if (item.path === 'main') {
+                <span class="badge" matTooltip="Percorso principale">#{{ item.step }}</span>
+              } @else if (item.path !== null) {
+                <span class="badge sub" matTooltip="Sottopercorso"><mat-icon svgIcon="route" /></span>
+              }
+              @if (item.children) {
+                <span class="children-count" matTooltip="Elementi associati">{{ item.children }}</span>
+              }
+            </div>
+            @if (item.frame.id === focusFrameId()) {
+              @let children = childrenOf(item.frame.id);
+              @if (children.length) {
+                <ol class="child-list" cdkDropList (cdkDropListDropped)="reorderChildren(item.frame.id, $event)">
+                  @for (child of children; track child.id) {
+                    <li
+                      class="child-item"
+                      cdkDrag
+                      cdkDragLockAxis="y"
+                      [class.selected]="child.id === store.selectedId()"
+                      (mouseenter)="highlightId.set(child.id)"
+                      (mouseleave)="highlightId.set(null)"
+                      (click)="select(child.id)"
+                    >
+                      <span class="drag-handle" cdkDragHandle aria-label="Trascina per cambiare livello">
+                        <mat-icon svgIcon="grip" />
+                      </span>
+                      <mat-icon class="kind-icon" [svgIcon]="kindIcon(child)" />
+                      <span class="child-label">{{ elementLabel(child.id) }}</span>
+                      @if (triggerIds().includes(child.id)) {
+                        <mat-icon class="trigger-icon" svgIcon="route" matTooltip="Avvia un sottopercorso" />
+                      }
+                    </li>
+                  }
+                </ol>
+                <p class="panel-note child-note">In alto gli elementi in primo piano: trascina per cambiarne l'ordine.</p>
+              } @else {
+                <p class="panel-note child-note">Nessun elemento associato a questo frame.</p>
+              }
+            }
+          </li>
+        }
+      </ul>
+    }
   </mat-sidenav>
 
   <mat-sidenav-content class="editor-main">
@@ -214,11 +411,43 @@
               <input type="color" [value]="frameHex()" (input)="setFrameColor($any($event.target).value)" />
             </label>
             <button mat-menu-item (click)="frameInput.click()"><mat-icon svgIcon="image" />Immagine di sfondo…</button>
+            @if (frame.ref) {
+              @for (fit of frameFits; track fit.value) {
+                <button
+                  mat-menu-item
+                  role="menuitemradio"
+                  [attr.aria-checked]="frame.fit === fit.value"
+                  [class.current]="frame.fit === fit.value"
+                  (click)="setFrameFit(fit.value)"
+                >
+                  <mat-icon [svgIcon]="frame.fit === fit.value ? 'check' : 'image'" />{{ fit.label }}
+                </button>
+              }
+            }
             <button mat-menu-item (click)="removeFrameBackground()"><mat-icon svgIcon="image-off" />Rimuovi sfondo</button>
           </mat-menu>
           <input #frameInput hidden type="file" accept="image/*" (change)="setFrameImage(frameInput)" />
 
-          @if (selectedInPath()) {
+          <button
+            matIconButton
+            [class.active]="keepFrameRatio()"
+            [attr.aria-pressed]="keepFrameRatio()"
+            aria-label="Mantieni le proporzioni"
+            [matTooltip]="keepFrameRatio() ? 'Proporzioni bloccate (Maiusc per ridimensionare libero)' : 'Ridimensionamento libero (Maiusc per mantenere le proporzioni)'"
+            (click)="keepFrameRatio.set(!keepFrameRatio())"
+          >
+            <mat-icon [svgIcon]="keepFrameRatio() ? 'lock' : 'lock-open'" />
+          </button>
+
+          <button
+            matIconButton
+            aria-label="Elementi del frame"
+            matTooltip="Elementi del frame"
+            (click)="openPanel('frames')"
+          >
+            <mat-icon svgIcon="grid" />
+          </button>
+          @if (selectedPath() === 'main') {
             <button
               matIconButton
               [class.active]="frame.bookmark"
@@ -229,10 +458,55 @@
               <mat-icon [svgIcon]="frame.bookmark ? 'bookmark-filled' : 'bookmark'" />
             </button>
             <span class="chip"><mat-icon svgIcon="check" />Nel percorso</span>
-          } @else {
+          } @else if (selectedPath() !== null) {
+            <button matButton class="chip-button" matTooltip="Mostra il sottopercorso" (click)="showSubPath($any(selectedPath()))">
+              <mat-icon svgIcon="route" />Nel sottopercorso
+            </button>
+          } @else if (subPaths().length === 0) {
             <button matButton class="add-path" (click)="addToMainPath()">
               <mat-icon svgIcon="route" />
               Aggiungi al percorso
+            </button>
+          } @else {
+            <button matButton class="add-path" [matMenuTriggerFor]="addPathMenu">
+              <mat-icon svgIcon="route" />
+              Aggiungi al percorso
+            </button>
+            <mat-menu #addPathMenu="matMenu">
+              <button mat-menu-item (click)="addToMainPath()"><mat-icon svgIcon="route" />Percorso principale</button>
+              @for (item of subPaths(); track item.sub.id) {
+                @if (item.sub.frame !== frame.id) {
+                  <button mat-menu-item (click)="addToSubPath(item.sub.id)">
+                    <mat-icon svgIcon="chevron-right" />Sottopercorso da Frame {{ item.sub.frame }}
+                    @if (item.sub.trigger !== null) {
+                      <small class="menu-hint">· {{ elementLabel(item.sub.trigger) }}</small>
+                    }
+                  </button>
+                }
+              }
+            </mat-menu>
+          }
+          <span class="divider"></span>
+        }
+
+        @if (el.type !== 'frame' && subPathOrigin() !== null) {
+          @if (selectedTriggerOf(); as sub) {
+            <button
+              matButton
+              class="chip-button"
+              matTooltip="Mostra il sottopercorso avviato da questo elemento"
+              (click)="showSubPath(sub.id)"
+            >
+              <mat-icon svgIcon="route" />Sottopercorso ({{ sub.choicePath.length }})
+            </button>
+          } @else {
+            <button
+              matIconButton
+              aria-label="Avvia un sottopercorso"
+              matTooltip="Avvia un sottopercorso al clic su questo elemento"
+              (click)="newSubPath()"
+            >
+              <mat-icon svgIcon="route" />
             </button>
           }
           <span class="divider"></span>
@@ -245,15 +519,76 @@
           <span class="divider"></span>
         }
 
+        <button
+          matIconButton
+          aria-label="Frame associato"
+          [matTooltip]="el.anchor ? 'Associato a Frame ' + el.anchor.frame : 'Associa a un frame'"
+          [class.active]="!!el.anchor"
+          [matMenuTriggerFor]="anchorMenu"
+        >
+          <mat-icon svgIcon="link" />
+        </button>
+        <mat-menu #anchorMenu="matMenu">
+          <button
+            mat-menu-item
+            role="menuitemradio"
+            [attr.aria-checked]="!el.anchor"
+            [class.current]="!el.anchor"
+            (click)="attachTo(null)"
+          >
+            <mat-icon [svgIcon]="el.anchor ? 'close' : 'check'" />Nessun frame
+          </button>
+          @for (frame of attachableFrames(); track frame.id) {
+            <button
+              mat-menu-item
+              role="menuitemradio"
+              [attr.aria-checked]="el.anchor?.frame === frame.id"
+              [class.current]="el.anchor?.frame === frame.id"
+              (mouseenter)="highlightId.set(frame.id)"
+              (mouseleave)="highlightId.set(null)"
+              (click)="highlightId.set(null); attachTo(frame.id)"
+            >
+              <mat-icon [svgIcon]="el.anchor?.frame === frame.id ? 'check' : 'frame'" />Frame {{ frame.id }}
+            </button>
+          }
+          @if (selectedFrame()) {
+            <button mat-menu-item (click)="attachElementsOnFrame()">
+              <mat-icon svgIcon="link" />Associa gli elementi sopra questo frame
+            </button>
+          }
+        </mat-menu>
+
         <button matIconButton aria-label="Ruota" matTooltip="Ruota" [matMenuTriggerFor]="rotateMenu">
           <mat-icon svgIcon="rotate" />
         </button>
         <mat-menu #rotateMenu="matMenu" class="wide-menu">
-          <div class="menu-control" (click)="$event.stopPropagation()" (keydown)="$event.key !== 'Escape' && $event.stopPropagation()">
-            <mat-slider min="0" max="360" step="1" discrete aria-label="Rotazione">
-              <input matSliderThumb [value]="el.rotation" (valueChange)="rotate($event)" />
-            </mat-slider>
-            <span class="value">{{ el.rotation }}°</span>
+          <div class="rotate-controls" (click)="$event.stopPropagation()" (keydown)="$event.key !== 'Escape' && $event.stopPropagation()">
+            <div class="menu-control">
+              <span class="axis" matTooltip="Rotazione sul piano">Z</span>
+              <mat-slider min="0" max="360" step="1" discrete aria-label="Rotazione">
+                <input matSliderThumb [value]="el.rotation" (input)="rotate('rotation', $any($event.target).valueAsNumber)" />
+              </mat-slider>
+              <span class="value">{{ el.rotation }}°</span>
+            </div>
+            @if (selectedFrame(); as frame) {
+              <div class="menu-control">
+                <span class="axis" matTooltip="Inclinazione 3D attorno all'asse orizzontale">X</span>
+                <mat-slider min="-180" max="180" step="1" discrete aria-label="Inclinazione 3D orizzontale">
+                  <input matSliderThumb [value]="frame.rotateX" (input)="rotate('rotateX', $any($event.target).valueAsNumber)" />
+                </mat-slider>
+                <span class="value">{{ frame.rotateX }}°</span>
+              </div>
+              <div class="menu-control">
+                <span class="axis" matTooltip="Inclinazione 3D attorno all'asse verticale">Y</span>
+                <mat-slider min="-180" max="180" step="1" discrete aria-label="Inclinazione 3D verticale">
+                  <input matSliderThumb [value]="frame.rotateY" (input)="rotate('rotateY', $any($event.target).valueAsNumber)" />
+                </mat-slider>
+                <span class="value">{{ frame.rotateY }}°</span>
+              </div>
+              @if (frame.rotateX || frame.rotateY) {
+                <button matButton class="reset-3d" (click)="resetTilt()">Azzera rotazione 3D</button>
+              }
+            }
           </div>
         </mat-menu>
         <button matIconButton aria-label="Porta avanti" matTooltip="Porta avanti" (click)="changeLayer(1)">
@@ -273,6 +608,7 @@
       #viewport
       class="viewport"
       (pointerdown)="onViewportPointerDown($event)"
+      (dblclick)="onViewportDblClick($event)"
       (dragover)="onDragOver($event)"
       (drop)="onDrop($event)"
     >
@@ -283,13 +619,24 @@
           [selectedId]="store.selectedId()"
           [pathIds]="store.mainPath()"
           [highlightId]="highlightId()"
+          [anchorFrameId]="anchorFrameId()"
+          [triggerIds]="triggerIds()"
+          [zoom]="canvasZoom()"
           [style.transform]="canvasTransform()"
           (elementPointerDown)="onElementPointerDown($event)"
           (resizePointerDown)="onResizePointerDown($event)"
-          (elementDblClick)="toggleZoom($event)"
+          [editingId]="editingId()"
+          (elementDblClick)="onElementDblClick($event)"
           (textCommit)="onTextCommit($event)"
         />
       }
     </div>
+
+    @if (zoomed()) {
+      <button matButton="filled" class="overview-button" matTooltip="Esc o doppio clic su un'area vuota" (click)="zoomOut()">
+        <mat-icon svgIcon="zoom-out" />
+        Vista d'insieme
+      </button>
+    }
   </mat-sidenav-content>
 </mat-sidenav-container>

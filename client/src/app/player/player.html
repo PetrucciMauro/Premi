@@ -1,6 +1,6 @@
 <div class="stage" (click)="onCanvasClick($event)" (touchstart)="onTouchStart($event)">
   @if (presentation(); as p) {
-    <app-slide-canvas [proper]="p.proper" [mediaUrl]="mediaUrl()" [style.transform]="transform()" />
+    <app-slide-canvas [proper]="p.proper" [mediaUrl]="mediaUrl()" [triggerIds]="triggerIds()" [zoom]="zoom()" [style.transform]="transform()" />
   }
 </div>
 
@@ -32,10 +32,16 @@
               <mat-icon class="bookmark" svgIcon="bookmark-filled" aria-label="Bookmark" />
             }
           </button>
+          @for (s of subPaths().get(frame.id) ?? []; track s.path.id) {
+            <button class="step-item sub-item" [class.active]="sub()?.path?.id === s.path.id" (click)="startSub(frame.id, s.path.id)">
+              <span class="num"><mat-icon svgIcon="route" /></span>
+              Sottopercorso · {{ s.frames.length }} frame
+            </button>
+          }
         }
       </div>
       <p class="keys">
-        <kbd>←</kbd><kbd>→</kbd> naviga · <kbd>Spazio</kbd> bookmark · <kbd>Esc</kbd> menu
+        <kbd>←</kbd><kbd>→</kbd> naviga · <kbd>Spazio</kbd> bookmark · <kbd>⌫</kbd> esci dal sottopercorso · <kbd>Esc</kbd> menu
       </p>
     </div>
   }
@@ -44,7 +50,9 @@
 <div class="controls glass">
   <button class="round" aria-label="Precedente" (click)="prev()"><mat-icon svgIcon="chevron-left" /></button>
   <span class="counter">
-    @if (step() === 0) {
+    @if (sub(); as s) {
+      <mat-icon class="sub-icon" svgIcon="route" />{{ s.index + 1 }} <span class="of">/ {{ s.frames.length }}</span>
+    } @else if (step() === 0) {
       Panoramica
     } @else {
       {{ step() }} <span class="of">/ {{ frames().length }}</span>

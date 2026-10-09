@@ -14,16 +14,22 @@ import {
   COLLECTIONS,
   ELEMENT_TYPES,
   FrameElement,
+  FrameImageFit,
   Presentation,
   Proper,
   SlideElement,
   TextElement,
   addElement,
   allElements,
+  anchorChain,
+  byLayer,
   findElement,
+  newAnchor,
   nextElementId,
   nextZIndex,
   removeElement,
+  removeFromPaths,
+  syncAnchors,
 } from '../model/presentation';
 
 interface HistoryEntry {
@@ -109,6 +115,7 @@ export class EditorStore {
     const before = this.proper();
     const after = structuredClone(before);
     mutate(after);
+    syncAnchors(before, after);
     if (same(before, after)) return false;
 
     this.state.set(after);
@@ -124,8 +131,10 @@ export class EditorStore {
 
   /** Modifica temporanea (es. durante un trascinamento) da confermare con commit(). */
   preview(mutate: (draft: Proper) => void): void {
-    const draft = structuredClone(this.proper());
+    const before = this.proper();
+    const draft = structuredClone(before);
     mutate(draft);
+    syncAnchors(before, draft);
     this.state.set(draft);
   }
 
@@ -183,14 +192,12 @@ export class EditorStore {
       // gli elementi sopra quello eliminato scendono di un livello
       for (const el of allElements(draft)) if (el.zIndex > element.zIndex) el.zIndex--;
       if (element.type === 'frame') {
-        draft.paths.main = draft.paths.main.filter((frameId) => frameId !== id);
-        draft.paths.choices = draft.paths.choices.map((choice) => {
-          const path = choice as { choicePath?: unknown[] };
-          return Array.isArray(path.choicePath)
-            ? { ...path, choicePath: path.choicePath.filter((frameId) => Number(frameId) !== id) }
-            : choice;
-        });
+        removeFromPaths(draft.paths, id);
+        // i sottopercorsi che partivano da questo frame non sono più raggiungibili
+        draft.paths.choices = draft.paths.choices.filter((sub) => sub.frame !== id);
       }
+      // i sottopercorsi avviati da questo elemento restano, in attesa di un nuovo elemento
+      for (const sub of draft.paths.choices) if (sub.trigger === id) sub.trigger = null;
     });
     if (this.selectedId() === id) this.selectedId.set(null);
   }
@@ -202,17 +209,69 @@ export class EditorStore {
     }, mergeKey);
   }
 
-  /** Scambia lo z-index con l'elemento immediatamente sopra (direction 1) o sotto (-1). */
+  /**
+   * Porta l'elemento sopra l'elemento immediatamente sopra (direction 1) o sotto quello
+   * immediatamente sotto (-1). Un frame si sposta insieme agli elementi associati; un
+   * elemento associato non può scendere sotto il suo frame (vedi enforceLayering).
+   */
   changeLayer(id: number, direction: 1 | -1): void {
     this.execute(direction === 1 ? 'porta avanti' : 'porta dietro', (draft) => {
-      const element = findElement(draft, id);
-      if (!element) return;
-      const other = allElements(draft)
-        .filter((el) => el.id !== id && (direction === 1 ? el.zIndex > element.zIndex : el.zIndex < element.zIndex))
-        .sort((a, b) => direction * (a.zIndex - b.zIndex))[0];
-      if (!other) return;
-      [element.zIndex, other.zIndex] = [other.zIndex, element.zIndex];
+      const order = byLayer(draft);
+      const levels = order.map((el) => el.zIndex);
+      const inGroup = (el: SlideElement) => el.id === id || anchorChain(draft, el).includes(id);
+      const group = order.filter(inGroup);
+      if (!group.length) return;
+      const rest = order.filter((el) => !inGroup(el));
+      // vicino: il primo elemento fuori dal gruppo sopra il suo elemento più alto o sotto il più basso
+      const edge = order.indexOf(direction === 1 ? group.at(-1)! : group[0]);
+      const neighbor = direction === 1 ? order.slice(edge + 1).find((el) => !inGroup(el)) : order.slice(0, edge).reverse().find((el) => !inGroup(el));
+      if (!neighbor) return;
+      const at = rest.indexOf(neighbor) + (direction === 1 ? 1 : 0);
+      [...rest.slice(0, at), ...group, ...rest.slice(at)].forEach((el, i) => (el.zIndex = levels[i]));
     });
+  }
+
+  /**
+   * Riordina gli elementi associati direttamente al frame; `ids` va dal più in alto al più
+   * in basso. Ogni elemento si sposta con i propri elementi associati; i livelli usati sono
+   * quelli che il gruppo occupava già, così il resto della presentazione non cambia.
+   */
+  reorderChildren(frameId: number, ids: number[]): void {
+    this.execute('riordina elementi del frame', (draft) => {
+      if (!ids.every((id) => findElement(draft, id)?.anchor?.frame === frameId)) return;
+      const order = byLayer(draft);
+      const groupOf = (id: number) => order.filter((el) => el.id === id || anchorChain(draft, el).includes(id));
+      const members = [...ids].reverse().flatMap(groupOf);
+      const levels = members.map((el) => el.zIndex).sort((a, b) => a - b);
+      members.forEach((el, i) => (el.zIndex = levels[i]));
+    });
+  }
+
+  /**
+   * Associa gli elementi a un frame (o li separa con frameId null): da quel momento
+   * seguono spostamenti, ridimensionamenti e rotazioni del frame.
+   */
+  attach(ids: number[], frameId: number | null, label = frameId === null ? 'separa dal frame' : 'associa al frame'): void {
+    this.execute(label, (draft) => {
+      for (const id of ids) {
+        const el = findElement(draft, id);
+        if (!el) continue;
+        if (frameId === null || !this.canAttach(draft, id, frameId)) delete el.anchor;
+        else if (el.anchor?.frame !== frameId) {
+          // la rotazione che aveva (rispetto alla tela o al frame precedente) diventa quella rispetto al nuovo frame
+          const relative = el.anchor ? el.anchor.rotation : el.rotation;
+          const frame = draft.frames.find((f) => f.id === frameId)!;
+          el.rotation = (((frame.rotation + relative) % 360) + 360) % 360;
+          el.anchor = newAnchor(frameId);
+        }
+      }
+    });
+  }
+
+  /** Un frame non può essere associato a sé stesso né a un frame che dipende da lui. */
+  canAttach(proper: Proper, id: number, frameId: number): boolean {
+    const frame = proper.frames.find((f) => f.id === frameId);
+    return !!frame && frame.id !== id && !anchorChain(proper, frame).includes(id);
   }
 
   setContent(id: number, content: string): void {
@@ -225,15 +284,18 @@ export class EditorStore {
     this.execute(label, (draft) => Object.assign(draft.background, change), 'background-' + Object.keys(change).join());
   }
 
-  setFrameBackground(id: number, change: { color?: string; ref?: string }): void {
+  setFrameBackground(id: number, change: { color?: string; ref?: string; fit?: FrameImageFit }): void {
     this.update<FrameElement>(id, 'modifica sfondo', (el) => Object.assign(el, change), `frame-bg-${id}-${Object.keys(change).join()}`);
   }
 
   // ---------------------------------------------------------------- percorsi
 
+  /** Aggiunge il frame al percorso principale, togliendolo dall'eventuale sottopercorso. */
   addToMainPath(id: number): void {
     this.execute('aggiungi a percorso principale', (draft) => {
-      if (!draft.paths.main.includes(id)) draft.paths.main.push(id);
+      if (draft.paths.main.includes(id)) return;
+      removeFromPaths(draft.paths, id);
+      draft.paths.main.push(id);
     });
   }
 
@@ -249,6 +311,60 @@ export class EditorStore {
     this.execute('modifica percorso principale', (draft) => {
       const [id] = draft.paths.main.splice(from, 1);
       draft.paths.main.splice(to, 0, id);
+    });
+  }
+
+  /** Crea un sottopercorso che parte dal frame `frame`, avviato dall'elemento `trigger`. */
+  createSubPath(frame: number, trigger: number | null = null): number {
+    const id = Math.max(0, ...this.proper().paths.choices.map((sub) => sub.id)) + 1;
+    this.execute('nuovo sottopercorso', (draft) => {
+      for (const sub of draft.paths.choices) if (trigger !== null && sub.trigger === trigger) sub.trigger = null;
+      draft.paths.choices.push({ id, frame, trigger, choicePath: [] });
+    });
+    return id;
+  }
+
+  removeSubPath(id: number): void {
+    this.execute('elimina sottopercorso', (draft) => {
+      draft.paths.choices = draft.paths.choices.filter((sub) => sub.id !== id);
+    });
+  }
+
+  /** Un elemento avvia al massimo un sottopercorso. */
+  setSubPathTrigger(id: number, trigger: number | null): void {
+    this.execute('modifica avvio sottopercorso', (draft) => {
+      for (const sub of draft.paths.choices) {
+        if (sub.id === id) sub.trigger = trigger;
+        else if (trigger !== null && sub.trigger === trigger) sub.trigger = null;
+      }
+    });
+  }
+
+  /** Aggiunge il frame al sottopercorso, togliendolo dagli altri percorsi. */
+  addToSubPath(id: number, frameId: number): void {
+    this.execute('aggiungi a sottopercorso', (draft) => {
+      const sub = draft.paths.choices.find((s) => s.id === id);
+      if (!sub || sub.frame === frameId || sub.choicePath.includes(frameId)) return;
+      removeFromPaths(draft.paths, frameId);
+      const frame = draft.frames.find((f) => f.id === frameId);
+      if (frame) frame.bookmark = 0;
+      sub.choicePath.push(frameId);
+    });
+  }
+
+  removeFromSubPath(id: number, frameId: number): void {
+    this.execute('rimuovi da sottopercorso', (draft) => {
+      const sub = draft.paths.choices.find((s) => s.id === id);
+      if (sub) sub.choicePath = sub.choicePath.filter((f) => f !== frameId);
+    });
+  }
+
+  moveInSubPath(id: number, from: number, to: number): void {
+    this.execute('modifica sottopercorso', (draft) => {
+      const sub = draft.paths.choices.find((s) => s.id === id);
+      if (!sub) return;
+      const [frameId] = sub.choicePath.splice(from, 1);
+      sub.choicePath.splice(to, 0, frameId);
     });
   }
 

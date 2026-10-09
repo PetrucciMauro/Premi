@@ -5,7 +5,7 @@
  *   Pagina di modifica di una presentazione: inserimento, spostamento, ridimensionamento
  *   e rotazione degli elementi, sfondi, percorso principale e bookmark.
  */
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -35,16 +35,34 @@ import { PresentationApi, UploadService } from '../core/presentation-api.service
 import {
   DEFAULT_TEXT_FONT,
   FrameElement,
+  FrameImageFit,
   MediaType,
+  Proper,
   SlideElement,
+  SubPath,
   TextElement,
   allElements,
+  anchorChain,
+  byLayer,
   findElement,
   mediaSrc,
+  newAnchor,
+  pathOf,
+  planeMatrix,
+  toFrameLocal,
   toHexColor,
 } from '../model/presentation';
 import { ElementPointerEvent, SlideCanvas, TextCommitEvent } from '../shared/slide-canvas';
-import { CameraAnimator, Size, Target, cameraFor, cameraMatrix, sameCamera } from '../shared/view-transform';
+import {
+  CameraAnimator,
+  Size,
+  cameraFor,
+  cameraMatrix,
+  focusCamera,
+  perspectiveFor,
+  sameCamera,
+  unproject,
+} from '../shared/view-transform';
 import { EditorStore } from './editor-store';
 
 export const FONTS = [
@@ -72,6 +90,16 @@ const KIND_LABELS: Record<string, string> = {
   SVG: 'Forma',
 };
 
+const KIND_ICONS: Record<string, string> = {
+  frame: 'frame',
+  text: 'type',
+  image: 'image',
+  video: 'video',
+  audio: 'music',
+};
+
+type PanelTab = 'paths' | 'frames';
+
 const AUTOSAVE_MS = 30_000;
 const MIN_SIZE = 10;
 
@@ -80,11 +108,17 @@ const isTyping = (target: EventTarget | null) =>
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), Math.max(min, max));
 
-const isInside = (outer: SlideElement, inner: SlideElement) =>
-  inner.xIndex >= outer.xIndex &&
-  inner.yIndex >= outer.yIndex &&
-  inner.xIndex + inner.width <= outer.xIndex + outer.width &&
-  inner.yIndex + inner.height <= outer.yIndex + outer.height;
+/** Il punto (in coordinate della tela) cade dentro al frame, anche se ruotato. */
+const isOnFrame = (frame: FrameElement, x: number, y: number) => {
+  const p = toFrameLocal(frame, x, y);
+  return p.x >= 0 && p.y >= 0 && p.x <= frame.width && p.y <= frame.height;
+};
+
+export const FRAME_FITS: { value: FrameImageFit; label: string }[] = [
+  { value: 'cover', label: 'Riempi (cover)' },
+  { value: 'contain', label: 'Adatta (fit)' },
+  { value: 'fill', label: 'Estendi (deforma)' },
+];
 
 /** Dimensioni naturali di un'immagine o di un video. */
 function naturalSize(type: MediaType, src: string): Promise<Size | null> {
@@ -148,11 +182,21 @@ export class Editor implements OnInit {
   private readonly viewport = viewChild.required<ElementRef<HTMLElement>>('viewport');
 
   protected readonly fonts = FONTS;
+  protected readonly frameFits = FRAME_FITS;
   protected readonly pathsOpen = signal(false);
+  protected readonly panelTab = signal<PanelTab>('paths');
+  /** sottopercorso aperto nel pannello */
+  protected readonly expandedSub = signal<number | null>(null);
+  /** ridimensionando un frame se ne mantengono le proporzioni (Maiusc inverte la scelta) */
+  protected readonly keepFrameRatio = signal(true);
+  /** i nuovi elementi vengono associati al frame selezionato o inquadrato */
+  protected readonly attachOnInsert = signal(true);
   protected readonly highlightId = signal<number | null>(null);
   protected readonly uploading = signal(0);
   private readonly viewportSize = signal<Size>({ width: 1, height: 1 });
-  private readonly zoomTarget = signal<Target | null>(null);
+  /** elemento inquadrato, con lo stato della presentazione al momento dello zoom (la vista non lo insegue) */
+  private readonly zoom = signal<{ proper: Proper; element: SlideElement } | null>(null);
+  private readonly zoomedId = computed(() => this.zoom()?.element.id ?? null);
   /** le transizioni della vista partono solo dopo il primo adattamento, per non animare il caricamento */
   protected readonly animated = signal(false);
   private keyMoveSession = 0;
@@ -171,6 +215,82 @@ export class Editor implements OnInit {
     const frame = this.selectedFrame();
     return !!frame && this.store.mainPath().includes(frame.id);
   });
+  /** percorso del frame selezionato: 'main', id del sottopercorso o null */
+  protected readonly selectedPath = computed(() => {
+    const frame = this.selectedFrame();
+    const proper = this.proper();
+    return frame && proper ? pathOf(proper.paths, frame.id) : null;
+  });
+
+  /** frame di cui la lista dei frame mostra gli elementi: quello selezionato o quello dell'elemento selezionato */
+  protected readonly focusFrameId = computed(() => {
+    const el = this.selected();
+    return el?.type === 'frame' ? el.id : (el?.anchor?.frame ?? null);
+  });
+
+  /** Elementi associati direttamente al frame, dal livello più alto. */
+  protected childrenOf(frameId: number): SlideElement[] {
+    const proper = this.proper();
+    return proper ? byLayer(proper).reverse().filter((el) => el.anchor?.frame === frameId) : [];
+  }
+
+  /** tutti i frame, con il percorso a cui appartengono */
+  protected readonly frameList = computed(() => {
+    const proper = this.proper();
+    if (!proper) return [];
+    return [...proper.frames]
+      .sort((a, b) => a.id - b.id)
+      .map((frame) => {
+        const path = pathOf(proper.paths, frame.id);
+        const step = path === 'main' ? proper.paths.main.indexOf(frame.id) + 1 : null;
+        return { frame, path, step, children: this.childrenOf(frame.id).length };
+      });
+  });
+
+  protected readonly subPaths = computed(() => {
+    const proper = this.proper();
+    return (proper?.paths.choices ?? []).map((sub) => ({
+      sub,
+      originInMain: proper!.paths.main.includes(sub.frame),
+    }));
+  });
+
+  /** frame del percorso principale da cui l'elemento selezionato può avviare un sottopercorso */
+  protected readonly subPathOrigin = computed(() => {
+    const proper = this.proper();
+    const el = this.selected();
+    if (!proper || !el) return null;
+    if (el.type === 'frame' && proper.paths.main.includes(el.id)) return el.id;
+    return anchorChain(proper, el).find((id) => proper.paths.main.includes(id)) ?? null;
+  });
+
+  /** sottopercorso avviato dall'elemento selezionato */
+  protected readonly selectedTriggerOf = computed(() => {
+    const id = this.store.selectedId();
+    return this.proper()?.paths.choices.find((sub) => sub.trigger === id) ?? null;
+  });
+
+  protected readonly triggerIds = computed(() =>
+    (this.proper()?.paths.choices ?? []).map((sub) => sub.trigger).filter((id): id is number => id !== null),
+  );
+
+  /** frame a cui è associato l'elemento selezionato */
+  protected readonly anchorFrameId = computed(() => this.selected()?.anchor?.frame ?? null);
+  /** frame a cui si può associare l'elemento selezionato */
+  protected readonly attachableFrames = computed(() => {
+    const proper = this.proper();
+    const el = this.selected();
+    return proper && el ? proper.frames.filter((frame) => this.store.canAttach(proper, el.id, frame.id)) : [];
+  });
+  /** frame a cui associare gli elementi inseriti: quello selezionato, quello dell'elemento selezionato o quello inquadrato */
+  protected readonly insertFrameTarget = computed(() => {
+    const proper = this.proper();
+    const el = this.selected();
+    const zoomed = this.zoom()?.element;
+    const id = el?.type === 'frame' ? el.id : (el?.anchor?.frame ?? (zoomed?.type === 'frame' ? zoomed.id : null));
+    return proper?.frames.find((frame) => frame.id === id) ?? null;
+  });
+
   protected kindLabel(element: SlideElement): string {
     return KIND_LABELS[element.type] ?? 'Elemento';
   }
@@ -188,17 +308,20 @@ export class Editor implements OnInit {
   private readonly camera = computed(() => {
     const proper = this.proper();
     const viewport = this.viewportSize();
-    const target = this.zoomTarget();
-    if (target) return cameraFor(viewport, target, 0.8);
+    // un frame inclinato (o un elemento che sta su di lui) si vede di fronte
+    const zoom = this.zoom();
+    if (zoom) return focusCamera(viewport, zoom.proper, zoom.element, 0.8);
     return proper ? cameraFor(viewport, { xIndex: 0, yIndex: 0, rotation: 0, ...proper.background }, 0.98) : null;
   }, { equal: sameCamera });
   private readonly matrix = computed(() => {
     const camera = this.camera();
-    return camera ? cameraMatrix(this.viewportSize(), camera) : new DOMMatrix();
+    const viewport = this.viewportSize();
+    return camera ? cameraMatrix(viewport, camera, perspectiveFor(viewport)) : new DOMMatrix();
   });
   private readonly animator = new CameraAnimator({ min: 350, max: 900, perUnit: 400 });
   protected readonly canvasTransform = this.animator.transform;
-  protected readonly zoomed = computed(() => this.zoomTarget() !== null);
+  protected readonly canvasZoom = this.animator.zoom;
+  protected readonly zoomed = computed(() => this.zoom() !== null);
 
   protected readonly backgroundHex = computed(() => toHexColor(this.proper()?.background.color ?? ''));
   protected readonly frameHex = computed(() => toHexColor(this.selectedFrame()?.color ?? ''));
@@ -282,24 +405,61 @@ export class Editor implements OnInit {
 
   // ---------------------------------------------------------------- coordinate e vista
 
-  /** Punto della tela sotto il puntatore. */
-  private toCanvas(event: { clientX: number; clientY: number }): DOMPoint {
+  /**
+   * Punto sotto il puntatore, in coordinate della tela: proiettato sul piano su cui si muove
+   * `element` (che può essere inclinato in 3D) o, senza elemento, su quello dell'elemento inquadrato.
+   */
+  private toCanvas(event: { clientX: number; clientY: number }, element?: SlideElement): { x: number; y: number } {
     const rect = this.viewport().nativeElement.getBoundingClientRect();
-    return this.matrix().inverse().transformPoint(new DOMPoint(event.clientX - rect.left, event.clientY - rect.top));
+    return unproject(this.matrix().multiply(this.plane(element)), event.clientX - rect.left, event.clientY - rect.top);
+  }
+
+  private plane(element?: SlideElement): DOMMatrix {
+    const proper = this.store.proper();
+    if (element) return planeMatrix(proper, element);
+    const zoomed = this.zoomedId();
+    const target = zoomed === null ? undefined : findElement(proper, zoomed);
+    return target ? planeMatrix(proper, target, true) : new DOMMatrix();
   }
 
   /** Centro dell'area visibile, in coordinate della tela. */
-  private viewCenter(): DOMPoint {
+  private viewCenter(): { x: number; y: number } {
     const { width, height } = this.viewportSize();
-    return this.matrix().inverse().transformPoint(new DOMPoint(width / 2, height / 2));
+    return unproject(this.matrix().multiply(this.plane()), width / 2, height / 2);
   }
 
   protected zoomOut(): void {
-    this.zoomTarget.set(null);
+    this.zoom.set(null);
   }
 
-  protected toggleZoom(element: SlideElement): void {
-    this.zoomTarget.set(this.zoomTarget() ? null : { ...element });
+  /**
+   * Doppio clic su un elemento: un testo entra in modifica; gli altri elementi vengono
+   * inquadrati (o, se sono già quelli inquadrati, si torna alla vista d'insieme).
+   */
+  protected onElementDblClick(element: SlideElement): void {
+    if (element.type === 'text') {
+      this.editText(element.id);
+      return;
+    }
+    if (this.zoomedId() === element.id) this.zoomOut();
+    else this.zoomTo(element);
+  }
+
+  protected readonly editingId = signal<number | null>(null);
+
+  /** Mette il testo in modifica e gli dà il focus. */
+  private editText(id: number): void {
+    this.store.selectedId.set(id);
+    this.editingId.set(id);
+    // il focus dopo che la casella di testo ha ricevuto i clic (classe editing)
+    setTimeout(() => {
+      const area = this.viewport().nativeElement.querySelector<HTMLTextAreaElement>(`[data-element-id="${id}"] textarea`);
+      area?.focus();
+    });
+  }
+
+  private zoomTo(element: SlideElement): void {
+    this.zoom.set({ proper: this.store.proper(), element });
   }
 
   // ---------------------------------------------------------------- selezione, spostamento, ridimensionamento
@@ -309,6 +469,11 @@ export class Editor implements OnInit {
       this.blurActive();
       this.store.selectedId.set(null);
     }
+  }
+
+  /** Doppio clic fuori dagli elementi: torna alla vista d'insieme. */
+  protected onViewportDblClick(event: MouseEvent): void {
+    if (!(event.target as HTMLElement).closest('.element')) this.zoomOut();
   }
 
   private blurActive(): void {
@@ -325,24 +490,17 @@ export class Editor implements OnInit {
 
     const proper = this.store.proper();
     const { width, height } = proper.background;
-    const start = this.toCanvas(event);
-    // spostando un frame si spostano anche gli elementi contenuti al suo interno
-    const contained =
-      element.type === 'frame' ? allElements(proper).filter((el) => el.id !== element.id && isInside(element, el)) : [];
-    const moving = [element, ...contained];
+    const start = this.toCanvas(event, element);
 
+    // gli elementi associati a un frame lo seguono da soli (EditorStore.preview)
     this.track(
       (e) => {
-        const p = this.toCanvas(e);
-        const dx = clamp(element.xIndex + p.x - start.x, 0, width - element.width) - element.xIndex;
-        const dy = clamp(element.yIndex + p.y - start.y, 0, height - element.height) - element.yIndex;
+        const p = this.toCanvas(e, element);
         this.store.preview((draft) => {
-          for (const original of moving) {
-            const el = findElement(draft, original.id);
-            if (el) {
-              el.xIndex = Math.round(original.xIndex + dx);
-              el.yIndex = Math.round(original.yIndex + dy);
-            }
+          const el = findElement(draft, element.id);
+          if (el) {
+            el.xIndex = Math.round(clamp(element.xIndex + p.x - start.x, 0, width - element.width));
+            el.yIndex = Math.round(clamp(element.yIndex + p.y - start.y, 0, height - element.height));
           }
         });
       },
@@ -356,17 +514,18 @@ export class Editor implements OnInit {
     this.blurActive();
 
     const before = this.store.proper();
-    const start = this.toCanvas(event);
+    const start = this.toCanvas(event, element);
     const ratio = element.width / Math.max(element.height, 1);
     const angle = (-element.rotation * Math.PI) / 180;
-    const keepRatio = element.type !== 'text';
+    const ratioByDefault = element.type === 'frame' ? this.keepFrameRatio() : element.type !== 'text';
 
     this.track(
       (e) => {
-        const p = this.toCanvas(e);
+        const p = this.toCanvas(e, element);
         // spostamento del puntatore nel sistema di riferimento (ruotato) dell'elemento
         const dx = (p.x - start.x) * Math.cos(angle) - (p.y - start.y) * Math.sin(angle);
         const dy = (p.x - start.x) * Math.sin(angle) + (p.y - start.y) * Math.cos(angle);
+        const keepRatio = ratioByDefault !== e.shiftKey;
         const width = Math.max(MIN_SIZE, element.width + dx);
         const height = keepRatio ? width / ratio : Math.max(MIN_SIZE, element.height + dy);
         this.store.preview((draft) => {
@@ -396,6 +555,7 @@ export class Editor implements OnInit {
   }
 
   protected onTextCommit({ id, content }: TextCommitEvent): void {
+    if (this.editingId() === id) this.editingId.set(null);
     this.store.setContent(id, content);
   }
 
@@ -426,7 +586,7 @@ export class Editor implements OnInit {
 
     const selected = this.selected();
     if (event.key === 'Escape') {
-      if (this.zoomTarget()) this.zoomOut();
+      if (this.zoom()) this.zoomOut();
       else this.store.selectedId.set(null);
       return;
     }
@@ -480,24 +640,64 @@ export class Editor implements OnInit {
       bookmark: 0,
       ref: '',
       color: 'rgba(255,255,255,0)',
+      fit: 'cover',
+      rotateX: 0,
+      rotateY: 0,
     } as Omit<FrameElement, 'id' | 'zIndex'>);
   }
 
-  protected insertText(): void {
+  /** Frame a cui associare un elemento inserito nel punto `at` (o al centro della vista). */
+  private frameForInsert(at?: { x: number; y: number }): FrameElement | null {
+    if (!this.attachOnInsert()) return null;
+    if (!at) return this.insertFrameTarget();
+    // trascinando un file si usa il frame più in alto sotto il puntatore
+    return [...this.store.proper().frames]
+      .sort((a, b) => b.zIndex - a.zIndex)
+      .find((frame) => isOnFrame(frame, at.x, at.y)) ?? null;
+  }
+
+  /**
+   * Posizione di un nuovo elemento di dimensioni `size` centrato in `at`. Associato a un frame
+   * ne prende la rotazione e, se serve, viene rimpicciolito (di `scale`) per starci dentro.
+   */
+  private placement(size: Size, at: { x: number; y: number }, frame: FrameElement | null) {
     const { width: w, height: h } = this.store.proper().background;
-    const width = Math.round(w * 0.15);
-    const height = Math.round(w * 0.05);
-    const center = this.viewCenter();
+    const scale = frame ? Math.min(1, (frame.width * 0.8) / size.width, (frame.height * 0.8) / size.height) : 1;
+    const width = Math.max(MIN_SIZE, Math.round(size.width * scale));
+    const height = Math.max(MIN_SIZE, Math.round(size.height * scale));
+    const x = at.x - width / 2;
+    const y = at.y - height / 2;
+    return {
+      scale,
+      geometry: {
+        xIndex: Math.round(frame ? x : clamp(x, 0, w - width)),
+        yIndex: Math.round(frame ? y : clamp(y, 0, h - height)),
+        width,
+        height,
+        rotation: frame?.rotation ?? 0,
+        ...(frame ? { anchor: newAnchor(frame.id) } : {}),
+      },
+    };
+  }
+
+  private frameCenter(frame: FrameElement) {
+    return { x: frame.xIndex + frame.width / 2, y: frame.yIndex + frame.height / 2 };
+  }
+
+  protected insertText(): void {
+    const w = this.store.proper().background.width;
+    const frame = this.frameForInsert();
+    const { scale, geometry } = this.placement(
+      { width: w * 0.15, height: w * 0.05 },
+      frame ? this.frameCenter(frame) : this.viewCenter(),
+      frame,
+    );
     const id = this.store.insert({
       type: 'text',
-      xIndex: Math.round(clamp(center.x - width / 2, 0, w - width)),
-      yIndex: Math.round(clamp(center.y - height / 2, 0, h - height)),
-      width,
-      height,
-      rotation: 0,
+      ...geometry,
       content: '',
       font: DEFAULT_TEXT_FONT,
-      fontSize: 1,
+      fontSize: Math.round(scale * 100) / 100 || 0.1,
       color: 'black',
     } as Omit<TextElement, 'id' | 'zIndex'>);
     // il testo riceve il focus quando il menu di inserimento è chiuso del tutto
@@ -509,16 +709,13 @@ export class Editor implements OnInit {
   protected onInsertMenuClosed(): void {
     const id = this.pendingFocus;
     this.pendingFocus = null;
-    if (id === null) return;
-    setTimeout(() =>
-      this.viewport().nativeElement.querySelector<HTMLTextAreaElement>(`[data-element-id="${id}"] textarea`)?.focus(),
-    );
+    if (id !== null) this.editText(id);
   }
 
   protected onFilesSelected(input: HTMLInputElement): void {
     const files = Array.from(input.files ?? []);
     input.value = '';
-    this.insertMedia(files, this.viewCenter());
+    this.insertMedia(files);
   }
 
   protected onDragOver(event: DragEvent): void {
@@ -532,7 +729,11 @@ export class Editor implements OnInit {
     this.insertMedia(files, this.toCanvas(event));
   }
 
-  private async insertMedia(files: File[], at: DOMPoint): Promise<void> {
+  /** Inserisce i file nel punto `at` della tela o, senza punto, al centro della vista o del frame selezionato. */
+  private async insertMedia(files: File[], at?: { x: number; y: number }): Promise<void> {
+    // il frame va scelto subito: durante il caricamento la selezione può cambiare
+    const frame = this.frameForInsert(at);
+    const center = at ?? (frame ? this.frameCenter(frame) : this.viewCenter());
     for (const [index, file] of files.entries()) {
       this.uploading.update((n) => n + 1);
       try {
@@ -549,15 +750,10 @@ export class Editor implements OnInit {
           size = { width: width * scale, height: height * scale };
         }
         const offset = index * 20;
-        this.store.insert({
-          type,
-          url,
-          xIndex: Math.round(clamp(at.x - size.width / 2 + offset, 0, w - size.width)),
-          yIndex: Math.round(clamp(at.y - size.height / 2 + offset, 0, h - size.height)),
-          width: Math.round(size.width),
-          height: Math.round(size.height),
-          rotation: 0,
-        } as Omit<SlideElement, 'id' | 'zIndex'>);
+        // il frame potrebbe essere stato eliminato durante il caricamento
+        const target = frame && this.store.proper().frames.find((f) => f.id === frame.id);
+        const { geometry } = this.placement(size, { x: center.x + offset, y: center.y + offset }, target ?? null);
+        this.store.insert({ type, url, ...geometry } as Omit<SlideElement, 'id' | 'zIndex'>);
       } catch (err) {
         this.notify.error(err);
       } finally {
@@ -617,6 +813,41 @@ export class Editor implements OnInit {
     if (frame) this.store.setFrameBackground(frame.id, { color: '', ref: '' });
   }
 
+  protected setFrameFit(fit: FrameImageFit): void {
+    const frame = this.selectedFrame();
+    if (frame) this.store.setFrameBackground(frame.id, { fit });
+  }
+
+  // ---------------------------------------------------------------- associazione ai frame
+
+  protected attachTo(frameId: number | null): void {
+    const el = this.selected();
+    if (el) this.store.attach([el.id], frameId);
+  }
+
+  /** Associa al frame selezionato gli elementi non ancora associati che hanno il centro sopra di esso. */
+  protected attachElementsOnFrame(): void {
+    const frame = this.selectedFrame();
+    if (!frame) return;
+    const proper = this.store.proper();
+    const area = frame.width * frame.height;
+    const ids = allElements(proper)
+      .filter(
+        (el) =>
+          !el.anchor &&
+          el.id !== frame.id &&
+          // un frame più grande contiene questo, non il contrario
+          (el.type !== 'frame' || el.width * el.height < area) &&
+          isOnFrame(frame, el.xIndex + el.width / 2, el.yIndex + el.height / 2) &&
+          this.store.canAttach(proper, el.id, frame.id),
+      )
+      .map((el) => el.id);
+    if (ids.length) this.store.attach(ids, frame.id, 'associa elementi al frame');
+    this.notify.info(
+      ids.length === 0 ? 'Nessun elemento da associare' : ids.length === 1 ? 'Associato 1 elemento' : `Associati ${ids.length} elementi`,
+    );
+  }
+
   // ---------------------------------------------------------------- elemento selezionato
 
   protected remove(): void {
@@ -629,9 +860,20 @@ export class Editor implements OnInit {
     if (el) this.store.changeLayer(el.id, direction);
   }
 
-  protected rotate(value: number): void {
+  /** Rotazione sul piano o, per i frame, inclinazione 3D; segue lo slider mentre si trascina. */
+  protected rotate(axis: 'rotation' | 'rotateX' | 'rotateY', value: number): void {
     const el = this.selected();
-    if (el) this.store.update(el.id, 'ruota elemento', (x) => (x.rotation = value), `rotate-${el.id}`);
+    if (!el || !Number.isFinite(value) || (axis !== 'rotation' && el.type !== 'frame')) return;
+    this.store.update(el.id, 'ruota elemento', (x) => ((x as FrameElement)[axis] = value), `rotate-${el.id}-${axis}`);
+  }
+
+  protected resetTilt(): void {
+    const frame = this.selectedFrame();
+    if (frame)
+      this.store.update<FrameElement>(frame.id, 'azzera rotazione 3D', (el) => {
+        el.rotateX = 0;
+        el.rotateY = 0;
+      });
   }
 
   protected setTextColor(color: string): void {
@@ -685,6 +927,78 @@ export class Editor implements OnInit {
     const frame = this.store.proper().frames.find((f) => f.id === id);
     if (!frame) return;
     this.store.selectedId.set(id);
-    this.zoomTarget.set({ ...frame });
+    this.zoomTo(frame);
+  }
+
+  protected select(id: number): void {
+    this.blurActive();
+    this.store.selectedId.set(id);
+  }
+
+  protected openPanel(tab: PanelTab): void {
+    this.panelTab.set(tab);
+    this.pathsOpen.set(true);
+  }
+
+  // ---------------------------------------------------------------- elementi del frame
+
+  /** Riordina trascinando gli elementi associati al frame espanso nella lista dei frame. */
+  protected reorderChildren(frameId: number, event: CdkDragDrop<SlideElement[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+    const ids = this.childrenOf(frameId).map((el) => el.id);
+    moveItemInArray(ids, event.previousIndex, event.currentIndex);
+    this.store.reorderChildren(frameId, ids);
+  }
+
+  // ---------------------------------------------------------------- sottopercorsi
+
+  /** Nuovo sottopercorso avviato dall'elemento selezionato (o dal frame selezionato, scegliendo dopo l'elemento). */
+  protected newSubPath(): void {
+    const el = this.selected();
+    const origin = this.subPathOrigin();
+    if (!el || origin === null) return;
+    const id = this.store.createSubPath(origin, el.type === 'frame' && el.id === origin ? null : el.id);
+    this.expandedSub.set(id);
+    this.openPanel('paths');
+  }
+
+  protected showSubPath(id: number): void {
+    this.expandedSub.set(id);
+    this.openPanel('paths');
+  }
+
+  protected addToSubPath(subId: number): void {
+    const frame = this.selectedFrame();
+    if (frame) this.store.addToSubPath(subId, frame.id);
+  }
+
+  protected reorderSubPath(subId: number, event: CdkDragDrop<number[]>): void {
+    if (event.previousIndex !== event.currentIndex) this.store.moveInSubPath(subId, event.previousIndex, event.currentIndex);
+  }
+
+  /** Elementi che possono avviare il sottopercorso: quelli associati (anche indirettamente) al frame di partenza. */
+  protected triggerCandidates(sub: SubPath): SlideElement[] {
+    const proper = this.proper();
+    return proper ? byLayer(proper).reverse().filter((el) => anchorChain(proper, el).includes(sub.frame)) : [];
+  }
+
+  protected elementLabel(id: number | null): string {
+    const el = id === null ? undefined : findElement(this.store.proper(), id);
+    if (!el) return '';
+    if (el.type === 'frame') return `Frame ${el.id}`;
+    if (el.type === 'text') return el.content.trim().replace(/\s+/g, ' ').slice(0, 40) || 'Testo vuoto';
+    if ('url' in el && !el.url.startsWith('data:')) {
+      const name = el.url.split('/').pop() ?? '';
+      try {
+        return decodeURIComponent(name);
+      } catch {
+        return name;
+      }
+    }
+    return KIND_LABELS[el.type] ?? 'Elemento';
+  }
+
+  protected kindIcon(el: SlideElement): string {
+    return KIND_ICONS[el.type] ?? 'frame';
   }
 }

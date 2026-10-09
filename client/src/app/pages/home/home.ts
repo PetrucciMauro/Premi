@@ -12,7 +12,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { NotifyService } from '../../core/notify.service';
-import { OfflineStore } from '../../core/offline-store.service';
 import { PresentationApi } from '../../core/presentation-api.service';
 import { PresentationTransfer } from '../../core/presentation-transfer.service';
 import { Background, mediaSrc } from '../../model/presentation';
@@ -37,11 +36,9 @@ export class Home implements OnInit {
   private readonly notify = inject(NotifyService);
   private readonly router = inject(Router);
   private readonly transfer = inject(PresentationTransfer);
-  protected readonly offline = inject(OfflineStore);
 
   protected readonly slideShows = signal<SlideShowCard[]>([]);
   protected readonly loading = signal(true);
-  protected readonly savingOffline = signal<string | null>(null);
   protected readonly exporting = signal<string | null>(null);
   protected readonly importing = signal(false);
   protected readonly query = signal('');
@@ -58,19 +55,8 @@ export class Home implements OnInit {
 
   private async update(): Promise<void> {
     try {
-      const metas = (await this.api.list()).sort((a, b) => a.titolo.localeCompare(b.titolo));
-      this.slideShows.set(metas.map(({ titolo }) => ({ titolo })));
       // le anteprime mostrano lo sfondo di ogni presentazione
-      const cards = await Promise.all(
-        metas.map(async ({ titolo }) => {
-          try {
-            return { titolo, background: (await this.api.get(titolo)).presentation.proper.background };
-          } catch {
-            return { titolo };
-          }
-        }),
-      );
-      this.slideShows.set(cards);
+      this.slideShows.set((await this.api.list()).sort((a, b) => a.titolo.localeCompare(b.titolo)));
     } catch (err) {
       this.notify.error(err);
     } finally {
@@ -210,26 +196,6 @@ export class Home implements OnInit {
       this.notify.error(err);
     } finally {
       this.importing.set(false);
-    }
-  }
-
-  protected async saveOffline(titolo: string): Promise<void> {
-    this.savingOffline.set(titolo);
-    try {
-      await this.offline.save((await this.api.get(titolo)).presentation);
-      this.notify.info(`"${titolo}" è disponibile offline`);
-    } catch (err) {
-      this.notify.error(err);
-    } finally {
-      this.savingOffline.set(null);
-    }
-  }
-
-  protected async removeOffline(titolo: string): Promise<void> {
-    try {
-      await this.offline.remove(titolo);
-    } catch (err) {
-      this.notify.error(err);
     }
   }
 }

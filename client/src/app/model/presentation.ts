@@ -3,7 +3,7 @@
  * Package : SlideShowElements
  * Description:
  *   Tipi degli elementi che compongono una presentazione e funzioni per crearli.
- *   Il formato è lo stesso salvato su MongoDB dalla versione precedente di Premi.
+ *   Il formato è compatibile con quello della versione web precedente (salvato su MongoDB).
  */
 
 export type ElementType = 'text' | 'frame' | 'image' | 'audio' | 'video' | 'SVG';
@@ -552,7 +552,7 @@ export function toExport(presentation: Presentation): ExportedPresentation {
 
 /**
  * Legge il contenuto di un file esportato. Accetta anche un documento { meta, proper }
- * senza involucro, come quello salvato su MongoDB.
+ * senza involucro, come quello della versione web precedente.
  */
 export function parseExport(text: string): Presentation {
   let data: unknown;
@@ -575,9 +575,12 @@ export function imageUrls(proper: Proper): string[] {
   return [proper.background.image, ...proper.frames.map((f) => f.ref), ...proper.images.map((el) => el.url)].filter(Boolean);
 }
 
-/** I file caricati sono salvati come "files/<utente>/<tipo>/<nome>", relativi alla radice del sito. */
+/**
+ * I file caricati sono nell'archivio locale come "media/<nome>", relativi alla radice del sito
+ * ("files/..." è il formato della vecchia versione web).
+ */
 export function mediaSrc(url: string): string {
-  return url.startsWith('files/') ? '/' + url : url;
+  return url.startsWith('media/') || url.startsWith('files/') ? '/' + url : url;
 }
 
 /** Converte un colore CSS (#hex, rgb, rgba) nel formato #rrggbb richiesto da <input type="color">. */

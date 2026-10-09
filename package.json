@@ -1,7 +1,7 @@
 {
   "name": "premi",
   "version": "1.0.0",
-  "description": "Premi - Better than Prezi",
+  "description": "Premi - Better than Prezi: presentazioni zoomabili, app desktop",
   "author": "LateButSafe",
   "license": "MIT",
   "private": true,
@@ -9,18 +9,24 @@
     "type": "git",
     "url": "https://github.com/PetrucciMauro/Premi.git"
   },
-  "keywords": ["LateButSafe", "Presentazioni", "Presentation", "SlideShow"],
+  "keywords": [
+    "LateButSafe",
+    "Presentazioni",
+    "Presentation",
+    "SlideShow"
+  ],
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
   },
   "scripts": {
-    "postinstall": "npm ci --prefix client && npm ci --prefix server",
+    "postinstall": "npm ci --prefix client && npm ci --prefix server && npm ci --prefix desktop",
     "build": "npm run build --prefix client",
-    "start": "npm start --prefix server",
-    "start:memory": "npm run dev:memory --prefix server",
+    "start": "npm run build && npm start --prefix desktop",
     "dev:client": "npm start --prefix client",
     "dev:server": "npm run dev --prefix server",
-    "dev:server:memory": "npm run dev:memory --prefix server",
+    "dist:desktop": "npm run build && npm run dist --prefix desktop",
+    "pack:desktop": "npm run build && npm run pack --prefix desktop",
+    "migrate:mongo": "npm run migrate:mongo --prefix server --",
     "test": "npm run test:server && npm run test:client",
     "test:server": "npm test --prefix server",
     "test:client": "npm test --prefix client -- --watch=false"

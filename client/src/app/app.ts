@@ -1,13 +1,10 @@
 /*
  * Name : Matteo Busetto
  * Module : Controller::HeaderController
- * Description: intestazione con marchio, navigazione e menu utente.
+ * Description: intestazione con marchio e navigazione.
  */
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 import {
   ActivatedRouteSnapshot,
   NavigationEnd,
@@ -17,7 +14,6 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { filter, map } from 'rxjs';
-import { AuthService } from './core/auth.service';
 
 const deepest = (route: ActivatedRouteSnapshot): ActivatedRouteSnapshot =>
   route.firstChild ? deepest(route.firstChild) : route;
@@ -25,12 +21,11 @@ const deepest = (route: ActivatedRouteSnapshot): ActivatedRouteSnapshot =>
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected readonly auth = inject(AuthService);
   private readonly router = inject(Router);
 
   /** Editor e player occupano tutto lo schermo, senza intestazione. */
@@ -41,11 +36,4 @@ export class App {
     ),
     { initialValue: false },
   );
-
-  protected readonly initial = computed(() => (this.auth.username() || '?').charAt(0));
-
-  protected logout(): void {
-    this.auth.logout();
-    this.router.navigate(['/login']);
-  }
 }

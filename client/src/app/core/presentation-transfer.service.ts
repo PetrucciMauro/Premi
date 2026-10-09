@@ -1,9 +1,9 @@
 /*
  * Esportazione e importazione delle presentazioni.
- * - JSON: le immagini caricate come file dalle versioni precedenti vengono incorporate in
- *   base64, così il file esportato non dipende dal server; audio e video restano indirizzi.
- * - HTML: una pagina autonoma con il player e tutti i media incorporati, che funziona fuori
- *   dall'app, senza server e senza connessione.
+ * In entrambi i formati i media dell'archivio locale vengono incorporati in base64, così il
+ * file esportato è autonomo:
+ * - JSON: si può importare in un'altra installazione di Premi;
+ * - HTML: una pagina con il player che funziona fuori dall'app, senza server e senza connessione.
  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
@@ -11,6 +11,13 @@ import { firstValueFrom } from 'rxjs';
 import { Presentation, Proper, imageUrls, mediaSrc, parseExport, toExport } from '../model/presentation';
 import { standaloneHtml } from '../../standalone/html';
 import { PresentationApi, readAsDataUrl } from './presentation-api.service';
+
+/** Tutti i media della presentazione: immagini, sfondi, audio e video. */
+const mediaUrls = (proper: Proper) => [
+  ...imageUrls(proper),
+  ...proper.audios.map((el) => el.url),
+  ...proper.videos.map((el) => el.url),
+];
 
 /** immagine degli elementi audio (vedi slide-canvas.scss) */
 const AUDIO_ICON = '/assets/nota.png';
@@ -25,18 +32,14 @@ export class PresentationTransfer {
   /** Scarica la presentazione come file "<titolo>.json". */
   async export(title: string): Promise<void> {
     const { presentation } = await this.api.get(title);
-    const json = JSON.stringify(toExport(await this.embed(presentation, imageUrls)), null, 2);
+    const json = JSON.stringify(toExport(await this.embed(presentation, mediaUrls)), null, 2);
     this.download(new Blob([json], { type: 'application/json' }), fileName(title, 'json'));
   }
 
   /** Scarica la presentazione come pagina HTML autonoma "<titolo>.html". */
   async exportHtml(title: string): Promise<void> {
     const { presentation } = await this.api.get(title);
-    const embedded = await this.embed(presentation, (proper) => [
-      ...imageUrls(proper),
-      ...proper.audios.map((el) => el.url),
-      ...proper.videos.map((el) => el.url),
-    ]);
+    const embedded = await this.embed(presentation, mediaUrls);
     const audioIcon = embedded.proper.audios.length ? await this.dataUrl(AUDIO_ICON).catch(() => undefined) : undefined;
     this.download(new Blob([standaloneHtml(embedded, audioIcon)], { type: 'text/html' }), fileName(title, 'html'));
   }

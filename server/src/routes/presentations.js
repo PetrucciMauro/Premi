@@ -3,163 +3,131 @@
  * Module : serverNode
  * Location : server/src/routes/presentations.js
  *
- * Gestione delle presentazioni dell'utente autenticato: /private/api/presentations
+ * Presentazioni: /private/api/presentations. I dati sono in SQLite (store.js), i media
+ * incorporati in base64 vengono salvati come file (media.js) e sostituiti dal loro indirizzo.
  */
 import { Router } from 'express';
-import { presentations } from '../db.js';
-
-// tipo di elemento -> campo della presentazione che lo contiene
-const FIELDS = {
-	text: 'proper.texts',
-	frame: 'proper.frames',
-	image: 'proper.images',
-	SVG: 'proper.SVGs',
-	audio: 'proper.audios',
-	video: 'proper.videos',
-	background: 'proper.background'
-};
-
-const emptyPresentation = (titolo) => ({
-	meta: { titolo },
-	proper: {
-		paths: { main: [], choices: [] },
-		texts: [], frames: [], images: [], SVGs: [], audios: [], videos: [],
-		background: { id: 0 }
-	}
-});
-
-// le presentazioni salvate dalla vecchia versione hanno id sia numerici sia stringa
-const sameId = (id) => ({ $in: [id, String(id), Number(id)].filter((v) => v === v) });
+import { COLLECTIONS } from '../store.js';
 
 const unknownType = (res, type) =>
 	res.status(404).json({ success: false, message: 'element type: ' + type + ' not known' });
 
-const router = Router();
+const notFound = (res) => res.status(404).json({ success: false, message: 'presentation not found' });
+const conflict = (res) => res.status(409).json({ success: false, message: 'presentation already exists' });
 
-router.get('/', async (req, res) => {
-	const docs = await presentations(req.user).find({}, { projection: { meta: 1 } }).toArray();
-	res.json({ success: true, message: docs.map((doc) => doc.meta) });
-});
+const validTitle = (title) => typeof title === 'string' && title.trim() !== '' && !title.includes('/');
 
-router.post('/new/:name', async (req, res) => {
-	const collection = presentations(req.user);
+export default function presentations({ store, media }) {
+	const router = Router();
 
-	if (await collection.findOne({ 'meta.titolo': req.params.name }) !== null)
-		return res.status(409).json({ success: false, message: 'presentation already exists' });
+	router.get('/', (req, res) => {
+		res.json({ success: true, message: store.list() });
+	});
 
-	await collection.insertOne(emptyPresentation(req.params.name));
-	res.json({ success: true, message: 'inserted presentation' });
-});
+	router.post('/new/:name', (req, res) => {
+		if (!validTitle(req.params.name))
+			return res.status(400).json({ success: false, message: 'titolo non valido' });
+		if (!store.create(req.params.name))
+			return conflict(res);
+		res.json({ success: true, message: 'inserted presentation' });
+	});
 
-router.post('/new/:name/:copyOf', async (req, res) => {
-	const collection = presentations(req.user);
+	router.post('/new/:name/:copyOf', (req, res) => {
+		if (!validTitle(req.params.name))
+			return res.status(400).json({ success: false, message: 'titolo non valido' });
+		const result = store.copy(req.params.copyOf, req.params.name);
+		if (result === 'missing')
+			return notFound(res);
+		if (result === 'exists')
+			return conflict(res);
+		res.json({ success: true, message: 'inserted presentation' });
+	});
 
-	if (await collection.findOne({ 'meta.titolo': req.params.name }) !== null)
-		return res.status(409).json({ success: false, message: 'presentation already exists' });
+	// importa una presentazione esportata in JSON: body.presentation = { meta, proper }
+	router.post('/import', async (req, res) => {
+		const presentation = req.body?.presentation;
+		const titolo = presentation?.meta?.titolo;
+		if (!validTitle(titolo) || typeof presentation.proper !== 'object' || presentation.proper === null || Array.isArray(presentation.proper))
+			return res.status(400).json({ success: false, message: 'presentazione non valida' });
+		if (store.presentationId(titolo) !== undefined)
+			return conflict(res);
 
-	const original = await collection.findOne({ 'meta.titolo': req.params.copyOf }, { projection: { _id: 0 } });
-	if (original === null)
-		return res.status(404).json({ success: false, message: 'presentation not found' });
+		const proper = await media.externalize(presentation.proper);
+		if (!store.create(titolo, proper))
+			return conflict(res);
+		res.json({ success: true, message: 'imported presentation' });
+	});
 
-	original.meta.titolo = req.params.name;
-	await collection.insertOne(original);
-	res.json({ success: true, message: 'inserted presentation' });
-});
+	router.get('/:name', (req, res) => {
+		const doc = store.get(req.params.name);
+		if (!doc)
+			return notFound(res);
+		res.json({ success: true, message: doc });
+	});
 
-// importa una presentazione esportata in JSON: body.presentation = { meta, proper }
-router.post('/import', async (req, res) => {
-	const presentation = req.body?.presentation;
-	const titolo = presentation?.meta?.titolo;
-	if (typeof titolo !== 'string' || !titolo.trim() || titolo.includes('/')
-		|| typeof presentation.proper !== 'object' || presentation.proper === null || Array.isArray(presentation.proper))
-		return res.status(400).json({ success: false, message: 'presentazione non valida' });
+	router.delete('/:name', (req, res) => {
+		store.remove(req.params.name);
+		res.json({ success: true, message: 'removed presentation: ' + req.params.name });
+	});
 
-	const collection = presentations(req.user);
-	if (await collection.findOne({ 'meta.titolo': titolo }) !== null)
-		return res.status(409).json({ success: false, message: 'presentation already exists' });
+	router.post('/:name/rename/:newName', (req, res) => {
+		if (!validTitle(req.params.newName))
+			return res.status(400).json({ success: false, message: 'titolo non valido' });
+		const result = store.rename(req.params.name, req.params.newName);
+		if (result === 'missing')
+			return notFound(res);
+		if (result === 'exists')
+			return conflict(res);
+		res.json({ success: true, message: 'renamed presentation: ' + req.params.newName });
+	});
 
-	const proper = { ...emptyPresentation(titolo).proper, ...presentation.proper };
-	await collection.insertOne({ meta: { titolo }, proper });
-	res.json({ success: true, message: 'imported presentation' });
-});
+	router.delete('/:name/delete/:type/:id', (req, res) => {
+		if (!COLLECTIONS[req.params.type])
+			return unknownType(res, req.params.type);
+		if (!store.deleteElement(req.params.name, req.params.type, req.params.id))
+			return notFound(res);
+		res.json({ success: true, message: 'deleted element' });
+	});
 
-router.get('/:name', async (req, res) => {
-	const doc = await presentations(req.user).findOne({ 'meta.titolo': req.params.name });
+	// sostituisce un elemento esistente (o lo sfondo)
+	router.put('/:name/element', async (req, res) => {
+		const element = req.body?.element;
+		if (!element)
+			return res.status(400).json({ success: false, message: 'body.element not sent' });
+		if (element.type !== 'background' && !COLLECTIONS[element.type])
+			return unknownType(res, element.type);
 
-	if (doc === null)
-		return res.status(404).json({ success: false, message: 'presentation not found' });
+		await media.externalizeElement(element);
+		const ok = element.type === 'background' ? store.setBackground(req.params.name, element) : store.replaceElement(req.params.name, element);
+		if (!ok)
+			return res.status(404).json({ success: false, message: 'element not found' });
+		res.json({ success: true, message: 'element replaced' });
+	});
 
-	res.json({ success: true, message: doc });
-});
+	// aggiunge un nuovo elemento
+	router.post('/:name/element', async (req, res) => {
+		const element = req.body?.element;
+		if (!element)
+			return res.status(400).json({ success: false, message: 'body.element not sent' });
+		if (!COLLECTIONS[element.type])
+			return unknownType(res, element.type);
+		if (!Number.isFinite(Number(element.id)))
+			return res.status(400).json({ success: false, message: 'element id not valid' });
 
-router.delete('/:name', async (req, res) => {
-	await presentations(req.user).deleteOne({ 'meta.titolo': req.params.name });
-	res.json({ success: true, message: 'removed presentation: ' + req.params.name });
-});
+		await media.externalizeElement(element);
+		if (!store.addElement(req.params.name, element))
+			return res.status(409).json({ success: false, message: 'presentation not found or element already exists' });
+		res.json({ success: true });
+	});
 
-router.post('/:name/rename/:newName', async (req, res) => {
-	const collection = presentations(req.user);
+	router.put('/:name/paths', (req, res) => {
+		const paths = req.body?.element;
+		if (!paths)
+			return res.status(400).json({ success: false, message: 'body.element not sent' });
+		if (!store.setPaths(req.params.name, paths))
+			return notFound(res);
+		res.json({ success: true });
+	});
 
-	if (await collection.findOne({ 'meta.titolo': req.params.newName }) !== null)
-		return res.status(409).json({ success: false, message: 'presentation already exists' });
-
-	await collection.updateOne({ 'meta.titolo': req.params.name }, { $set: { 'meta.titolo': req.params.newName } });
-	res.json({ success: true, message: 'renamed presentation: ' + req.params.newName });
-});
-
-router.delete('/:name/delete/:type/:id', async (req, res) => {
-	const field = FIELDS[req.params.type];
-	if (!field || req.params.type === 'background')
-		return unknownType(res, req.params.type);
-
-	await presentations(req.user).updateOne(
-		{ 'meta.titolo': req.params.name },
-		{ $pull: { [field]: { id: sameId(req.params.id) } } });
-	res.json({ success: true, message: 'deleted element' });
-});
-
-// sostituisce un elemento esistente (o lo sfondo)
-router.put('/:name/element', async (req, res) => {
-	const element = req.body?.element;
-	if (!element)
-		return res.status(400).json({ success: false, message: 'body.element not sent' });
-
-	const field = FIELDS[element.type];
-	if (!field)
-		return unknownType(res, element.type);
-
-	const collection = presentations(req.user);
-	if (element.type === 'background')
-		await collection.updateOne({ 'meta.titolo': req.params.name }, { $set: { [field]: element } });
-	else
-		await collection.updateOne(
-			{ 'meta.titolo': req.params.name, [field + '.id']: sameId(element.id) },
-			{ $set: { [field + '.$']: element } });
-
-	res.json({ success: true, message: 'element replaced' });
-});
-
-// aggiunge un nuovo elemento
-router.post('/:name/element', async (req, res) => {
-	const element = req.body?.element;
-	if (!element)
-		return res.status(400).json({ success: false, message: 'body.element not sent' });
-
-	const field = FIELDS[element.type];
-	if (!field || element.type === 'background')
-		return unknownType(res, element.type);
-
-	await presentations(req.user).updateOne({ 'meta.titolo': req.params.name }, { $push: { [field]: element } });
-	res.json({ success: true });
-});
-
-router.put('/:name/paths', async (req, res) => {
-	const paths = req.body?.element;
-	if (!paths)
-		return res.status(400).json({ success: false, message: 'body.element not sent' });
-
-	await presentations(req.user).updateOne({ 'meta.titolo': req.params.name }, { $set: { 'proper.paths': paths } });
-	res.json({ success: true });
-});
-
-export default router;
+	return router;
+}

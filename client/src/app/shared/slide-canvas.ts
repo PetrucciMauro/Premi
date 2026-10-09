@@ -126,8 +126,6 @@ export class SlideCanvas {
   readonly zoom = input(1);
   /** elementi che avviano un sottopercorso */
   readonly triggerIds = input<number[]>([]);
-  /** Permette al player offline di sostituire gli indirizzi dei file con quelli salvati in locale. */
-  readonly mediaUrl = input<(url: string) => string>(mediaSrc);
 
   readonly elementPointerDown = output<ElementPointerEvent>();
   readonly resizePointerDown = output<ElementPointerEvent>();
@@ -149,7 +147,7 @@ export class SlideCanvas {
   });
 
   protected src(url: string): string {
-    return this.mediaUrl()(url);
+    return mediaSrc(url);
   }
 
   protected cssUrl(url: string): string | null {

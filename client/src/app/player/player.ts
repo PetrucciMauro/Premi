@@ -21,9 +21,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { NotifyService } from '../core/notify.service';
-import { OfflineStore } from '../core/offline-store.service';
 import { PresentationApi } from '../core/presentation-api.service';
-import { FrameElement, Presentation, SubPath, mediaSrc } from '../model/presentation';
+import { FrameElement, Presentation, SubPath } from '../model/presentation';
 import { SlideCanvas } from '../shared/slide-canvas';
 import { CameraAnimator, Size, cameraFor, focusCamera, sameCamera } from '../shared/view-transform';
 
@@ -43,11 +42,8 @@ const viewportSize = (): Size => ({ width: window.innerWidth, height: window.inn
 })
 export class Player implements OnInit {
   readonly title = input.required<string>();
-  /** true quando la presentazione viene letta da quelle salvate offline. */
-  readonly offline = input(false);
 
   private readonly api = inject(PresentationApi);
-  private readonly offlineStore = inject(OfflineStore);
   private readonly notify = inject(NotifyService);
   private readonly router = inject(Router);
 
@@ -58,7 +54,6 @@ export class Player implements OnInit {
   protected readonly step = signal(0);
   /** frame inquadrato fuori dal percorso (cliccandolo) */
   private readonly extraFrame = signal<FrameElement | null>(null);
-  protected readonly mediaUrl = signal<(url: string) => string>(mediaSrc);
 
   /** sottopercorso in corso e posizione al suo interno */
   protected readonly sub = signal<{ path: SubPath; frames: FrameElement[]; index: number } | null>(null);
@@ -107,13 +102,9 @@ export class Player implements OnInit {
   protected readonly transform = this.animator.transform;
   protected readonly zoom = this.animator.zoom;
 
-  // indirizzi locali dei file salvati offline, da liberare all'uscita
-  private readonly objectUrls: string[] = [];
-
   constructor() {
     inject(DestroyRef).onDestroy(() => {
       this.animator.stop();
-      this.objectUrls.forEach((url) => URL.revokeObjectURL(url));
     });
 
     // la telecamera si muove verso ogni nuovo passo; al ridimensionamento della finestra salta
@@ -129,21 +120,7 @@ export class Player implements OnInit {
 
   async ngOnInit(): Promise<void> {
     try {
-      if (this.offline()) {
-        const saved = await this.offlineStore.get(this.title());
-        if (!saved) throw new Error('Presentazione non disponibile offline');
-        const urls = new Map(
-          Object.entries(saved.media).map(([url, blob]) => {
-            const objectUrl = URL.createObjectURL(blob);
-            this.objectUrls.push(objectUrl);
-            return [url, objectUrl];
-          }),
-        );
-        this.mediaUrl.set((url) => urls.get(url) ?? mediaSrc(url));
-        this.presentation.set(saved.presentation);
-      } else {
-        this.presentation.set((await this.api.get(this.title())).presentation);
-      }
+      this.presentation.set((await this.api.get(this.title())).presentation);
     } catch (err) {
       this.notify.error(err);
       this.goHome();
@@ -273,7 +250,7 @@ export class Player implements OnInit {
   }
 
   protected goHome(): void {
-    this.router.navigate([this.offline() ? '/offline' : '/private/home']);
+    this.router.navigate(['/private/home']);
   }
 
   protected goEdit(): void {

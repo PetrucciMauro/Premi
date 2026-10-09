@@ -32,8 +32,7 @@
             ],
             "styles": [
               "src/styles.scss"
-            ],
-            "serviceWorker": "ngsw-config.json"
+            ]
           },
           "configurations": {
             "production": {
@@ -54,8 +53,7 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "serviceWorker": false
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"

@@ -762,7 +762,7 @@ export class Editor implements OnInit {
     }
   }
 
-  /** Legge un'immagine da usare come sfondo e ne restituisce il data URL base64. */
+  /** Carica un'immagine da usare come sfondo e ne restituisce l'indirizzo nell'archivio. */
   private async uploadImage(input: HTMLInputElement): Promise<string | null> {
     const file = input.files?.[0];
     input.value = '';

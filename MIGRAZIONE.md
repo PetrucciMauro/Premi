@@ -321,3 +321,31 @@ sono coperti dai test automatici.
   basata sul token.
 - Per provare senza MongoDB: `npm install`, `npm run build`, `npm run start:memory`, poi aprire
   http://localhost:8081 (i dati si perdono alla chiusura).
+
+---
+
+## 8. Passaggio all'app desktop (Electron + SQLite)
+
+Dopo la migrazione ad Angular 22, Premi è diventata un'app desktop. Le sezioni precedenti
+descrivono la versione web intermedia: dove sono in contrasto, vale questa.
+
+**Perché.** Le immagini erano salvate in base64 dentro il documento MongoDB della presentazione,
+che non può superare i 16 MB: le presentazioni con molte immagini non si potevano salvare.
+
+| Prima (web) | Dopo (desktop) |
+|---|---|
+| Server Express pubblico con MongoDB | Server Express locale (su `127.0.0.1`) avviato dall'app Electron |
+| Presentazione = un documento MongoDB con le immagini in base64 | SQLite (`node:sqlite`): una riga per presentazione e una per elemento |
+| Immagini in base64, audio e video in `server/files/<utente>/` | Tutti i media come file in `media/`, nominati con l'impronta SHA-256 del contenuto |
+| Account, login, JWT, profilo | Nessun account: un token casuale per sessione, aggiunto da Electron alle richieste |
+| Sezione "Offline" (IndexedDB) e service worker | Rimossi: tutto è già sul computer |
+| Limite di 8 MB per immagine e 16 MB per presentazione | Nessun limite (import fino a 2 GB) |
+
+- **API**: le rotte delle presentazioni sono le stesse; `GET /private/api/presentations`
+  restituisce anche lo sfondo (per le anteprime). I media si caricano con
+  `POST /private/api/media` e si leggono da `/media/<nome>`; `/account` e `/files` non esistono più.
+- **Import/export**: importando un JSON i media in base64 vengono salvati come file; l'export
+  JSON ora incorpora anche audio e video, così il file si può importare in un'altra installazione.
+- **Migrazione dei dati**: `npm run migrate:mongo` (vedi README).
+- **Packaging**: `desktop/` con electron-builder (Windows nsis/portable, macOS dmg, Linux AppImage).
+  `node:sqlite` è incluso in Electron 44 (Node 24): non ci sono moduli nativi da ricompilare.

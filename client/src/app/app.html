@@ -1,38 +1,13 @@
 @if (!fullscreen()) {
   <header class="header">
-    <a class="brand" [routerLink]="auth.token() ? '/private/home' : '/login'" aria-label="Premi, home">
+    <a class="brand" routerLink="/private/home" aria-label="Premi, home">
       <span class="logo" aria-hidden="true"><span></span><span></span></span>
       <span class="wordmark">Premi</span>
     </a>
 
     <nav class="nav">
-      @if (auth.token()) {
-        <a class="nav-link" routerLink="/private/home" routerLinkActive="active">Presentazioni</a>
-        <a class="nav-link" routerLink="/offline" routerLinkActive="active">Offline</a>
-      }
+      <a class="nav-link" routerLink="/private/home" routerLinkActive="active">Presentazioni</a>
     </nav>
-
-    <span class="spacer"></span>
-
-    @if (auth.token()) {
-      <button class="avatar-button" [matMenuTriggerFor]="userMenu" aria-label="Menu utente">
-        <span class="avatar">{{ initial() }}</span>
-      </button>
-      <mat-menu #userMenu="matMenu" xPosition="before">
-        <div class="menu-user">
-          <span class="avatar">{{ initial() }}</span>
-          <div>
-            <div class="menu-user-name">{{ auth.username() }}</div>
-            <div class="menu-user-hint">Account Premi</div>
-          </div>
-        </div>
-        <a mat-menu-item routerLink="/private/profile"><mat-icon svgIcon="user" />Profilo</a>
-        <button mat-menu-item (click)="logout()"><mat-icon svgIcon="log-out" />Esci</button>
-      </mat-menu>
-    } @else {
-      <a matButton routerLink="/login">Accedi</a>
-      <a matButton="filled" routerLink="/registrazione">Inizia gratis</a>
-    }
   </header>
 }
 <main>

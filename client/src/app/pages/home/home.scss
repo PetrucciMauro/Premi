@@ -151,27 +151,6 @@
   }
 }
 
-.badge {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px 3px 6px;
-  border-radius: 999px;
-  background: rgb(15 10 30 / 65%);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  backdrop-filter: blur(6px);
-
-  mat-icon {
-    width: 14px;
-    height: 14px;
-  }
-}
-
 .card-body {
   display: flex;
   align-items: center;

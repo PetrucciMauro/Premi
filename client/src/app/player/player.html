@@ -1,6 +1,6 @@
 <div class="stage" (click)="onCanvasClick($event)" (touchstart)="onTouchStart($event)">
   @if (presentation(); as p) {
-    <app-slide-canvas [proper]="p.proper" [mediaUrl]="mediaUrl()" [triggerIds]="triggerIds()" [zoom]="zoom()" [style.transform]="transform()" />
+    <app-slide-canvas [proper]="p.proper" [triggerIds]="triggerIds()" [zoom]="zoom()" [style.transform]="transform()" />
   }
 </div>
 
@@ -14,9 +14,7 @@
         <span class="panel-title">{{ title() }}</span>
         <div class="panel-actions">
           <button class="pill" (click)="goHome()"><mat-icon svgIcon="home" />Esci</button>
-          @if (!offline()) {
-            <button class="pill" (click)="goEdit()"><mat-icon svgIcon="pencil" />Modifica</button>
-          }
+          <button class="pill" (click)="goEdit()"><mat-icon svgIcon="pencil" />Modifica</button>
         </div>
       </div>
       <div class="steps">

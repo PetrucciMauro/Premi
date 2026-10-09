@@ -82,9 +82,6 @@
                 <mat-icon svgIcon="play" />
               </button>
             </div>
-            @if (offline.titles().includes(slide.titolo)) {
-              <span class="badge"><mat-icon svgIcon="check" />Offline</span>
-            }
           </div>
           <div class="card-body">
             <h3 class="card-title" [title]="slide.titolo">{{ slide.titolo }}</h3>
@@ -102,17 +99,6 @@
             <button mat-menu-item (click)="exportHtml(slide.titolo)" [disabled]="exporting() === slide.titolo">
               <mat-icon svgIcon="presentation" />Esporta in HTML
             </button>
-            <mat-divider />
-            @if (offline.titles().includes(slide.titolo)) {
-              <button mat-menu-item (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">
-                <mat-icon svgIcon="refresh" />Aggiorna copia offline
-              </button>
-              <button mat-menu-item (click)="removeOffline(slide.titolo)"><mat-icon svgIcon="cloud-off" />Rimuovi da offline</button>
-            } @else {
-              <button mat-menu-item (click)="saveOffline(slide.titolo)" [disabled]="savingOffline() === slide.titolo">
-                <mat-icon svgIcon="download" />Rendi disponibile offline
-              </button>
-            }
             <mat-divider />
             <button mat-menu-item class="danger" (click)="remove(slide.titolo)"><mat-icon svgIcon="trash" />Elimina</button>
           </mat-menu>

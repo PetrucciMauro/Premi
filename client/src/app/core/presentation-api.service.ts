@@ -1,5 +1,6 @@
 /*
- * Chiamate REST verso /private/api: presentazioni e file multimediali.
+ * Chiamate REST al server locale (/private/api): presentazioni e file multimediali.
+ * I media sono file separati dalla presentazione, che ne contiene solo l'indirizzo ("media/...").
  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
@@ -14,7 +15,6 @@ import {
   SlideElement,
   normalizePresentation,
 } from '../model/presentation';
-import { AuthService } from './auth.service';
 
 interface ServerResponse<T = unknown> {
   success: boolean;
@@ -22,16 +22,19 @@ interface ServerResponse<T = unknown> {
 }
 
 const PRESENTATIONS = '/private/api/presentations';
-const FILES = '/private/api/files';
+const MEDIA = '/private/api/media';
 const enc = encodeURIComponent;
 
 @Injectable({ providedIn: 'root' })
 export class PresentationApi {
   private readonly http = inject(HttpClient);
 
-  list(): Promise<PresentationMeta[]> {
+  /** Titoli delle presentazioni, con lo sfondo per le anteprime. */
+  list(): Promise<(PresentationMeta & { background?: Background })[]> {
     return firstValueFrom(
-      this.http.get<ServerResponse<PresentationMeta[]>>(PRESENTATIONS).pipe(map((r) => r.message)),
+      this.http
+        .get<ServerResponse<(PresentationMeta & { background?: Background })[]>>(PRESENTATIONS)
+        .pipe(map((r) => r.message)),
     );
   }
 
@@ -75,9 +78,6 @@ export class PresentationApi {
   }
 }
 
-// un documento MongoDB non può superare i 16 MB e il base64 aumenta la dimensione di un terzo
-export const MAX_IMAGE_SIZE = 8 * 1024 * 1024;
-
 /** Contenuto di un file (o blob) come data URL base64. */
 export function readAsDataUrl(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -97,28 +97,17 @@ export function mediaType(file: File): MediaType | undefined {
 @Injectable({ providedIn: 'root' })
 export class UploadService {
   private readonly http = inject(HttpClient);
-  private readonly auth = inject(AuthService);
 
   /**
-   * Restituisce l'indirizzo con cui referenziare il file nella presentazione: le immagini
-   * vengono incorporate come data URL base64, audio e video sono caricati sul server.
+   * Carica il file (immagine, audio o video) nell'archivio locale e restituisce l'indirizzo
+   * con cui referenziarlo nella presentazione. Non ci sono limiti di dimensione.
    */
   async upload(file: File): Promise<{ type: MediaType; url: string }> {
     const type = mediaType(file);
     if (!type) throw new Error(`Formato del file "${file.name}" non supportato`);
-
-    if (type === 'image') {
-      if (file.size > MAX_IMAGE_SIZE)
-        throw new Error(`L'immagine "${file.name}" è troppo grande (massimo ${MAX_IMAGE_SIZE / 1024 / 1024} MB)`);
-      return { type, url: await readAsDataUrl(file) };
-    }
-
-    const name = file.name.replace(/\.[^.]*$/, '') || file.name;
     const body = new FormData();
     body.append('file', file);
-    const res = await firstValueFrom(
-      this.http.post<{ success: boolean; name: string }>(`${FILES}/${type}/${enc(name)}`, body),
-    );
-    return { type, url: `files/${this.auth.username()}/${type}/${res.name}` };
+    const res = await firstValueFrom(this.http.post<{ success: boolean; type: MediaType; url: string }>(MEDIA, body));
+    return { type: res.type, url: res.url };
   }
 }

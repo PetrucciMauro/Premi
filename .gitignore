@@ -8,3 +8,8 @@ tmp/
 ./package-lock.json
 ./client/package-lock.json
 ./server/package-lock.json
+
+# dati locali del server di sviluppo e build dell'app desktop
+server/data/
+desktop/build/
+desktop/dist/

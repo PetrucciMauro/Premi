@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import '../../testing/dom-matrix';
 import {
   DEFAULT_CANVAS_WIDTH,
+  elementCorners,
   elementTransform,
   frameLift,
+  frameName,
   imageUrls,
   normalizePresentation,
   parseExport,
@@ -12,6 +14,18 @@ import {
   toExport,
   toHexColor,
 } from './presentation';
+
+describe('nomi degli elementi', () => {
+  it('conserva i nomi validi e ripuliti, ignora gli altri', () => {
+    const { proper } = normalizePresentation({
+      proper: { frames: [{ id: 1, name: '  Il  finale ' }, { id: 2, name: 42 }, { id: 3, name: '   ' }], texts: [{ id: 4, name: 'Titolo' }] },
+    });
+    expect(proper.frames.map((f) => f.name)).toEqual(['Il finale', undefined, undefined]);
+    expect('name' in proper.frames[1]).toBe(false);
+    expect(proper.texts[0].name).toBe('Titolo');
+    expect(proper.frames.map(frameName)).toEqual(['Il finale', 'Frame 2', 'Frame 3']);
+  });
+});
 
 describe('rotazione 3D dei frame', () => {
   const { proper } = normalizePresentation({
@@ -71,6 +85,35 @@ describe('rotazione 3D dei frame', () => {
   it('il frame inclinato resta davanti al piano della tela', () => {
     for (const [x, y] of [[0, 0], [200, 0], [0, 100], [200, 100]]) expect(render(frame, x, y).z).toBeGreaterThan(0);
     expect(frameLift(frame)).toBeGreaterThan(0);
+  });
+});
+
+describe('livelli sui piani inclinati', () => {
+  // distanza del punto p dal piano per a, b, c
+  const distance = (p: DOMPoint, [a, b, c]: DOMPoint[]) => {
+    const u = [b.x - a.x, b.y - a.y, b.z - a.z];
+    const v = [c.x - a.x, c.y - a.y, c.z - a.z];
+    const n = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]];
+    const len = Math.hypot(...n);
+    return Math.abs(n[0] * (p.x - a.x) + n[1] * (p.y - a.y) + n[2] * (p.z - a.z)) / len;
+  };
+  const make = (width: number) =>
+    normalizePresentation({
+      proper: {
+        frames: [{ id: 1, zIndex: 0, xIndex: 0, yIndex: 0, width, height: width / 2, rotateY: 40 }],
+        texts: [{ id: 2, zIndex: 1, xIndex: 10, yIndex: 10, width: width / 4, height: width / 20, anchor: { frame: 1, x: 0.2, y: 0.2, width: 0.25, height: 0.1, rotation: 0 } }],
+      },
+    }).proper;
+
+  it('stacca il testo dal suo frame in proporzione alla dimensione del frame', () => {
+    // con mezzo pixel Chrome, mentre la telecamera ruota, scambia l'ordine dei due piani
+    for (const width of [400, 2000, 10000]) {
+      const proper = make(width);
+      const layers = tiltLayers(proper);
+      const frame = elementCorners(proper, proper.frames[0], layers.get(1));
+      const text = elementCorners(proper, proper.texts[0], layers.get(2));
+      expect(distance(text[0], frame)).toBeCloseTo(Math.max(0.5, width * 0.002), 3);
+    }
   });
 });
 

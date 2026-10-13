@@ -31,6 +31,22 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { NotifyService } from '../core/notify.service';
+import { Alignment, Axis, Guides, alignmentGuides, snapMove } from '../model/arrange';
+import {
+  DEFAULT_TRANSITION,
+  PathTransition,
+  SPIN_AXES,
+  TRANSITION_EASINGS,
+  TRANSITION_KINDS,
+  TRANSITION_LIMITS,
+  Transition,
+  TransitionEasing,
+  TransitionKind,
+  SpinAxis,
+  findLink,
+  sameTransition,
+  transitionProps,
+} from '../model/transition';
 import { PresentationApi, UploadService } from '../core/presentation-api.service';
 import {
   DEFAULT_TEXT_FONT,
@@ -45,6 +61,8 @@ import {
   anchorChain,
   byLayer,
   findElement,
+  frameName,
+  MAX_NAME_LENGTH,
   mediaSrc,
   newAnchor,
   pathOf,
@@ -54,16 +72,20 @@ import {
 } from '../model/presentation';
 import { ElementPointerEvent, SlideCanvas, TextCommitEvent } from '../shared/slide-canvas';
 import {
+  Camera,
   CameraAnimator,
   Size,
   cameraFor,
   cameraMatrix,
   focusCamera,
+  motionFor,
   perspectiveFor,
   sameCamera,
   unproject,
 } from '../shared/view-transform';
+import { Tour } from '../tutorial/tour';
 import { EditorStore } from './editor-store';
+import { editorTutorial } from './editor-tutorial';
 
 export const FONTS = [
   "'Times New Roman', Times, serif",
@@ -98,10 +120,38 @@ const KIND_ICONS: Record<string, string> = {
   audio: 'music',
 };
 
+const ALIGNMENTS: { value: Alignment; label: string; icon: string }[] = [
+  { value: 'left', label: 'A sinistra', icon: 'align-left' },
+  { value: 'center-x', label: 'Al centro in orizzontale', icon: 'align-center-x' },
+  { value: 'right', label: 'A destra', icon: 'align-right' },
+  { value: 'top', label: 'In alto', icon: 'align-top' },
+  { value: 'center-y', label: 'Al centro in verticale', icon: 'align-center-y' },
+  { value: 'bottom', label: 'In basso', icon: 'align-bottom' },
+  { value: 'center', label: 'Al centro', icon: 'align-center' },
+];
+
+const TRANSITION_KIND_LABELS: Record<TransitionKind, string> = { fly: 'Volo', direct: 'Diretto', fade: 'Dissolvenza', cut: 'Stacco' };
+const EASING_LABELS: Record<TransitionEasing, string> = {
+  smooth: 'Morbido',
+  linear: 'Costante',
+  'ease-in': 'Accelera',
+  'ease-out': 'Rallenta',
+  back: 'Con rincorsa',
+  elastic: 'Elastico',
+  bounce: 'Rimbalzo',
+};
+const SPIN_AXIS_LABELS: Record<SpinAxis, string> = { z: 'sul piano', x: 'capriola in avanti', y: 'capriola di lato' };
+
 type PanelTab = 'paths' | 'frames';
 
 const AUTOSAVE_MS = 30_000;
 const MIN_SIZE = 10;
+/** zoom per pixel di rotella (esponenziale: ogni scatto avvicina o allontana della stessa proporzione) */
+const WHEEL_ZOOM = 0.0015;
+/** larghezza massima, in pixel di impaginazione, della tela zoomata: oltre il browser non la impagina più */
+const MAX_LAYOUT_PX = 30_000_000;
+/** distanza sullo schermo, in pixel, entro cui un elemento trascinato si allinea agli altri */
+const SNAP_PX = 6;
 
 const isTyping = (target: EventTarget | null) =>
   target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
@@ -172,12 +222,15 @@ function naturalSize(type: MediaType, src: string): Promise<Size | null> {
 export class Editor implements OnInit {
   /** Titolo della presentazione, dal parametro della rotta. */
   readonly title = input.required<string>();
+  /** parametro ?tutorial della rotta: all'apertura parte il tutorial */
+  readonly tutorial = input<string>();
 
   protected readonly store = inject(EditorStore);
   private readonly api = inject(PresentationApi);
   private readonly uploader = inject(UploadService);
   private readonly notify = inject(NotifyService);
   private readonly router = inject(Router);
+  private readonly tour = inject(Tour);
 
   private readonly viewport = viewChild.required<ElementRef<HTMLElement>>('viewport');
 
@@ -197,12 +250,41 @@ export class Editor implements OnInit {
   /** elemento inquadrato, con lo stato della presentazione al momento dello zoom (la vista non lo insegue) */
   private readonly zoom = signal<{ proper: Proper; element: SlideElement } | null>(null);
   private readonly zoomedId = computed(() => this.zoom()?.element.id ?? null);
+  /** inquadratura scelta con la rotella del mouse: sostituisce quella calcolata finché non si cambia vista */
+  private readonly freeCamera = signal<Camera | null>(null);
+  /** la prossima inquadratura viene dalla rotella o da un trascinamento: si mostra subito, senza animazione */
+  private instantMove = false;
+  /** inquadratura d'arrivo dell'anteprima di una transizione in corso */
+  private previewCamera: Camera | null = null;
+  /** si sta spostando la vista trascinando un'area vuota */
+  protected readonly panning = signal(false);
+  private wheelSettle: ReturnType<typeof setTimeout> | undefined;
   /** le transizioni della vista partono solo dopo il primo adattamento, per non animare il caricamento */
   protected readonly animated = signal(false);
   private keyMoveSession = 0;
+  /** guide degli allineamenti dell'elemento che si sta trascinando */
+  protected readonly guides = signal<Guides | null>(null);
+  /** scala della vista: pixel dello schermo per pixel della tela */
+  protected readonly viewScale = computed(() => this.camera()?.scale ?? 1);
 
   protected readonly proper = this.store.current;
   protected readonly selected = this.store.selected;
+  protected readonly alignments = ALIGNMENTS;
+  protected readonly transitionKinds = TRANSITION_KINDS.map((value) => ({ value, label: TRANSITION_KIND_LABELS[value] }));
+  protected readonly easings = TRANSITION_EASINGS.map((value) => ({ value, label: EASING_LABELS[value] }));
+  protected readonly spinAxes = SPIN_AXES.map((value) => ({ value, label: SPIN_AXIS_LABELS[value] }));
+  protected readonly limits = TRANSITION_LIMITS;
+  protected readonly maxNameLength = MAX_NAME_LENGTH;
+  /** più elementi selezionati (tutti nello stesso contenitore) */
+  protected readonly multiSelection = computed(() => {
+    const selection = this.store.selection();
+    return selection.length > 1 ? selection : null;
+  });
+  /** nome del contenitore degli elementi selezionati */
+  protected readonly containerLabel = computed(() => {
+    const frame = this.store.selection()[0]?.anchor?.frame;
+    return frame === undefined ? 'nella tela' : `nel Frame ${frame}`;
+  });
   protected readonly selectedText = computed(() => {
     const el = this.selected();
     return el?.type === 'text' ? el : null;
@@ -274,6 +356,13 @@ export class Editor implements OnInit {
     (this.proper()?.paths.choices ?? []).map((sub) => sub.trigger).filter((id): id is number => id !== null),
   );
 
+  /** collegamento tra due frame di cui si sta modificando la transizione (menu aperto) */
+  protected readonly editedLink = signal<{ from: number; to: number } | null>(null);
+  protected readonly editedTransition = computed(() => {
+    const link = this.editedLink();
+    return link ? this.linkTransition(link.from, link.to) : undefined;
+  });
+
   /** frame a cui è associato l'elemento selezionato */
   protected readonly anchorFrameId = computed(() => this.selected()?.anchor?.frame ?? null);
   /** frame a cui si può associare l'elemento selezionato */
@@ -290,6 +379,13 @@ export class Editor implements OnInit {
     const id = el?.type === 'frame' ? el.id : (el?.anchor?.frame ?? (zoomed?.type === 'frame' ? zoomed.id : null));
     return proper?.frames.find((frame) => frame.id === id) ?? null;
   });
+
+  /** Rinomina dal campo della barra dell'elemento (Invio conferma, Esc annulla). */
+  protected renameFrom(input: HTMLInputElement, id: number): void {
+    this.store.rename(id, input.value);
+    // il campo mostra il nome ripulito, anche quando il binding non cambia
+    input.value = findElement(this.store.proper(), id)?.name ?? '';
+  }
 
   protected kindLabel(element: SlideElement): string {
     return KIND_LABELS[element.type] ?? 'Elemento';
@@ -309,6 +405,8 @@ export class Editor implements OnInit {
     const proper = this.proper();
     const viewport = this.viewportSize();
     // un frame inclinato (o un elemento che sta su di lui) si vede di fronte
+    const free = this.freeCamera();
+    if (free) return free;
     const zoom = this.zoom();
     if (zoom) return focusCamera(viewport, zoom.proper, zoom.element, 0.8);
     return proper ? cameraFor(viewport, { xIndex: 0, yIndex: 0, rotation: 0, ...proper.background }, 0.98) : null;
@@ -321,7 +419,9 @@ export class Editor implements OnInit {
   private readonly animator = new CameraAnimator({ min: 350, max: 900, perUnit: 400 });
   protected readonly canvasTransform = this.animator.transform;
   protected readonly canvasZoom = this.animator.zoom;
-  protected readonly zoomed = computed(() => this.zoom() !== null);
+  protected readonly canvasCamera = this.animator.view;
+  protected readonly canvasVeil = this.animator.veil;
+  protected readonly zoomed = computed(() => this.zoom() !== null || this.freeCamera() !== null);
 
   protected readonly backgroundHex = computed(() => toHexColor(this.proper()?.background.color ?? ''));
   protected readonly frameHex = computed(() => toHexColor(this.selectedFrame()?.color ?? ''));
@@ -349,13 +449,29 @@ export class Editor implements OnInit {
       const camera = this.camera();
       const viewport = this.viewportSize();
       if (!camera) return;
-      untracked(() => this.animator.moveTo(viewport, camera, this.animated() && viewport === lastViewport));
+      untracked(() => {
+        // l'anteprima di una transizione muove già la telecamera da sé
+        const preview = this.previewCamera;
+        this.previewCamera = null;
+        if (preview && sameCamera(camera, preview)) return;
+        if (this.instantMove) {
+          // durante zoom e spostamenti continui la tela si reimpagina a passi; alla fine, alla scala esatta
+          this.instantMove = false;
+          this.animator.jump(viewport, camera, false);
+          clearTimeout(this.wheelSettle);
+          this.wheelSettle = setTimeout(() => this.animator.jump(this.viewportSize(), this.camera() ?? camera), 150);
+        } else this.animator.moveTo(viewport, camera, this.animated() && viewport === lastViewport);
+      });
       lastViewport = viewport;
     });
-    destroyRef.onDestroy(() => this.animator.stop());
+    destroyRef.onDestroy(() => {
+      clearTimeout(this.wheelSettle);
+      this.animator.stop();
+    });
 
     const autosave = setInterval(() => this.autosave(), AUTOSAVE_MS);
     destroyRef.onDestroy(() => {
+      this.tour.stop();
       clearInterval(autosave);
       this.autosave();
     });
@@ -365,10 +481,21 @@ export class Editor implements OnInit {
     try {
       const { presentation, raw } = await this.api.get(this.title());
       this.store.load(presentation, raw);
+      if (this.tutorial() !== undefined) {
+        // il parametro si toglie, così ricaricando la pagina il tutorial non riparte
+        this.router.navigate([], { queryParams: { tutorial: null }, replaceUrl: true });
+        this.startTutorial();
+      }
     } catch (err) {
       this.notify.error(err);
       this.router.navigate(['/private/home']);
     }
+  }
+
+  /** Avvia il tutorial dell'editor, dalla vista d'insieme. */
+  protected startTutorial(): void {
+    this.zoomOut();
+    this.tour.start(editorTutorial({ store: this.store, panelOpen: this.pathsOpen }));
   }
 
   // ---------------------------------------------------------------- salvataggio ed esecuzione
@@ -430,6 +557,60 @@ export class Editor implements OnInit {
 
   protected zoomOut(): void {
     this.zoom.set(null);
+    this.freeCamera.set(null);
+  }
+
+  /**
+   * Rotella del mouse (o pizzico sul trackpad): avvicina o allontana la vista tenendo fermo il
+   * punto sotto il puntatore, anche quando si guarda un frame inclinato.
+   */
+  protected onWheel(event: WheelEvent): void {
+    const proper = this.proper();
+    const current = this.camera();
+    if (!proper || !current) return;
+    event.preventDefault();
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? 400 : 1;
+    // Maiusc + rotella, o lo scorrimento orizzontale del trackpad, spostano la vista in orizzontale
+    if (!event.ctrlKey && (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY))) {
+      const { width, height } = this.viewportSize();
+      const shift = (event.deltaX || event.deltaY) * unit;
+      this.panFrom(current, width / 2, height / 2, width / 2 - shift, height / 2);
+      return;
+    }
+    const pixels = event.deltaY * unit;
+    const { width, height } = proper.background;
+    const viewport = this.viewportSize();
+    // da metà della vista d'insieme fino al limite oltre cui il browser non riesce a impaginare la tela
+    const min = Math.min(viewport.width / width, viewport.height / height) * 0.5;
+    const max = MAX_LAYOUT_PX / Math.max(width, height);
+    const scale = clamp(current.scale * Math.exp(-pixels * WHEEL_ZOOM), min, max);
+    if (scale === current.scale) return;
+    // il punto sotto il puntatore (sul piano inquadrato) resta dov'è: il centro si avvicina a lui
+    const local = this.toCanvas(event);
+    const p = this.plane().transformPoint(new DOMPoint(local.x, local.y, 0));
+    const k = current.scale / scale;
+    const z = current.z ?? 0;
+    this.instantMove = true;
+    this.freeCamera.set({ ...current, scale, x: p.x - (p.x - current.x) * k, y: p.y - (p.y - current.y) * k, z: p.z - (p.z - z) * k });
+  }
+
+  /** Punto, sul piano inquadrato e in 3D, che la telecamera `camera` mostra in (x, y) del riquadro. */
+  private pointAt(camera: Camera, x: number, y: number): DOMPoint {
+    const viewport = this.viewportSize();
+    const plane = this.plane();
+    const local = unproject(cameraMatrix(viewport, camera, perspectiveFor(viewport)).multiply(plane), x, y);
+    return plane.transformPoint(new DOMPoint(local.x, local.y, 0));
+  }
+
+  /**
+   * Sposta la vista in modo che il punto che la telecamera `from` mostra in (x0, y0) finisca in
+   * (x1, y1): i calcoli partono sempre da `from`, così il punto afferrato segue il puntatore.
+   */
+  private panFrom(from: Camera, x0: number, y0: number, x1: number, y1: number): void {
+    const a = this.pointAt(from, x0, y0);
+    const b = this.pointAt(from, x1, y1);
+    this.instantMove = true;
+    this.freeCamera.set({ ...from, x: from.x + a.x - b.x, y: from.y + a.y - b.y, z: (from.z ?? 0) + a.z - b.z });
   }
 
   /**
@@ -449,7 +630,7 @@ export class Editor implements OnInit {
 
   /** Mette il testo in modifica e gli dà il focus. */
   private editText(id: number): void {
-    this.store.selectedId.set(id);
+    this.store.select(id);
     this.editingId.set(id);
     // il focus dopo che la casella di testo ha ricevuto i clic (classe editing)
     setTimeout(() => {
@@ -459,16 +640,42 @@ export class Editor implements OnInit {
   }
 
   private zoomTo(element: SlideElement): void {
+    this.freeCamera.set(null);
     this.zoom.set({ proper: this.store.proper(), element });
   }
 
   // ---------------------------------------------------------------- selezione, spostamento, ridimensionamento
 
+  /**
+   * Clic su un'area vuota: toglie la selezione. Trascinando (con il tasto sinistro o con quello
+   * centrale) si sposta invece la vista, e la selezione resta: il punto afferrato segue il puntatore.
+   */
   protected onViewportPointerDown(event: PointerEvent): void {
-    if (!(event.target as HTMLElement).closest('.element')) {
-      this.blurActive();
-      this.store.selectedId.set(null);
+    if ((event.target as HTMLElement).closest('.element')) return;
+    this.blurActive();
+    const start = this.camera();
+    if (!start || (event.button !== 0 && event.button !== 1)) {
+      this.store.select(null);
+      return;
     }
+    event.preventDefault();
+    const rect = this.viewport().nativeElement.getBoundingClientRect();
+    const x0 = event.clientX - rect.left;
+    const y0 = event.clientY - rect.top;
+    this.track(
+      (e) => {
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        // sotto pochi pixel è un clic, non un trascinamento
+        if (!this.panning() && Math.hypot(x - x0, y - y0) < 4) return;
+        this.panning.set(true);
+        this.panFrom(start, x0, y0, x, y);
+      },
+      () => {
+        if (!this.panning()) this.store.select(null);
+        this.panning.set(false);
+      },
+    );
   }
 
   /** Doppio clic fuori dagli elementi: torna alla vista d'insieme. */
@@ -480,32 +687,79 @@ export class Editor implements OnInit {
     (document.activeElement as HTMLElement | null)?.blur?.();
   }
 
+  /**
+   * Clic su un elemento: lo seleziona e lo sposta trascinando. Con Maiusc o Ctrl lo aggiunge
+   * (o toglie) alla selezione; trascinando un elemento selezionato si spostano tutti.
+   * Vicino a un allineamento con un altro elemento (o con il contenitore) gli elementi vi si
+   * agganciano e compare una guida; con Alt premuto non si agganciano.
+   */
   protected onElementPointerDown({ event, element }: ElementPointerEvent): void {
     if (event.button !== 0) return;
-    this.store.selectedId.set(element.id);
+    if (event.shiftKey || event.ctrlKey || event.metaKey) {
+      event.preventDefault();
+      this.blurActive();
+      if (!this.store.toggleSelect(element.id))
+        this.notify.info('Si possono selezionare insieme solo elementi dello stesso frame (o tutti sulla tela)');
+      return;
+    }
+    const grouped = this.store.selectedIds().length > 1 && this.store.selectedIds().includes(element.id);
+    if (!grouped) this.store.select(element.id);
     if (event.target instanceof HTMLTextAreaElement) return; // si sta scrivendo nel testo
 
     event.preventDefault();
     this.blurActive();
 
     const proper = this.store.proper();
-    const { width, height } = proper.background;
+    // gli elementi selezionati stanno nello stesso contenitore, quindi sullo stesso piano
+    const group = grouped ? this.store.selection() : [element];
+    const ids = group.map((el) => el.id);
     const start = this.toCanvas(event, element);
+    let moved = false;
 
     // gli elementi associati a un frame lo seguono da soli (EditorStore.preview)
     this.track(
       (e) => {
         const p = this.toCanvas(e, element);
+        let [dx, dy] = [Math.round(p.x - start.x), Math.round(p.y - start.y)];
+        if (!e.altKey) [dx, dy] = snapMove(proper, ids, dx, dy, SNAP_PX / this.viewScale());
+        [dx, dy] = this.clampMove(group, dx, dy);
+        this.guides.set(alignmentGuides(proper, ids, dx, dy));
+        moved ||= dx !== 0 || dy !== 0;
         this.store.preview((draft) => {
-          const el = findElement(draft, element.id);
-          if (el) {
-            el.xIndex = Math.round(clamp(element.xIndex + p.x - start.x, 0, width - element.width));
-            el.yIndex = Math.round(clamp(element.yIndex + p.y - start.y, 0, height - element.height));
+          for (const item of group) {
+            const el = findElement(draft, item.id);
+            if (el) {
+              el.xIndex = item.xIndex + dx;
+              el.yIndex = item.yIndex + dy;
+            }
           }
         });
       },
-      () => this.store.commit('sposta elemento', proper),
+      () => {
+        this.guides.set(null);
+        this.store.commit(group.length > 1 ? 'sposta elementi' : 'sposta elemento', proper);
+        // un clic senza trascinare su un elemento della selezione seleziona solo lui
+        if (grouped && !moved) this.store.select(element.id);
+      },
     );
+  }
+
+  /**
+   * Limita lo spostamento (dx, dy) degli elementi in modo che restino dentro alla tela;
+   * chi ne è già fuori non viene spinto oltre, né riportato dentro di colpo.
+   */
+  private clampMove(elements: SlideElement[], dx: number, dy: number): [number, number] {
+    const { width, height } = this.store.proper().background;
+    const limit = (d: number, pos: (el: SlideElement) => number, size: (el: SlideElement) => number, max: number) =>
+      clamp(
+        d,
+        Math.min(0, Math.max(...elements.map((el) => -pos(el)))),
+        Math.max(0, Math.min(...elements.map((el) => max - size(el) - pos(el)))),
+      );
+    return [
+      limit(dx, (el) => el.xIndex, (el) => el.width, width),
+      limit(dy, (el) => el.yIndex, (el) => el.height, height),
+    ];
   }
 
   protected onResizePointerDown({ event, element }: ElementPointerEvent): void {
@@ -584,16 +838,22 @@ export class Editor implements OnInit {
       return;
     }
 
-    const selected = this.selected();
-    if (event.key === 'Escape') {
-      if (this.zoom()) this.zoomOut();
-      else this.store.selectedId.set(null);
+    if (ctrl && event.key.toLowerCase() === 'a') {
+      event.preventDefault();
+      this.store.selectSiblings();
       return;
     }
-    if (!selected) return;
+
+    const selection = this.store.selection();
+    if (event.key === 'Escape') {
+      if (this.zoomed()) this.zoomOut();
+      else this.store.select(null);
+      return;
+    }
+    if (!selection.length) return;
 
     if (event.key === 'Delete') {
-      this.store.remove(selected.id);
+      this.store.remove(...selection.map((el) => el.id));
       return;
     }
 
@@ -607,16 +867,9 @@ export class Editor implements OnInit {
     const move = moves[event.key];
     if (!move) return;
     event.preventDefault();
-    const { width, height } = this.store.proper().background;
-    this.store.update(
-      selected.id,
-      'sposta elemento',
-      (el) => {
-        el.xIndex = clamp(el.xIndex + move[0], 0, width - el.width);
-        el.yIndex = clamp(el.yIndex + move[1], 0, height - el.height);
-      },
-      `key-move-${selected.id}-${this.keyMoveSession}`,
-    );
+    const ids = selection.map((el) => el.id);
+    const [dx, dy] = this.clampMove(selection, move[0], move[1]);
+    this.store.move(ids, dx, dy, `key-move-${ids.join()}-${this.keyMoveSession}`);
   }
 
   protected onKeyUp(event: KeyboardEvent): void {
@@ -851,8 +1104,16 @@ export class Editor implements OnInit {
   // ---------------------------------------------------------------- elemento selezionato
 
   protected remove(): void {
-    const el = this.selected();
-    if (el) this.store.remove(el.id);
+    this.store.remove(...this.store.selectedIds());
+  }
+
+  /** Allinea gli elementi selezionati: tra loro o, con `toContainer` (e sempre per uno solo), al contenitore. */
+  protected align(alignment: Alignment, toContainer?: boolean): void {
+    this.store.align(this.store.selectedIds(), alignment, toContainer);
+  }
+
+  protected distribute(axis: Axis): void {
+    this.store.distribute(this.store.selectedIds(), axis);
   }
 
   protected changeLayer(direction: 1 | -1): void {
@@ -903,6 +1164,69 @@ export class Editor implements OnInit {
     else media.pause();
   }
 
+  // ---------------------------------------------------------------- transizioni
+
+  /** Transizione del collegamento tra due frame consecutivi di un percorso. */
+  protected linkTransition(from: number, to: number): PathTransition | undefined {
+    return findLink(this.proper()?.paths.transitions ?? [], from, to);
+  }
+
+  protected isEditedLink(from: number, to: number): boolean {
+    const link = this.editedLink();
+    return link?.from === from && link.to === to;
+  }
+
+  protected isDefaultTransition(transition: Transition | undefined): boolean {
+    return !transition || sameTransition(transition, DEFAULT_TRANSITION);
+  }
+
+  /** Riassunto della transizione per il pannello dei percorsi: tipo, durata, partenza automatica. */
+  protected transitionSummary(transition: Transition | undefined): string {
+    const t = transition ?? DEFAULT_TRANSITION;
+    const parts = [TRANSITION_KIND_LABELS[t.kind]];
+    if (t.kind !== 'cut' && t.duration !== null) parts.push(`${t.duration} s`);
+    if (t.advance !== null) parts.push(`da sola dopo ${t.advance} s`);
+    return parts.join(' · ');
+  }
+
+  /** Modifica la transizione aperta nel menu (i passi degli slider diventano una sola modifica). */
+  protected updateTransition(change: Partial<Transition>): void {
+    const t = this.editedTransition();
+    if (!t) return;
+    this.store.setTransition(t.from, t.to, { ...transitionProps(t), ...change }, `transition-${t.from}-${t.to}-${Object.keys(change).join()}`);
+  }
+
+  protected resetTransition(): void {
+    const t = this.editedTransition();
+    if (t) this.store.setTransition(t.from, t.to, null);
+  }
+
+  protected applyTransitionToAll(): void {
+    const t = this.editedTransition();
+    if (!t) return;
+    this.store.setTransitionForAll(transitionProps(t));
+    this.notify.info('Transizione applicata a tutti i passi dei percorsi');
+  }
+
+  /**
+   * Anteprima della transizione aperta nel menu: la telecamera va dal frame di partenza a
+   * quello d'arrivo; con `back` fa il ritorno, la stessa transizione al contrario.
+   */
+  protected previewTransition(back = false): void {
+    const t = this.editedTransition();
+    const proper = this.proper();
+    const from = proper?.frames.find((f) => f.id === t?.from);
+    const to = proper?.frames.find((f) => f.id === t?.to);
+    if (!t || !proper || !from || !to) return;
+    const viewport = this.viewportSize();
+    const [start, end] = back ? [to, from] : [from, to];
+    this.freeCamera.set(null);
+    this.zoom.set({ proper, element: end });
+    this.previewCamera = focusCamera(viewport, proper, end, 0.8);
+    this.animator.jump(viewport, focusCamera(viewport, proper, start, 0.8));
+    this.animator.moveTo(viewport, this.previewCamera, true, motionFor(t, back));
+  }
+
   // ---------------------------------------------------------------- percorso principale
 
   protected addToMainPath(): void {
@@ -926,13 +1250,13 @@ export class Editor implements OnInit {
   protected focusFrame(id: number): void {
     const frame = this.store.proper().frames.find((f) => f.id === id);
     if (!frame) return;
-    this.store.selectedId.set(id);
+    this.store.select(id);
     this.zoomTo(frame);
   }
 
   protected select(id: number): void {
     this.blurActive();
-    this.store.selectedId.set(id);
+    this.store.select(id);
   }
 
   protected openPanel(tab: PanelTab): void {
@@ -982,9 +1306,21 @@ export class Editor implements OnInit {
     return proper ? byLayer(proper).reverse().filter((el) => anchorChain(proper, el).includes(sub.frame)) : [];
   }
 
+  /** Nome con cui mostrare il frame (vedi frameName). */
+  protected frameLabel(id: number): string {
+    const frame = this.proper()?.frames.find((f) => f.id === id);
+    return frame ? frameName(frame) : `Frame ${id}`;
+  }
+
+  /** Il nome dato all'elemento o, senza, una descrizione ricavata dal contenuto. */
   protected elementLabel(id: number | null): string {
     const el = id === null ? undefined : findElement(this.store.proper(), id);
     if (!el) return '';
+    return el.name || this.defaultLabel(el);
+  }
+
+  /** Descrizione dell'elemento ricavata dal tipo e dal contenuto, usata quando non ha un nome. */
+  protected defaultLabel(el: SlideElement): string {
     if (el.type === 'frame') return `Frame ${el.id}`;
     if (el.type === 'text') return el.content.trim().replace(/\s+/g, ' ').slice(0, 40) || 'Testo vuoto';
     if ('url' in el && !el.url.startsWith('data:')) {

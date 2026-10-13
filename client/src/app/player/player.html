@@ -1,8 +1,11 @@
 <div class="stage" (click)="onCanvasClick($event)" (touchstart)="onTouchStart($event)">
   @if (presentation(); as p) {
-    <app-slide-canvas [proper]="p.proper" [triggerIds]="triggerIds()" [zoom]="zoom()" [style.transform]="transform()" />
+    <app-slide-canvas [proper]="p.proper" [triggerIds]="triggerIds()" [zoom]="zoom()" [camera]="cameraView()" [style.transform]="transform()" />
   }
 </div>
+
+<!-- velo delle transizioni a dissolvenza -->
+<div class="veil" aria-hidden="true" [style.background]="veil().color" [style.opacity]="veil().opacity"></div>
 
 <nav class="player-menu" [class.open]="menuOpen()">
   <button class="glass round" [attr.aria-label]="menuOpen() ? 'Chiudi menu' : 'Apri menu'" [attr.aria-expanded]="menuOpen()" (click)="menuOpen.set(!menuOpen())">
@@ -25,7 +28,7 @@
         @for (frame of frames(); track frame.id; let i = $index) {
           <button class="step-item" [class.active]="step() === i + 1" (click)="goto(i + 1)">
             <span class="num">{{ i + 1 }}</span>
-            Frame {{ frame.id }}
+            {{ frameName(frame) }}
             @if (frame.bookmark) {
               <mat-icon class="bookmark" svgIcon="bookmark-filled" aria-label="Bookmark" />
             }

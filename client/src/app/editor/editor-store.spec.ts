@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PresentationApi } from '../core/presentation-api.service';
-import { FrameElement, TextElement, normalizePresentation } from '../model/presentation';
+import { FrameElement, TextElement, newAnchor, normalizePresentation } from '../model/presentation';
+import { DEFAULT_TRANSITION } from '../model/transition';
 import { EditorStore } from './editor-store';
 
 const frame = (id: number, zIndex: number): FrameElement => ({
@@ -144,6 +145,64 @@ describe('EditorStore', () => {
     });
   });
 
+  it('dà un nome agli elementi, ripulito; un nome vuoto lo toglie', () => {
+    store.rename(1, '  Apertura   del  viaggio ');
+    expect(store.proper().frames[0].name).toBe('Apertura del viaggio');
+    store.rename(2, 'x'.repeat(100));
+    expect(store.proper().texts[0].name).toHaveLength(60);
+    store.rename(1, '   ');
+    expect('name' in store.proper().frames[0]).toBe(false);
+    store.undo();
+    expect(store.proper().frames[0].name).toBe('Apertura del viaggio');
+  });
+
+  describe('transizioni dei percorsi', () => {
+    const custom = { ...DEFAULT_TRANSITION, kind: 'fade' as const };
+    const links = () => store.proper().paths.transitions.map((t) => `${t.from}>${t.to}${t.kind === 'fade' ? '*' : ''}`);
+
+    beforeEach(() => {
+      // percorso 1 3 4 5 con tutte le transizioni personalizzate
+      for (const x of [300, 500, 700]) store.addToMainPath(store.insert({ ...frame(0, 0), xIndex: x }));
+      store.setTransitionForAll(custom);
+    });
+
+    it('una transizione per ogni coppia di frame consecutivi', () => {
+      expect(links()).toEqual(['1>3*', '3>4*', '4>5*']);
+      store.setTransition(3, 4, null);
+      expect(links()).toEqual(['1>3*', '3>4', '4>5*']);
+    });
+
+    it('spostando un frame in mezzo al percorso i collegamenti toccati vengono ricreati predefiniti', () => {
+      store.moveInMainPath(3, 1); // 1 5 3 4
+      expect(links()).toEqual(['1>5', '5>3', '3>4*']);
+    });
+
+    it('spostando un frame in testa o in coda nasce una sola transizione dove arriva', () => {
+      store.moveInMainPath(2, 0); // 4 1 3 5
+      expect(links()).toEqual(['4>1', '1>3*', '3>5']);
+      store.moveInMainPath(0, 3); // 1 3 5 4
+      expect(links()).toEqual(['1>3*', '3>5', '5>4']);
+    });
+
+    it('togliendo un frame il collegamento si ricuce con la transizione predefinita', () => {
+      store.removeFromMainPath(4);
+      expect(links()).toEqual(['1>3*', '3>5']);
+      store.undo();
+      expect(links()).toEqual(['1>3*', '3>4*', '4>5*']);
+    });
+
+    it('i sottopercorsi hanno ingresso, passi e ritorno', () => {
+      const sub = store.createSubPath(5, 2);
+      store.addToSubPath(sub, 3);
+      store.addToSubPath(sub, 4);
+      // 3 e 4 sono passati dal percorso principale al sottopercorso: anche 3>4 e 4>5 si spezzano
+      expect(links()).toEqual(['1>5', '5>3', '3>4', '4>5']);
+      store.setTransitionForAll(custom);
+      store.moveInSubPath(sub, 1, 0); // 5 → 4 3 → 5
+      expect(links()).toEqual(['1>5*', '5>4', '4>3', '3>5']);
+    });
+  });
+
   describe('sottopercorsi', () => {
     beforeEach(() => {
       // frame 3 e 4 oltre al frame 1 del percorso principale; testo 2 associato al frame 1
@@ -255,7 +314,7 @@ describe('EditorStore', () => {
     expect(api['deleteElement']).toHaveBeenCalledWith('Prova', 'frame', 1);
     expect(api['newElement']).toHaveBeenCalledWith('Prova', expect.objectContaining({ id: 3 }));
     expect(api['updateElement']).toHaveBeenCalledWith('Prova', expect.objectContaining({ id: 2, content: 'modificato' }));
-    expect(api['updatePaths']).toHaveBeenCalledWith('Prova', { main: [], choices: [] });
+    expect(api['updatePaths']).toHaveBeenCalledWith('Prova', { main: [], choices: [], transitions: [] });
     expect(store.dirty()).toBe(false);
   });
 
@@ -277,5 +336,48 @@ describe('EditorStore', () => {
     store.load(normalizePresentation(raw), raw);
     await store.save();
     expect(api['updateElement']).toHaveBeenCalledWith('Nuova', expect.objectContaining({ type: 'background', width: 1600 }));
+  });
+
+  it('seleziona più elementi solo se stanno nello stesso contenitore', () => {
+    expect(store.toggleSelect(1)).toBe(true);
+    expect(store.toggleSelect(2)).toBe(true);
+    expect(store.selectedIds()).toEqual([1, 2]);
+    expect(store.selectedId()).toBeNull();
+
+    const id = store.insert({ ...text(0, 0), anchor: newAnchor(1) } as TextElement);
+    store.select(2);
+    expect(store.toggleSelect(id)).toBe(false);
+    expect(store.selectedIds()).toEqual([id]);
+
+    store.toggleSelect(id);
+    expect(store.selectedIds()).toEqual([]);
+  });
+
+  it('elimina più elementi con un solo comando', () => {
+    store.remove(1, 2);
+    expect(store.proper().frames).toEqual([]);
+    expect(store.proper().texts).toEqual([]);
+    store.undo();
+    expect(store.proper().frames.length + store.proper().texts.length).toBe(2);
+    expect(store.canUndo()).toBe(false);
+  });
+
+  it('allinea e distribuisce in un solo comando annullabile', () => {
+    store.align([2], 'right');
+    expect(store.proper().texts[0].xIndex).toBe(950);
+    expect(store.undoLabel()).toBe('posiziona nel contenitore');
+    store.align([1, 2], 'left');
+    expect(store.proper().texts[0].xIndex).toBe(0);
+    expect(store.undoLabel()).toBe('allinea elementi');
+    store.undo();
+    expect(store.proper().texts[0].xIndex).toBe(950);
+  });
+
+  it('dopo annulla toglie dalla selezione gli elementi che non esistono più', () => {
+    const id = store.insert({ ...text(0, 0) });
+    store.toggleSelect(2);
+    expect(store.selectedIds()).toEqual([id, 2]);
+    store.undo();
+    expect(store.selectedIds()).toEqual([2]);
   });
 });

@@ -19,6 +19,13 @@
   }
 }
 
+// velo delle dissolvenze: copre la tela, sotto ai controlli
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 // controlli in vetro: si fanno da parte finché non servono
 .glass {
   border: 1px solid rgb(255 255 255 / 14%);

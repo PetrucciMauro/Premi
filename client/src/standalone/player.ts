@@ -12,10 +12,13 @@ import {
   SlideElement,
   SubPath,
   elementTransform,
+  frameName,
   normalizePresentation,
   tiltLayers,
 } from '../app/model/presentation';
-import { Camera, CameraMotion, Size, cameraFor, focusCamera } from '../app/shared/camera';
+import { Camera, CameraMotion, CameraView, Size, cameraFor, focusCamera, motionFor } from '../app/shared/camera';
+import { findLink, transitionBetween } from '../app/model/transition';
+import { culledElements, floorMode, floorTiles, hiddenFrom, sceneCorners, tileCorners } from '../app/shared/culling';
 
 /** Dati incorporati nel file HTML (vedi standalone-export.ts). */
 export interface StandaloneData {
@@ -112,6 +115,34 @@ const layers = tiltLayers(proper);
 // i frame vengono prima nel DOM, così a parità di z-index restano sotto agli altri elementi
 for (const el of [...proper.frames, ...proper.texts, ...proper.images, ...proper.videos, ...proper.audios])
   scene.append(renderElement(el, layers.get(el.id)));
+// sfondo diviso in tessere, usato quando la tela è a cavallo dell'occhio della telecamera (vedi culling.ts)
+const tiles = floorTiles(proper.background.width, proper.background.height).map((tile) => {
+  const node = h('div', 'floor-tile culled');
+  Object.assign(node.style, {
+    left: tile.x + 'px',
+    top: tile.y + 'px',
+    width: tile.width + 'px',
+    height: tile.height + 'px',
+    backgroundColor: proper.background.color,
+    backgroundImage: cssUrl(proper.background.image),
+    backgroundSize: `${proper.background.width}px ${proper.background.height}px`,
+    backgroundPosition: `${-tile.x}px ${-tile.y}px`,
+  });
+  scene.prepend(node);
+  return { tile, node };
+});
+const corners = sceneCorners(proper);
+const nodes = new Map([...scene.querySelectorAll<HTMLElement>('.element')].map((node) => [Number(node.dataset['elementId']), node]));
+
+/** Nasconde gli elementi e le parti della tela che non si vedono (vedi culling.ts). */
+function cull(camera: CameraView): void {
+  const floor = floorMode(camera, proper.background.width, proper.background.height);
+  scene.classList.toggle('no-floor', floor !== 'whole');
+  for (const { tile, node } of tiles) node.classList.toggle('culled', floor !== 'tiles' || hiddenFrom(camera, tileCorners(tile)));
+  const culled = culledElements(corners, camera, floor === 'none');
+  for (const [id, node] of nodes) node.classList.toggle('culled', culled.has(id));
+}
+
 canvas.append(scene);
 stage.append(canvas);
 
@@ -142,13 +173,21 @@ const mainFrame = () => (sub || extraFrame ? null : (mainFrames[step - 1] ?? nul
 // ---------------------------------------------------------------- telecamera
 
 const viewport = (): Size => ({ width: window.innerWidth, height: window.innerHeight });
-const motion = new CameraMotion({ min: 900, max: 2200, perUnit: 650 }, (transform, zoom) => {
+// velo delle transizioni a dissolvenza
+const veil = h('div', 'veil', { 'aria-hidden': 'true' });
+const motion = new CameraMotion({ min: 900, max: 2200, perUnit: 650 }, (transform, zoom, view, cover) => {
   canvas.style.transform = transform;
   scene.style.setProperty('zoom', String(zoom));
+  veil.style.background = cover.color;
+  veil.style.opacity = String(cover.opacity);
+  cull(view);
 });
 
+/** frame inquadrato al passo corrente (null nella vista d'insieme) */
+const target = (): FrameElement | null => extraFrame ?? (sub ? sub.frames[sub.index] : mainFrames[step - 1]) ?? null;
+
 function camera(): Camera {
-  const frame = extraFrame ?? (sub ? sub.frames[sub.index] : mainFrames[step - 1]);
+  const frame = target();
   // un frame inclinato viene raddrizzato: la telecamera ne segue la rotazione 3D
   return frame
     ? focusCamera(viewport(), proper, frame)
@@ -188,7 +227,7 @@ const progress = h('div', 'progress', { 'aria-hidden': 'true' });
 const progressBar = h('span');
 progress.append(progressBar);
 
-document.body.append(stage, menu, controls, progress);
+document.body.append(stage, veil, menu, controls, progress);
 
 function stepButton(label: string, num: string, active: boolean, onClick: () => void, extra = ''): HTMLButtonElement {
   const button = h('button', 'step-item' + (active ? ' active' : '') + extra);
@@ -209,7 +248,7 @@ function renderMenu(): void {
   if (!open) return;
   steps.replaceChildren(stepButton("Vista d'insieme", icon('grid'), step === 0 && !sub, () => goto(0)));
   mainFrames.forEach((frame, i) => {
-    const button = stepButton(`Frame ${frame.id}`, String(i + 1), step === i + 1 && !sub, () => goto(i + 1));
+    const button = stepButton(frameName(frame), String(i + 1), step === i + 1 && !sub, () => goto(i + 1));
     if (frame.bookmark) button.insertAdjacentHTML('beforeend', icon('bookmark-filled').replace('class="icon"', 'class="icon bookmark"'));
     steps.append(button);
     for (const s of subPaths.get(frame.id) ?? [])
@@ -217,17 +256,43 @@ function renderMenu(): void {
   });
 }
 
-/** Aggiorna telecamera, contatore, avanzamento ed elementi cliccabili dopo ogni cambio di passo. */
-function update(animate = true): void {
-  motion.moveTo(viewport(), camera(), animate);
+/** passaggio automatico al passo successivo (vedi Transition.advance) */
+let advanceTimer: ReturnType<typeof setTimeout> | undefined;
+
+/** frame inquadrato finora (quello che si lascia al prossimo passo) */
+let shown: FrameElement | null = null;
+
+/** frame a cui porta il prossimo passo in avanti (null se si torna alla vista d'insieme) */
+function upcoming(): FrameElement | null {
+  if (extraFrame) return null;
+  if (sub) return sub.frames[sub.index + 1] ?? mainFrames[step - 1] ?? null;
+  return mainFrames[step] ?? null;
+}
+
+/**
+ * Aggiorna la vista dopo un cambio di passo: la telecamera segue la transizione del
+ * collegamento tra il frame che si lascia e quello d'arrivo, al contrario se lo si percorre
+ * all'indietro (`back`). La partenza automatica vale solo andando avanti.
+ */
+function update(animate = true, back = false): void {
+  clearTimeout(advanceTimer);
+  const leaving = shown;
+  const frame = target();
+  shown = frame;
+  const link = transitionBetween(proper.paths.transitions, leaving?.id, frame?.id, back);
+  const options = link ? motionFor(link.transition, link.reverse) : motionFor(undefined, back);
+  motion.moveTo(viewport(), camera(), animate, options).then((arrived) => {
+    const advance = findLink(proper.paths.transitions, frame?.id, upcoming()?.id)?.advance;
+    if (arrived && !back && advance != null && target() === frame) advanceTimer = setTimeout(next, advance * 1000);
+  });
 
   if (sub) counter.innerHTML = `${icon('route')}${sub.index + 1} <span class="of">/ ${sub.frames.length}</span>`;
   else if (step === 0) counter.textContent = 'Panoramica';
   else counter.innerHTML = `${step} <span class="of">/ ${mainFrames.length}</span>`;
   progressBar.style.width = mainFrames.length ? (step / mainFrames.length) * 100 + '%' : '0';
 
-  const frame = mainFrame();
-  const triggers = new Set(frame ? (subPaths.get(frame.id) ?? []).map((s) => s.path.trigger) : []);
+  const current = mainFrame();
+  const triggers = new Set(current ? (subPaths.get(current.id) ?? []).map((s) => s.path.trigger) : []);
   for (const node of scene.querySelectorAll<HTMLElement>('.element'))
     node.classList.toggle('trigger', triggers.has(Number(node.dataset['elementId'])));
   renderMenu();
@@ -237,11 +302,12 @@ function update(animate = true): void {
 
 function goto(target: number): void {
   const count = mainFrames.length + 1;
+  const back = target < step;
   extraFrame = null;
   sub = null;
   step = ((target % count) + count) % count;
   menu.classList.remove('open');
-  update();
+  update(true, back);
 }
 
 function startSub(frameId: number, pathId: number): void {
@@ -261,21 +327,21 @@ function moveInSub(delta: 1 | -1): boolean {
   extraFrame = null;
   const index = sub.index + delta;
   sub = index >= 0 && index < sub.frames.length ? { ...sub, index } : null;
-  update();
+  update(true, delta < 0);
   return true;
 }
 
 function next(): void {
   if (extraFrame) {
     extraFrame = null;
-    update();
+    update(true, true);
   } else if (!moveInSub(1)) goto(step + 1);
 }
 
 function prev(): void {
   if (extraFrame) {
     extraFrame = null;
-    update();
+    update(true, true);
   } else if (!moveInSub(-1)) goto(step - 1);
 }
 
@@ -305,9 +371,10 @@ stage.addEventListener('click', (event) => {
   if (!id) return;
   const subIndex = sub?.frames.findIndex((frame) => frame.id === id) ?? -1;
   if (sub && subIndex !== -1) {
+    const back = subIndex < sub.index;
     extraFrame = null;
     sub = { ...sub, index: subIndex };
-    update();
+    update(true, back);
     return;
   }
   const index = mainFrames.findIndex((frame) => frame.id === id);
@@ -369,7 +436,7 @@ document.addEventListener('keyup', (event) => {
     case 'Backspace':
       extraFrame = null;
       sub = null;
-      update();
+      update(true, true);
       break;
     case 'f':
     case 'F':

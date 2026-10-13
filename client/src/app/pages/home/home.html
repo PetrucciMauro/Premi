@@ -20,6 +20,10 @@
           <input type="search" placeholder="Cerca…" aria-label="Cerca presentazioni" [value]="query()" (input)="query.set($any($event.target).value)" />
         </label>
       }
+      <button matButton="outlined" class="new-button" [disabled]="startingTutorial()" (click)="startTutorial()">
+        <mat-icon svgIcon="graduation" />
+        Tutorial
+      </button>
       <button matButton="outlined" class="new-button" [disabled]="importing()" (click)="importInput.click()">
         <mat-icon svgIcon="upload" />
         Importa
@@ -31,6 +35,20 @@
       </button>
     </div>
   </header>
+
+  @if (tutorialHint() && !loading()) {
+    <aside class="tutorial-hint">
+      <span class="hint-icon"><mat-icon svgIcon="graduation" /></span>
+      <div class="hint-text">
+        <h2>Prima volta su Premi?</h2>
+        <p>Segui il tutorial: crea una presentazione di prova e ti guida passo passo tra frame, testi e percorso.</p>
+      </div>
+      <button matButton="filled" [disabled]="startingTutorial()" (click)="startTutorial()">Inizia il tutorial</button>
+      <button matIconButton aria-label="Non mostrare più" class="hint-close" (click)="dismissTutorialHint()">
+        <mat-icon svgIcon="close" />
+      </button>
+    </aside>
+  }
 
   @if (loading()) {
     <div class="grid">

@@ -10,6 +10,8 @@
  */
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { PresentationApi } from '../core/presentation-api.service';
+import { DEFAULT_TRANSITION, Transition, syncTransitions } from '../model/transition';
+import { Alignment, Axis, alignElements, distributeElements, parentOf } from '../model/arrange';
 import {
   COLLECTIONS,
   ELEMENT_TYPES,
@@ -23,6 +25,7 @@ import {
   allElements,
   anchorChain,
   byLayer,
+  cleanName,
   findElement,
   newAnchor,
   nextElementId,
@@ -60,7 +63,13 @@ export class EditorStore {
 
   readonly title = signal('');
   private readonly state = signal<Proper | null>(null);
-  readonly selectedId = signal<number | null>(null);
+  /** elementi selezionati, tutti nello stesso contenitore (stesso frame o la tela) */
+  readonly selectedIds = signal<number[]>([]);
+  /** l'elemento selezionato quando ce n'è uno solo */
+  readonly selectedId = computed(() => {
+    const ids = this.selectedIds();
+    return ids.length === 1 ? ids[0] : null;
+  });
 
   private readonly undoStack = signal<HistoryEntry[]>([]);
   private readonly redoStack = signal<HistoryEntry[]>([]);
@@ -79,6 +88,11 @@ export class EditorStore {
     const id = this.selectedId();
     const proper = this.state();
     return proper && id !== null ? (findElement(proper, id) ?? null) : null;
+  });
+  /** tutti gli elementi selezionati */
+  readonly selection = computed(() => {
+    const proper = this.state();
+    return proper ? this.selectedIds().map((id) => findElement(proper, id)).filter((el): el is SlideElement => !!el) : [];
   });
   readonly mainPath = computed(() => this.state()?.paths.main ?? []);
 
@@ -100,7 +114,7 @@ export class EditorStore {
     this.title.set(presentation.meta.titolo);
     this.state.set(proper);
     this.savedState.set(saved);
-    this.selectedId.set(null);
+    this.selectedIds.set([]);
     this.undoStack.set([]);
     this.redoStack.set([]);
   }
@@ -116,6 +130,7 @@ export class EditorStore {
     const after = structuredClone(before);
     mutate(after);
     syncAnchors(before, after);
+    syncTransitions(after.paths, before.paths);
     if (same(before, after)) return false;
 
     this.state.set(after);
@@ -135,6 +150,7 @@ export class EditorStore {
     const draft = structuredClone(before);
     mutate(draft);
     syncAnchors(before, draft);
+    syncTransitions(draft.paths, before.paths);
     this.state.set(draft);
   }
 
@@ -167,8 +183,49 @@ export class EditorStore {
     this.dropMissingSelection();
   }
 
+  /** Dopo annulla/ripristina restano selezionati gli elementi ancora presenti nello stesso contenitore. */
   private dropMissingSelection(): void {
-    if (!this.selected()) this.selectedId.set(null);
+    const selection = this.selection();
+    const parent = selection.length ? parentOf(selection[0]) : null;
+    const ids = selection.filter((el) => parentOf(el) === parent).map((el) => el.id);
+    if (ids.length !== this.selectedIds().length) this.selectedIds.set(ids);
+  }
+
+  // ---------------------------------------------------------------- selezione
+
+  /** Seleziona solo l'elemento indicato (o nessuno). */
+  select(id: number | null): void {
+    this.selectedIds.set(id === null ? [] : [id]);
+  }
+
+  /**
+   * Aggiunge o toglie l'elemento dalla selezione. Gli elementi selezionati devono stare nello
+   * stesso contenitore: un elemento di un altro contenitore sostituisce la selezione e la
+   * funzione restituisce false.
+   */
+  toggleSelect(id: number): boolean {
+    const proper = this.proper();
+    const el = findElement(proper, id);
+    if (!el) return true;
+    const ids = this.selectedIds();
+    if (ids.includes(id)) {
+      this.selectedIds.set(ids.filter((x) => x !== id));
+      return true;
+    }
+    const first = ids.length ? findElement(proper, ids[0]) : undefined;
+    if (first && parentOf(first) !== parentOf(el)) {
+      this.selectedIds.set([id]);
+      return false;
+    }
+    this.selectedIds.set([...ids, id]);
+    return true;
+  }
+
+  /** Seleziona tutti gli elementi del contenitore della selezione (la tela se non c'è selezione). */
+  selectSiblings(): void {
+    const first = this.selection()[0];
+    const parent = first ? parentOf(first) : null;
+    this.selectedIds.set(byLayer(this.proper()).filter((el) => parentOf(el) === parent).map((el) => el.id));
   }
 
   // ---------------------------------------------------------------- elementi
@@ -179,27 +236,33 @@ export class EditorStore {
     this.execute(INSERT_LABELS[element.type], (draft) =>
       addElement(draft, { ...element, id, zIndex: nextZIndex(draft) } as SlideElement),
     );
-    this.selectedId.set(id);
+    this.select(id);
     return id;
   }
 
-  remove(id: number): void {
-    const element = findElement(this.proper(), id);
-    if (!element) return;
+  /** Elimina gli elementi indicati con un solo comando. */
+  remove(...ids: number[]): void {
+    const elements = ids.map((id) => findElement(this.proper(), id)).filter((el): el is SlideElement => !!el);
+    if (!elements.length) return;
     const labels: Record<string, string> = { frame: 'frame', text: 'testo', image: 'immagine', audio: 'audio', video: 'video' };
-    this.execute('eliminazione ' + (labels[element.type] ?? element.type), (draft) => {
-      removeElement(draft, id);
-      // gli elementi sopra quello eliminato scendono di un livello
-      for (const el of allElements(draft)) if (el.zIndex > element.zIndex) el.zIndex--;
-      if (element.type === 'frame') {
-        removeFromPaths(draft.paths, id);
-        // i sottopercorsi che partivano da questo frame non sono più raggiungibili
-        draft.paths.choices = draft.paths.choices.filter((sub) => sub.frame !== id);
+    const label =
+      elements.length > 1 ? `eliminazione ${elements.length} elementi` : 'eliminazione ' + (labels[elements[0].type] ?? elements[0].type);
+    this.execute(label, (draft) => {
+      for (const { id, type } of elements) {
+        const removed = removeElement(draft, id);
+        if (!removed) continue;
+        // gli elementi sopra quello eliminato scendono di un livello
+        for (const el of allElements(draft)) if (el.zIndex > removed.zIndex) el.zIndex--;
+        if (type === 'frame') {
+          removeFromPaths(draft.paths, id);
+          // i sottopercorsi che partivano da questo frame non sono più raggiungibili
+          draft.paths.choices = draft.paths.choices.filter((sub) => sub.frame !== id);
+        }
+        // i sottopercorsi avviati da questo elemento restano, in attesa di un nuovo elemento
+        for (const sub of draft.paths.choices) if (sub.trigger === id) sub.trigger = null;
       }
-      // i sottopercorsi avviati da questo elemento restano, in attesa di un nuovo elemento
-      for (const sub of draft.paths.choices) if (sub.trigger === id) sub.trigger = null;
     });
-    if (this.selectedId() === id) this.selectedId.set(null);
+    this.selectedIds.update((selected) => selected.filter((id) => !ids.includes(id)));
   }
 
   update<T extends SlideElement>(id: number, label: string, change: (el: T) => void, mergeKey?: string): void {
@@ -207,6 +270,31 @@ export class EditorStore {
       const el = findElement(draft, id) as T | undefined;
       if (el) change(el);
     }, mergeKey);
+  }
+
+  /** Sposta gli elementi di (dx, dy); i comandi con la stessa `mergeKey` diventano uno solo. */
+  move(ids: number[], dx: number, dy: number, mergeKey?: string): void {
+    this.execute(ids.length > 1 ? 'sposta elementi' : 'sposta elemento', (draft) => {
+      for (const id of ids) {
+        const el = findElement(draft, id);
+        if (el) {
+          el.xIndex += dx;
+          el.yIndex += dy;
+        }
+      }
+    }, mergeKey);
+  }
+
+  /** Allinea un elemento al suo contenitore o più elementi tra loro (vedi alignElements). */
+  align(ids: number[], alignment: Alignment, toContainer = ids.length < 2): void {
+    this.execute(toContainer ? 'posiziona nel contenitore' : 'allinea elementi', (draft) =>
+      alignElements(draft, ids, alignment, toContainer),
+    );
+  }
+
+  /** Distribuisce gli elementi a distanze uguali lungo un asse. */
+  distribute(ids: number[], axis: Axis): void {
+    this.execute('distribuisci elementi', (draft) => distributeElements(draft, ids, axis));
   }
 
   /**
@@ -274,6 +362,15 @@ export class EditorStore {
     return !!frame && frame.id !== id && !anchorChain(proper, frame).includes(id);
   }
 
+  /** Dà un nome all'elemento; un nome vuoto lo toglie. */
+  rename(id: number, name: string): void {
+    const clean = cleanName(name);
+    this.update(id, clean ? 'rinomina' : 'rimuovi nome', (el) => {
+      if (clean) el.name = clean;
+      else delete el.name;
+    });
+  }
+
   setContent(id: number, content: string): void {
     this.update<TextElement>(id, 'modifica testo', (el) => (el.content = content));
   }
@@ -286,6 +383,26 @@ export class EditorStore {
 
   setFrameBackground(id: number, change: { color?: string; ref?: string; fit?: FrameImageFit }): void {
     this.update<FrameElement>(id, 'modifica sfondo', (el) => Object.assign(el, change), `frame-bg-${id}-${Object.keys(change).join()}`);
+  }
+
+  // ---------------------------------------------------------------- transizioni
+
+  /**
+   * Modifica la transizione tra i frame `from` e `to` (null torna a quella predefinita).
+   * Le transizioni nascono e spariscono con i collegamenti dei percorsi (vedi syncTransitions).
+   */
+  setTransition(from: number, to: number, transition: Transition | null, mergeKey?: string): void {
+    this.execute(transition ? 'modifica transizione' : 'transizione predefinita', (draft) => {
+      const link = draft.paths.transitions.find((t) => t.from === from && t.to === to);
+      if (link) Object.assign(link, transition ?? DEFAULT_TRANSITION, { from, to });
+    }, mergeKey);
+  }
+
+  /** Stessa transizione per tutti i collegamenti dei percorsi. */
+  setTransitionForAll(transition: Transition): void {
+    this.execute('transizione per tutti i passi', (draft) => {
+      for (const link of draft.paths.transitions) Object.assign(link, transition, { from: link.from, to: link.to });
+    });
   }
 
   // ---------------------------------------------------------------- percorsi

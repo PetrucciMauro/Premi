@@ -4,6 +4,7 @@
  * Non dipende da Angular: la usa anche il player autonomo delle presentazioni esportate in HTML.
  */
 import { Proper, SlideElement, planeMatrix, tiltedFrames } from '../model/presentation';
+import { DEFAULT_TRANSITION, EASINGS, SpinAxis, Transition, TransitionKind } from '../model/transition';
 
 export interface Size {
   width: number;
@@ -67,17 +68,37 @@ export const sameCamera = (a: Camera | null, b: Camera | null): boolean =>
     (a.rotateY ?? 0) === (b.rotateY ?? 0) &&
     (a.z ?? 0) === (b.z ?? 0));
 
+/** Ciò che inquadra la telecamera: matrice dalla tela allo schermo (con la prospettiva) e finestra. */
+export interface CameraView {
+  matrix: DOMMatrix;
+  viewport: Size;
+  /** angolo, in gradi, tra la direzione della telecamera e la perpendicolare alla tela */
+  tilt: number;
+}
+
+/** Inclinazione della telecamera rispetto alla tela (0 se la guarda di fronte). */
+export function cameraTilt(camera: Camera): number {
+  const rad = (deg = 0) => (deg * Math.PI) / 180;
+  const cos = Math.cos(rad(camera.rotateX)) * Math.cos(rad(camera.rotateY));
+  return (Math.acos(Math.min(1, Math.abs(cos))) * 180) / Math.PI;
+}
+
 /** Distanza prospettica, in pixel dello schermo, con cui si vedono i frame inclinati. */
 export const perspectiveFor = (viewport: Size) => Math.max(viewport.width, viewport.height) * 1.2;
 
 /**
- * Matrice della telecamera, da applicare alla tela con transform-origin 0 0. Con
- * `perspective` la proiezione è prospettica: non cambia nulla sul piano della tela, ma i
- * frame inclinati appaiono in 3D. La rotazione 3D della telecamera raddrizza il frame inquadrato.
+ * Matrice della telecamera, da applicare alla tela con transform-origin 0 0. La rotazione 3D
+ * della telecamera raddrizza il frame inquadrato.
+ * Con `perspective` la proiezione diventa prospettica man mano che la telecamera si inclina
+ * rispetto alla tela (del tutto a 90°): guardando la tela di fronte la vista resta ortografica,
+ * così un frame girato di taglio resta una riga ovunque sia sullo schermo, mentre nei voli in 3D
+ * e davanti ai frame inclinati la prospettiva dà profondità.
  */
 export function cameraMatrix(viewport: Size, camera: Camera, perspective = 0): DOMMatrix {
   let m = new DOMMatrix().translate(viewport.width / 2, viewport.height / 2);
-  if (perspective > 0) m = m.multiply(new DOMMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -1 / perspective, 0, 0, 0, 1]));
+  const depth = Math.sin((cameraTilt(camera) * Math.PI) / 180);
+  if (perspective > 0 && depth > 1e-6)
+    m = m.multiply(new DOMMatrix([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -depth / perspective, 0, 0, 0, 1]));
   return m
     .scale(camera.scale, camera.scale, camera.scale)
     .rotateAxisAngle(0, 1, 0, -(camera.rotateY ?? 0))
@@ -125,35 +146,40 @@ export function unproject(m: DOMMatrix, x: number, y: number): { x: number; y: n
   };
 }
 
+/** Rotazioni lungo l'arco più breve e profondità, interpolate per t in [0, 1]. */
+function turnPath(from: Camera, to: Camera) {
+  const arc = (a = 0, b = 0) => (t: number) => a + (((((b - a) % 360) + 540) % 360) - 180) * t;
+  const rotate = { rotation: arc(from.rotation, to.rotation), rotateX: arc(from.rotateX, to.rotateX), rotateY: arc(from.rotateY, to.rotateY) };
+  const z0 = from.z ?? 0;
+  const dz = (to.z ?? 0) - z0;
+  return (t: number) => ({ rotation: rotate.rotation(t), rotateX: rotate.rotateX(t), rotateY: rotate.rotateY(t), z: z0 + dz * t });
+}
+
+export interface CameraPath {
+  /** lunghezza del percorso, proporzionale alla durata ideale */
+  length: number;
+  at: (t: number) => Camera;
+}
+
 /**
  * Percorso di zoom e spostamento fluido tra due telecamere (van Wijk e Nuij, "Smooth and
  * efficient zooming and panning", come d3-interpolate): per i salti lunghi la telecamera
- * si allontana e poi si riavvicina. Restituisce la funzione del percorso per t in [0, 1]
- * e la sua lunghezza S, proporzionale alla durata ideale.
+ * si allontana e poi si riavvicina, tanto più quanto è grande `arc` (1 = come d3).
+ * Restituisce la funzione del percorso per t in [0, 1] e la sua lunghezza S.
  */
-export function zoomPath(viewport: Size, from: Camera, to: Camera): { length: number; at: (t: number) => Camera } {
-  const rho = Math.SQRT2;
+export function zoomPath(viewport: Size, from: Camera, to: Camera, arc = 1): CameraPath {
+  const rho = Math.SQRT2 * Math.max(arc, 0.05);
   const w0 = viewport.width / from.scale;
   const w1 = viewport.width / to.scale;
   const dx = to.x - from.x;
   const dy = to.y - from.y;
   const d2 = dx * dx + dy * dy;
-  // rotazioni lungo l'arco più breve
-  const arc = (a = 0, b = 0) => (t: number) => a + (((((b - a) % 360) + 540) % 360) - 180) * t;
-  const rotate = { rotation: arc(from.rotation, to.rotation), rotateX: arc(from.rotateX, to.rotateX), rotateY: arc(from.rotateY, to.rotateY) };
-  const z0 = from.z ?? 0;
-  const dz = (to.z ?? 0) - z0;
-  const rotation = (t: number) => ({
-    rotation: rotate.rotation(t),
-    rotateX: rotate.rotateX(t),
-    rotateY: rotate.rotateY(t),
-    z: z0 + dz * t,
-  });
+  const rotation = turnPath(from, to);
 
   if (d2 < 1e-6) {
     const S = Math.log(w1 / w0) / rho;
     return {
-      length: Math.abs(S),
+      length: Math.abs(S) * (rho / Math.SQRT2),
       at: (t) => ({ x: from.x + t * dx, y: from.y + t * dy, scale: viewport.width / (w0 * Math.exp(rho * t * S)), ...rotation(t) }),
     };
   }
@@ -164,13 +190,27 @@ export function zoomPath(viewport: Size, from: Camera, to: Camera): { length: nu
   const r1 = Math.log(Math.sqrt(b1 * b1 + 1) - b1);
   const S = (r1 - r0) / rho;
   return {
-    length: S,
+    // misurata come con l'ampiezza normale, così l'ampiezza non allunga la durata automatica
+    length: S * (rho / Math.SQRT2),
     at: (t) => {
       const s = t * S;
       const u = (w0 / (rho * rho * d1)) * (Math.cosh(r0) * Math.tanh(rho * s + r0) - Math.sinh(r0));
       const w = (w0 * Math.cosh(r0)) / Math.cosh(rho * s + r0);
       return { x: from.x + u * dx, y: from.y + u * dy, scale: viewport.width / w, ...rotation(t) };
     },
+  };
+}
+
+/** Percorso diretto: la telecamera va dritta verso l'inquadratura, con lo zoom a velocità costante. */
+export function directPath(viewport: Size, from: Camera, to: Camera): CameraPath {
+  const w0 = viewport.width / from.scale;
+  const w1 = viewport.width / to.scale;
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const rotation = turnPath(from, to);
+  return {
+    length: Math.hypot(Math.log(w1 / w0), Math.hypot(dx, dy) / Math.max(w0, w1)) / Math.SQRT2,
+    at: (t) => ({ x: from.x + t * dx, y: from.y + t * dy, scale: viewport.width / (w0 * (w1 / w0) ** t), ...rotation(t) }),
   };
 }
 
@@ -186,13 +226,79 @@ export function layoutZoom(scale: number, current: number): number {
   return ZOOM_STEP ** Math.round(Math.log(scale) / Math.log(ZOOM_STEP));
 }
 
-const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
-
 /** Durata dei movimenti della telecamera: proporzionale alla lunghezza del percorso, entro min e max (ms). */
 export interface MotionDuration {
   min: number;
   max: number;
   perUnit: number;
+}
+
+/** Come muovere la telecamera verso una nuova inquadratura (vedi motionFor). */
+export interface MotionOptions {
+  path: TransitionKind;
+  /** durata in ms; null = in base alla lunghezza del percorso */
+  duration: number | null;
+  easing: (t: number) => number;
+  arc: number;
+  spins: number;
+  spinAxis: SpinAxis;
+  /** attesa prima di partire, in ms */
+  delay: number;
+  fadeColor: string;
+  /**
+   * riproduce il movimento al contrario: tornando indietro da un frame si rivede, a ritroso,
+   * la transizione con cui ci si era arrivati
+   */
+  reverse: boolean;
+}
+
+/**
+ * Opzioni di movimento per arrivare su un frame con la transizione `transition` (o quella
+ * predefinita); con `reverse` per lasciarlo tornando indietro, rivedendo la transizione a
+ * ritroso (senza l'attesa, che andando indietro sarebbe solo un ritardo).
+ */
+export function motionFor(transition: Transition = DEFAULT_TRANSITION, reverse = false): MotionOptions {
+  return {
+    path: transition.kind,
+    duration: transition.duration === null ? null : transition.duration * 1000,
+    easing: EASINGS[transition.easing],
+    arc: transition.arc,
+    spins: transition.spins,
+    spinAxis: transition.spinAxis,
+    delay: reverse ? 0 : transition.delay * 1000,
+    fadeColor: transition.fadeColor,
+    reverse,
+  };
+}
+
+/** Velo colorato sopra la tela (per le dissolvenze): opacità da 0 a 1. */
+export interface Veil {
+  opacity: number;
+  color: string;
+}
+
+export const NO_VEIL: Veil = { opacity: 0, color: '#000000' };
+
+/** Telecamera con i giri in più (in gradi) attorno all'asse `axis`. */
+const spun = (camera: Camera, axis: SpinAxis, degrees: number): Camera => {
+  if (degrees === 0) return camera;
+  if (axis === 'z') return { ...camera, rotation: camera.rotation + degrees };
+  if (axis === 'x') return { ...camera, rotateX: (camera.rotateX ?? 0) + degrees };
+  return { ...camera, rotateY: (camera.rotateY ?? 0) + degrees };
+};
+
+/**
+ * Inquadrature del movimento verso `to`, per t in [0, 1] (prima dell'andamento): camera e velo.
+ * Con la dissolvenza la vista sfuma sull'inquadratura di partenza e riappare su quella d'arrivo.
+ */
+export function motionAt(path: CameraPath, from: Camera, to: Camera, options: MotionOptions, t: number): { camera: Camera; veil: Veil } {
+  if (options.path === 'fade') {
+    const half = t < 0.5;
+    const opacity = Math.min(1, Math.max(0, options.easing(half ? t * 2 : (1 - t) * 2)));
+    return { camera: half ? from : to, veil: { opacity, color: options.fadeColor } };
+  }
+  const e = options.easing(t);
+  return { camera: spun(path.at(e), options.spinAxis, options.spins * 360 * e), veil: NO_VEIL };
 }
 
 /**
@@ -202,43 +308,93 @@ export interface MotionDuration {
  * Anche cambiando la trasformazione a ogni fotogramma, con la prospettiva 3D Chrome non
  * ridisegna la tela alla nuova scala: per questo la scala viene data soprattutto con la
  * proprietà CSS zoom, che impagina di nuovo la tela, e la transform resta vicina a 1.
- * A ogni fotogramma `render` riceve la transform (CSS) e la scala di impaginazione.
+ * A ogni fotogramma `render` riceve la transform (CSS), la scala di impaginazione, la vista
+ * della telecamera (matrice dalla tela allo schermo, con la prospettiva, e dimensioni della
+ * finestra) e il velo da mostrare sopra la tela (per le dissolvenze).
  */
 export class CameraMotion {
   private camera: Camera | null = null;
   private zoom = 1;
   private frame = 0;
+  private veil: Veil = NO_VEIL;
+  /** conclude il movimento in corso: true se è arrivato, false se è stato interrotto */
+  private finish: ((arrived: boolean) => void) | null = null;
 
   constructor(
     private readonly duration: MotionDuration,
-    private readonly render: (transform: string, zoom: number) => void,
+    private readonly render: (transform: string, zoom: number, view: CameraView, veil: Veil) => void,
     /** senza la proprietà CSS zoom (Firefox prima della 126) la scala è tutta nella transform */
     private readonly layoutZoom = typeof CSS !== 'undefined' && !!CSS.supports?.('zoom', '2'),
   ) {}
 
-  moveTo(viewport: Size, target: Camera, animate = true): void {
-    cancelAnimationFrame(this.frame);
+  /**
+   * Muove la telecamera verso `target` con le opzioni `options` (senza: il volo classico).
+   * La promessa restituita vale true quando la telecamera è arrivata, false se il movimento
+   * viene interrotto da un altro.
+   */
+  moveTo(viewport: Size, target: Camera, animate = true, options: MotionOptions = motionFor()): Promise<boolean> {
+    this.interrupt();
+    const done = new Promise<boolean>((resolve) => (this.finish = resolve));
     const from = this.camera;
     const reduced = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!animate || !from || reduced) {
-      this.show(viewport, target, true);
-      return;
+    if (!animate || !from || reduced || (options.path === 'cut' && options.delay <= 0)) {
+      this.arrive(viewport, target);
+      return done;
     }
-    const path = zoomPath(viewport, from, target);
+
     const { min, max, perUnit } = this.duration;
-    const duration = Math.min(max, Math.max(min, path.length * perUnit));
+    // al contrario si percorre a ritroso il movimento che va da `target` a `from`
+    const [a, b] = options.reverse ? [target, from] : [from, target];
+    const path = options.path === 'direct' ? directPath(viewport, a, b) : zoomPath(viewport, a, b, options.arc);
+    const auto = options.path === 'fade' ? 900 : Math.min(max, Math.max(min, path.length * perUnit));
+    const duration = options.path === 'cut' ? 0 : (options.duration ?? auto);
     const start = performance.now();
     const step = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      if (t < 1) this.show(viewport, path.at(easeInOutCubic(t)));
-      else this.show(viewport, target, true);
-      if (t < 1) this.frame = requestAnimationFrame(step);
+      const elapsed = now - start - options.delay;
+      // durante l'attesa la telecamera resta ferma
+      const t = elapsed < 0 ? -1 : duration > 0 ? Math.min(1, elapsed / duration) : 1;
+      if (t >= 1) {
+        this.arrive(viewport, target);
+        return;
+      }
+      if (t >= 0) {
+        const { camera, veil } = motionAt(path, a, b, options, options.reverse ? 1 - t : t);
+        this.veil = veil;
+        this.show(viewport, camera, options.path === 'fade' && t >= 0.5);
+      }
+      this.frame = requestAnimationFrame(step);
     };
     this.frame = requestAnimationFrame(step);
+    return done;
+  }
+
+  /**
+   * Mostra subito l'inquadratura, senza animazione. Con `settled` false la scala di
+   * impaginazione cambia solo a passi: per i movimenti continui, come lo zoom con la rotella.
+   */
+  jump(viewport: Size, target: Camera, settled = true): void {
+    this.interrupt();
+    this.veil = NO_VEIL;
+    this.show(viewport, target, settled);
   }
 
   stop(): void {
+    this.interrupt();
+  }
+
+  private interrupt(): void {
     cancelAnimationFrame(this.frame);
+    const finish = this.finish;
+    this.finish = null;
+    finish?.(false);
+  }
+
+  private arrive(viewport: Size, target: Camera): void {
+    this.veil = NO_VEIL;
+    this.show(viewport, target, true);
+    const finish = this.finish;
+    this.finish = null;
+    finish?.(true);
   }
 
   private show(viewport: Size, camera: Camera, settled = false): void {
@@ -248,6 +404,7 @@ export class CameraMotion {
     if (!this.layoutZoom) this.zoom = 1;
     else this.zoom = settled ? camera.scale : layoutZoom(camera.scale, this.zoom);
     const z = this.zoom;
-    this.render(cssMatrix(cameraMatrix(viewport, camera, perspectiveFor(viewport)).scale(1 / z, 1 / z, 1 / z)), z);
+    const matrix = cameraMatrix(viewport, camera, perspectiveFor(viewport));
+    this.render(cssMatrix(matrix.scale(1 / z, 1 / z, 1 / z)), z, { matrix, viewport, tilt: cameraTilt(camera) }, this.veil);
   }
 }

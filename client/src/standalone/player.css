@@ -51,6 +51,31 @@ body {
   box-shadow: 0 30px 80px rgb(0 0 0 / 45%);
 }
 
+/* velo delle transizioni a dissolvenza: copre la tela, sotto ai controlli */
+.veil {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* superfici che non si vedono (vedi culling.ts): con la tela di taglio non si disegna lo sfondo */
+.scene.no-floor {
+  background: none !important;
+  box-shadow: none;
+}
+
+.floor-tile {
+  position: absolute;
+  z-index: -1;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.culled {
+  visibility: hidden;
+}
+
 .element {
   position: absolute;
   user-select: none;

@@ -6,6 +6,8 @@
  *   Il formato è compatibile con quello della versione web precedente (salvato su MongoDB).
  */
 
+import { PathTransition, normalizeTransitions } from './transition';
+
 export type ElementType = 'text' | 'frame' | 'image' | 'audio' | 'video' | 'SVG';
 export type MediaType = 'image' | 'audio' | 'video';
 
@@ -34,6 +36,8 @@ interface BaseElement {
   height: number;
   width: number;
   anchor?: FrameAnchor;
+  /** nome dato dall'utente (vedi cleanName); senza, l'elemento si chiama come il suo tipo */
+  name?: string;
 }
 
 export interface TextElement extends BaseElement {
@@ -99,6 +103,8 @@ export interface SubPath {
 export interface Paths {
   main: number[];
   choices: SubPath[];
+  /** una transizione per ogni coppia di frame consecutivi dei percorsi (vedi syncTransitions) */
+  transitions: PathTransition[];
 }
 
 export interface Proper {
@@ -189,6 +195,16 @@ const str = (value: unknown, fallback = ''): string => (typeof value === 'string
 
 const array = <T>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : []);
 
+export const MAX_NAME_LENGTH = 60;
+
+/** Nome di un elemento ripulito (spazi superflui, lunghezza massima); '' se non ne ha. */
+export function cleanName(value: unknown): string {
+  return typeof value === 'string' ? value.trim().replace(/\s+/g, ' ').slice(0, MAX_NAME_LENGTH).trim() : '';
+}
+
+/** Nome con cui mostrare un frame: quello dato dall'utente o "Frame <id>". */
+export const frameName = (frame: Pick<BaseElement, 'id' | 'name'>): string => frame.name || `Frame ${frame.id}`;
+
 /** Sottopercorsi validi; le scelte salvate dalla versione con impress.js non sono compatibili. */
 function normalizeSubPaths(value: unknown): SubPath[] {
   return array<Record<string, unknown>>(value)
@@ -233,7 +249,10 @@ function normalizeBase(raw: Record<string, unknown>): BaseElement {
     width: num(raw['width']),
   };
   const anchor = normalizeAnchor(raw['anchor']);
-  return anchor && anchor.frame !== base.id ? { ...base, anchor } : base;
+  if (anchor && anchor.frame !== base.id) base.anchor = anchor;
+  const name = cleanName(raw['name']);
+  if (name) base.name = name;
+  return base;
 }
 
 /**
@@ -246,6 +265,12 @@ export function normalizePresentation(raw: unknown): Presentation {
   const bg = (proper['background'] ?? {}) as Record<string, unknown>;
   const paths = (proper['paths'] ?? {}) as Record<string, unknown>;
 
+  const rawFrames = array<Record<string, unknown>>(proper['frames']);
+  const main = array<unknown>(paths['main']).map((id) => num(id));
+  const choices = normalizeSubPaths(paths['choices']);
+  // le transizioni salvate un tempo sui frame (vedi normalizeTransitions)
+  const frameTransitions = new Map(rawFrames.filter((el) => el['transition']).map((el) => [num(el['id']), el['transition']]));
+
   const width = num(bg['width'], DEFAULT_CANVAS_WIDTH) || DEFAULT_CANVAS_WIDTH;
   const height = num(bg['height'], width / CANVAS_RATIO) || width / CANVAS_RATIO;
 
@@ -253,8 +278,9 @@ export function normalizePresentation(raw: unknown): Presentation {
     meta: { titolo: str(doc['meta']?.titolo) },
     proper: {
       paths: {
-        main: array<unknown>(paths['main']).map((id) => num(id)),
-        choices: normalizeSubPaths(paths['choices']),
+        main,
+        choices,
+        transitions: normalizeTransitions({ main, choices }, paths['transitions'], frameTransitions),
       },
       texts: array<Record<string, unknown>>(proper['texts']).map((el) => ({
         ...normalizeBase(el),
@@ -264,7 +290,7 @@ export function normalizePresentation(raw: unknown): Presentation {
         fontSize: num(el['fontSize'], 1) || 1,
         color: str(el['color'], 'black') || 'black',
       })),
-      frames: array<Record<string, unknown>>(proper['frames']).map((el) => ({
+      frames: rawFrames.map((el) => ({
         ...normalizeBase(el),
         type: 'frame',
         bookmark: num(el['bookmark']) ? 1 : 0,
@@ -456,8 +482,18 @@ export function frameLift(frame: FrameElement): number {
   return (
     (frame.height / 2) * Math.abs(Math.sin(radians(frame.rotateX))) +
     (frame.width / 2) * Math.abs(Math.sin(radians(frame.rotateY))) +
-    1
+    layerGap(frame)
   );
+}
+
+/**
+ * Distanza tra due livelli consecutivi sul piano inclinato del frame (e tra il frame e la tela):
+ * proporzionale alla dimensione del frame, così quando il frame è inquadrato sullo schermo resta
+ * di qualche pixel a ogni zoom. Con distanze minori Chrome, mentre la telecamera ruota in 3D,
+ * non sa più quale piano sta davanti e i testi sfarfallano o spariscono dietro al loro frame.
+ */
+function layerGap(frame: FrameElement): number {
+  return Math.max(0.5, Math.max(frame.width, frame.height) * 0.002);
 }
 
 /** Inclinazione di un frame attorno al suo centro, in coordinate della tela (con lo spostamento verso lo spettatore). */
@@ -494,9 +530,6 @@ export function planeMatrix(proper: Proper, el: SlideElement, self = false): DOM
   return tiltedFrames(proper, el, self).reduce((m, frame) => m.multiply(tiltMatrix(frame)), new DOMMatrix());
 }
 
-/** distanza, in pixel della tela, tra due livelli consecutivi sullo stesso piano inclinato */
-const LAYER_GAP = 0.5;
-
 /**
  * Trasformazione CSS di un elemento (con transform-origin al centro): la sua rotazione e,
  * se è un frame inclinato o è associato a frame inclinati, la loro rotazione 3D, così gli
@@ -507,14 +540,33 @@ const LAYER_GAP = 0.5;
  */
 export function elementTransform(proper: Proper, el: SlideElement, layer = 0): string {
   if (!tiltedFrames(proper, el, true).length) return `rotate(${el.rotation}deg)`;
+  return localMatrix(proper, el, layer).toString();
+}
+
+/** Trasformazione dell'elemento attorno al suo centro (vedi elementTransform). */
+function localMatrix(proper: Proper, el: SlideElement, layer: number): DOMMatrix {
   const ox = el.xIndex + el.width / 2;
   const oy = el.yIndex + el.height / 2;
+  if (!tiltedFrames(proper, el, true).length) return new DOMMatrix().rotate(el.rotation);
   return new DOMMatrix()
     .translate(-ox, -oy)
     .multiply(planeMatrix(proper, el, true))
-    .translate(ox, oy, layer * LAYER_GAP)
-    .rotate(el.rotation)
-    .toString();
+    .translate(ox, oy, layer * layerGap(tiltedFrames(proper, el, true)[0]))
+    .rotate(el.rotation);
+}
+
+/** Angoli dell'elemento come vengono mostrati: in coordinate della tela, in 3D se è su un piano inclinato. */
+export function elementCorners(proper: Proper, el: SlideElement, layer = 0): DOMPoint[] {
+  const ox = el.xIndex + el.width / 2;
+  const oy = el.yIndex + el.height / 2;
+  const m = new DOMMatrix().translate(ox, oy).multiply(localMatrix(proper, el, layer)).translate(-ox, -oy);
+  const { xIndex: x, yIndex: y, width: w, height: h } = el;
+  return [
+    [x, y],
+    [x + w, y],
+    [x + w, y + h],
+    [x, y + h],
+  ].map(([px, py]) => m.transformPoint(new DOMPoint(px, py, 0)));
 }
 
 /**

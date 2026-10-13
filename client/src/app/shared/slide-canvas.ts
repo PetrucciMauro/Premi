@@ -17,6 +17,9 @@ import {
   tiltLayers,
   mediaSrc,
 } from '../model/presentation';
+import { Guides } from '../model/arrange';
+import { CameraView } from './camera';
+import { FloorMode, culledElements, floorMode, floorTiles, hiddenFrom, sameIds, sceneCorners, tileCorners } from './culling';
 
 export interface ElementPointerEvent {
   event: PointerEvent;
@@ -40,23 +43,39 @@ export interface TextCommitEvent {
   template: `
     <div
       class="scene"
+      [class.no-floor]="floor() !== 'whole'"
       [style.zoom]="zoom()"
       [style.width.px]="proper().background.width"
       [style.height.px]="proper().background.height"
       [style.font-size.px]="baseFontSize"
-      [style.background-color]="proper().background.color"
-      [style.background-image]="cssUrl(proper().background.image)"
+      [style.background-color]="floor() === 'whole' ? proper().background.color : null"
+      [style.background-image]="floor() === 'whole' ? cssUrl(proper().background.image) : null"
     >
+    <!-- con la tela a cavallo dell'occhio della telecamera lo sfondo è diviso in tessere (vedi culling.ts) -->
+    @for (tile of tiles(); track $index) {
+      <div
+        class="floor-tile"
+        [style.left.px]="tile.x"
+        [style.top.px]="tile.y"
+        [style.width.px]="tile.width"
+        [style.height.px]="tile.height"
+        [style.background-color]="proper().background.color"
+        [style.background-image]="cssUrl(proper().background.image)"
+        [style.background-size]="proper().background.width + 'px ' + proper().background.height + 'px'"
+        [style.background-position]="-tile.x + 'px ' + -tile.y + 'px'"
+      ></div>
+    }
     @for (el of elements(); track el.type + el.id) {
       <div
         class="element"
         [class]="'element element-' + el.type"
-        [class.selected]="el.id === selectedId()"
+        [class.selected]="selectedIds().includes(el.id)"
         [class.editing]="el.id === editingId()"
         [class.in-path]="el.type === 'frame' && pathIds().includes(el.id)"
         [class.highlighted]="el.id === highlightId()"
         [class.anchor-frame]="el.id === anchorFrameId()"
         [class.trigger]="triggerIds().includes(el.id)"
+        [class.culled]="culled().has(el.id)"
         [attr.data-element-id]="el.id"
         [style.left.px]="el.xIndex"
         [style.top.px]="el.yIndex"
@@ -101,10 +120,33 @@ export interface TextCommitEvent {
             <audio [src]="src(asMedia(el).url)" [controls]="!editable()" preload="metadata" (loadedmetadata)="fixDuration($event)"></audio>
           }
         }
-        @if (editable() && el.id === selectedId()) {
+        @if (editable() && selectedIds().length === 1 && selectedIds()[0] === el.id) {
           <div
             class="resize-handle"
             (pointerdown)="$event.stopPropagation(); resizePointerDown.emit({ event: $event, element: el })"
+          ></div>
+        }
+      </div>
+    }
+    @if (guidePlane(); as plane) {
+      <!-- guide di allineamento, nel sistema di riferimento del contenitore -->
+      <div
+        class="guides"
+        [style.left.px]="plane.left"
+        [style.top.px]="plane.top"
+        [style.width.px]="plane.width"
+        [style.height.px]="plane.height"
+        [style.transform]="plane.transform"
+        [style.--guide-width]="plane.lineWidth + 'px'"
+      >
+        @for (line of plane.lines; track $index) {
+          <div
+            class="guide"
+            [class.vertical]="line.axis === 'x'"
+            [style.left.px]="line.axis === 'x' ? line.at : line.from"
+            [style.top.px]="line.axis === 'x' ? line.from : line.at"
+            [style.width.px]="line.axis === 'x' ? null : line.to - line.from"
+            [style.height.px]="line.axis === 'x' ? line.to - line.from : null"
           ></div>
         }
       </div>
@@ -115,7 +157,8 @@ export interface TextCommitEvent {
 export class SlideCanvas {
   readonly proper = input.required<Proper>();
   readonly editable = input(false);
-  readonly selectedId = input<number | null>(null);
+  /** elementi selezionati: la maniglia di ridimensionamento compare solo se ce n'è uno */
+  readonly selectedIds = input<number[]>([]);
   /** testo in modifica: solo questo riceve i clic nella sua casella di testo */
   readonly editingId = input<number | null>(null);
   readonly pathIds = input<number[]>([]);
@@ -124,6 +167,15 @@ export class SlideCanvas {
   readonly anchorFrameId = input<number | null>(null);
   /** scala a cui impaginare la tela; la transform applicata all'host deve compensarla */
   readonly zoom = input(1);
+  /** guide di allineamento da mostrare durante un trascinamento */
+  readonly guides = input<Guides | null>(null);
+  /** spessore delle guide in pixel della tela (perché sullo schermo restino sottili a ogni zoom) */
+  readonly guideWidth = input(1);
+  /**
+   * Vista della telecamera: gli elementi e le parti della tela che non si vedono (dietro di lei,
+   * di taglio o fuori dallo schermo) vengono nascosti, vedi culling.ts.
+   */
+  readonly camera = input<CameraView | null>(null);
   /** elementi che avviano un sottopercorso */
   readonly triggerIds = input<number[]>([]);
 
@@ -145,6 +197,49 @@ export class SlideCanvas {
     const layers = tiltLayers(p);
     return new Map(this.elements().map((el) => [el.id, elementTransform(p, el, layers.get(el.id))]));
   });
+
+  /** Posizione e trasformazione del contenitore delle guide: un frame (anche ruotato o inclinato) o la tela. */
+  protected readonly guidePlane = computed(() => {
+    const guides = this.guides();
+    if (!guides) return null;
+    const p = this.proper();
+    const base = { lines: guides.lines, lineWidth: this.guideWidth() };
+    const frame = guides.container === null ? undefined : p.frames.find((f) => f.id === guides.container);
+    if (!frame) return { ...base, left: 0, top: 0, width: p.background.width, height: p.background.height, transform: null };
+    // sopra a tutti gli elementi del piano, anche se inclinato
+    const layer = this.elements().length + 1;
+    return { ...base, left: frame.xIndex, top: frame.yIndex, width: frame.width, height: frame.height, transform: elementTransform(p, frame, layer) };
+  });
+
+  private readonly corners = computed(() => sceneCorners(this.proper()));
+
+  /** come disegnare la tela (vedi culling.ts) */
+  protected readonly floor = computed<FloorMode>(() => {
+    const camera = this.camera();
+    const { width, height } = this.proper().background;
+    return camera ? floorMode(camera, width, height) : 'whole';
+  });
+
+  private readonly allTiles = computed(() => floorTiles(this.proper().background.width, this.proper().background.height));
+
+  /** tessere dello sfondo che si vedono, quando la tela è divisa */
+  protected readonly tiles = computed(
+    () => {
+      const camera = this.camera();
+      if (!camera || this.floor() !== 'tiles') return [];
+      return this.allTiles().filter((tile) => !hiddenFrom(camera, tileCorners(tile)));
+    },
+    { equal: (a, b) => a.length === b.length && a.every((t, i) => t === b[i]) },
+  );
+
+  /** elementi che non si vedono e non vanno disegnati (vedi culling.ts) */
+  protected readonly culled = computed(
+    () => {
+      const camera = this.camera();
+      return camera ? culledElements(this.corners(), camera, this.floor() === 'none') : new Set<number>();
+    },
+    { equal: sameIds },
+  );
 
   protected src(url: string): string {
     return mediaSrc(url);

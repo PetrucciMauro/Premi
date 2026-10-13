@@ -14,6 +14,7 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { filter, map } from 'rxjs';
+import { TourOverlay } from './tutorial/tour';
 
 const deepest = (route: ActivatedRouteSnapshot): ActivatedRouteSnapshot =>
   route.firstChild ? deepest(route.firstChild) : route;
@@ -21,7 +22,7 @@ const deepest = (route: ActivatedRouteSnapshot): ActivatedRouteSnapshot =>
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, TourOverlay],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

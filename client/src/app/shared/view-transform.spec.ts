@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import '../../testing/dom-matrix';
-import { normalizePresentation, planeMatrix } from '../model/presentation';
+import { elementCorners, normalizePresentation, planeMatrix } from '../model/presentation';
 import { Camera, cameraFor, cameraMatrix, focusCamera, layoutZoom, perspectiveFor, unproject, zoomPath } from './view-transform';
 
 const viewport = { width: 1600, height: 900 };
@@ -116,5 +116,39 @@ describe('telecamera', () => {
     expect(8 / z).toBeLessThan(1.1);
     expect(layoutZoom(8.3, z)).toBe(z);
     expect(layoutZoom(0.2, z)).toBeLessThan(0.23);
+  });
+});
+
+describe('prospettiva', () => {
+  const vp = { width: 1600, height: 900 };
+  // un frame girato di taglio, lontano dal centro della vista
+  const { proper } = normalizePresentation({
+    proper: {
+      background: { width: 8000, height: 4000 },
+      frames: [
+        { id: 1, zIndex: 0, xIndex: 6500, yIndex: 300, width: 1300, height: 731, rotateY: 90 },
+        { id: 2, zIndex: 1, xIndex: 1000, yIndex: 1000, width: 1600, height: 900 },
+      ],
+    },
+  });
+  const screenWidth = (camera: Camera) => {
+    const m = cameraMatrix(vp, camera, perspectiveFor(vp));
+    const xs = elementCorners(proper, proper.frames[0]).map((p) => {
+      const q = m.transformPoint(p);
+      return q.x / q.w;
+    });
+    return Math.max(...xs) - Math.min(...xs);
+  };
+
+  it('con la telecamera di fronte alla tela la vista è ortografica: un frame di taglio resta una riga', () => {
+    expect(screenWidth(cameraFor(vp, { xIndex: 0, yIndex: 0, rotation: 0, width: 8000, height: 4000 }))).toBeCloseTo(0, 6);
+    expect(screenWidth(focusCamera(vp, proper, proper.frames[1]))).toBeCloseTo(0, 6);
+  });
+
+  it('con la telecamera inclinata la vista è prospettica', () => {
+    const tilted = { ...focusCamera(vp, proper, proper.frames[1]), rotateY: 30 };
+    const m = cameraMatrix(vp, tilted, perspectiveFor(vp));
+    const w = (x: number) => m.transformPoint(new DOMPoint(x, 1450, 0)).w;
+    expect(Math.abs(w(1000) - w(2600))).toBeGreaterThan(0.1);
   });
 });

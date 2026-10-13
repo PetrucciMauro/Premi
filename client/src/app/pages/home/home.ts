@@ -18,6 +18,25 @@ import { Background, mediaSrc } from '../../model/presentation';
 import { ConfirmDialog, ConfirmDialogData, TitleDialog, TitleDialogData } from './dialogs';
 import { NewPresentation, NewPresentationDialog } from './new-presentation-dialog';
 
+const TUTORIAL_SEEN = 'premi.tutorial-seen';
+
+// la memoria del browser può non essere disponibile (navigazione privata, permessi)
+function readFlag(key: string): boolean {
+  try {
+    return localStorage.getItem(key) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function writeFlag(key: string): void {
+  try {
+    localStorage.setItem(key, '1');
+  } catch {
+    // il riquadro tornerà alla prossima apertura
+  }
+}
+
 interface SlideShowCard {
   titolo: string;
   background?: Background;
@@ -94,6 +113,32 @@ export class Home implements OnInit {
       return false;
     }
     return true;
+  }
+
+  /** il riquadro che propone il tutorial si mostra finché non lo si avvia o chiude */
+  protected readonly tutorialHint = signal(!readFlag(TUTORIAL_SEEN));
+  protected readonly startingTutorial = signal(false);
+
+  protected dismissTutorialHint(): void {
+    writeFlag(TUTORIAL_SEEN);
+    this.tutorialHint.set(false);
+  }
+
+  /** Crea una presentazione di prova e la apre nell'editor con il tutorial. */
+  protected async startTutorial(): Promise<void> {
+    this.dismissTutorialHint();
+    const titles = new Set(this.slideShows().map((s) => s.titolo));
+    let title = 'Tutorial';
+    for (let n = 2; titles.has(title); n++) title = `Tutorial ${n}`;
+    this.startingTutorial.set(true);
+    try {
+      await this.api.create(title);
+      this.router.navigate(['/private/edit', title], { queryParams: { tutorial: 1 } });
+    } catch (err) {
+      this.notify.error(err);
+    } finally {
+      this.startingTutorial.set(false);
+    }
   }
 
   /** Nuova presentazione, vuota o a partire da un modello. */

@@ -154,6 +154,7 @@
 }
 
 .path-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -183,6 +184,67 @@
   &:hover .remove,
   .remove:focus-visible {
     opacity: 1;
+  }
+}
+
+// tra una tappa e la successiva: la transizione che le collega (si apre il suo menu)
+.path-list.linked {
+  gap: 30px;
+}
+
+.transition-link {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 30px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px 0 6px;
+  border: 1px dashed var(--mat-sys-outline-variant);
+  border-radius: 999px;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface-variant);
+  font: inherit;
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  mat-icon {
+    flex: none;
+    width: 14px;
+    height: 14px;
+  }
+
+  &:hover,
+  &.open {
+    border-color: var(--mat-sys-primary);
+  }
+
+  // transizione diversa da quella predefinita
+  &.custom {
+    border-style: solid;
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
+  }
+}
+
+// durante il trascinamento i collegamenti si spezzano
+.cdk-drop-list-dragging .transition-link,
+.cdk-drag-preview .transition-link {
+  visibility: hidden;
+}
+
+// ingresso e ritorno di un sottopercorso
+.sub-edge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 8px 0 16px;
+  font-size: 11px;
+
+  .transition-link {
+    position: static;
   }
 }
 
@@ -499,6 +561,11 @@
   background: radial-gradient(var(--premi-canvas-dot) 1px, transparent 1px) 0 0 / 20px 20px, var(--premi-canvas);
   touch-action: none;
 
+  // trascinando un'area vuota si sposta la vista
+  &.panning {
+    cursor: grabbing;
+  }
+
   app-slide-canvas {
     --slide-canvas-radius: 2px;
     --slide-canvas-shadow: var(--premi-shadow-lg);
@@ -566,6 +633,24 @@
   text-transform: uppercase;
   color: var(--mat-sys-primary);
   white-space: nowrap;
+}
+
+.name-input {
+  width: 16ch;
+  margin-right: 4px;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+
+  &:hover,
+  &:focus {
+    border-color: var(--mat-sys-outline-variant);
+    outline: none;
+  }
 }
 
 .chip {
@@ -664,4 +749,125 @@
 .menu-hint {
   margin-left: 4px;
   color: var(--mat-sys-on-surface-variant);
+}
+
+// comandi raggruppati (per evidenziarli insieme nel tutorial)
+.tool-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+// velo delle transizioni a dissolvenza (anteprima): copre la tela, non i comandi
+.veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+// pannello della transizione del frame (nel menu)
+.transition-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 360px;
+  padding: 8px 0 4px;
+
+  .panel-intro {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0 16px 4px;
+    font-size: 13px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .default-badge {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--mat-sys-surface-container-high);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .segmented {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 0 16px 4px;
+    padding: 3px;
+    border-radius: 12px;
+    background: var(--mat-sys-surface-container-high);
+
+    button {
+      padding: 7px 4px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+
+      &.active {
+        background: var(--mat-sys-primary);
+        color: var(--mat-sys-on-primary);
+      }
+    }
+  }
+
+  .menu-control {
+    padding-block: 0;
+
+    mat-slider {
+      flex: 1;
+      width: auto;
+    }
+
+    .axis {
+      width: 9ch;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  .check,
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 2px 16px;
+    font-size: 13px;
+  }
+
+  .field {
+    justify-content: space-between;
+
+    select,
+    input[type='color'] {
+      padding: 5px 8px;
+      border: 1px solid var(--mat-sys-outline-variant);
+      border-radius: 8px;
+      background: var(--mat-sys-surface-container-lowest);
+      color: inherit;
+      font: inherit;
+    }
+
+    input[type='color'] {
+      width: 48px;
+      height: 32px;
+      padding: 2px;
+    }
+  }
+
+  .panel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 12px 4px;
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
 }

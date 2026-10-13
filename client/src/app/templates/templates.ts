@@ -15,6 +15,7 @@ import {
   normalizePresentation,
   syncAnchors,
 } from '../model/presentation';
+import { syncTransitions } from '../model/transition';
 
 export interface PresentationTemplate {
   id: string;
@@ -123,6 +124,7 @@ class TemplateBuilder {
     const before = structuredClone(this.proper);
     for (const [id, turn] of this.turns) Object.assign(this.get(id), turn);
     syncAnchors(before, this.proper);
+    syncTransitions(this.proper.paths);
     return this.proper;
   }
 

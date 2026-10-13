@@ -152,3 +152,40 @@ video {
   cursor: nwse-resize;
   touch-action: none;
 }
+
+.guides {
+  position: absolute;
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
+.guide {
+  position: absolute;
+  height: var(--guide-width, 1px);
+  margin-top: calc(var(--guide-width, 1px) / -2);
+  background: #ec4899;
+
+  &.vertical {
+    width: var(--guide-width, 1px);
+    height: auto;
+    margin-top: 0;
+    margin-left: calc(var(--guide-width, 1px) / -2);
+  }
+}
+
+// superfici che non si vedono (vedi culling.ts): con la tela di taglio la scena non disegna
+// lo sfondo, e gli elementi nascosti non entrano nel calcolo 3D del browser
+.scene.no-floor {
+  box-shadow: none;
+}
+
+.floor-tile {
+  position: absolute;
+  z-index: -1;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+.element.culled {
+  visibility: hidden;
+}

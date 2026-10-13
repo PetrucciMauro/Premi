@@ -22,9 +22,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { NotifyService } from '../core/notify.service';
 import { PresentationApi } from '../core/presentation-api.service';
-import { FrameElement, Presentation, SubPath } from '../model/presentation';
+import { FrameElement, Presentation, SubPath, frameName } from '../model/presentation';
+import { findLink, transitionBetween } from '../model/transition';
 import { SlideCanvas } from '../shared/slide-canvas';
-import { CameraAnimator, Size, cameraFor, focusCamera, sameCamera } from '../shared/view-transform';
+import { CameraAnimator, Size, cameraFor, focusCamera, motionFor, sameCamera } from '../shared/view-transform';
 
 const viewportSize = (): Size => ({ width: window.innerWidth, height: window.innerHeight });
 
@@ -50,6 +51,7 @@ export class Player implements OnInit {
   protected readonly presentation = signal<Presentation | null>(null);
   protected readonly viewport = signal<Size>(viewportSize());
   protected readonly menuOpen = signal(false);
+  protected readonly frameName = frameName;
   /** indice del passo corrente: 0 è la vista d'insieme, poi i frame del percorso principale */
   protected readonly step = signal(0);
   /** frame inquadrato fuori dal percorso (cliccandolo) */
@@ -86,12 +88,26 @@ export class Player implements OnInit {
     return frame ? (this.subPaths().get(frame.id) ?? []).map((s) => s.path.trigger!) : [];
   });
 
+  /** frame inquadrato al passo corrente (null nella vista d'insieme) */
+  private readonly target = computed(() => {
+    const sub = this.sub();
+    return this.extraFrame() ?? (sub ? sub.frames[sub.index] : this.frames()[this.step() - 1]) ?? null;
+  });
+
+  /** frame a cui porta il prossimo passo in avanti (null se si torna alla vista d'insieme) */
+  private upcoming(): FrameElement | null {
+    if (this.extraFrame()) return null;
+    const sub = this.sub();
+    const main = this.frames()[this.step() - 1] ?? null;
+    if (sub) return sub.frames[sub.index + 1] ?? main;
+    return this.frames()[this.step()] ?? null;
+  }
+
   /** inquadratura del passo corrente */
   private readonly camera = computed(() => {
     const proper = this.presentation()?.proper;
     if (!proper) return null;
-    const sub = this.sub();
-    const frame = this.extraFrame() ?? (sub ? sub.frames[sub.index] : this.frames()[this.step() - 1]);
+    const frame = this.target();
     // un frame inclinato viene raddrizzato: la telecamera ne segue la rotazione 3D
     return frame
       ? focusCamera(this.viewport(), proper, frame)
@@ -101,9 +117,18 @@ export class Player implements OnInit {
   private readonly animator = new CameraAnimator({ min: 900, max: 2200, perUnit: 650 });
   protected readonly transform = this.animator.transform;
   protected readonly zoom = this.animator.zoom;
+  protected readonly cameraView = this.animator.view;
+  protected readonly veil = this.animator.veil;
+  /** passaggio automatico al passo successivo (vedi Transition.advance) */
+  private advanceTimer: ReturnType<typeof setTimeout> | undefined;
+  /** il prossimo movimento torna indietro: si rivede a ritroso la transizione del frame che si lascia */
+  private back = false;
+  /** frame inquadrato finora (quello che si lascia al prossimo passo) */
+  private shown: FrameElement | null = null;
 
   constructor() {
     inject(DestroyRef).onDestroy(() => {
+      clearTimeout(this.advanceTimer);
       this.animator.stop();
     });
 
@@ -113,7 +138,24 @@ export class Player implements OnInit {
       const camera = this.camera();
       const viewport = this.viewport();
       if (!camera) return;
-      untracked(() => this.animator.moveTo(viewport, camera, viewport === lastViewport));
+      untracked(() => {
+        // si usa la transizione del collegamento tra il frame che si lascia e quello d'arrivo
+        // (al contrario se lo si percorre all'indietro). La partenza automatica vale solo
+        // andando avanti (altrimenti tornando indietro si verrebbe rispinti in avanti)
+        clearTimeout(this.advanceTimer);
+        const back = this.back;
+        this.back = false;
+        const leaving = this.shown;
+        const frame = this.target();
+        this.shown = frame;
+        const transitions = this.presentation()?.proper.paths.transitions ?? [];
+        const link = transitionBetween(transitions, leaving?.id, frame?.id, back);
+        const motion = link ? motionFor(link.transition, link.reverse) : motionFor(undefined, back);
+        this.animator.moveTo(viewport, camera, viewport === lastViewport, motion).then((arrived) => {
+          const advance = findLink(transitions, frame?.id, this.upcoming()?.id)?.advance;
+          if (arrived && !back && advance != null && this.target() === frame) this.advanceTimer = setTimeout(() => this.next(), advance * 1000);
+        });
+      });
       lastViewport = viewport;
     });
   }
@@ -131,6 +173,7 @@ export class Player implements OnInit {
 
   protected goto(step: number): void {
     const count = this.frames().length + 1;
+    this.back = step < this.step();
     this.extraFrame.set(null);
     this.sub.set(null);
     this.step.set(((step % count) + count) % count);
@@ -143,6 +186,7 @@ export class Player implements OnInit {
     const sub = this.subPaths().get(frameId)?.find((s) => s.path.id === pathId);
     if (index === -1 || !sub) return;
     this.goto(index + 1);
+    this.back = false;
     this.sub.set({ ...sub, index: 0 });
   }
 
@@ -151,19 +195,26 @@ export class Player implements OnInit {
     const sub = this.sub();
     if (!sub) return false;
     this.extraFrame.set(null);
+    this.back = delta < 0;
     const index = sub.index + delta;
     this.sub.set(index >= 0 && index < sub.frames.length ? { ...sub, index } : null);
     return true;
   }
 
   protected next(): void {
-    if (this.extraFrame()) this.extraFrame.set(null);
+    if (this.extraFrame()) this.leaveExtraFrame();
     else if (!this.moveInSub(1)) this.goto(this.step() + 1);
   }
 
   protected prev(): void {
-    if (this.extraFrame()) this.extraFrame.set(null);
+    if (this.extraFrame()) this.leaveExtraFrame();
     else if (!this.moveInSub(-1)) this.goto(this.step() - 1);
+  }
+
+  /** Torna al passo da cui si era aperto un frame fuori dal percorso: è un ritorno indietro. */
+  private leaveExtraFrame(): void {
+    this.back = true;
+    this.extraFrame.set(null);
   }
 
   /** Salta al frame con bookmark successivo a quello corrente. */
@@ -190,6 +241,7 @@ export class Player implements OnInit {
     const sub = this.sub();
     const subIndex = sub?.frames.findIndex((frame) => frame.id === id) ?? -1;
     if (sub && subIndex !== -1) {
+      this.back = subIndex < sub.index;
       this.extraFrame.set(null);
       this.sub.set({ ...sub, index: subIndex });
       return;
@@ -236,6 +288,7 @@ export class Player implements OnInit {
         break;
       case 'Backspace':
         // torna al frame di partenza del sottopercorso
+        this.back = true;
         this.extraFrame.set(null);
         this.sub.set(null);
         break;

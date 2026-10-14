@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import '../../testing/dom-matrix';
 import { Camera, CameraMotion, directPath, motionAt, motionFor, zoomPath } from '../shared/camera';
 import { normalizePresentation } from './presentation';
-import { DEFAULT_TRANSITION, EASINGS, TRANSITION_EASINGS, normalizeTransition, transitionBetween } from './transition';
+import { DEFAULT_TRANSITION, EASINGS, TRANSITION_EASINGS, normalizeTransition, syncTransitions, transitionBetween } from './transition';
 
 const viewport = { width: 1600, height: 900 };
 const from: Camera = { x: 0, y: 0, scale: 0.1, rotation: 0 };
@@ -13,7 +13,7 @@ describe('transizioni', () => {
     expect(normalizeTransition(undefined)).toBeUndefined();
     expect(normalizeTransition({})).toEqual(DEFAULT_TRANSITION);
     const t = normalizeTransition({ kind: 'boh', duration: 99, easing: 'bounce', arc: -1, spins: 1.3, spinAxis: 'y', delay: '2', advance: 0 })!;
-    expect(t.kind).toBe('fly');
+    expect(t.kind).toBe('direct');
     expect(t.duration).toBe(8);
     expect(t.easing).toBe('bounce');
     expect(t.arc).toBe(0);
@@ -41,6 +41,17 @@ describe('transizioni', () => {
     expect(transitions[0].advance).toBe(2);
     expect(transitions[0].duration).toBe(1);
     expect('transition' in proper.frames[1]).toBe(false);
+  });
+
+  it('la transizione predefinita di partenza va dritta verso il frame', () => {
+    expect(DEFAULT_TRANSITION.kind).toBe('direct');
+    expect(normalizeTransition({ easing: 'linear' }, { ...DEFAULT_TRANSITION, kind: 'fade' })?.kind).toBe('fade');
+  });
+
+  it('i nuovi collegamenti ricevono la transizione indicata', () => {
+    const paths = { main: [1, 2, 3], choices: [], transitions: [{ ...DEFAULT_TRANSITION, kind: 'cut' as const, from: 1, to: 2 }] };
+    syncTransitions(paths, undefined, { ...DEFAULT_TRANSITION, kind: 'fade' });
+    expect(paths.transitions.map((t) => t.kind)).toEqual(['cut', 'fade']);
   });
 
   it('le transizioni salvate seguono i percorsi: spariscono quelle dei collegamenti che non esistono', () => {

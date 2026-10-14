@@ -463,7 +463,20 @@
               <button matButton matTooltip="Il ritorno al passo precedente: la stessa transizione, al contrario" (click)="previewTransition(true)">Al contrario</button>
               <button matButton (click)="applyTransitionToAll()">Applica a tutti</button>
               @if (!isDefaultTransition(t)) {
-                <button matButton (click)="resetTransition()">Predefinita</button>
+                <button matButton matTooltip="Torna alla transizione predefinita" (click)="resetTransition()">Predefinita</button>
+              }
+            </div>
+            <div class="panel-actions secondary">
+              <button matButton matTooltip="Copia le impostazioni per incollarle su un altro passo" (click)="copyTransition()">Copia</button>
+              <button matButton matTooltip="Usa le impostazioni copiate" [disabled]="!canPasteTransition(t)" (click)="pasteTransition()">Incolla</button>
+              @if (!isDefaultTransition(t)) {
+                <button matButton matTooltip="I passi che si creeranno da ora avranno questa transizione, in tutte le presentazioni" (click)="setDefaultTransition()">
+                  Usa come predefinita
+                </button>
+              } @else if (customDefaultTransition()) {
+                <button matButton matTooltip="La predefinita torna quella di partenza: diretta, con durata automatica" (click)="resetDefaultTransition()">
+                  Ripristina predefinita originale
+                </button>
               }
             </div>
           </div>

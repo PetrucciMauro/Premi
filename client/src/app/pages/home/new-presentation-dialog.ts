@@ -9,6 +9,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { TransitionPreferences } from '../../core/transition-preferences.service';
 import { Proper } from '../../model/presentation';
 import { SlideCanvas } from '../../shared/slide-canvas';
 import { cameraFor, cameraMatrix, cssMatrix, perspectiveFor } from '../../shared/view-transform';
@@ -156,6 +157,7 @@ interface Choice {
 })
 export class NewPresentationDialog {
   private readonly ref = inject<MatDialogRef<NewPresentationDialog, NewPresentation>>(MatDialogRef);
+  private readonly transitions = inject(TransitionPreferences);
 
   protected title = '';
   protected readonly selected = signal('empty');
@@ -175,6 +177,10 @@ export class NewPresentationDialog {
     if (!title) return;
     // un modello nuovo per ogni presentazione: le anteprime restano del dialog
     const template = TEMPLATES.find((t) => t.id === this.selected());
-    this.ref.close({ title, proper: template?.build() });
+    const proper = template?.build();
+    // i passi del modello si muovono con la transizione predefinita scelta
+    const transition = this.transitions.defaultTransition();
+    for (const link of proper?.paths.transitions ?? []) Object.assign(link, transition, { from: link.from, to: link.to });
+    this.ref.close({ title, proper });
   }
 }

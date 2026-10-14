@@ -11,7 +11,7 @@
 
 /**
  * - fly: volo, la telecamera si allontana e si riavvicina (lo spostamento classico di Premi);
- * - direct: va dritta verso il frame, senza allontanarsi;
+ * - direct: va dritta verso il frame zoomando nel frattempo, come impress.js (la predefinita);
  * - fade: la vista sfuma verso un colore e riappare sul frame;
  * - cut: stacco, il frame compare subito.
  */
@@ -51,8 +51,9 @@ export interface PathTransition extends Transition {
   to: number;
 }
 
+/** Transizione predefinita di partenza; ognuno può sceglierne un'altra (vedi TransitionPreferences). */
 export const DEFAULT_TRANSITION: Transition = {
-  kind: 'fly',
+  kind: 'direct',
   duration: null,
   easing: 'smooth',
   arc: 1,
@@ -75,11 +76,17 @@ const clamp = (value: number, { min, max }: { min: number; max: number }) => Mat
 const finite = (value: unknown): number | null => (value === null || value === undefined || value === '' ? null : Number.isFinite(Number(value)) ? Number(value) : null);
 const oneOf = <T extends string>(value: unknown, allowed: T[], fallback: T): T => (allowed.includes(value as T) ? (value as T) : fallback);
 
-/** Transizione valida da un valore qualsiasi (letto dal server o da un file); undefined se assente. */
-export function normalizeTransition(value: unknown): Transition | undefined {
+/** prima delle transizioni tra frame Premi si spostava sempre in volo */
+const LEGACY_TRANSITION: Transition = { ...DEFAULT_TRANSITION, kind: 'fly' };
+
+/**
+ * Transizione valida da un valore qualsiasi (letto dal server o da un file); undefined se
+ * assente. I campi mancanti o non validi prendono il valore di `fallback`.
+ */
+export function normalizeTransition(value: unknown, fallback = DEFAULT_TRANSITION): Transition | undefined {
   if (!value || typeof value !== 'object') return undefined;
   const raw = value as Record<string, unknown>;
-  const d = DEFAULT_TRANSITION;
+  const d = fallback;
   const duration = finite(raw['duration']);
   const advance = finite(raw['advance']);
   return {
@@ -149,15 +156,15 @@ export const findLink = (transitions: PathTransition[], from: number | undefined
 /**
  * Una transizione per ogni collegamento dei percorsi: restano quelle dei collegamenti che
  * esistono ancora, nello stesso percorso; quelle dei collegamenti spezzati (un frame spostato,
- * aggiunto o tolto) spariscono e i nuovi collegamenti ricevono la transizione predefinita.
+ * aggiunto o tolto) spariscono e i nuovi collegamenti ricevono la transizione `fallback`.
  * `previous` sono i percorsi prima della modifica: senza, conta solo la coppia di frame.
  */
-export function syncTransitions(paths: PathsShape, previous?: PathsShape): void {
+export function syncTransitions(paths: PathsShape, previous?: PathsShape, fallback = DEFAULT_TRANSITION): void {
   const existing = paths.transitions ?? [];
   const before = previous && new Set(pathLinks(previous).map((l) => `${l.path}:${l.from}>${l.to}`));
   paths.transitions = pathLinks(paths).map(({ path, from, to }) => {
     const kept = !before || before.has(`${path}:${from}>${to}`) ? findLink(existing, from, to) : undefined;
-    return kept ?? { ...DEFAULT_TRANSITION, from, to };
+    return kept ?? { ...fallback, from, to };
   });
 }
 
@@ -176,7 +183,7 @@ export function normalizeTransitions(paths: PathsShape, value: unknown, frameTra
       })
     : null;
   const legacy = (from: number, to: number): PathTransition => ({
-    ...(normalizeTransition(frameTransitions.get(to)) ?? DEFAULT_TRANSITION),
+    ...(normalizeTransition(frameTransitions.get(to), LEGACY_TRANSITION) ?? LEGACY_TRANSITION),
     advance: normalizeTransition(frameTransitions.get(from))?.advance ?? null,
     from,
     to,

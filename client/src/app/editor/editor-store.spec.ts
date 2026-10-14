@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PresentationApi } from '../core/presentation-api.service';
+import { TransitionPreferences } from '../core/transition-preferences.service';
 import { FrameElement, TextElement, newAnchor, normalizePresentation } from '../model/presentation';
 import { DEFAULT_TRANSITION } from '../model/transition';
 import { EditorStore } from './editor-store';
@@ -200,6 +201,21 @@ describe('EditorStore', () => {
       store.setTransitionForAll(custom);
       store.moveInSubPath(sub, 1, 0); // 5 → 4 3 → 5
       expect(links()).toEqual(['1>5*', '5>4', '4>3', '3>5']);
+    });
+
+    it('i nuovi collegamenti e il ritorno alla predefinita usano la predefinita scelta', () => {
+      const prefs = TestBed.inject(TransitionPreferences);
+      prefs.setDefault({ ...custom, from: 9, to: 9 } as typeof custom);
+      try {
+        store.setTransition(3, 4, { ...DEFAULT_TRANSITION, kind: 'cut' });
+        store.setTransition(3, 4, null);
+        store.removeFromMainPath(5);
+        store.addToMainPath(5);
+        expect(links()).toEqual(['1>3*', '3>4*', '4>5*']);
+        expect('from' in prefs.defaultTransition()).toBe(false);
+      } finally {
+        prefs.resetDefault();
+      }
     });
   });
 

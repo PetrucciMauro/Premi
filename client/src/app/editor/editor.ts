@@ -31,6 +31,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { NotifyService } from '../core/notify.service';
+import { TransitionPreferences } from '../core/transition-preferences.service';
 import { Alignment, Axis, Guides, alignmentGuides, snapMove } from '../model/arrange';
 import {
   DEFAULT_TRANSITION,
@@ -229,6 +230,7 @@ export class Editor implements OnInit {
   private readonly api = inject(PresentationApi);
   private readonly uploader = inject(UploadService);
   private readonly notify = inject(NotifyService);
+  protected readonly transitionPrefs = inject(TransitionPreferences);
   private readonly router = inject(Router);
   private readonly tour = inject(Tour);
 
@@ -1176,13 +1178,17 @@ export class Editor implements OnInit {
     return link?.from === from && link.to === to;
   }
 
+  /** la transizione è quella predefinita scelta (vedi TransitionPreferences) */
   protected isDefaultTransition(transition: Transition | undefined): boolean {
-    return !transition || sameTransition(transition, DEFAULT_TRANSITION);
+    return !transition || sameTransition(transition, this.transitionPrefs.defaultTransition());
   }
+
+  /** la predefinita scelta non è più quella di partenza */
+  protected readonly customDefaultTransition = computed(() => !sameTransition(this.transitionPrefs.defaultTransition(), DEFAULT_TRANSITION));
 
   /** Riassunto della transizione per il pannello dei percorsi: tipo, durata, partenza automatica. */
   protected transitionSummary(transition: Transition | undefined): string {
-    const t = transition ?? DEFAULT_TRANSITION;
+    const t = transition ?? this.transitionPrefs.defaultTransition();
     const parts = [TRANSITION_KIND_LABELS[t.kind]];
     if (t.kind !== 'cut' && t.duration !== null) parts.push(`${t.duration} s`);
     if (t.advance !== null) parts.push(`da sola dopo ${t.advance} s`);
@@ -1199,6 +1205,38 @@ export class Editor implements OnInit {
   protected resetTransition(): void {
     const t = this.editedTransition();
     if (t) this.store.setTransition(t.from, t.to, null);
+  }
+
+  protected copyTransition(): void {
+    const t = this.editedTransition();
+    if (!t) return;
+    this.transitionPrefs.copy(transitionProps(t));
+    this.notify.info('Transizione copiata: incollala su un altro passo');
+  }
+
+  protected pasteTransition(): void {
+    const t = this.editedTransition();
+    const copied = this.transitionPrefs.copied();
+    if (t && copied) this.store.setTransition(t.from, t.to, copied);
+  }
+
+  /** la transizione copiata è diversa da quella aperta nel menu, quindi incollarla serve */
+  protected canPasteTransition(transition: Transition): boolean {
+    const copied = this.transitionPrefs.copied();
+    return !!copied && !sameTransition(copied, transition);
+  }
+
+  /** La transizione aperta nel menu diventa quella dei passi che si creeranno da qui in poi. */
+  protected setDefaultTransition(): void {
+    const t = this.editedTransition();
+    if (!t) return;
+    this.transitionPrefs.setDefault(transitionProps(t));
+    this.notify.info('Transizione predefinita per i nuovi passi, in tutte le presentazioni');
+  }
+
+  protected resetDefaultTransition(): void {
+    this.transitionPrefs.resetDefault();
+    this.notify.info('Ripristinata la transizione predefinita di partenza');
   }
 
   protected applyTransitionToAll(): void {

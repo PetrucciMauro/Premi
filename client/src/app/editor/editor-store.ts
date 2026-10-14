@@ -10,7 +10,8 @@
  */
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { PresentationApi } from '../core/presentation-api.service';
-import { DEFAULT_TRANSITION, Transition, syncTransitions } from '../model/transition';
+import { TransitionPreferences } from '../core/transition-preferences.service';
+import { Transition, syncTransitions } from '../model/transition';
 import { Alignment, Axis, alignElements, distributeElements, parentOf } from '../model/arrange';
 import {
   COLLECTIONS,
@@ -60,6 +61,7 @@ export type NewElement = Omit<SlideElement, 'id' | 'zIndex'>;
 @Injectable()
 export class EditorStore {
   private readonly api = inject(PresentationApi);
+  private readonly transitions = inject(TransitionPreferences);
 
   readonly title = signal('');
   private readonly state = signal<Proper | null>(null);
@@ -130,7 +132,7 @@ export class EditorStore {
     const after = structuredClone(before);
     mutate(after);
     syncAnchors(before, after);
-    syncTransitions(after.paths, before.paths);
+    syncTransitions(after.paths, before.paths, this.transitions.defaultTransition());
     if (same(before, after)) return false;
 
     this.state.set(after);
@@ -150,7 +152,7 @@ export class EditorStore {
     const draft = structuredClone(before);
     mutate(draft);
     syncAnchors(before, draft);
-    syncTransitions(draft.paths, before.paths);
+    syncTransitions(draft.paths, before.paths, this.transitions.defaultTransition());
     this.state.set(draft);
   }
 
@@ -388,13 +390,13 @@ export class EditorStore {
   // ---------------------------------------------------------------- transizioni
 
   /**
-   * Modifica la transizione tra i frame `from` e `to` (null torna a quella predefinita).
+   * Modifica la transizione tra i frame `from` e `to` (null: quella predefinita scelta, vedi TransitionPreferences).
    * Le transizioni nascono e spariscono con i collegamenti dei percorsi (vedi syncTransitions).
    */
   setTransition(from: number, to: number, transition: Transition | null, mergeKey?: string): void {
     this.execute(transition ? 'modifica transizione' : 'transizione predefinita', (draft) => {
       const link = draft.paths.transitions.find((t) => t.from === from && t.to === to);
-      if (link) Object.assign(link, transition ?? DEFAULT_TRANSITION, { from, to });
+      if (link) Object.assign(link, transition ?? this.transitions.defaultTransition(), { from, to });
     }, mergeKey);
   }
 

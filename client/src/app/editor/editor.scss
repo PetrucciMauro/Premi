@@ -869,5 +869,10 @@
     gap: 6px;
     padding: 8px 12px 4px;
     border-top: 1px solid var(--mat-sys-outline-variant);
+
+    &.secondary {
+      padding-top: 0;
+      border-top: none;
+    }
   }
 }
